@@ -1,0 +1,5 @@
+Fix handling of overlapping sm and m.
+Include stdlib.h (for malloc) in config*.h.
+Remove PQCgen*, rng*, randombytes.h.
+Undefine KAT_INT.
+Include crypto_sign.h in sign.c.

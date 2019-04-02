@@ -1,0 +1,1149 @@
+<?xml version="1.0"?>
+<build xmlns:xi="http://www.w3.org/2001/XInclude" all="all">
+
+    <group>
+
+
+
+    
+
+    
+
+    <fragment name="KeccakSponge-common" inherits="common">
+        <h>Constructions/KeccakSponge-common.h</h>
+        <h>Constructions/KeccakSponge.inc</h>
+    </fragment>
+
+    <fragment name="KeccakSpongeWidth200" inherits="KeccakSponge-common">
+        <c>Constructions/KeccakSpongeWidth200.c</c>
+        <h>Constructions/KeccakSpongeWidth200.h</h>
+    </fragment>
+
+    <fragment name="KeccakSpongeWidth400" inherits="KeccakSponge-common">
+        <c>Constructions/KeccakSpongeWidth400.c</c>
+        <h>Constructions/KeccakSpongeWidth400.h</h>
+    </fragment>
+
+    <fragment name="KeccakSpongeWidth800" inherits="KeccakSponge-common">
+        <c>Constructions/KeccakSpongeWidth800.c</c>
+        <h>Constructions/KeccakSpongeWidth800.h</h>
+    </fragment>
+
+    <fragment name="KeccakSpongeWidth1600" inherits="KeccakSponge-common">
+        <c>Constructions/KeccakSpongeWidth1600.c</c>
+        <h>Constructions/KeccakSpongeWidth1600.h</h>
+    </fragment>
+
+    <fragment name="KeccakSponge" inherits="KeccakSpongeWidth200 KeccakSpongeWidth400 KeccakSpongeWidth800 KeccakSpongeWidth1600"/>
+
+    
+
+    <fragment name="FIPS202" inherits="KeccakSpongeWidth1600">
+        <c>Modes/SimpleFIPS202.c</c>
+        <h>Modes/SimpleFIPS202.h</h>
+        <c>Modes/KeccakHash.c</c>
+        <h>Modes/KeccakHash.h</h>
+    </fragment>
+
+    <fragment name="SP800-185" inherits="KeccakSpongeWidth1600">
+        <c>Modes/SP800-185.c</c>
+        <h>Modes/SP800-185.inc</h>
+        <h>Modes/SP800-185.h</h>
+        <h>Modes/Phases.h</h>
+    </fragment>
+
+    
+
+    <fragment name="KeccakDuplex-common" inherits="common">
+        <h>Constructions/KeccakDuplex-common.h</h>
+        <h>Constructions/KeccakDuplex.inc</h>
+    </fragment>
+
+    <fragment name="KeccakDuplexWidth200" inherits="KeccakDuplex-common">
+        <c>Constructions/KeccakDuplexWidth200.c</c>
+        <h>Constructions/KeccakDuplexWidth200.h</h>
+    </fragment>
+
+    <fragment name="KeccakDuplexWidth400" inherits="KeccakDuplex-common">
+        <c>Constructions/KeccakDuplexWidth400.c</c>
+        <h>Constructions/KeccakDuplexWidth400.h</h>
+    </fragment>
+
+    <fragment name="KeccakDuplexWidth800" inherits="KeccakDuplex-common">
+        <c>Constructions/KeccakDuplexWidth800.c</c>
+        <h>Constructions/KeccakDuplexWidth800.h</h>
+    </fragment>
+
+    <fragment name="KeccakDuplexWidth1600" inherits="KeccakDuplex-common">
+        <c>Constructions/KeccakDuplexWidth1600.c</c>
+        <h>Constructions/KeccakDuplexWidth1600.h</h>
+    </fragment>
+
+    <fragment name="KeccakDuplex" inherits="KeccakDuplexWidth200 KeccakDuplexWidth400 KeccakDuplexWidth800 KeccakDuplexWidth1600"/>
+
+    
+
+    <fragment name="KeccakPRG-common" inherits="common">
+        <h>Modes/KeccakPRG-common.h</h>
+        <h>Modes/KeccakPRG.inc</h>
+    </fragment>
+
+    <fragment name="KeccakPRGWidth200" inherits="KeccakPRG-common KeccakDuplexWidth200">
+        <c>Modes/KeccakPRGWidth200.c</c>
+        <h>Modes/KeccakPRGWidth200.h</h>
+    </fragment>
+
+    <fragment name="KeccakPRGWidth400" inherits="KeccakPRG-common KeccakDuplexWidth400">
+        <c>Modes/KeccakPRGWidth400.c</c>
+        <h>Modes/KeccakPRGWidth400.h</h>
+    </fragment>
+
+    <fragment name="KeccakPRGWidth800" inherits="KeccakPRG-common KeccakDuplexWidth800">
+        <c>Modes/KeccakPRGWidth800.c</c>
+        <h>Modes/KeccakPRGWidth800.h</h>
+    </fragment>
+
+    <fragment name="KeccakPRGWidth1600" inherits="KeccakPRG-common KeccakDuplexWidth1600">
+        <c>Modes/KeccakPRGWidth1600.c</c>
+        <h>Modes/KeccakPRGWidth1600.h</h>
+    </fragment>
+
+    <fragment name="KeccakPRG" inherits="KeccakPRGWidth200 KeccakPRGWidth400 KeccakPRGWidth800 KeccakPRGWidth1600"/>
+
+    
+
+    <fragment name="KangarooTwelve" inherits="KeccakSpongeWidth1600">
+        <c>Modes/KangarooTwelve.c</c>
+        <h>Modes/KangarooTwelve.h</h>
+        <h>Modes/Phases.h</h>
+    </fragment>
+
+    
+
+    <fragment name="Kravatte" inherits="common">
+        <c>Constructions/Kravatte.c</c>
+        <h>Constructions/Kravatte.h</h>
+        <c>Modes/KravatteModes.c</c>
+        <h>Modes/KravatteModes.h</h>
+    </fragment>
+
+    <fragment name="All" inherits="common Ketje Keyak KeccakSponge KeccakDuplex KeccakPRG FIPS202 SP800-185 KangarooTwelve Kravatte"/>
+
+</group>
+    <group>
+
+
+
+
+    
+
+    <fragment name="optimized">
+        <h>Common/brg_endian.h</h>
+        <gcc>-fomit-frame-pointer</gcc>
+        <gcc>-O2</gcc>
+        <gcc>-g0</gcc>
+        <gcc>-march=native</gcc>
+        <gcc>-mtune=native</gcc>
+    </fragment>
+
+    
+
+    <fragment name="width200">
+    </fragment>
+
+    <fragment name="reference200" inherits="common width200">
+        <c>SnP/KeccakP-200/Reference/KeccakP-200-reference.c</c>
+        <h>SnP/KeccakP-200/Reference/KeccakP-200-reference.h</h>
+        <h>SnP/KeccakP-200/Reference/KeccakP-200-SnP.h</h>
+    </fragment>
+
+    <fragment name="compact200" inherits="common optimized width200">
+        <c>SnP/KeccakP-200/Compact/KeccakP-200-compact.c</c>
+        <h>SnP/KeccakP-200/Compact/KeccakP-200-SnP.h</h>
+    </fragment>
+
+    <fragment name="optimized200ARMv6M" inherits="common optimized width200">
+        <c>SnP/KeccakP-200/OptimizedAsmARM/KeccakP-200-armv6m-le-gcc.s</c>
+        <h>SnP/KeccakP-200/OptimizedAsmARM/KeccakP-200-SnP.h</h>
+    </fragment>
+
+    <fragment name="optimized200ARMv7M" inherits="common optimized width200">
+        <c>SnP/KeccakP-200/OptimizedAsmARM/KeccakP-200-armv7m-le-gcc.s</c>
+        <h>SnP/KeccakP-200/OptimizedAsmARM/KeccakP-200-SnP.h</h>
+    </fragment>
+
+    <fragment name="optimized200AVR8" inherits="common optimized width200">
+        <c>SnP/KeccakP-200/OptimizedAsmAVR8/KeccakP-200-avr8-fast.s</c>
+        <h>SnP/KeccakP-200/OptimizedAsmAVR8/KeccakP-200-SnP.h</h>
+    </fragment>
+
+    
+
+    <fragment name="width400">
+    </fragment>
+
+    <fragment name="reference400" inherits="common width400">
+        <c>SnP/KeccakP-400/Reference/KeccakP-400-reference.c</c>
+        <h>SnP/KeccakP-400/Reference/KeccakP-400-reference.h</h>
+        <h>SnP/KeccakP-400/Reference/KeccakP-400-SnP.h</h>
+    </fragment>
+
+    <fragment name="optimized400ARMv6M" inherits="common optimized width400">
+        <c>SnP/KeccakP-400/OptimizedAsmARM/KeccakP-400-armv6m-le-gcc.s</c>
+        <h>SnP/KeccakP-400/OptimizedAsmARM/KeccakP-400-SnP.h</h>
+    </fragment>
+
+    <fragment name="optimized400ARMv7M" inherits="common optimized width400">
+        <c>SnP/KeccakP-400/OptimizedAsmARM/KeccakP-400-armv7m-le-gcc.s</c>
+        <h>SnP/KeccakP-400/OptimizedAsmARM/KeccakP-400-SnP.h</h>
+    </fragment>
+
+    <fragment name="optimized400AVR8" inherits="common optimized width400">
+        <c>SnP/KeccakP-400/OptimizedAsmAVR8/KeccakP-400-avr8-fast.s</c>
+        <h>SnP/KeccakP-400/OptimizedAsmAVR8/KeccakP-400-SnP.h</h>
+    </fragment>
+
+    
+
+    <fragment name="width800">
+    </fragment>
+
+    <fragment name="reference800" inherits="common width800">
+        <c>SnP/KeccakP-800/Reference/KeccakP-800-reference.c</c>
+        <h>SnP/KeccakP-800/Reference/KeccakP-800-reference.h</h>
+        <h>SnP/KeccakP-800/Reference/KeccakP-800-SnP.h</h>
+    </fragment>
+
+    <fragment name="compact800" inherits="common optimized width800">
+        <c>SnP/KeccakP-800/Compact/KeccakP-800-compact.c</c>
+        <h>SnP/KeccakP-800/Compact/KeccakP-800-SnP.h</h>
+    </fragment>
+
+    <fragment name="optimized800" inherits="width800 optimized">
+        <h>SnP/KeccakP-800/Optimized32/KeccakP-800-SnP.h</h>
+        <h>SnP/KeccakP-800/Optimized32/KeccakP-800-opt32-bis.macros</h>
+        <c>SnP/KeccakP-800/Optimized32/KeccakP-800-opt32.c</c>
+        <h>SnP/KeccakP-800/Optimized32/KeccakP-800-opt32.macros</h>
+        <h>SnP/KeccakP-800/Optimized32/KeccakP-800-unrolling-bis.macros</h>
+        <h>SnP/KeccakP-800/Optimized32/KeccakP-800-unrolling.macros</h>
+    </fragment>
+
+    <fragment name="optimized800u2" inherits="optimized800">
+        <h>SnP/KeccakP-800/Optimized32/u2/KeccakP-800-opt32-config.h</h>
+    </fragment>
+
+    <fragment name="optimized800ufull" inherits="optimized800">
+        <h>SnP/KeccakP-800/Optimized32/ufull/KeccakP-800-opt32-config.h</h>
+    </fragment>
+
+    <fragment name="optimized800lcu2" inherits="optimized800">
+        <h>SnP/KeccakP-800/Optimized32/LCu2/KeccakP-800-opt32-config.h</h>
+    </fragment>
+
+    <fragment name="optimized800lcufull" inherits="optimized800">
+        <h>SnP/KeccakP-800/Optimized32/LCufull/KeccakP-800-opt32-config.h</h>
+    </fragment>
+
+    <fragment name="optimized800ARM" inherits="common optimized width800">
+        <h>SnP/KeccakP-800/OptimizedAsmARM/KeccakP-800-SnP.h</h>
+    </fragment>
+
+    <fragment name="optimized800ARMv6Mu1" inherits="optimized800ARM">
+        <c>SnP/KeccakP-800/OptimizedAsmARM/KeccakP-800-u1-armv6m-le-gcc.s</c>
+    </fragment>
+
+    <fragment name="optimized800ARMv6Mu2" inherits="optimized800ARM">
+        <c>SnP/KeccakP-800/OptimizedAsmARM/KeccakP-800-u2-armv6m-le-gcc.s</c>
+    </fragment>
+
+    <fragment name="optimized800ARMv7Mu2" inherits="optimized800ARM">
+        <c>SnP/KeccakP-800/OptimizedAsmARM/KeccakP-800-u2-armv7m-le-gcc.s</c>
+    </fragment>
+
+    <fragment name="optimized800ARMv7Mufull" inherits="optimized800ARM">
+        <c>SnP/KeccakP-800/OptimizedAsmARM/KeccakP-800-uf-armv7m-le-gcc.s</c>
+    </fragment>
+
+    <fragment name="optimized800ARMv7Au2" inherits="optimized800ARM">
+        <c>SnP/KeccakP-800/OptimizedAsmARM/KeccakP-800-u2-armv7a-le-gcc.s</c>
+    </fragment>
+
+    <fragment name="optimized800ARMv8A" inherits="common optimized width800">
+      <c>SnP/KeccakP-800/Optimized64AsmARM/KeccakP-800-armv8a-neon.s</c>
+      <h>SnP/KeccakP-800/Optimized64AsmARM/KeccakP-800-SnP.h</h>
+    </fragment>
+
+    <fragment name="optimized800AVR8" inherits="common optimized width800">
+        <c>SnP/KeccakP-800/OptimizedAsmAVR8/KeccakP-800-avr8-fast.s</c>
+        <h>SnP/KeccakP-800/OptimizedAsmAVR8/KeccakP-800-SnP.h</h>
+    </fragment>
+
+    
+
+    <fragment name="width1600">
+    </fragment>
+
+    <fragment name="reference1600" inherits="common width1600">
+        <c>SnP/KeccakP-1600/Reference/KeccakP-1600-reference.c</c>
+        <h>SnP/KeccakP-1600/Reference/KeccakP-1600-reference.h</h>
+        <h>SnP/KeccakP-1600/Reference/KeccakP-1600-SnP.h</h>
+    </fragment>
+
+    <fragment name="reference1600-32bits" inherits="common width1600">
+        <c>SnP/KeccakP-1600/Reference32BI/KeccakP-1600-reference32BI.c</c>
+        <h>SnP/KeccakP-1600/Reference32BI/KeccakP-1600-reference.h</h>
+        <h>SnP/KeccakP-1600/Reference32BI/KeccakP-1600-SnP.h</h>
+    </fragment>
+
+    <fragment name="compact1600" inherits="common optimized width1600">
+        <c>SnP/KeccakP-1600/Compact64/KeccakP-1600-compact64.c</c>
+        <h>SnP/KeccakP-1600/Compact64/KeccakP-1600-SnP.h</h>
+        <h>SnP/SnP-Relaned.h</h>
+    </fragment>
+
+    <fragment name="compact1600AVR8" inherits="common optimized width1600">
+        <c>SnP/KeccakP-1600/OptimizedAsmAVR8/KeccakP-1600-avr8-compact.s</c>
+        <h>SnP/KeccakP-1600/OptimizedAsmAVR8/KeccakP-1600-SnP.h</h>
+    </fragment>
+
+    <fragment name="inplace1600bi" inherits="width1600 optimized">
+        <c>SnP/KeccakP-1600/Inplace32BI/KeccakP-1600-inplace32BI.c</c>
+        <h>SnP/KeccakP-1600/Inplace32BI/KeccakP-1600-SnP.h</h>
+        <h>SnP/SnP-Relaned.h</h>
+    </fragment>
+
+    <fragment name="inplace1600ARM" inherits="width1600 optimized">
+        <h>SnP/KeccakP-1600/Optimized32biAsmARM/KeccakP-1600-SnP.h</h>
+    </fragment>
+
+    <fragment name="inplace1600ARMv6M" inherits="inplace1600ARM">
+        <c>SnP/KeccakP-1600/Optimized32biAsmARM/KeccakP-1600-inplace-32bi-armv6m-le-gcc.s</c>
+    </fragment>
+
+    <fragment name="inplace1600ARMv7M" inherits="inplace1600ARM">
+        <c>SnP/KeccakP-1600/Optimized32biAsmARM/KeccakP-1600-inplace-32bi-armv7m-le-gcc.s</c>
+    </fragment>
+
+    <fragment name="inplace1600ARMv7A" inherits="inplace1600ARM">
+        <c>SnP/KeccakP-1600/Optimized32biAsmARM/KeccakP-1600-inplace-32bi-armv7a-le-gcc.s</c>
+    </fragment>
+
+    <fragment name="optimized1600" inherits="width1600 optimized">
+        <c>SnP/KeccakP-1600/Optimized64/KeccakP-1600-opt64.c</c>
+        <h>SnP/KeccakP-1600/Optimized/KeccakP-1600-unrolling.macros</h>
+        <h>SnP/KeccakP-1600/Optimized/KeccakP-1600-64.macros</h>
+        <h>SnP/KeccakP-1600/Optimized64/KeccakP-1600-SnP.h</h>
+        <h>SnP/SnP-Relaned.h</h>
+        <gcc>-m64</gcc>
+    </fragment>
+
+    <fragment name="optimized1600u6" inherits="optimized1600">
+        <h>SnP/KeccakP-1600/Optimized64/u6/KeccakP-1600-opt64-config.h</h>
+    </fragment>
+
+    <fragment name="optimized1600ufull" inherits="optimized1600">
+        <h>SnP/KeccakP-1600/Optimized64/ufull/KeccakP-1600-opt64-config.h</h>
+    </fragment>
+
+    <fragment name="optimized1600lcu6" inherits="optimized1600">
+        <h>SnP/KeccakP-1600/Optimized64/LCu6/KeccakP-1600-opt64-config.h</h>
+    </fragment>
+
+    <fragment name="optimized1600lcufull" inherits="optimized1600">
+        <h>SnP/KeccakP-1600/Optimized64/LCufull/KeccakP-1600-opt64-config.h</h>
+    </fragment>
+
+    <fragment name="optimized1600lcufullshld" inherits="optimized1600">
+        <h>SnP/KeccakP-1600/Optimized64/LCufullshld/KeccakP-1600-opt64-config.h</h>
+    </fragment>
+
+    <fragment name="optimized1600AsmX86-64" inherits="width1600 optimized">
+        <c>SnP/KeccakP-1600/OptimizedAsmX86-64/KeccakP-1600-x86-64-gas.s</c>
+        <h>SnP/KeccakP-1600/OptimizedAsmX86-64/KeccakP-1600-SnP.h</h>
+    </fragment>
+
+    <fragment name="optimized1600AsmX86-64shld" inherits="width1600 optimized">
+        <c>SnP/KeccakP-1600/OptimizedAsmX86-64/KeccakP-1600-x86-64-shld-gas.s</c>
+        <h>SnP/KeccakP-1600/OptimizedAsmX86-64/KeccakP-1600-SnP.h</h>
+    </fragment>
+
+    <fragment name="optimized1600AsmX86-64Apple" inherits="width1600 optimized">
+        <c>SnP/KeccakP-1600/OptimizedAsmX86-64/KeccakP-1600-x86-64-gas_Apple.s</c>
+        <h>SnP/KeccakP-1600/OptimizedAsmX86-64/KeccakP-1600-SnP.h</h>
+    </fragment>
+
+
+
+    <fragment name="optimized1600AVX2" inherits="width1600 optimized">
+        <c>SnP/KeccakP-1600/OptimizedAVX2/KeccakP-1600-AVX2.cpp</c>
+        <h>SnP/KeccakP-1600/OptimizedAVX2/KeccakP-1600-AVX2.h</h>
+        <h>SnP/KeccakP-1600/OptimizedAVX2/KeccakP-1600-SnP.h</h>
+    </fragment>
+
+    <fragment name="optimized1600AVX512" inherits="width1600 optimized">
+        <c>SnP/KeccakP-1600/OptimizedAVX512/KeccakP-1600-AVX512.c</c>
+        <h>SnP/KeccakP-1600/OptimizedAVX512/AVX512u12/KeccakP-1600-AVX512-config.h</h>
+        <h>SnP/KeccakP-1600/OptimizedAVX512/KeccakP-1600-SnP.h</h>
+    </fragment>
+
+    <fragment name="optimized1600XOP" inherits="width1600 optimized">
+        <c>SnP/KeccakP-1600/OptimizedXOP/KeccakP-1600-XOP.c</c>
+        <h>SnP/KeccakP-1600/OptimizedXOP/KeccakP-1600-SnP.h</h>
+        <h>SnP/KeccakP-1600/Optimized/KeccakP-1600-unrolling.macros</h>
+        <h>SnP/SnP-Relaned.h</h>
+    </fragment>
+
+    <fragment name="optimized1600XOPu6" inherits="optimized1600XOP">
+        <h>SnP/KeccakP-1600/OptimizedXOP/u6/KeccakP-1600-XOP-config.h</h>
+    </fragment>
+
+    <fragment name="optimized1600XOPufull" inherits="optimized1600XOP">
+        <h>SnP/KeccakP-1600/OptimizedXOP/ufull/KeccakP-1600-XOP-config.h</h>
+    </fragment>
+
+    <fragment name="optimized1600ARM" inherits="width1600 optimized">
+        <h>SnP/KeccakP-1600/Optimized32biAsmARM/KeccakP-1600-SnP.h</h>
+    </fragment>
+
+    <fragment name="optimized1600ARMv6Mu1" inherits="optimized1600ARM">
+        <c>SnP/KeccakP-1600/Optimized32biAsmARM/KeccakP-1600-u1-32bi-armv6m-le-gcc.s</c>
+    </fragment>
+
+    <fragment name="optimized1600ARMv6Mu2" inherits="optimized1600ARM">
+        <c>SnP/KeccakP-1600/Optimized32biAsmARM/KeccakP-1600-u2-32bi-armv6m-le-gcc.s</c>
+    </fragment>
+
+    <fragment name="optimized1600ARMv7A" inherits="width1600 optimized">
+        <c>SnP/KeccakP-1600/OptimizedAsmARM/KeccakP-1600-armv7a-le-neon-gcc.s</c>
+        <h>SnP/KeccakP-1600/OptimizedAsmARM/KeccakP-1600-SnP.h</h>
+    </fragment>
+
+    <fragment name="optimized1600ARMv8A" inherits="width1600 optimized">
+        <c>SnP/KeccakP-1600/Optimized64AsmARM/KeccakP-1600-armv8a-neon.s</c>
+        <h>SnP/KeccakP-1600/Optimized64AsmARM/KeccakP-1600-SnP.h</h>
+    </fragment>
+
+    <fragment name="optimized1600AVR8" inherits="common optimized width1600">
+        <c>SnP/KeccakP-1600/OptimizedAsmAVR8/KeccakP-1600-avr8-fast.s</c>
+        <h>SnP/KeccakP-1600/OptimizedAsmAVR8/KeccakP-1600-SnP.h</h>
+    </fragment>
+
+    
+
+    <fragment name="800times2on1">
+        <c>PlSnP/KeccakP-800-times2/FallbackOn1/KeccakP-800-times2-on1.c</c>
+        <h>PlSnP/KeccakP-800-times2/FallbackOn1/KeccakP-800-times2-SnP.h</h>
+        <h>PlSnP/Fallback/PlSnP-Fallback.inc</h>
+    </fragment>
+
+    
+
+    <fragment name="800times4on1">
+        <c>PlSnP/KeccakP-800-times4/FallbackOn1/KeccakP-800-times4-on1.c</c>
+        <h>PlSnP/KeccakP-800-times4/FallbackOn1/KeccakP-800-times4-SnP.h</h>
+        <h>PlSnP/Fallback/PlSnP-Fallback.inc</h>
+    </fragment>
+
+    <fragment name="800times4ARMv7A" inherits="800times4on1"/>
+
+    
+
+    <fragment name="800times8on1">
+        <c>PlSnP/KeccakP-800-times8/FallbackOn1/KeccakP-800-times8-on1.c</c>
+        <h>PlSnP/KeccakP-800-times8/FallbackOn1/KeccakP-800-times8-SnP.h</h>
+        <h>PlSnP/Fallback/PlSnP-Fallback.inc</h>
+    </fragment>
+
+    <fragment name="no_parallel800">
+        <define>KeccakP800timesN_excluded</define>
+    </fragment>
+
+    
+
+    <fragment name="1600times2on1">
+        <c>PlSnP/KeccakP-1600-times2/FallbackOn1/KeccakP-1600-times2-on1.c</c>
+        <h>PlSnP/KeccakP-1600-times2/FallbackOn1/KeccakP-1600-times2-SnP.h</h>
+        <h>PlSnP/Fallback/PlSnP-Fallback.inc</h>
+    </fragment>
+
+    <fragment name="SIMD128">
+        <c>PlSnP/KeccakP-1600-times2/SIMD128/KeccakP-1600-times2-SIMD128.c</c>
+        <h>PlSnP/KeccakP-1600-times2/SIMD128/KeccakP-1600-times2-SnP.h</h>
+        <h>SnP/KeccakP-1600/Optimized/KeccakP-1600-unrolling.macros</h>
+    </fragment>
+
+    <fragment name="SIMD128-SSE2u2" inherits="SIMD128">
+        <h>PlSnP/KeccakP-1600-times2/SIMD128/SSE2u2/SIMD128-config.h</h>
+    </fragment>
+
+    <fragment name="SIMD128-SSE2ufull" inherits="SIMD128">
+        <h>PlSnP/KeccakP-1600-times2/SIMD128/SSE2ufull/SIMD128-config.h</h>
+    </fragment>
+
+    <fragment name="SIMD128-XOPu2" inherits="SIMD128">
+        <h>PlSnP/KeccakP-1600-times2/SIMD128/XOPu2/SIMD128-config.h</h>
+    </fragment>
+
+    <fragment name="SIMD128-XOPufull" inherits="SIMD128">
+        <h>PlSnP/KeccakP-1600-times2/SIMD128/XOPufull/SIMD128-config.h</h>
+    </fragment>
+
+    <fragment name="SIMD512-2">
+        <c>PlSnP/KeccakP-1600-times2/SIMD512/KeccakP-1600-times2-SIMD512.c</c>
+        <h>PlSnP/KeccakP-1600-times2/SIMD512/KeccakP-1600-times2-SnP.h</h>
+    </fragment>
+
+    <fragment name="SIMD512-2-AVX512u4" inherits="SIMD512-2">
+        <h>PlSnP/KeccakP-1600-times2/SIMD512/AVX512u4/SIMD512-2-config.h</h>
+    </fragment>
+
+    <fragment name="SIMD512-2-AVX512u12" inherits="SIMD512-2">
+        <h>PlSnP/KeccakP-1600-times2/SIMD512/AVX512u12/SIMD512-2-config.h</h>
+    </fragment>
+
+    <fragment name="SIMD512-2-AVX512ufull" inherits="SIMD512-2">
+        <h>PlSnP/KeccakP-1600-times2/SIMD512/AVX512ufull/SIMD512-2-config.h</h>
+    </fragment>
+
+    <fragment name="1600times2ARMV7A">
+        <c>PlSnP/KeccakP-1600-times2/OptimizedAsmARM/KeccakP-1600-inplace-pl2-armv7a-neon-le-gcc.s</c>
+        <h>PlSnP/KeccakP-1600-times2/OptimizedAsmARM/KeccakP-1600-times2-SnP.h</h>
+    </fragment>
+
+    
+
+    <fragment name="1600times4on1">
+        <c>PlSnP/KeccakP-1600-times4/FallbackOn1/KeccakP-1600-times4-on1.c</c>
+        <h>PlSnP/KeccakP-1600-times4/FallbackOn1/KeccakP-1600-times4-SnP.h</h>
+        <h>PlSnP/Fallback/PlSnP-Fallback.inc</h>
+    </fragment>
+
+    <fragment name="1600times4on2">
+        <c>PlSnP/KeccakP-1600-times4/FallbackOn2/KeccakP-1600-times4-on2.c</c>
+        <h>PlSnP/KeccakP-1600-times4/FallbackOn2/KeccakP-1600-times4-SnP.h</h>
+        <h>PlSnP/Fallback/PlSnP-Fallback.inc</h>
+    </fragment>
+
+    <fragment name="SIMD256">
+        <c>PlSnP/KeccakP-1600-times4/SIMD256/KeccakP-1600-times4-SIMD256.c</c>
+        <h>PlSnP/KeccakP-1600-times4/SIMD256/KeccakP-1600-times4-SnP.h</h>
+        <h>SnP/KeccakP-1600/Optimized/KeccakP-1600-unrolling.macros</h>
+    </fragment>
+
+    <fragment name="SIMD256-AVX2u6" inherits="SIMD256">
+        <h>PlSnP/KeccakP-1600-times4/SIMD256/AVX2u6/SIMD256-config.h</h>
+    </fragment>
+
+    <fragment name="SIMD256-AVX2u12" inherits="SIMD256">
+        <h>PlSnP/KeccakP-1600-times4/SIMD256/AVX2u12/SIMD256-config.h</h>
+    </fragment>
+
+    <fragment name="SIMD256-AVX2ufull" inherits="SIMD256">
+        <h>PlSnP/KeccakP-1600-times4/SIMD256/AVX2ufull/SIMD256-config.h</h>
+    </fragment>
+
+    <fragment name="SIMD512-4">
+        <c>PlSnP/KeccakP-1600-times4/SIMD512/KeccakP-1600-times4-SIMD512.c</c>
+        <h>PlSnP/KeccakP-1600-times4/SIMD512/KeccakP-1600-times4-SnP.h</h>
+    </fragment>
+
+    <fragment name="SIMD512-4-AVX512u4" inherits="SIMD512-4">
+        <h>PlSnP/KeccakP-1600-times4/SIMD512/AVX512u4/SIMD512-4-config.h</h>
+    </fragment>
+
+    <fragment name="SIMD512-4-AVX512u12" inherits="SIMD512-4">
+        <h>PlSnP/KeccakP-1600-times4/SIMD512/AVX512u12/SIMD512-4-config.h</h>
+    </fragment>
+
+    <fragment name="SIMD512-4-AVX512ufull" inherits="SIMD512-4">
+        <h>PlSnP/KeccakP-1600-times4/SIMD512/AVX512ufull/SIMD512-4-config.h</h>
+    </fragment>
+
+    
+
+    <fragment name="1600times8on1">
+        <c>PlSnP/KeccakP-1600-times8/FallbackOn1/KeccakP-1600-times8-on1.c</c>
+        <h>PlSnP/KeccakP-1600-times8/FallbackOn1/KeccakP-1600-times8-SnP.h</h>
+        <h>PlSnP/Fallback/PlSnP-Fallback.inc</h>
+    </fragment>
+
+    <fragment name="1600times8on2">
+        <c>PlSnP/KeccakP-1600-times8/FallbackOn2/KeccakP-1600-times8-on2.c</c>
+        <h>PlSnP/KeccakP-1600-times8/FallbackOn2/KeccakP-1600-times8-SnP.h</h>
+        <h>PlSnP/Fallback/PlSnP-Fallback.inc</h>
+    </fragment>
+
+    <fragment name="1600times8on4">
+        <c>PlSnP/KeccakP-1600-times8/FallbackOn4/KeccakP-1600-times8-on4.c</c>
+        <h>PlSnP/KeccakP-1600-times8/FallbackOn4/KeccakP-1600-times8-SnP.h</h>
+        <h>PlSnP/Fallback/PlSnP-Fallback.inc</h>
+    </fragment>
+
+    <fragment name="SIMD512-8">
+        <c>PlSnP/KeccakP-1600-times8/SIMD512/KeccakP-1600-times8-SIMD512.c</c>
+        <h>PlSnP/KeccakP-1600-times8/SIMD512/KeccakP-1600-times8-SnP.h</h>
+    </fragment>
+
+    <fragment name="SIMD512-8-AVX512u4" inherits="SIMD512-8">
+        <h>PlSnP/KeccakP-1600-times8/SIMD512/AVX512u4/SIMD512-config.h</h>
+    </fragment>
+
+    <fragment name="SIMD512-8-AVX512u12" inherits="SIMD512-8">
+        <h>PlSnP/KeccakP-1600-times8/SIMD512/AVX512u12/SIMD512-config.h</h>
+    </fragment>
+
+    <fragment name="SIMD512-8-AVX512ufull" inherits="SIMD512-8">
+        <h>PlSnP/KeccakP-1600-times8/SIMD512/AVX512ufull/SIMD512-config.h</h>
+    </fragment>
+
+    <fragment name="no_parallel1600">
+        <define>KeccakP1600timesN_excluded</define>
+    </fragment>
+
+</group>
+    <group xml:base="Ketje/Ketje.build">
+
+
+
+    
+
+    <fragment name="Ket-SnP-common">
+        <h>Ketje/Ket/SnP-compliant/Ket.inc</h>
+        <h>Ketje/Ket/SnP-compliant/Ket-common.h</h>
+    </fragment>
+
+    <fragment name="KetJr-SnP" inherits="Ket-SnP-common">
+        <c>Ketje/Ket/SnP-compliant/KetJr.c</c>
+        <h>Ketje/Ket/SnP-compliant/KetJr.h</h>
+    </fragment>
+
+    <fragment name="KetSr-SnP" inherits="Ket-SnP-common">
+        <c>Ketje/Ket/SnP-compliant/KetSr.c</c>
+        <h>Ketje/Ket/SnP-compliant/KetSr.h</h>
+    </fragment>
+
+    <fragment name="KetMn-SnP" inherits="Ket-SnP-common">
+        <c>Ketje/Ket/SnP-compliant/KetMn.c</c>
+        <h>Ketje/Ket/SnP-compliant/KetMn.h</h>
+    </fragment>
+
+    <fragment name="KetMj-SnP" inherits="Ket-SnP-common">
+        <c>Ketje/Ket/SnP-compliant/KetMj.c</c>
+        <h>Ketje/Ket/SnP-compliant/KetMj.h</h>
+    </fragment>
+
+    <fragment name="Ket-SnP" inherits="KetJr-SnP KetSr-SnP KetMn-SnP KetMj-SnP"/>
+
+    <fragment name="Ket-optimizedLE-common">
+        <h>Ketje/Ket/OptimizedLE/Ket.inc</h>
+        <h>Ketje/Ket/OptimizedLE/Ket-common.h</h>
+    </fragment>
+
+    <fragment name="KetJr-optimizedLE" inherits="Ket-optimizedLE-common">
+        <c>Ketje/Ket/OptimizedLE/KetJr.c</c>
+        <h>Ketje/Ket/OptimizedLE/KetJr.h</h>
+    </fragment>
+
+    <fragment name="KetSr-optimizedLE" inherits="Ket-optimizedLE-common">
+        <c>Ketje/Ket/OptimizedLE/KetSr.c</c>
+        <h>Ketje/Ket/OptimizedLE/KetSr.h</h>
+    </fragment>
+
+    <fragment name="KetMn-optimizedLE" inherits="Ket-optimizedLE-common">
+        <c>Ketje/Ket/OptimizedLE/KetMn.c</c>
+        <h>Ketje/Ket/OptimizedLE/KetMn.h</h>
+    </fragment>
+
+    <fragment name="KetMj-optimizedLE" inherits="Ket-optimizedLE-common">
+        <c>Ketje/Ket/OptimizedLE/KetMj.c</c>
+        <h>Ketje/Ket/OptimizedLE/KetMj.h</h>
+    </fragment>
+
+    <fragment name="Ket-optimizedLE" inherits="KetJr-optimizedLE KetSr-optimizedLE KetMn-optimizedLE KetMj-optimizedLE"/>
+
+    <fragment name="Ket-ARMv7M-common">
+        <h>Ketje/Ket/OptimizedAsmARM/Ket-common.h</h>
+    </fragment>
+
+    <fragment name="KetJr-ARMv7M" inherits="Ket-ARMv7M-common">
+        <h>Ketje/Ket/OptimizedAsmARM/KetJr.h</h>
+        <c>Ketje/Ket/OptimizedAsmARM/KetjeJr-armv7m-le-gcc.s</c>
+    </fragment>
+
+    <fragment name="KetSr-ARMv7M" inherits="Ket-ARMv7M-common">
+        <h>Ketje/Ket/OptimizedAsmARM/KetSr.h</h>
+        <c>Ketje/Ket/OptimizedAsmARM/KetjeSr-armv7m-le-gcc.s</c>
+    </fragment>
+
+    <fragment name="Ket-ARMv7M" inherits="KetJr-ARMv7M KetSr-ARMv7M"/>
+
+    
+
+    <fragment name="Ketje-common" inherits="common">
+        <h>Ketje/Ketje-common.h</h>
+        <h>Ketje/Ketjev2.inc</h>
+    </fragment>
+
+    <fragment name="KetjeJr" inherits="Ketje-common">
+        <c>Ketje/KetjeJr.c</c>
+        <h>Ketje/KetjeJr.h</h>
+    </fragment>
+
+    <fragment name="KetjeSr" inherits="Ketje-common">
+        <c>Ketje/KetjeSr.c</c>
+        <h>Ketje/KetjeSr.h</h>
+    </fragment>
+
+    <fragment name="KetjeMn" inherits="Ketje-common">
+        <c>Ketje/KetjeMn.c</c>
+        <h>Ketje/KetjeMn.h</h>
+    </fragment>
+
+    <fragment name="KetjeMj" inherits="Ketje-common">
+        <c>Ketje/KetjeMj.c</c>
+        <h>Ketje/KetjeMj.h</h>
+    </fragment>
+
+    <fragment name="Ketje" inherits="KetjeJr KetjeSr KetjeMn KetjeMj">
+        <h>Ketje/Ketjev2.h</h>
+    </fragment>
+
+    
+
+    
+
+    <fragment name="crypto_aead/ketjejrv2" inherits="KetjeJr">
+        <c>CAESAR/KetjeJr/encrypt.c</c>
+        <h>CAESAR/KetjeJr/api.h</h>
+    </fragment>
+
+    <fragment name="KetjeJrSelfTest" inherits="crypto_aead/ketjejrv2 crypto_aead_test">
+        <c>CAESAR/KetjeJr/selftest.c</c>
+    </fragment>
+
+    <fragment name="KetjeJr-compact" inherits="KetjeJr KetJr-SnP compact200"/>
+    <fragment name="KetjeJr-AVR8" inherits="KetjeJr KetJr-SnP optimized200AVR8"/>
+    <fragment name="KetjeJr-ARMv6M" inherits="KetjeJr KetJr-optimizedLE optimized200ARMv6M"/>
+    <fragment name="KetjeJr-ARMv7M" inherits="KetjeJr KetJr-ARMv7M"/>
+
+    <group all="supercop">
+        <target name="crypto_aead/ketjejrv2/KetjeJr-compact" inherits="crypto_aead/ketjejrv2 KetjeJr-compact"/><target name="crypto_aead/ketjejrv2/KetjeJr-AVR8" inherits="crypto_aead/ketjejrv2 KetjeJr-AVR8"/><target name="crypto_aead/ketjejrv2/KetjeJr-ARMv6M" inherits="crypto_aead/ketjejrv2 KetjeJr-ARMv6M"/><target name="crypto_aead/ketjejrv2/KetjeJr-ARMv7M" inherits="crypto_aead/ketjejrv2 KetjeJr-ARMv7M"/><target name="KetjeJrSelfTest/KetjeJr-compact" inherits="KetjeJrSelfTest KetjeJr-compact"/><target name="KetjeJrSelfTest/KetjeJr-AVR8" inherits="KetjeJrSelfTest KetjeJr-AVR8"/><target name="KetjeJrSelfTest/KetjeJr-ARMv6M" inherits="KetjeJrSelfTest KetjeJr-ARMv6M"/><target name="KetjeJrSelfTest/KetjeJr-ARMv7M" inherits="KetjeJrSelfTest KetjeJr-ARMv7M"/>
+    </group>
+
+    
+
+    <fragment name="crypto_aead/ketjesrv2" inherits="KetjeSr">
+        <c>CAESAR/KetjeSr/encrypt.c</c>
+        <h>CAESAR/KetjeSr/api.h</h>
+    </fragment>
+
+    <fragment name="KetjeSrSelfTest" inherits="crypto_aead/ketjesrv2 crypto_aead_test">
+        <c>CAESAR/KetjeSr/selftest.c</c>
+    </fragment>
+
+    <fragment name="KetjeSr-compact" inherits="KetjeSr KetSr-SnP reference400"/>
+    <fragment name="KetjeSr-AVR8" inherits="KetjeSr KetSr-SnP optimized400AVR8"/>
+    <fragment name="KetjeSr-ARMv6M" inherits="KetjeSr KetSr-optimizedLE  optimized400ARMv6M"/>
+    <fragment name="KetjeSr-ARMv7M" inherits="KetjeSr KetSr-ARMv7M"/>
+
+    <group all="supercop">
+        <target name="crypto_aead/ketjesrv2/KetjeSr-compact" inherits="crypto_aead/ketjesrv2 KetjeSr-compact"/><target name="crypto_aead/ketjesrv2/KetjeSr-AVR8" inherits="crypto_aead/ketjesrv2 KetjeSr-AVR8"/><target name="crypto_aead/ketjesrv2/KetjeSr-ARMv6M" inherits="crypto_aead/ketjesrv2 KetjeSr-ARMv6M"/><target name="crypto_aead/ketjesrv2/KetjeSr-ARMv7M" inherits="crypto_aead/ketjesrv2 KetjeSr-ARMv7M"/><target name="KetjeSrSelfTest/KetjeSr-compact" inherits="KetjeSrSelfTest KetjeSr-compact"/><target name="KetjeSrSelfTest/KetjeSr-AVR8" inherits="KetjeSrSelfTest KetjeSr-AVR8"/><target name="KetjeSrSelfTest/KetjeSr-ARMv6M" inherits="KetjeSrSelfTest KetjeSr-ARMv6M"/><target name="KetjeSrSelfTest/KetjeSr-ARMv7M" inherits="KetjeSrSelfTest KetjeSr-ARMv7M"/>
+    </group>
+
+    
+
+    <fragment name="crypto_aead/ketjeminorv2" inherits="KetjeMn">
+        <c>CAESAR/KetjeMn/encrypt.c</c>
+        <h>CAESAR/KetjeMn/api.h</h>
+    </fragment>
+
+    <fragment name="KetjeMnSelfTest" inherits="crypto_aead/ketjeminorv2 crypto_aead_test">
+        <c>CAESAR/KetjeMn/selftest.c</c>
+    </fragment>
+
+    <fragment name="KetjeMn-compact" inherits="KetjeMn KetMn-SnP compact800"/>
+    <fragment name="KetjeMn-AVR8" inherits="KetjeMn KetMn-SnP optimized800AVR8"/>
+    <fragment name="KetjeMn-generic32" inherits="KetjeMn KetMn-SnP optimized800u2"/>
+    <fragment name="KetjeMn-generic32lc" inherits="KetjeMn KetMn-SnP optimized800lcu2"/>
+    <fragment name="KetjeMn-ARMv6M" inherits="KetjeMn KetMn-optimizedLE optimized800ARMv6Mu2"/>
+    <fragment name="KetjeMn-ARMv7M" inherits="KetjeMn KetMn-SnP optimized800ARMv7Mu2"/>
+    <fragment name="KetjeMn-ARMv7A" inherits="KetjeMn KetMn-optimizedLE optimized800ARMv7Au2"/>
+    <fragment name="KetjeMn-ARMv8A" inherits="KetjeMn KetMn-optimizedLE optimized800ARMv8A"/>
+
+    <group all="supercop">
+        <target name="crypto_aead/ketjeminorv2/KetjeMn-compact" inherits="crypto_aead/ketjeminorv2 KetjeMn-compact"/><target name="crypto_aead/ketjeminorv2/KetjeMn-AVR8" inherits="crypto_aead/ketjeminorv2 KetjeMn-AVR8"/><target name="crypto_aead/ketjeminorv2/KetjeMn-generic32" inherits="crypto_aead/ketjeminorv2 KetjeMn-generic32"/><target name="crypto_aead/ketjeminorv2/KetjeMn-generic32lc" inherits="crypto_aead/ketjeminorv2 KetjeMn-generic32lc"/><target name="crypto_aead/ketjeminorv2/KetjeMn-ARMv6M" inherits="crypto_aead/ketjeminorv2 KetjeMn-ARMv6M"/><target name="crypto_aead/ketjeminorv2/KetjeMn-ARMv7M" inherits="crypto_aead/ketjeminorv2 KetjeMn-ARMv7M"/><target name="crypto_aead/ketjeminorv2/KetjeMn-ARMv7A" inherits="crypto_aead/ketjeminorv2 KetjeMn-ARMv7A"/><target name="crypto_aead/ketjeminorv2/KetjeMn-ARMv8A" inherits="crypto_aead/ketjeminorv2 KetjeMn-ARMv8A"/><target name="KetjeMnSelfTest/KetjeMn-compact" inherits="KetjeMnSelfTest KetjeMn-compact"/><target name="KetjeMnSelfTest/KetjeMn-AVR8" inherits="KetjeMnSelfTest KetjeMn-AVR8"/><target name="KetjeMnSelfTest/KetjeMn-generic32" inherits="KetjeMnSelfTest KetjeMn-generic32"/><target name="KetjeMnSelfTest/KetjeMn-generic32lc" inherits="KetjeMnSelfTest KetjeMn-generic32lc"/><target name="KetjeMnSelfTest/KetjeMn-ARMv6M" inherits="KetjeMnSelfTest KetjeMn-ARMv6M"/><target name="KetjeMnSelfTest/KetjeMn-ARMv7M" inherits="KetjeMnSelfTest KetjeMn-ARMv7M"/><target name="KetjeMnSelfTest/KetjeMn-ARMv7A" inherits="KetjeMnSelfTest KetjeMn-ARMv7A"/><target name="KetjeMnSelfTest/KetjeMn-ARMv8A" inherits="KetjeMnSelfTest KetjeMn-ARMv8A"/>
+    </group>
+
+    
+
+    <fragment name="crypto_aead/ketjemajorv2" inherits="KetjeMj">
+        <c>CAESAR/KetjeMj/encrypt.c</c>
+        <h>CAESAR/KetjeMj/api.h</h>
+    </fragment>
+
+    <fragment name="KetjeMjSelfTest" inherits="crypto_aead/ketjemajorv2 crypto_aead_test">
+        <c>CAESAR/KetjeMj/selftest.c</c>
+    </fragment>
+
+    <fragment name="KetjeMj-compact" inherits="KetjeMj KetMj-SnP compact1600"/>
+    <fragment name="KetjeMj-AVR8" inherits="KetjeMj KetMj-SnP optimized1600AVR8"/>
+    <fragment name="KetjeMj-generic32" inherits="KetjeMj KetMj-SnP inplace1600bi"/>
+    <fragment name="KetjeMj-generic64" inherits="KetjeMj KetMj-SnP optimized1600ufull"/>
+    <fragment name="KetjeMj-generic64lc" inherits="KetjeMj KetMj-SnP optimized1600lcufull"/>
+    <fragment name="KetjeMj-ARMv6M" inherits="KetjeMj KetMj-optimizedLE optimized1600ARMv6Mu2"/>
+    <fragment name="KetjeMj-ARMv7M" inherits="KetjeMj KetMj-SnP inplace1600ARMv7M"/>
+    <fragment name="KetjeMj-ARMv7A" inherits="KetjeMj KetMj-optimizedLE optimized1600ARMv7A"/>
+    <fragment name="KetjeMj-ARMv8A" inherits="KetjeMj KetMj-optimizedLE optimized1600ARMv8A"/>
+
+    <group all="supercop">
+        <target name="crypto_aead/ketjemajorv2/KetjeMj-compact" inherits="crypto_aead/ketjemajorv2 KetjeMj-compact"/><target name="crypto_aead/ketjemajorv2/KetjeMj-AVR8" inherits="crypto_aead/ketjemajorv2 KetjeMj-AVR8"/><target name="crypto_aead/ketjemajorv2/KetjeMj-generic32" inherits="crypto_aead/ketjemajorv2 KetjeMj-generic32"/><target name="crypto_aead/ketjemajorv2/KetjeMj-generic64" inherits="crypto_aead/ketjemajorv2 KetjeMj-generic64"/><target name="crypto_aead/ketjemajorv2/KetjeMj-generic64lc" inherits="crypto_aead/ketjemajorv2 KetjeMj-generic64lc"/><target name="crypto_aead/ketjemajorv2/KetjeMj-ARMv6M" inherits="crypto_aead/ketjemajorv2 KetjeMj-ARMv6M"/><target name="crypto_aead/ketjemajorv2/KetjeMj-ARMv7M" inherits="crypto_aead/ketjemajorv2 KetjeMj-ARMv7M"/><target name="crypto_aead/ketjemajorv2/KetjeMj-ARMv7A" inherits="crypto_aead/ketjemajorv2 KetjeMj-ARMv7A"/><target name="crypto_aead/ketjemajorv2/KetjeMj-ARMv8A" inherits="crypto_aead/ketjemajorv2 KetjeMj-ARMv8A"/><target name="KetjeMjSelfTest/KetjeMj-compact" inherits="KetjeMjSelfTest KetjeMj-compact"/><target name="KetjeMjSelfTest/KetjeMj-AVR8" inherits="KetjeMjSelfTest KetjeMj-AVR8"/><target name="KetjeMjSelfTest/KetjeMj-generic32" inherits="KetjeMjSelfTest KetjeMj-generic32"/><target name="KetjeMjSelfTest/KetjeMj-generic64" inherits="KetjeMjSelfTest KetjeMj-generic64"/><target name="KetjeMjSelfTest/KetjeMj-generic64lc" inherits="KetjeMjSelfTest KetjeMj-generic64lc"/><target name="KetjeMjSelfTest/KetjeMj-ARMv6M" inherits="KetjeMjSelfTest KetjeMj-ARMv6M"/><target name="KetjeMjSelfTest/KetjeMj-ARMv7M" inherits="KetjeMjSelfTest KetjeMj-ARMv7M"/><target name="KetjeMjSelfTest/KetjeMj-ARMv7A" inherits="KetjeMjSelfTest KetjeMj-ARMv7A"/><target name="KetjeMjSelfTest/KetjeMj-ARMv8A" inherits="KetjeMjSelfTest KetjeMj-ARMv8A"/>
+    </group>
+
+</group>
+    <group xml:base="Keyak/Keyak.build">
+
+
+
+    <fragment name="Keyak-common" inherits="common">
+        <h>Keyak/Motorist.inc</h>
+        <h>Keyak/Keyak-common.h</h>
+        <h>Keyak/Keyakv2.inc</h>
+    </fragment>
+
+    <fragment name="RiverKeyak" inherits="Keyak-common">
+        <c>Keyak/RiverKeyak.c</c>
+        <h>Keyak/RiverKeyak.h</h>
+    </fragment>
+
+    <fragment name="LakeKeyak" inherits="Keyak-common">
+        <c>Keyak/LakeKeyak.c</c>
+        <h>Keyak/LakeKeyak.h</h>
+    </fragment>
+
+    <fragment name="SeaKeyak" inherits="Keyak-common">
+        <c>Keyak/SeaKeyak.c</c>
+        <h>Keyak/SeaKeyak.h</h>
+    </fragment>
+
+    <fragment name="OceanKeyak" inherits="Keyak-common">
+        <c>Keyak/OceanKeyak.c</c>
+        <h>Keyak/OceanKeyak.h</h>
+    </fragment>
+
+    <fragment name="LunarKeyak" inherits="Keyak-common">
+        <c>Keyak/LunarKeyak.c</c>
+        <h>Keyak/LunarKeyak.h</h>
+    </fragment>
+
+    <fragment name="Keyak" inherits="RiverKeyak LakeKeyak SeaKeyak OceanKeyak LunarKeyak"/>
+
+    
+
+    <fragment name="crypto_aead/riverkeyakv2" inherits="RiverKeyak">
+        <c>CAESAR/RiverKeyak/encrypt.c</c>
+        <h>CAESAR/RiverKeyak/api.h</h>
+    </fragment>
+
+    <fragment name="RiverKeyakSelfTest" inherits="crypto_aead/riverkeyakv2 crypto_aead_test">
+        <c>CAESAR/RiverKeyak/selftest.c</c>
+    </fragment>
+
+    <fragment name="crypto_aead/lakekeyakv2" inherits="LakeKeyak">
+        <c>CAESAR/LakeKeyak/encrypt.c</c>
+        <h>CAESAR/LakeKeyak/api.h</h>
+    </fragment>
+
+    <fragment name="LakeKeyakSelfTest" inherits="crypto_aead/lakekeyakv2 crypto_aead_test">
+        <c>CAESAR/LakeKeyak/selftest.c</c>
+    </fragment>
+
+    <fragment name="crypto_aead/seakeyakv2" inherits="SeaKeyak">
+        <c>CAESAR/SeaKeyak/encrypt.c</c>
+        <h>CAESAR/SeaKeyak/api.h</h>
+    </fragment>
+
+    <fragment name="SeaKeyakSelfTest" inherits="crypto_aead/seakeyakv2 crypto_aead_test">
+        <c>CAESAR/SeaKeyak/selftest.c</c>
+    </fragment>
+
+    <fragment name="crypto_aead/oceankeyakv2" inherits="OceanKeyak">
+        <c>CAESAR/OceanKeyak/encrypt.c</c>
+        <h>CAESAR/OceanKeyak/api.h</h>
+    </fragment>
+
+    <fragment name="OceanKeyakSelfTest" inherits="crypto_aead/oceankeyakv2 crypto_aead_test">
+        <c>CAESAR/OceanKeyak/selftest.c</c>
+    </fragment>
+
+    <fragment name="crypto_aead/lunarkeyakv2" inherits="LunarKeyak">
+        <c>CAESAR/LunarKeyak/encrypt.c</c>
+        <h>CAESAR/LunarKeyak/api.h</h>
+    </fragment>
+
+    <fragment name="LunarKeyakSelfTest" inherits="crypto_aead/lunarkeyakv2 crypto_aead_test">
+        <c>CAESAR/LunarKeyak/selftest.c</c>
+    </fragment>
+
+    <group all="supercop">
+        <target name="crypto_aead/riverkeyakv2/reference" inherits="crypto_aead/riverkeyakv2 reference"/><target name="crypto_aead/riverkeyakv2/reference32bits" inherits="crypto_aead/riverkeyakv2 reference32bits"/><target name="crypto_aead/riverkeyakv2/compact" inherits="crypto_aead/riverkeyakv2 compact"/><target name="crypto_aead/riverkeyakv2/generic32" inherits="crypto_aead/riverkeyakv2 generic32"/><target name="crypto_aead/riverkeyakv2/generic32lc" inherits="crypto_aead/riverkeyakv2 generic32lc"/><target name="crypto_aead/riverkeyakv2/generic64" inherits="crypto_aead/riverkeyakv2 generic64"/><target name="crypto_aead/riverkeyakv2/generic64lc" inherits="crypto_aead/riverkeyakv2 generic64lc"/><target name="crypto_aead/riverkeyakv2/asmX86-64" inherits="crypto_aead/riverkeyakv2 asmX86-64"/><target name="crypto_aead/riverkeyakv2/asmX86-64shld" inherits="crypto_aead/riverkeyakv2 asmX86-64shld"/><target name="crypto_aead/riverkeyakv2/Nehalem" inherits="crypto_aead/riverkeyakv2 Nehalem"/><target name="crypto_aead/riverkeyakv2/SandyBridge" inherits="crypto_aead/riverkeyakv2 SandyBridge"/><target name="crypto_aead/riverkeyakv2/Bulldozer" inherits="crypto_aead/riverkeyakv2 Bulldozer"/><target name="crypto_aead/riverkeyakv2/Haswell" inherits="crypto_aead/riverkeyakv2 Haswell"/><target name="crypto_aead/riverkeyakv2/KnightsLanding" inherits="crypto_aead/riverkeyakv2 KnightsLanding"/><target name="crypto_aead/riverkeyakv2/ARMv6M" inherits="crypto_aead/riverkeyakv2 ARMv6M"/><target name="crypto_aead/riverkeyakv2/ARMv7M" inherits="crypto_aead/riverkeyakv2 ARMv7M"/><target name="crypto_aead/riverkeyakv2/ARMv7A" inherits="crypto_aead/riverkeyakv2 ARMv7A"/><target name="crypto_aead/riverkeyakv2/ARMv8A" inherits="crypto_aead/riverkeyakv2 ARMv8A"/><target name="crypto_aead/riverkeyakv2/AVR8" inherits="crypto_aead/riverkeyakv2 AVR8"/><target name="RiverKeyakSelfTest/reference" inherits="RiverKeyakSelfTest reference"/><target name="RiverKeyakSelfTest/reference32bits" inherits="RiverKeyakSelfTest reference32bits"/><target name="RiverKeyakSelfTest/compact" inherits="RiverKeyakSelfTest compact"/><target name="RiverKeyakSelfTest/generic32" inherits="RiverKeyakSelfTest generic32"/><target name="RiverKeyakSelfTest/generic32lc" inherits="RiverKeyakSelfTest generic32lc"/><target name="RiverKeyakSelfTest/generic64" inherits="RiverKeyakSelfTest generic64"/><target name="RiverKeyakSelfTest/generic64lc" inherits="RiverKeyakSelfTest generic64lc"/><target name="RiverKeyakSelfTest/asmX86-64" inherits="RiverKeyakSelfTest asmX86-64"/><target name="RiverKeyakSelfTest/asmX86-64shld" inherits="RiverKeyakSelfTest asmX86-64shld"/><target name="RiverKeyakSelfTest/Nehalem" inherits="RiverKeyakSelfTest Nehalem"/><target name="RiverKeyakSelfTest/SandyBridge" inherits="RiverKeyakSelfTest SandyBridge"/><target name="RiverKeyakSelfTest/Bulldozer" inherits="RiverKeyakSelfTest Bulldozer"/><target name="RiverKeyakSelfTest/Haswell" inherits="RiverKeyakSelfTest Haswell"/><target name="RiverKeyakSelfTest/KnightsLanding" inherits="RiverKeyakSelfTest KnightsLanding"/><target name="RiverKeyakSelfTest/ARMv6M" inherits="RiverKeyakSelfTest ARMv6M"/><target name="RiverKeyakSelfTest/ARMv7M" inherits="RiverKeyakSelfTest ARMv7M"/><target name="RiverKeyakSelfTest/ARMv7A" inherits="RiverKeyakSelfTest ARMv7A"/><target name="RiverKeyakSelfTest/ARMv8A" inherits="RiverKeyakSelfTest ARMv8A"/><target name="RiverKeyakSelfTest/AVR8" inherits="RiverKeyakSelfTest AVR8"/><target name="crypto_aead/lakekeyakv2/reference" inherits="crypto_aead/lakekeyakv2 reference"/><target name="crypto_aead/lakekeyakv2/reference32bits" inherits="crypto_aead/lakekeyakv2 reference32bits"/><target name="crypto_aead/lakekeyakv2/compact" inherits="crypto_aead/lakekeyakv2 compact"/><target name="crypto_aead/lakekeyakv2/generic32" inherits="crypto_aead/lakekeyakv2 generic32"/><target name="crypto_aead/lakekeyakv2/generic32lc" inherits="crypto_aead/lakekeyakv2 generic32lc"/><target name="crypto_aead/lakekeyakv2/generic64" inherits="crypto_aead/lakekeyakv2 generic64"/><target name="crypto_aead/lakekeyakv2/generic64lc" inherits="crypto_aead/lakekeyakv2 generic64lc"/><target name="crypto_aead/lakekeyakv2/asmX86-64" inherits="crypto_aead/lakekeyakv2 asmX86-64"/><target name="crypto_aead/lakekeyakv2/asmX86-64shld" inherits="crypto_aead/lakekeyakv2 asmX86-64shld"/><target name="crypto_aead/lakekeyakv2/Nehalem" inherits="crypto_aead/lakekeyakv2 Nehalem"/><target name="crypto_aead/lakekeyakv2/SandyBridge" inherits="crypto_aead/lakekeyakv2 SandyBridge"/><target name="crypto_aead/lakekeyakv2/Bulldozer" inherits="crypto_aead/lakekeyakv2 Bulldozer"/><target name="crypto_aead/lakekeyakv2/Haswell" inherits="crypto_aead/lakekeyakv2 Haswell"/><target name="crypto_aead/lakekeyakv2/KnightsLanding" inherits="crypto_aead/lakekeyakv2 KnightsLanding"/><target name="crypto_aead/lakekeyakv2/ARMv6M" inherits="crypto_aead/lakekeyakv2 ARMv6M"/><target name="crypto_aead/lakekeyakv2/ARMv7M" inherits="crypto_aead/lakekeyakv2 ARMv7M"/><target name="crypto_aead/lakekeyakv2/ARMv7A" inherits="crypto_aead/lakekeyakv2 ARMv7A"/><target name="crypto_aead/lakekeyakv2/ARMv8A" inherits="crypto_aead/lakekeyakv2 ARMv8A"/><target name="crypto_aead/lakekeyakv2/AVR8" inherits="crypto_aead/lakekeyakv2 AVR8"/><target name="LakeKeyakSelfTest/reference" inherits="LakeKeyakSelfTest reference"/><target name="LakeKeyakSelfTest/reference32bits" inherits="LakeKeyakSelfTest reference32bits"/><target name="LakeKeyakSelfTest/compact" inherits="LakeKeyakSelfTest compact"/><target name="LakeKeyakSelfTest/generic32" inherits="LakeKeyakSelfTest generic32"/><target name="LakeKeyakSelfTest/generic32lc" inherits="LakeKeyakSelfTest generic32lc"/><target name="LakeKeyakSelfTest/generic64" inherits="LakeKeyakSelfTest generic64"/><target name="LakeKeyakSelfTest/generic64lc" inherits="LakeKeyakSelfTest generic64lc"/><target name="LakeKeyakSelfTest/asmX86-64" inherits="LakeKeyakSelfTest asmX86-64"/><target name="LakeKeyakSelfTest/asmX86-64shld" inherits="LakeKeyakSelfTest asmX86-64shld"/><target name="LakeKeyakSelfTest/Nehalem" inherits="LakeKeyakSelfTest Nehalem"/><target name="LakeKeyakSelfTest/SandyBridge" inherits="LakeKeyakSelfTest SandyBridge"/><target name="LakeKeyakSelfTest/Bulldozer" inherits="LakeKeyakSelfTest Bulldozer"/><target name="LakeKeyakSelfTest/Haswell" inherits="LakeKeyakSelfTest Haswell"/><target name="LakeKeyakSelfTest/KnightsLanding" inherits="LakeKeyakSelfTest KnightsLanding"/><target name="LakeKeyakSelfTest/ARMv6M" inherits="LakeKeyakSelfTest ARMv6M"/><target name="LakeKeyakSelfTest/ARMv7M" inherits="LakeKeyakSelfTest ARMv7M"/><target name="LakeKeyakSelfTest/ARMv7A" inherits="LakeKeyakSelfTest ARMv7A"/><target name="LakeKeyakSelfTest/ARMv8A" inherits="LakeKeyakSelfTest ARMv8A"/><target name="LakeKeyakSelfTest/AVR8" inherits="LakeKeyakSelfTest AVR8"/><target name="crypto_aead/seakeyakv2/reference" inherits="crypto_aead/seakeyakv2 reference"/><target name="crypto_aead/seakeyakv2/reference32bits" inherits="crypto_aead/seakeyakv2 reference32bits"/><target name="crypto_aead/seakeyakv2/compact" inherits="crypto_aead/seakeyakv2 compact"/><target name="crypto_aead/seakeyakv2/generic32" inherits="crypto_aead/seakeyakv2 generic32"/><target name="crypto_aead/seakeyakv2/generic32lc" inherits="crypto_aead/seakeyakv2 generic32lc"/><target name="crypto_aead/seakeyakv2/generic64" inherits="crypto_aead/seakeyakv2 generic64"/><target name="crypto_aead/seakeyakv2/generic64lc" inherits="crypto_aead/seakeyakv2 generic64lc"/><target name="crypto_aead/seakeyakv2/asmX86-64" inherits="crypto_aead/seakeyakv2 asmX86-64"/><target name="crypto_aead/seakeyakv2/asmX86-64shld" inherits="crypto_aead/seakeyakv2 asmX86-64shld"/><target name="crypto_aead/seakeyakv2/Nehalem" inherits="crypto_aead/seakeyakv2 Nehalem"/><target name="crypto_aead/seakeyakv2/SandyBridge" inherits="crypto_aead/seakeyakv2 SandyBridge"/><target name="crypto_aead/seakeyakv2/Bulldozer" inherits="crypto_aead/seakeyakv2 Bulldozer"/><target name="crypto_aead/seakeyakv2/Haswell" inherits="crypto_aead/seakeyakv2 Haswell"/><target name="crypto_aead/seakeyakv2/KnightsLanding" inherits="crypto_aead/seakeyakv2 KnightsLanding"/><target name="crypto_aead/seakeyakv2/ARMv6M" inherits="crypto_aead/seakeyakv2 ARMv6M"/><target name="crypto_aead/seakeyakv2/ARMv7M" inherits="crypto_aead/seakeyakv2 ARMv7M"/><target name="crypto_aead/seakeyakv2/ARMv7A" inherits="crypto_aead/seakeyakv2 ARMv7A"/><target name="crypto_aead/seakeyakv2/ARMv8A" inherits="crypto_aead/seakeyakv2 ARMv8A"/><target name="crypto_aead/seakeyakv2/AVR8" inherits="crypto_aead/seakeyakv2 AVR8"/><target name="SeaKeyakSelfTest/reference" inherits="SeaKeyakSelfTest reference"/><target name="SeaKeyakSelfTest/reference32bits" inherits="SeaKeyakSelfTest reference32bits"/><target name="SeaKeyakSelfTest/compact" inherits="SeaKeyakSelfTest compact"/><target name="SeaKeyakSelfTest/generic32" inherits="SeaKeyakSelfTest generic32"/><target name="SeaKeyakSelfTest/generic32lc" inherits="SeaKeyakSelfTest generic32lc"/><target name="SeaKeyakSelfTest/generic64" inherits="SeaKeyakSelfTest generic64"/><target name="SeaKeyakSelfTest/generic64lc" inherits="SeaKeyakSelfTest generic64lc"/><target name="SeaKeyakSelfTest/asmX86-64" inherits="SeaKeyakSelfTest asmX86-64"/><target name="SeaKeyakSelfTest/asmX86-64shld" inherits="SeaKeyakSelfTest asmX86-64shld"/><target name="SeaKeyakSelfTest/Nehalem" inherits="SeaKeyakSelfTest Nehalem"/><target name="SeaKeyakSelfTest/SandyBridge" inherits="SeaKeyakSelfTest SandyBridge"/><target name="SeaKeyakSelfTest/Bulldozer" inherits="SeaKeyakSelfTest Bulldozer"/><target name="SeaKeyakSelfTest/Haswell" inherits="SeaKeyakSelfTest Haswell"/><target name="SeaKeyakSelfTest/KnightsLanding" inherits="SeaKeyakSelfTest KnightsLanding"/><target name="SeaKeyakSelfTest/ARMv6M" inherits="SeaKeyakSelfTest ARMv6M"/><target name="SeaKeyakSelfTest/ARMv7M" inherits="SeaKeyakSelfTest ARMv7M"/><target name="SeaKeyakSelfTest/ARMv7A" inherits="SeaKeyakSelfTest ARMv7A"/><target name="SeaKeyakSelfTest/ARMv8A" inherits="SeaKeyakSelfTest ARMv8A"/><target name="SeaKeyakSelfTest/AVR8" inherits="SeaKeyakSelfTest AVR8"/><target name="crypto_aead/oceankeyakv2/reference" inherits="crypto_aead/oceankeyakv2 reference"/><target name="crypto_aead/oceankeyakv2/reference32bits" inherits="crypto_aead/oceankeyakv2 reference32bits"/><target name="crypto_aead/oceankeyakv2/compact" inherits="crypto_aead/oceankeyakv2 compact"/><target name="crypto_aead/oceankeyakv2/generic32" inherits="crypto_aead/oceankeyakv2 generic32"/><target name="crypto_aead/oceankeyakv2/generic32lc" inherits="crypto_aead/oceankeyakv2 generic32lc"/><target name="crypto_aead/oceankeyakv2/generic64" inherits="crypto_aead/oceankeyakv2 generic64"/><target name="crypto_aead/oceankeyakv2/generic64lc" inherits="crypto_aead/oceankeyakv2 generic64lc"/><target name="crypto_aead/oceankeyakv2/asmX86-64" inherits="crypto_aead/oceankeyakv2 asmX86-64"/><target name="crypto_aead/oceankeyakv2/asmX86-64shld" inherits="crypto_aead/oceankeyakv2 asmX86-64shld"/><target name="crypto_aead/oceankeyakv2/Nehalem" inherits="crypto_aead/oceankeyakv2 Nehalem"/><target name="crypto_aead/oceankeyakv2/SandyBridge" inherits="crypto_aead/oceankeyakv2 SandyBridge"/><target name="crypto_aead/oceankeyakv2/Bulldozer" inherits="crypto_aead/oceankeyakv2 Bulldozer"/><target name="crypto_aead/oceankeyakv2/Haswell" inherits="crypto_aead/oceankeyakv2 Haswell"/><target name="crypto_aead/oceankeyakv2/KnightsLanding" inherits="crypto_aead/oceankeyakv2 KnightsLanding"/><target name="crypto_aead/oceankeyakv2/ARMv6M" inherits="crypto_aead/oceankeyakv2 ARMv6M"/><target name="crypto_aead/oceankeyakv2/ARMv7M" inherits="crypto_aead/oceankeyakv2 ARMv7M"/><target name="crypto_aead/oceankeyakv2/ARMv7A" inherits="crypto_aead/oceankeyakv2 ARMv7A"/><target name="crypto_aead/oceankeyakv2/ARMv8A" inherits="crypto_aead/oceankeyakv2 ARMv8A"/><target name="crypto_aead/oceankeyakv2/AVR8" inherits="crypto_aead/oceankeyakv2 AVR8"/><target name="OceanKeyakSelfTest/reference" inherits="OceanKeyakSelfTest reference"/><target name="OceanKeyakSelfTest/reference32bits" inherits="OceanKeyakSelfTest reference32bits"/><target name="OceanKeyakSelfTest/compact" inherits="OceanKeyakSelfTest compact"/><target name="OceanKeyakSelfTest/generic32" inherits="OceanKeyakSelfTest generic32"/><target name="OceanKeyakSelfTest/generic32lc" inherits="OceanKeyakSelfTest generic32lc"/><target name="OceanKeyakSelfTest/generic64" inherits="OceanKeyakSelfTest generic64"/><target name="OceanKeyakSelfTest/generic64lc" inherits="OceanKeyakSelfTest generic64lc"/><target name="OceanKeyakSelfTest/asmX86-64" inherits="OceanKeyakSelfTest asmX86-64"/><target name="OceanKeyakSelfTest/asmX86-64shld" inherits="OceanKeyakSelfTest asmX86-64shld"/><target name="OceanKeyakSelfTest/Nehalem" inherits="OceanKeyakSelfTest Nehalem"/><target name="OceanKeyakSelfTest/SandyBridge" inherits="OceanKeyakSelfTest SandyBridge"/><target name="OceanKeyakSelfTest/Bulldozer" inherits="OceanKeyakSelfTest Bulldozer"/><target name="OceanKeyakSelfTest/Haswell" inherits="OceanKeyakSelfTest Haswell"/><target name="OceanKeyakSelfTest/KnightsLanding" inherits="OceanKeyakSelfTest KnightsLanding"/><target name="OceanKeyakSelfTest/ARMv6M" inherits="OceanKeyakSelfTest ARMv6M"/><target name="OceanKeyakSelfTest/ARMv7M" inherits="OceanKeyakSelfTest ARMv7M"/><target name="OceanKeyakSelfTest/ARMv7A" inherits="OceanKeyakSelfTest ARMv7A"/><target name="OceanKeyakSelfTest/ARMv8A" inherits="OceanKeyakSelfTest ARMv8A"/><target name="OceanKeyakSelfTest/AVR8" inherits="OceanKeyakSelfTest AVR8"/><target name="crypto_aead/lunarkeyakv2/reference" inherits="crypto_aead/lunarkeyakv2 reference"/><target name="crypto_aead/lunarkeyakv2/reference32bits" inherits="crypto_aead/lunarkeyakv2 reference32bits"/><target name="crypto_aead/lunarkeyakv2/compact" inherits="crypto_aead/lunarkeyakv2 compact"/><target name="crypto_aead/lunarkeyakv2/generic32" inherits="crypto_aead/lunarkeyakv2 generic32"/><target name="crypto_aead/lunarkeyakv2/generic32lc" inherits="crypto_aead/lunarkeyakv2 generic32lc"/><target name="crypto_aead/lunarkeyakv2/generic64" inherits="crypto_aead/lunarkeyakv2 generic64"/><target name="crypto_aead/lunarkeyakv2/generic64lc" inherits="crypto_aead/lunarkeyakv2 generic64lc"/><target name="crypto_aead/lunarkeyakv2/asmX86-64" inherits="crypto_aead/lunarkeyakv2 asmX86-64"/><target name="crypto_aead/lunarkeyakv2/asmX86-64shld" inherits="crypto_aead/lunarkeyakv2 asmX86-64shld"/><target name="crypto_aead/lunarkeyakv2/Nehalem" inherits="crypto_aead/lunarkeyakv2 Nehalem"/><target name="crypto_aead/lunarkeyakv2/SandyBridge" inherits="crypto_aead/lunarkeyakv2 SandyBridge"/><target name="crypto_aead/lunarkeyakv2/Bulldozer" inherits="crypto_aead/lunarkeyakv2 Bulldozer"/><target name="crypto_aead/lunarkeyakv2/Haswell" inherits="crypto_aead/lunarkeyakv2 Haswell"/><target name="crypto_aead/lunarkeyakv2/KnightsLanding" inherits="crypto_aead/lunarkeyakv2 KnightsLanding"/><target name="crypto_aead/lunarkeyakv2/ARMv6M" inherits="crypto_aead/lunarkeyakv2 ARMv6M"/><target name="crypto_aead/lunarkeyakv2/ARMv7M" inherits="crypto_aead/lunarkeyakv2 ARMv7M"/><target name="crypto_aead/lunarkeyakv2/ARMv7A" inherits="crypto_aead/lunarkeyakv2 ARMv7A"/><target name="crypto_aead/lunarkeyakv2/ARMv8A" inherits="crypto_aead/lunarkeyakv2 ARMv8A"/><target name="crypto_aead/lunarkeyakv2/AVR8" inherits="crypto_aead/lunarkeyakv2 AVR8"/><target name="LunarKeyakSelfTest/reference" inherits="LunarKeyakSelfTest reference"/><target name="LunarKeyakSelfTest/reference32bits" inherits="LunarKeyakSelfTest reference32bits"/><target name="LunarKeyakSelfTest/compact" inherits="LunarKeyakSelfTest compact"/><target name="LunarKeyakSelfTest/generic32" inherits="LunarKeyakSelfTest generic32"/><target name="LunarKeyakSelfTest/generic32lc" inherits="LunarKeyakSelfTest generic32lc"/><target name="LunarKeyakSelfTest/generic64" inherits="LunarKeyakSelfTest generic64"/><target name="LunarKeyakSelfTest/generic64lc" inherits="LunarKeyakSelfTest generic64lc"/><target name="LunarKeyakSelfTest/asmX86-64" inherits="LunarKeyakSelfTest asmX86-64"/><target name="LunarKeyakSelfTest/asmX86-64shld" inherits="LunarKeyakSelfTest asmX86-64shld"/><target name="LunarKeyakSelfTest/Nehalem" inherits="LunarKeyakSelfTest Nehalem"/><target name="LunarKeyakSelfTest/SandyBridge" inherits="LunarKeyakSelfTest SandyBridge"/><target name="LunarKeyakSelfTest/Bulldozer" inherits="LunarKeyakSelfTest Bulldozer"/><target name="LunarKeyakSelfTest/Haswell" inherits="LunarKeyakSelfTest Haswell"/><target name="LunarKeyakSelfTest/KnightsLanding" inherits="LunarKeyakSelfTest KnightsLanding"/><target name="LunarKeyakSelfTest/ARMv6M" inherits="LunarKeyakSelfTest ARMv6M"/><target name="LunarKeyakSelfTest/ARMv7M" inherits="LunarKeyakSelfTest ARMv7M"/><target name="LunarKeyakSelfTest/ARMv7A" inherits="LunarKeyakSelfTest ARMv7A"/><target name="LunarKeyakSelfTest/ARMv8A" inherits="LunarKeyakSelfTest ARMv8A"/><target name="LunarKeyakSelfTest/AVR8" inherits="LunarKeyakSelfTest AVR8"/>
+    </group>
+
+</group>
+    <group xml:base="SUPERCOP/SUPERCOP.build">
+
+
+
+    
+
+    <fragment name="crypto_hash_test">
+        <h>SUPERCOP/test_crypto_hash.h</h>
+        <c>SUPERCOP/test_crypto_hash.c</c>
+    </fragment>
+
+    <fragment name="crypto_hash/shake128/kcp" inherits="KeccakSpongeWidth1600">
+        <c>SUPERCOP/SHAKE128/SHAKE128.c</c>
+        <h>SUPERCOP/SHAKE128/api.h</h>
+    </fragment>
+
+    <fragment name="SHAKE128_SelfTest" inherits="crypto_hash/shake128/kcp crypto_hash_test">
+        <c>SUPERCOP/SHAKE128/selftest.c</c>
+    </fragment>
+
+    <fragment name="crypto_hash/shake256/kcp" inherits="KeccakSpongeWidth1600">
+        <c>SUPERCOP/SHAKE256/SHAKE256.c</c>
+        <h>SUPERCOP/SHAKE256/api.h</h>
+    </fragment>
+
+    <fragment name="SHAKE256_SelfTest" inherits="crypto_hash/shake256/kcp crypto_hash_test">
+        <c>SUPERCOP/SHAKE256/selftest.c</c>
+    </fragment>
+
+    <fragment name="crypto_hash/sha3224/kcp" inherits="KeccakSpongeWidth1600">
+        <c>SUPERCOP/SHA3-224/SHA3-224.c</c>
+        <h>SUPERCOP/SHA3-224/api.h</h>
+    </fragment>
+
+    <fragment name="SHA3-224_SelfTest" inherits="crypto_hash/sha3224/kcp crypto_hash_test">
+        <c>SUPERCOP/SHA3-224/selftest.c</c>
+    </fragment>
+
+    <fragment name="crypto_hash/sha3256/kcp" inherits="KeccakSpongeWidth1600">
+        <c>SUPERCOP/SHA3-256/SHA3-256.c</c>
+        <h>SUPERCOP/SHA3-256/api.h</h>
+    </fragment>
+
+    <fragment name="SHA3-256_SelfTest" inherits="crypto_hash/sha3256/kcp crypto_hash_test">
+        <c>SUPERCOP/SHA3-256/selftest.c</c>
+    </fragment>
+
+    <fragment name="crypto_hash/sha3384/kcp" inherits="KeccakSpongeWidth1600">
+        <c>SUPERCOP/SHA3-384/SHA3-384.c</c>
+        <h>SUPERCOP/SHA3-384/api.h</h>
+    </fragment>
+
+    <fragment name="SHA3-384_SelfTest" inherits="crypto_hash/sha3384/kcp crypto_hash_test">
+        <c>SUPERCOP/SHA3-384/selftest.c</c>
+    </fragment>
+
+    <fragment name="crypto_hash/sha3512/kcp" inherits="KeccakSpongeWidth1600">
+        <c>SUPERCOP/SHA3-512/SHA3-512.c</c>
+        <h>SUPERCOP/SHA3-512/api.h</h>
+    </fragment>
+
+    <fragment name="SHA3-512_SelfTest" inherits="crypto_hash/sha3512/kcp crypto_hash_test">
+        <c>SUPERCOP/SHA3-512/selftest.c</c>
+    </fragment>
+
+    <fragment name="crypto_hash/k12/kcp" inherits="KangarooTwelve">
+        <c>SUPERCOP/KangarooTwelve/K12.c</c>
+        <h>SUPERCOP/KangarooTwelve/api.h</h>
+        <h>SUPERCOP/KangarooTwelve/KeccakP-1600-times2-SnP.h</h>
+        <h>SUPERCOP/KangarooTwelve/KeccakP-1600-times4-SnP.h</h>
+        <h>SUPERCOP/KangarooTwelve/KeccakP-1600-times8-SnP.h</h>
+    </fragment>
+
+    <fragment name="KangarooTwelve_SelfTest" inherits="crypto_hash/k12/kcp crypto_hash_test">
+        <c>SUPERCOP/KangarooTwelve/selftest.c</c>
+    </fragment>
+
+    <group all="supercop">
+        <target name="crypto_hash/shake128/kcp/reference1600" inherits="crypto_hash/shake128/kcp reference1600"/><target name="crypto_hash/shake128/kcp/reference1600-32bits" inherits="crypto_hash/shake128/kcp reference1600-32bits"/><target name="crypto_hash/shake128/kcp/compact1600" inherits="crypto_hash/shake128/kcp compact1600"/><target name="crypto_hash/shake128/kcp/compact1600AVR8" inherits="crypto_hash/shake128/kcp compact1600AVR8"/><target name="crypto_hash/shake128/kcp/inplace1600bi" inherits="crypto_hash/shake128/kcp inplace1600bi"/><target name="crypto_hash/shake128/kcp/inplace1600ARMv6M" inherits="crypto_hash/shake128/kcp inplace1600ARMv6M"/><target name="crypto_hash/shake128/kcp/inplace1600ARMv7M" inherits="crypto_hash/shake128/kcp inplace1600ARMv7M"/><target name="crypto_hash/shake128/kcp/inplace1600ARMv7A" inherits="crypto_hash/shake128/kcp inplace1600ARMv7A"/><target name="crypto_hash/shake128/kcp/optimized1600u6" inherits="crypto_hash/shake128/kcp optimized1600u6"/><target name="crypto_hash/shake128/kcp/optimized1600ufull" inherits="crypto_hash/shake128/kcp optimized1600ufull"/><target name="crypto_hash/shake128/kcp/optimized1600lcu6" inherits="crypto_hash/shake128/kcp optimized1600lcu6"/><target name="crypto_hash/shake128/kcp/optimized1600lcufull" inherits="crypto_hash/shake128/kcp optimized1600lcufull"/><target name="crypto_hash/shake128/kcp/optimized1600lcufullshld" inherits="crypto_hash/shake128/kcp optimized1600lcufullshld"/><target name="crypto_hash/shake128/kcp/optimized1600AsmX86-64" inherits="crypto_hash/shake128/kcp optimized1600AsmX86-64"/><target name="crypto_hash/shake128/kcp/optimized1600AsmX86-64shld" inherits="crypto_hash/shake128/kcp optimized1600AsmX86-64shld"/><target name="crypto_hash/shake128/kcp/optimized1600AsmX86-64Apple" inherits="crypto_hash/shake128/kcp optimized1600AsmX86-64Apple"/><target name="crypto_hash/shake128/kcp/optimized1600AVX2" inherits="crypto_hash/shake128/kcp optimized1600AVX2"/><target name="crypto_hash/shake128/kcp/optimized1600AVX512" inherits="crypto_hash/shake128/kcp optimized1600AVX512"/><target name="crypto_hash/shake128/kcp/optimized1600XOPu6" inherits="crypto_hash/shake128/kcp optimized1600XOPu6"/><target name="crypto_hash/shake128/kcp/optimized1600XOPufull" inherits="crypto_hash/shake128/kcp optimized1600XOPufull"/><target name="crypto_hash/shake128/kcp/optimized1600ARMv6Mu1" inherits="crypto_hash/shake128/kcp optimized1600ARMv6Mu1"/><target name="crypto_hash/shake128/kcp/optimized1600ARMv6Mu2" inherits="crypto_hash/shake128/kcp optimized1600ARMv6Mu2"/><target name="crypto_hash/shake128/kcp/optimized1600ARMv7A" inherits="crypto_hash/shake128/kcp optimized1600ARMv7A"/><target name="crypto_hash/shake128/kcp/optimized1600ARMv8A" inherits="crypto_hash/shake128/kcp optimized1600ARMv8A"/><target name="crypto_hash/shake128/kcp/optimized1600AVR8" inherits="crypto_hash/shake128/kcp optimized1600AVR8"/><target name="SHAKE128_SelfTest/reference1600" inherits="SHAKE128_SelfTest reference1600"/><target name="SHAKE128_SelfTest/reference1600-32bits" inherits="SHAKE128_SelfTest reference1600-32bits"/><target name="SHAKE128_SelfTest/compact1600" inherits="SHAKE128_SelfTest compact1600"/><target name="SHAKE128_SelfTest/compact1600AVR8" inherits="SHAKE128_SelfTest compact1600AVR8"/><target name="SHAKE128_SelfTest/inplace1600bi" inherits="SHAKE128_SelfTest inplace1600bi"/><target name="SHAKE128_SelfTest/inplace1600ARMv6M" inherits="SHAKE128_SelfTest inplace1600ARMv6M"/><target name="SHAKE128_SelfTest/inplace1600ARMv7M" inherits="SHAKE128_SelfTest inplace1600ARMv7M"/><target name="SHAKE128_SelfTest/inplace1600ARMv7A" inherits="SHAKE128_SelfTest inplace1600ARMv7A"/><target name="SHAKE128_SelfTest/optimized1600u6" inherits="SHAKE128_SelfTest optimized1600u6"/><target name="SHAKE128_SelfTest/optimized1600ufull" inherits="SHAKE128_SelfTest optimized1600ufull"/><target name="SHAKE128_SelfTest/optimized1600lcu6" inherits="SHAKE128_SelfTest optimized1600lcu6"/><target name="SHAKE128_SelfTest/optimized1600lcufull" inherits="SHAKE128_SelfTest optimized1600lcufull"/><target name="SHAKE128_SelfTest/optimized1600lcufullshld" inherits="SHAKE128_SelfTest optimized1600lcufullshld"/><target name="SHAKE128_SelfTest/optimized1600AsmX86-64" inherits="SHAKE128_SelfTest optimized1600AsmX86-64"/><target name="SHAKE128_SelfTest/optimized1600AsmX86-64shld" inherits="SHAKE128_SelfTest optimized1600AsmX86-64shld"/><target name="SHAKE128_SelfTest/optimized1600AsmX86-64Apple" inherits="SHAKE128_SelfTest optimized1600AsmX86-64Apple"/><target name="SHAKE128_SelfTest/optimized1600AVX2" inherits="SHAKE128_SelfTest optimized1600AVX2"/><target name="SHAKE128_SelfTest/optimized1600AVX512" inherits="SHAKE128_SelfTest optimized1600AVX512"/><target name="SHAKE128_SelfTest/optimized1600XOPu6" inherits="SHAKE128_SelfTest optimized1600XOPu6"/><target name="SHAKE128_SelfTest/optimized1600XOPufull" inherits="SHAKE128_SelfTest optimized1600XOPufull"/><target name="SHAKE128_SelfTest/optimized1600ARMv6Mu1" inherits="SHAKE128_SelfTest optimized1600ARMv6Mu1"/><target name="SHAKE128_SelfTest/optimized1600ARMv6Mu2" inherits="SHAKE128_SelfTest optimized1600ARMv6Mu2"/><target name="SHAKE128_SelfTest/optimized1600ARMv7A" inherits="SHAKE128_SelfTest optimized1600ARMv7A"/><target name="SHAKE128_SelfTest/optimized1600ARMv8A" inherits="SHAKE128_SelfTest optimized1600ARMv8A"/><target name="SHAKE128_SelfTest/optimized1600AVR8" inherits="SHAKE128_SelfTest optimized1600AVR8"/><target name="crypto_hash/shake256/kcp/reference1600" inherits="crypto_hash/shake256/kcp reference1600"/><target name="crypto_hash/shake256/kcp/reference1600-32bits" inherits="crypto_hash/shake256/kcp reference1600-32bits"/><target name="crypto_hash/shake256/kcp/compact1600" inherits="crypto_hash/shake256/kcp compact1600"/><target name="crypto_hash/shake256/kcp/compact1600AVR8" inherits="crypto_hash/shake256/kcp compact1600AVR8"/><target name="crypto_hash/shake256/kcp/inplace1600bi" inherits="crypto_hash/shake256/kcp inplace1600bi"/><target name="crypto_hash/shake256/kcp/inplace1600ARMv6M" inherits="crypto_hash/shake256/kcp inplace1600ARMv6M"/><target name="crypto_hash/shake256/kcp/inplace1600ARMv7M" inherits="crypto_hash/shake256/kcp inplace1600ARMv7M"/><target name="crypto_hash/shake256/kcp/inplace1600ARMv7A" inherits="crypto_hash/shake256/kcp inplace1600ARMv7A"/><target name="crypto_hash/shake256/kcp/optimized1600u6" inherits="crypto_hash/shake256/kcp optimized1600u6"/><target name="crypto_hash/shake256/kcp/optimized1600ufull" inherits="crypto_hash/shake256/kcp optimized1600ufull"/><target name="crypto_hash/shake256/kcp/optimized1600lcu6" inherits="crypto_hash/shake256/kcp optimized1600lcu6"/><target name="crypto_hash/shake256/kcp/optimized1600lcufull" inherits="crypto_hash/shake256/kcp optimized1600lcufull"/><target name="crypto_hash/shake256/kcp/optimized1600lcufullshld" inherits="crypto_hash/shake256/kcp optimized1600lcufullshld"/><target name="crypto_hash/shake256/kcp/optimized1600AsmX86-64" inherits="crypto_hash/shake256/kcp optimized1600AsmX86-64"/><target name="crypto_hash/shake256/kcp/optimized1600AsmX86-64shld" inherits="crypto_hash/shake256/kcp optimized1600AsmX86-64shld"/><target name="crypto_hash/shake256/kcp/optimized1600AsmX86-64Apple" inherits="crypto_hash/shake256/kcp optimized1600AsmX86-64Apple"/><target name="crypto_hash/shake256/kcp/optimized1600AVX2" inherits="crypto_hash/shake256/kcp optimized1600AVX2"/><target name="crypto_hash/shake256/kcp/optimized1600AVX512" inherits="crypto_hash/shake256/kcp optimized1600AVX512"/><target name="crypto_hash/shake256/kcp/optimized1600XOPu6" inherits="crypto_hash/shake256/kcp optimized1600XOPu6"/><target name="crypto_hash/shake256/kcp/optimized1600XOPufull" inherits="crypto_hash/shake256/kcp optimized1600XOPufull"/><target name="crypto_hash/shake256/kcp/optimized1600ARMv6Mu1" inherits="crypto_hash/shake256/kcp optimized1600ARMv6Mu1"/><target name="crypto_hash/shake256/kcp/optimized1600ARMv6Mu2" inherits="crypto_hash/shake256/kcp optimized1600ARMv6Mu2"/><target name="crypto_hash/shake256/kcp/optimized1600ARMv7A" inherits="crypto_hash/shake256/kcp optimized1600ARMv7A"/><target name="crypto_hash/shake256/kcp/optimized1600ARMv8A" inherits="crypto_hash/shake256/kcp optimized1600ARMv8A"/><target name="crypto_hash/shake256/kcp/optimized1600AVR8" inherits="crypto_hash/shake256/kcp optimized1600AVR8"/><target name="SHAKE256_SelfTest/reference1600" inherits="SHAKE256_SelfTest reference1600"/><target name="SHAKE256_SelfTest/reference1600-32bits" inherits="SHAKE256_SelfTest reference1600-32bits"/><target name="SHAKE256_SelfTest/compact1600" inherits="SHAKE256_SelfTest compact1600"/><target name="SHAKE256_SelfTest/compact1600AVR8" inherits="SHAKE256_SelfTest compact1600AVR8"/><target name="SHAKE256_SelfTest/inplace1600bi" inherits="SHAKE256_SelfTest inplace1600bi"/><target name="SHAKE256_SelfTest/inplace1600ARMv6M" inherits="SHAKE256_SelfTest inplace1600ARMv6M"/><target name="SHAKE256_SelfTest/inplace1600ARMv7M" inherits="SHAKE256_SelfTest inplace1600ARMv7M"/><target name="SHAKE256_SelfTest/inplace1600ARMv7A" inherits="SHAKE256_SelfTest inplace1600ARMv7A"/><target name="SHAKE256_SelfTest/optimized1600u6" inherits="SHAKE256_SelfTest optimized1600u6"/><target name="SHAKE256_SelfTest/optimized1600ufull" inherits="SHAKE256_SelfTest optimized1600ufull"/><target name="SHAKE256_SelfTest/optimized1600lcu6" inherits="SHAKE256_SelfTest optimized1600lcu6"/><target name="SHAKE256_SelfTest/optimized1600lcufull" inherits="SHAKE256_SelfTest optimized1600lcufull"/><target name="SHAKE256_SelfTest/optimized1600lcufullshld" inherits="SHAKE256_SelfTest optimized1600lcufullshld"/><target name="SHAKE256_SelfTest/optimized1600AsmX86-64" inherits="SHAKE256_SelfTest optimized1600AsmX86-64"/><target name="SHAKE256_SelfTest/optimized1600AsmX86-64shld" inherits="SHAKE256_SelfTest optimized1600AsmX86-64shld"/><target name="SHAKE256_SelfTest/optimized1600AsmX86-64Apple" inherits="SHAKE256_SelfTest optimized1600AsmX86-64Apple"/><target name="SHAKE256_SelfTest/optimized1600AVX2" inherits="SHAKE256_SelfTest optimized1600AVX2"/><target name="SHAKE256_SelfTest/optimized1600AVX512" inherits="SHAKE256_SelfTest optimized1600AVX512"/><target name="SHAKE256_SelfTest/optimized1600XOPu6" inherits="SHAKE256_SelfTest optimized1600XOPu6"/><target name="SHAKE256_SelfTest/optimized1600XOPufull" inherits="SHAKE256_SelfTest optimized1600XOPufull"/><target name="SHAKE256_SelfTest/optimized1600ARMv6Mu1" inherits="SHAKE256_SelfTest optimized1600ARMv6Mu1"/><target name="SHAKE256_SelfTest/optimized1600ARMv6Mu2" inherits="SHAKE256_SelfTest optimized1600ARMv6Mu2"/><target name="SHAKE256_SelfTest/optimized1600ARMv7A" inherits="SHAKE256_SelfTest optimized1600ARMv7A"/><target name="SHAKE256_SelfTest/optimized1600ARMv8A" inherits="SHAKE256_SelfTest optimized1600ARMv8A"/><target name="SHAKE256_SelfTest/optimized1600AVR8" inherits="SHAKE256_SelfTest optimized1600AVR8"/><target name="crypto_hash/sha3224/kcp/reference1600" inherits="crypto_hash/sha3224/kcp reference1600"/><target name="crypto_hash/sha3224/kcp/reference1600-32bits" inherits="crypto_hash/sha3224/kcp reference1600-32bits"/><target name="crypto_hash/sha3224/kcp/compact1600" inherits="crypto_hash/sha3224/kcp compact1600"/><target name="crypto_hash/sha3224/kcp/compact1600AVR8" inherits="crypto_hash/sha3224/kcp compact1600AVR8"/><target name="crypto_hash/sha3224/kcp/inplace1600bi" inherits="crypto_hash/sha3224/kcp inplace1600bi"/><target name="crypto_hash/sha3224/kcp/inplace1600ARMv6M" inherits="crypto_hash/sha3224/kcp inplace1600ARMv6M"/><target name="crypto_hash/sha3224/kcp/inplace1600ARMv7M" inherits="crypto_hash/sha3224/kcp inplace1600ARMv7M"/><target name="crypto_hash/sha3224/kcp/inplace1600ARMv7A" inherits="crypto_hash/sha3224/kcp inplace1600ARMv7A"/><target name="crypto_hash/sha3224/kcp/optimized1600u6" inherits="crypto_hash/sha3224/kcp optimized1600u6"/><target name="crypto_hash/sha3224/kcp/optimized1600ufull" inherits="crypto_hash/sha3224/kcp optimized1600ufull"/><target name="crypto_hash/sha3224/kcp/optimized1600lcu6" inherits="crypto_hash/sha3224/kcp optimized1600lcu6"/><target name="crypto_hash/sha3224/kcp/optimized1600lcufull" inherits="crypto_hash/sha3224/kcp optimized1600lcufull"/><target name="crypto_hash/sha3224/kcp/optimized1600lcufullshld" inherits="crypto_hash/sha3224/kcp optimized1600lcufullshld"/><target name="crypto_hash/sha3224/kcp/optimized1600AsmX86-64" inherits="crypto_hash/sha3224/kcp optimized1600AsmX86-64"/><target name="crypto_hash/sha3224/kcp/optimized1600AsmX86-64shld" inherits="crypto_hash/sha3224/kcp optimized1600AsmX86-64shld"/><target name="crypto_hash/sha3224/kcp/optimized1600AsmX86-64Apple" inherits="crypto_hash/sha3224/kcp optimized1600AsmX86-64Apple"/><target name="crypto_hash/sha3224/kcp/optimized1600AVX2" inherits="crypto_hash/sha3224/kcp optimized1600AVX2"/><target name="crypto_hash/sha3224/kcp/optimized1600AVX512" inherits="crypto_hash/sha3224/kcp optimized1600AVX512"/><target name="crypto_hash/sha3224/kcp/optimized1600XOPu6" inherits="crypto_hash/sha3224/kcp optimized1600XOPu6"/><target name="crypto_hash/sha3224/kcp/optimized1600XOPufull" inherits="crypto_hash/sha3224/kcp optimized1600XOPufull"/><target name="crypto_hash/sha3224/kcp/optimized1600ARMv6Mu1" inherits="crypto_hash/sha3224/kcp optimized1600ARMv6Mu1"/><target name="crypto_hash/sha3224/kcp/optimized1600ARMv6Mu2" inherits="crypto_hash/sha3224/kcp optimized1600ARMv6Mu2"/><target name="crypto_hash/sha3224/kcp/optimized1600ARMv7A" inherits="crypto_hash/sha3224/kcp optimized1600ARMv7A"/><target name="crypto_hash/sha3224/kcp/optimized1600ARMv8A" inherits="crypto_hash/sha3224/kcp optimized1600ARMv8A"/><target name="crypto_hash/sha3224/kcp/optimized1600AVR8" inherits="crypto_hash/sha3224/kcp optimized1600AVR8"/><target name="SHA3-224_SelfTest/reference1600" inherits="SHA3-224_SelfTest reference1600"/><target name="SHA3-224_SelfTest/reference1600-32bits" inherits="SHA3-224_SelfTest reference1600-32bits"/><target name="SHA3-224_SelfTest/compact1600" inherits="SHA3-224_SelfTest compact1600"/><target name="SHA3-224_SelfTest/compact1600AVR8" inherits="SHA3-224_SelfTest compact1600AVR8"/><target name="SHA3-224_SelfTest/inplace1600bi" inherits="SHA3-224_SelfTest inplace1600bi"/><target name="SHA3-224_SelfTest/inplace1600ARMv6M" inherits="SHA3-224_SelfTest inplace1600ARMv6M"/><target name="SHA3-224_SelfTest/inplace1600ARMv7M" inherits="SHA3-224_SelfTest inplace1600ARMv7M"/><target name="SHA3-224_SelfTest/inplace1600ARMv7A" inherits="SHA3-224_SelfTest inplace1600ARMv7A"/><target name="SHA3-224_SelfTest/optimized1600u6" inherits="SHA3-224_SelfTest optimized1600u6"/><target name="SHA3-224_SelfTest/optimized1600ufull" inherits="SHA3-224_SelfTest optimized1600ufull"/><target name="SHA3-224_SelfTest/optimized1600lcu6" inherits="SHA3-224_SelfTest optimized1600lcu6"/><target name="SHA3-224_SelfTest/optimized1600lcufull" inherits="SHA3-224_SelfTest optimized1600lcufull"/><target name="SHA3-224_SelfTest/optimized1600lcufullshld" inherits="SHA3-224_SelfTest optimized1600lcufullshld"/><target name="SHA3-224_SelfTest/optimized1600AsmX86-64" inherits="SHA3-224_SelfTest optimized1600AsmX86-64"/><target name="SHA3-224_SelfTest/optimized1600AsmX86-64shld" inherits="SHA3-224_SelfTest optimized1600AsmX86-64shld"/><target name="SHA3-224_SelfTest/optimized1600AsmX86-64Apple" inherits="SHA3-224_SelfTest optimized1600AsmX86-64Apple"/><target name="SHA3-224_SelfTest/optimized1600AVX2" inherits="SHA3-224_SelfTest optimized1600AVX2"/><target name="SHA3-224_SelfTest/optimized1600AVX512" inherits="SHA3-224_SelfTest optimized1600AVX512"/><target name="SHA3-224_SelfTest/optimized1600XOPu6" inherits="SHA3-224_SelfTest optimized1600XOPu6"/><target name="SHA3-224_SelfTest/optimized1600XOPufull" inherits="SHA3-224_SelfTest optimized1600XOPufull"/><target name="SHA3-224_SelfTest/optimized1600ARMv6Mu1" inherits="SHA3-224_SelfTest optimized1600ARMv6Mu1"/><target name="SHA3-224_SelfTest/optimized1600ARMv6Mu2" inherits="SHA3-224_SelfTest optimized1600ARMv6Mu2"/><target name="SHA3-224_SelfTest/optimized1600ARMv7A" inherits="SHA3-224_SelfTest optimized1600ARMv7A"/><target name="SHA3-224_SelfTest/optimized1600ARMv8A" inherits="SHA3-224_SelfTest optimized1600ARMv8A"/><target name="SHA3-224_SelfTest/optimized1600AVR8" inherits="SHA3-224_SelfTest optimized1600AVR8"/><target name="crypto_hash/sha3256/kcp/reference1600" inherits="crypto_hash/sha3256/kcp reference1600"/><target name="crypto_hash/sha3256/kcp/reference1600-32bits" inherits="crypto_hash/sha3256/kcp reference1600-32bits"/><target name="crypto_hash/sha3256/kcp/compact1600" inherits="crypto_hash/sha3256/kcp compact1600"/><target name="crypto_hash/sha3256/kcp/compact1600AVR8" inherits="crypto_hash/sha3256/kcp compact1600AVR8"/><target name="crypto_hash/sha3256/kcp/inplace1600bi" inherits="crypto_hash/sha3256/kcp inplace1600bi"/><target name="crypto_hash/sha3256/kcp/inplace1600ARMv6M" inherits="crypto_hash/sha3256/kcp inplace1600ARMv6M"/><target name="crypto_hash/sha3256/kcp/inplace1600ARMv7M" inherits="crypto_hash/sha3256/kcp inplace1600ARMv7M"/><target name="crypto_hash/sha3256/kcp/inplace1600ARMv7A" inherits="crypto_hash/sha3256/kcp inplace1600ARMv7A"/><target name="crypto_hash/sha3256/kcp/optimized1600u6" inherits="crypto_hash/sha3256/kcp optimized1600u6"/><target name="crypto_hash/sha3256/kcp/optimized1600ufull" inherits="crypto_hash/sha3256/kcp optimized1600ufull"/><target name="crypto_hash/sha3256/kcp/optimized1600lcu6" inherits="crypto_hash/sha3256/kcp optimized1600lcu6"/><target name="crypto_hash/sha3256/kcp/optimized1600lcufull" inherits="crypto_hash/sha3256/kcp optimized1600lcufull"/><target name="crypto_hash/sha3256/kcp/optimized1600lcufullshld" inherits="crypto_hash/sha3256/kcp optimized1600lcufullshld"/><target name="crypto_hash/sha3256/kcp/optimized1600AsmX86-64" inherits="crypto_hash/sha3256/kcp optimized1600AsmX86-64"/><target name="crypto_hash/sha3256/kcp/optimized1600AsmX86-64shld" inherits="crypto_hash/sha3256/kcp optimized1600AsmX86-64shld"/><target name="crypto_hash/sha3256/kcp/optimized1600AsmX86-64Apple" inherits="crypto_hash/sha3256/kcp optimized1600AsmX86-64Apple"/><target name="crypto_hash/sha3256/kcp/optimized1600AVX2" inherits="crypto_hash/sha3256/kcp optimized1600AVX2"/><target name="crypto_hash/sha3256/kcp/optimized1600AVX512" inherits="crypto_hash/sha3256/kcp optimized1600AVX512"/><target name="crypto_hash/sha3256/kcp/optimized1600XOPu6" inherits="crypto_hash/sha3256/kcp optimized1600XOPu6"/><target name="crypto_hash/sha3256/kcp/optimized1600XOPufull" inherits="crypto_hash/sha3256/kcp optimized1600XOPufull"/><target name="crypto_hash/sha3256/kcp/optimized1600ARMv6Mu1" inherits="crypto_hash/sha3256/kcp optimized1600ARMv6Mu1"/><target name="crypto_hash/sha3256/kcp/optimized1600ARMv6Mu2" inherits="crypto_hash/sha3256/kcp optimized1600ARMv6Mu2"/><target name="crypto_hash/sha3256/kcp/optimized1600ARMv7A" inherits="crypto_hash/sha3256/kcp optimized1600ARMv7A"/><target name="crypto_hash/sha3256/kcp/optimized1600ARMv8A" inherits="crypto_hash/sha3256/kcp optimized1600ARMv8A"/><target name="crypto_hash/sha3256/kcp/optimized1600AVR8" inherits="crypto_hash/sha3256/kcp optimized1600AVR8"/><target name="SHA3-256_SelfTest/reference1600" inherits="SHA3-256_SelfTest reference1600"/><target name="SHA3-256_SelfTest/reference1600-32bits" inherits="SHA3-256_SelfTest reference1600-32bits"/><target name="SHA3-256_SelfTest/compact1600" inherits="SHA3-256_SelfTest compact1600"/><target name="SHA3-256_SelfTest/compact1600AVR8" inherits="SHA3-256_SelfTest compact1600AVR8"/><target name="SHA3-256_SelfTest/inplace1600bi" inherits="SHA3-256_SelfTest inplace1600bi"/><target name="SHA3-256_SelfTest/inplace1600ARMv6M" inherits="SHA3-256_SelfTest inplace1600ARMv6M"/><target name="SHA3-256_SelfTest/inplace1600ARMv7M" inherits="SHA3-256_SelfTest inplace1600ARMv7M"/><target name="SHA3-256_SelfTest/inplace1600ARMv7A" inherits="SHA3-256_SelfTest inplace1600ARMv7A"/><target name="SHA3-256_SelfTest/optimized1600u6" inherits="SHA3-256_SelfTest optimized1600u6"/><target name="SHA3-256_SelfTest/optimized1600ufull" inherits="SHA3-256_SelfTest optimized1600ufull"/><target name="SHA3-256_SelfTest/optimized1600lcu6" inherits="SHA3-256_SelfTest optimized1600lcu6"/><target name="SHA3-256_SelfTest/optimized1600lcufull" inherits="SHA3-256_SelfTest optimized1600lcufull"/><target name="SHA3-256_SelfTest/optimized1600lcufullshld" inherits="SHA3-256_SelfTest optimized1600lcufullshld"/><target name="SHA3-256_SelfTest/optimized1600AsmX86-64" inherits="SHA3-256_SelfTest optimized1600AsmX86-64"/><target name="SHA3-256_SelfTest/optimized1600AsmX86-64shld" inherits="SHA3-256_SelfTest optimized1600AsmX86-64shld"/><target name="SHA3-256_SelfTest/optimized1600AsmX86-64Apple" inherits="SHA3-256_SelfTest optimized1600AsmX86-64Apple"/><target name="SHA3-256_SelfTest/optimized1600AVX2" inherits="SHA3-256_SelfTest optimized1600AVX2"/><target name="SHA3-256_SelfTest/optimized1600AVX512" inherits="SHA3-256_SelfTest optimized1600AVX512"/><target name="SHA3-256_SelfTest/optimized1600XOPu6" inherits="SHA3-256_SelfTest optimized1600XOPu6"/><target name="SHA3-256_SelfTest/optimized1600XOPufull" inherits="SHA3-256_SelfTest optimized1600XOPufull"/><target name="SHA3-256_SelfTest/optimized1600ARMv6Mu1" inherits="SHA3-256_SelfTest optimized1600ARMv6Mu1"/><target name="SHA3-256_SelfTest/optimized1600ARMv6Mu2" inherits="SHA3-256_SelfTest optimized1600ARMv6Mu2"/><target name="SHA3-256_SelfTest/optimized1600ARMv7A" inherits="SHA3-256_SelfTest optimized1600ARMv7A"/><target name="SHA3-256_SelfTest/optimized1600ARMv8A" inherits="SHA3-256_SelfTest optimized1600ARMv8A"/><target name="SHA3-256_SelfTest/optimized1600AVR8" inherits="SHA3-256_SelfTest optimized1600AVR8"/><target name="crypto_hash/sha3384/kcp/reference1600" inherits="crypto_hash/sha3384/kcp reference1600"/><target name="crypto_hash/sha3384/kcp/reference1600-32bits" inherits="crypto_hash/sha3384/kcp reference1600-32bits"/><target name="crypto_hash/sha3384/kcp/compact1600" inherits="crypto_hash/sha3384/kcp compact1600"/><target name="crypto_hash/sha3384/kcp/compact1600AVR8" inherits="crypto_hash/sha3384/kcp compact1600AVR8"/><target name="crypto_hash/sha3384/kcp/inplace1600bi" inherits="crypto_hash/sha3384/kcp inplace1600bi"/><target name="crypto_hash/sha3384/kcp/inplace1600ARMv6M" inherits="crypto_hash/sha3384/kcp inplace1600ARMv6M"/><target name="crypto_hash/sha3384/kcp/inplace1600ARMv7M" inherits="crypto_hash/sha3384/kcp inplace1600ARMv7M"/><target name="crypto_hash/sha3384/kcp/inplace1600ARMv7A" inherits="crypto_hash/sha3384/kcp inplace1600ARMv7A"/><target name="crypto_hash/sha3384/kcp/optimized1600u6" inherits="crypto_hash/sha3384/kcp optimized1600u6"/><target name="crypto_hash/sha3384/kcp/optimized1600ufull" inherits="crypto_hash/sha3384/kcp optimized1600ufull"/><target name="crypto_hash/sha3384/kcp/optimized1600lcu6" inherits="crypto_hash/sha3384/kcp optimized1600lcu6"/><target name="crypto_hash/sha3384/kcp/optimized1600lcufull" inherits="crypto_hash/sha3384/kcp optimized1600lcufull"/><target name="crypto_hash/sha3384/kcp/optimized1600lcufullshld" inherits="crypto_hash/sha3384/kcp optimized1600lcufullshld"/><target name="crypto_hash/sha3384/kcp/optimized1600AsmX86-64" inherits="crypto_hash/sha3384/kcp optimized1600AsmX86-64"/><target name="crypto_hash/sha3384/kcp/optimized1600AsmX86-64shld" inherits="crypto_hash/sha3384/kcp optimized1600AsmX86-64shld"/><target name="crypto_hash/sha3384/kcp/optimized1600AsmX86-64Apple" inherits="crypto_hash/sha3384/kcp optimized1600AsmX86-64Apple"/><target name="crypto_hash/sha3384/kcp/optimized1600AVX2" inherits="crypto_hash/sha3384/kcp optimized1600AVX2"/><target name="crypto_hash/sha3384/kcp/optimized1600AVX512" inherits="crypto_hash/sha3384/kcp optimized1600AVX512"/><target name="crypto_hash/sha3384/kcp/optimized1600XOPu6" inherits="crypto_hash/sha3384/kcp optimized1600XOPu6"/><target name="crypto_hash/sha3384/kcp/optimized1600XOPufull" inherits="crypto_hash/sha3384/kcp optimized1600XOPufull"/><target name="crypto_hash/sha3384/kcp/optimized1600ARMv6Mu1" inherits="crypto_hash/sha3384/kcp optimized1600ARMv6Mu1"/><target name="crypto_hash/sha3384/kcp/optimized1600ARMv6Mu2" inherits="crypto_hash/sha3384/kcp optimized1600ARMv6Mu2"/><target name="crypto_hash/sha3384/kcp/optimized1600ARMv7A" inherits="crypto_hash/sha3384/kcp optimized1600ARMv7A"/><target name="crypto_hash/sha3384/kcp/optimized1600ARMv8A" inherits="crypto_hash/sha3384/kcp optimized1600ARMv8A"/><target name="crypto_hash/sha3384/kcp/optimized1600AVR8" inherits="crypto_hash/sha3384/kcp optimized1600AVR8"/><target name="SHA3-384_SelfTest/reference1600" inherits="SHA3-384_SelfTest reference1600"/><target name="SHA3-384_SelfTest/reference1600-32bits" inherits="SHA3-384_SelfTest reference1600-32bits"/><target name="SHA3-384_SelfTest/compact1600" inherits="SHA3-384_SelfTest compact1600"/><target name="SHA3-384_SelfTest/compact1600AVR8" inherits="SHA3-384_SelfTest compact1600AVR8"/><target name="SHA3-384_SelfTest/inplace1600bi" inherits="SHA3-384_SelfTest inplace1600bi"/><target name="SHA3-384_SelfTest/inplace1600ARMv6M" inherits="SHA3-384_SelfTest inplace1600ARMv6M"/><target name="SHA3-384_SelfTest/inplace1600ARMv7M" inherits="SHA3-384_SelfTest inplace1600ARMv7M"/><target name="SHA3-384_SelfTest/inplace1600ARMv7A" inherits="SHA3-384_SelfTest inplace1600ARMv7A"/><target name="SHA3-384_SelfTest/optimized1600u6" inherits="SHA3-384_SelfTest optimized1600u6"/><target name="SHA3-384_SelfTest/optimized1600ufull" inherits="SHA3-384_SelfTest optimized1600ufull"/><target name="SHA3-384_SelfTest/optimized1600lcu6" inherits="SHA3-384_SelfTest optimized1600lcu6"/><target name="SHA3-384_SelfTest/optimized1600lcufull" inherits="SHA3-384_SelfTest optimized1600lcufull"/><target name="SHA3-384_SelfTest/optimized1600lcufullshld" inherits="SHA3-384_SelfTest optimized1600lcufullshld"/><target name="SHA3-384_SelfTest/optimized1600AsmX86-64" inherits="SHA3-384_SelfTest optimized1600AsmX86-64"/><target name="SHA3-384_SelfTest/optimized1600AsmX86-64shld" inherits="SHA3-384_SelfTest optimized1600AsmX86-64shld"/><target name="SHA3-384_SelfTest/optimized1600AsmX86-64Apple" inherits="SHA3-384_SelfTest optimized1600AsmX86-64Apple"/><target name="SHA3-384_SelfTest/optimized1600AVX2" inherits="SHA3-384_SelfTest optimized1600AVX2"/><target name="SHA3-384_SelfTest/optimized1600AVX512" inherits="SHA3-384_SelfTest optimized1600AVX512"/><target name="SHA3-384_SelfTest/optimized1600XOPu6" inherits="SHA3-384_SelfTest optimized1600XOPu6"/><target name="SHA3-384_SelfTest/optimized1600XOPufull" inherits="SHA3-384_SelfTest optimized1600XOPufull"/><target name="SHA3-384_SelfTest/optimized1600ARMv6Mu1" inherits="SHA3-384_SelfTest optimized1600ARMv6Mu1"/><target name="SHA3-384_SelfTest/optimized1600ARMv6Mu2" inherits="SHA3-384_SelfTest optimized1600ARMv6Mu2"/><target name="SHA3-384_SelfTest/optimized1600ARMv7A" inherits="SHA3-384_SelfTest optimized1600ARMv7A"/><target name="SHA3-384_SelfTest/optimized1600ARMv8A" inherits="SHA3-384_SelfTest optimized1600ARMv8A"/><target name="SHA3-384_SelfTest/optimized1600AVR8" inherits="SHA3-384_SelfTest optimized1600AVR8"/><target name="crypto_hash/sha3512/kcp/reference1600" inherits="crypto_hash/sha3512/kcp reference1600"/><target name="crypto_hash/sha3512/kcp/reference1600-32bits" inherits="crypto_hash/sha3512/kcp reference1600-32bits"/><target name="crypto_hash/sha3512/kcp/compact1600" inherits="crypto_hash/sha3512/kcp compact1600"/><target name="crypto_hash/sha3512/kcp/compact1600AVR8" inherits="crypto_hash/sha3512/kcp compact1600AVR8"/><target name="crypto_hash/sha3512/kcp/inplace1600bi" inherits="crypto_hash/sha3512/kcp inplace1600bi"/><target name="crypto_hash/sha3512/kcp/inplace1600ARMv6M" inherits="crypto_hash/sha3512/kcp inplace1600ARMv6M"/><target name="crypto_hash/sha3512/kcp/inplace1600ARMv7M" inherits="crypto_hash/sha3512/kcp inplace1600ARMv7M"/><target name="crypto_hash/sha3512/kcp/inplace1600ARMv7A" inherits="crypto_hash/sha3512/kcp inplace1600ARMv7A"/><target name="crypto_hash/sha3512/kcp/optimized1600u6" inherits="crypto_hash/sha3512/kcp optimized1600u6"/><target name="crypto_hash/sha3512/kcp/optimized1600ufull" inherits="crypto_hash/sha3512/kcp optimized1600ufull"/><target name="crypto_hash/sha3512/kcp/optimized1600lcu6" inherits="crypto_hash/sha3512/kcp optimized1600lcu6"/><target name="crypto_hash/sha3512/kcp/optimized1600lcufull" inherits="crypto_hash/sha3512/kcp optimized1600lcufull"/><target name="crypto_hash/sha3512/kcp/optimized1600lcufullshld" inherits="crypto_hash/sha3512/kcp optimized1600lcufullshld"/><target name="crypto_hash/sha3512/kcp/optimized1600AsmX86-64" inherits="crypto_hash/sha3512/kcp optimized1600AsmX86-64"/><target name="crypto_hash/sha3512/kcp/optimized1600AsmX86-64shld" inherits="crypto_hash/sha3512/kcp optimized1600AsmX86-64shld"/><target name="crypto_hash/sha3512/kcp/optimized1600AsmX86-64Apple" inherits="crypto_hash/sha3512/kcp optimized1600AsmX86-64Apple"/><target name="crypto_hash/sha3512/kcp/optimized1600AVX2" inherits="crypto_hash/sha3512/kcp optimized1600AVX2"/><target name="crypto_hash/sha3512/kcp/optimized1600AVX512" inherits="crypto_hash/sha3512/kcp optimized1600AVX512"/><target name="crypto_hash/sha3512/kcp/optimized1600XOPu6" inherits="crypto_hash/sha3512/kcp optimized1600XOPu6"/><target name="crypto_hash/sha3512/kcp/optimized1600XOPufull" inherits="crypto_hash/sha3512/kcp optimized1600XOPufull"/><target name="crypto_hash/sha3512/kcp/optimized1600ARMv6Mu1" inherits="crypto_hash/sha3512/kcp optimized1600ARMv6Mu1"/><target name="crypto_hash/sha3512/kcp/optimized1600ARMv6Mu2" inherits="crypto_hash/sha3512/kcp optimized1600ARMv6Mu2"/><target name="crypto_hash/sha3512/kcp/optimized1600ARMv7A" inherits="crypto_hash/sha3512/kcp optimized1600ARMv7A"/><target name="crypto_hash/sha3512/kcp/optimized1600ARMv8A" inherits="crypto_hash/sha3512/kcp optimized1600ARMv8A"/><target name="crypto_hash/sha3512/kcp/optimized1600AVR8" inherits="crypto_hash/sha3512/kcp optimized1600AVR8"/><target name="SHA3-512_SelfTest/reference1600" inherits="SHA3-512_SelfTest reference1600"/><target name="SHA3-512_SelfTest/reference1600-32bits" inherits="SHA3-512_SelfTest reference1600-32bits"/><target name="SHA3-512_SelfTest/compact1600" inherits="SHA3-512_SelfTest compact1600"/><target name="SHA3-512_SelfTest/compact1600AVR8" inherits="SHA3-512_SelfTest compact1600AVR8"/><target name="SHA3-512_SelfTest/inplace1600bi" inherits="SHA3-512_SelfTest inplace1600bi"/><target name="SHA3-512_SelfTest/inplace1600ARMv6M" inherits="SHA3-512_SelfTest inplace1600ARMv6M"/><target name="SHA3-512_SelfTest/inplace1600ARMv7M" inherits="SHA3-512_SelfTest inplace1600ARMv7M"/><target name="SHA3-512_SelfTest/inplace1600ARMv7A" inherits="SHA3-512_SelfTest inplace1600ARMv7A"/><target name="SHA3-512_SelfTest/optimized1600u6" inherits="SHA3-512_SelfTest optimized1600u6"/><target name="SHA3-512_SelfTest/optimized1600ufull" inherits="SHA3-512_SelfTest optimized1600ufull"/><target name="SHA3-512_SelfTest/optimized1600lcu6" inherits="SHA3-512_SelfTest optimized1600lcu6"/><target name="SHA3-512_SelfTest/optimized1600lcufull" inherits="SHA3-512_SelfTest optimized1600lcufull"/><target name="SHA3-512_SelfTest/optimized1600lcufullshld" inherits="SHA3-512_SelfTest optimized1600lcufullshld"/><target name="SHA3-512_SelfTest/optimized1600AsmX86-64" inherits="SHA3-512_SelfTest optimized1600AsmX86-64"/><target name="SHA3-512_SelfTest/optimized1600AsmX86-64shld" inherits="SHA3-512_SelfTest optimized1600AsmX86-64shld"/><target name="SHA3-512_SelfTest/optimized1600AsmX86-64Apple" inherits="SHA3-512_SelfTest optimized1600AsmX86-64Apple"/><target name="SHA3-512_SelfTest/optimized1600AVX2" inherits="SHA3-512_SelfTest optimized1600AVX2"/><target name="SHA3-512_SelfTest/optimized1600AVX512" inherits="SHA3-512_SelfTest optimized1600AVX512"/><target name="SHA3-512_SelfTest/optimized1600XOPu6" inherits="SHA3-512_SelfTest optimized1600XOPu6"/><target name="SHA3-512_SelfTest/optimized1600XOPufull" inherits="SHA3-512_SelfTest optimized1600XOPufull"/><target name="SHA3-512_SelfTest/optimized1600ARMv6Mu1" inherits="SHA3-512_SelfTest optimized1600ARMv6Mu1"/><target name="SHA3-512_SelfTest/optimized1600ARMv6Mu2" inherits="SHA3-512_SelfTest optimized1600ARMv6Mu2"/><target name="SHA3-512_SelfTest/optimized1600ARMv7A" inherits="SHA3-512_SelfTest optimized1600ARMv7A"/><target name="SHA3-512_SelfTest/optimized1600ARMv8A" inherits="SHA3-512_SelfTest optimized1600ARMv8A"/><target name="SHA3-512_SelfTest/optimized1600AVR8" inherits="SHA3-512_SelfTest optimized1600AVR8"/><target name="crypto_hash/k12/kcp/reference1600" inherits="crypto_hash/k12/kcp reference1600"/><target name="crypto_hash/k12/kcp/reference1600-32bits" inherits="crypto_hash/k12/kcp reference1600-32bits"/><target name="crypto_hash/k12/kcp/compact1600" inherits="crypto_hash/k12/kcp compact1600"/><target name="crypto_hash/k12/kcp/compact1600AVR8" inherits="crypto_hash/k12/kcp compact1600AVR8"/><target name="crypto_hash/k12/kcp/inplace1600bi" inherits="crypto_hash/k12/kcp inplace1600bi"/><target name="crypto_hash/k12/kcp/inplace1600ARMv6M" inherits="crypto_hash/k12/kcp inplace1600ARMv6M"/><target name="crypto_hash/k12/kcp/inplace1600ARMv7M" inherits="crypto_hash/k12/kcp inplace1600ARMv7M"/><target name="crypto_hash/k12/kcp/inplace1600ARMv7A" inherits="crypto_hash/k12/kcp inplace1600ARMv7A"/><target name="crypto_hash/k12/kcp/optimized1600u6" inherits="crypto_hash/k12/kcp optimized1600u6"/><target name="crypto_hash/k12/kcp/optimized1600ufull" inherits="crypto_hash/k12/kcp optimized1600ufull"/><target name="crypto_hash/k12/kcp/optimized1600lcu6" inherits="crypto_hash/k12/kcp optimized1600lcu6"/><target name="crypto_hash/k12/kcp/optimized1600lcufull" inherits="crypto_hash/k12/kcp optimized1600lcufull"/><target name="crypto_hash/k12/kcp/optimized1600lcufullshld" inherits="crypto_hash/k12/kcp optimized1600lcufullshld"/><target name="crypto_hash/k12/kcp/optimized1600AsmX86-64" inherits="crypto_hash/k12/kcp optimized1600AsmX86-64"/><target name="crypto_hash/k12/kcp/optimized1600AsmX86-64shld" inherits="crypto_hash/k12/kcp optimized1600AsmX86-64shld"/><target name="crypto_hash/k12/kcp/optimized1600AsmX86-64Apple" inherits="crypto_hash/k12/kcp optimized1600AsmX86-64Apple"/><target name="crypto_hash/k12/kcp/optimized1600AVX2" inherits="crypto_hash/k12/kcp optimized1600AVX2"/><target name="crypto_hash/k12/kcp/optimized1600AVX512" inherits="crypto_hash/k12/kcp optimized1600AVX512"/><target name="crypto_hash/k12/kcp/optimized1600XOPu6" inherits="crypto_hash/k12/kcp optimized1600XOPu6"/><target name="crypto_hash/k12/kcp/optimized1600XOPufull" inherits="crypto_hash/k12/kcp optimized1600XOPufull"/><target name="crypto_hash/k12/kcp/optimized1600ARMv6Mu1" inherits="crypto_hash/k12/kcp optimized1600ARMv6Mu1"/><target name="crypto_hash/k12/kcp/optimized1600ARMv6Mu2" inherits="crypto_hash/k12/kcp optimized1600ARMv6Mu2"/><target name="crypto_hash/k12/kcp/optimized1600ARMv7A" inherits="crypto_hash/k12/kcp optimized1600ARMv7A"/><target name="crypto_hash/k12/kcp/optimized1600ARMv8A" inherits="crypto_hash/k12/kcp optimized1600ARMv8A"/><target name="crypto_hash/k12/kcp/optimized1600AVR8" inherits="crypto_hash/k12/kcp optimized1600AVR8"/><target name="KangarooTwelve_SelfTest/reference1600" inherits="KangarooTwelve_SelfTest reference1600"/><target name="KangarooTwelve_SelfTest/reference1600-32bits" inherits="KangarooTwelve_SelfTest reference1600-32bits"/><target name="KangarooTwelve_SelfTest/compact1600" inherits="KangarooTwelve_SelfTest compact1600"/><target name="KangarooTwelve_SelfTest/compact1600AVR8" inherits="KangarooTwelve_SelfTest compact1600AVR8"/><target name="KangarooTwelve_SelfTest/inplace1600bi" inherits="KangarooTwelve_SelfTest inplace1600bi"/><target name="KangarooTwelve_SelfTest/inplace1600ARMv6M" inherits="KangarooTwelve_SelfTest inplace1600ARMv6M"/><target name="KangarooTwelve_SelfTest/inplace1600ARMv7M" inherits="KangarooTwelve_SelfTest inplace1600ARMv7M"/><target name="KangarooTwelve_SelfTest/inplace1600ARMv7A" inherits="KangarooTwelve_SelfTest inplace1600ARMv7A"/><target name="KangarooTwelve_SelfTest/optimized1600u6" inherits="KangarooTwelve_SelfTest optimized1600u6"/><target name="KangarooTwelve_SelfTest/optimized1600ufull" inherits="KangarooTwelve_SelfTest optimized1600ufull"/><target name="KangarooTwelve_SelfTest/optimized1600lcu6" inherits="KangarooTwelve_SelfTest optimized1600lcu6"/><target name="KangarooTwelve_SelfTest/optimized1600lcufull" inherits="KangarooTwelve_SelfTest optimized1600lcufull"/><target name="KangarooTwelve_SelfTest/optimized1600lcufullshld" inherits="KangarooTwelve_SelfTest optimized1600lcufullshld"/><target name="KangarooTwelve_SelfTest/optimized1600AsmX86-64" inherits="KangarooTwelve_SelfTest optimized1600AsmX86-64"/><target name="KangarooTwelve_SelfTest/optimized1600AsmX86-64shld" inherits="KangarooTwelve_SelfTest optimized1600AsmX86-64shld"/><target name="KangarooTwelve_SelfTest/optimized1600AsmX86-64Apple" inherits="KangarooTwelve_SelfTest optimized1600AsmX86-64Apple"/><target name="KangarooTwelve_SelfTest/optimized1600AVX2" inherits="KangarooTwelve_SelfTest optimized1600AVX2"/><target name="KangarooTwelve_SelfTest/optimized1600AVX512" inherits="KangarooTwelve_SelfTest optimized1600AVX512"/><target name="KangarooTwelve_SelfTest/optimized1600XOPu6" inherits="KangarooTwelve_SelfTest optimized1600XOPu6"/><target name="KangarooTwelve_SelfTest/optimized1600XOPufull" inherits="KangarooTwelve_SelfTest optimized1600XOPufull"/><target name="KangarooTwelve_SelfTest/optimized1600ARMv6Mu1" inherits="KangarooTwelve_SelfTest optimized1600ARMv6Mu1"/><target name="KangarooTwelve_SelfTest/optimized1600ARMv6Mu2" inherits="KangarooTwelve_SelfTest optimized1600ARMv6Mu2"/><target name="KangarooTwelve_SelfTest/optimized1600ARMv7A" inherits="KangarooTwelve_SelfTest optimized1600ARMv7A"/><target name="KangarooTwelve_SelfTest/optimized1600ARMv8A" inherits="KangarooTwelve_SelfTest optimized1600ARMv8A"/><target name="KangarooTwelve_SelfTest/optimized1600AVR8" inherits="KangarooTwelve_SelfTest optimized1600AVR8"/>
+    </group>
+
+</group>
+    <group>
+
+
+
+
+
+    
+    <target name="PRG-AVR8" inherits="KeccakPRGWidth200 optimized200AVR8"/>
+
+    
+    <target name="KetjeJr-compact8" inherits="KetjeJr KetJr-SnP compact200"/>
+
+    
+    <target name="libKeccak-16bits.a" inherits="KeccakSpongeWidth400 KeccakDuplexWidth400 KeccakPRG400 reference400"/>
+
+    
+    <target name="RiverKeyak-ARMv7M" inherits="RiverKeyak optimized800ARMv7Mu2"/>
+
+    
+    <target name="libRiverKeyak-generic32.a" inherits="RiverKeyak optimized800lcu2"/>
+
+    
+    <target name="libRiverKeyak-PRG-compact32.a" inherits="RiverKeyak KeccakPRGWidth800 compact800"/>
+
+    
+    <target name="libK12-AVX2.a" inherits="KangarooTwelve optimized1600AVX2 SIMD128-SSE2u2 SIMD256-AVX2u12 1600times8on4"/>
+
+    
+    <target name="libK12-32bits.a" inherits="KangarooTwelve inplace1600bi no_parallel1600"/>
+
+    
+    <target name="FIPS202-opt64" inherits="FIPS202 optimized1600ufull"/>
+
+</group>
+
+    
+
+    <fragment name="common">
+        <h>Common/align.h</h>
+        <h>Common/brg_endian.h</h>
+    </fragment>
+
+    
+
+    
+    <fragment name="KeccakTests" inherits="All">
+        <c>Tests/main.c</c>
+        <c>Tests/testSnP.c</c>
+        <h>Tests/testSnP.inc</h>
+        <h>Tests/testSnP.h</h>
+        <c>Tests/testPlSnP.c</c>
+        <h>Tests/testPlSnP.inc</h>
+        <h>Tests/testPlSnP.h</h>
+        <c>Tests/testSponge.c</c>
+        <h>Tests/testSponge.inc</h>
+        <h>Tests/testSponge.h</h>
+        <c>Tests/testDuplex.c</c>
+        <h>Tests/testDuplex.inc</h>
+        <h>Tests/testDuplex.h</h>
+        <c>Tests/testMotorist.c</c>
+        <h>Tests/testMotorist.inc</h>
+        <h>Tests/testMotorist.h</h>
+        <c>Tests/testKeyakv2.c</c>
+        <h>Tests/testKeyakv2.inc</h>
+        <h>Tests/testKeyakv2.h</h>
+        <c>Tests/testKetjev2.c</c>
+        <h>Tests/testKetjev2.h</h>
+        <h>Tests/testKetjev2.inc</h>
+        <c>Tests/genKAT.c</c>
+        <h>Tests/genKAT.h</h>
+        <c>Tests/testPerformance.c</c>
+        <h>Tests/timing.h</h>
+        <h>Tests/testPerformance.h</h>
+        <h>Tests/timingSnP.inc</h>
+        <h>Tests/timingPlSnP.inc</h>
+        <h>Tests/timingSponge.inc</h>
+        <h>Tests/timingKeyak.inc</h>
+        <c>Tests/testKeccakPRG.c</c>
+        <h>Tests/testKeccakPRG.inc</h>
+        <h>Tests/testKeccakPRG.h</h>
+        <c>Tests/testKangarooTwelve.c</c>
+        <h>Tests/testKangarooTwelve.h</h>
+        <c>Tests/testKravatte.c</c>
+        <h>Tests/testKravatte.h</h>
+        <c>Tests/testKravatteModes.c</c>
+        <h>Tests/testKravatteModes.h</h>
+        <c>Tests/testSP800-185.c</c>
+        <h>Tests/testSP800-185.h</h>
+        <gcc>-lm</gcc>
+    </fragment>
+
+    
+    <fragment name="KeccakSum" inherits="FIPS202 KangarooTwelve">
+        <c>KeccakSum/KeccakSum.c</c>
+        <c>KeccakSum/base64.c</c>
+        <h>KeccakSum/base64.h</h>
+    </fragment>
+
+    
+    <fragment name="libkeccak.a" inherits="All"/>
+
+    
+
+    <fragment name="crypto_aead_test">
+        <h>CAESAR/test_crypto_aead.h</h>
+        <c>CAESAR/test_crypto_aead.c</c>
+    </fragment>
+
+    
+
+    <fragment name="serial-fallbacks" inherits="800times2on1 800times4on1 800times8on1 1600times2on1 1600times4on1 1600times8on1"/>
+
+    
+    <fragment name="reference" inherits="reference200 reference400 reference800 reference1600 serial-fallbacks Ket-SnP">
+        <c>Tests/displayIntermediateValues.c</c>
+        <h>Tests/displayIntermediateValues.h</h>
+        <define>KeccakReference</define>
+        <gcc>-O</gcc>
+    </fragment>
+
+    
+    <fragment name="reference32bits" inherits="reference200 reference400 reference800 reference1600-32bits serial-fallbacks Ket-SnP">
+        <c>Tests/displayIntermediateValues.c</c>
+        <h>Tests/displayIntermediateValues.h</h>
+        <define>KeccakReference</define>
+        <define>KeccakReference32BI</define>
+        <gcc>-O</gcc>
+    </fragment>
+
+    
+    <fragment name="compact" inherits="compact200 reference400 compact800 compact1600 serial-fallbacks Ket-SnP"/>
+
+    
+    <fragment name="generic32" inherits="reference200 reference400 optimized800u2 inplace1600bi serial-fallbacks Ket-SnP"/>
+    
+    <fragment name="generic32lc" inherits="reference200 reference400 optimized800lcu2 inplace1600bi serial-fallbacks Ket-SnP"/>
+
+    
+    <fragment name="generic64" inherits="reference200 reference400 optimized800ufull optimized1600ufull serial-fallbacks Ket-SnP"/>
+    
+    <fragment name="generic64lc" inherits="reference200 reference400 optimized800lcufull optimized1600lcufull serial-fallbacks Ket-SnP"/>
+
+    
+    <fragment name="asmX86-64" inherits="reference200 reference400 reference800 optimized1600AsmX86-64 serial-fallbacks Ket-SnP"/>
+    
+    <fragment name="asmX86-64shld" inherits="reference200 reference400 reference800 optimized1600AsmX86-64shld serial-fallbacks Ket-SnP"/>
+
+    
+    <fragment name="Nehalem" inherits="reference200 reference400 optimized800lcufull optimized1600lcufull 800times2on1 800times4on1 800times8on1 SIMD128-SSE2u2 1600times4on2 1600times8on2 Ket-SnP"/>
+    
+    <fragment name="SandyBridge" inherits="reference200 reference400 optimized800lcufull optimized1600lcufullshld 800times2on1 800times4on1 800times8on1 SIMD128-SSE2ufull 1600times4on2 1600times8on2 Ket-SnP"/>
+    
+    <fragment name="Bulldozer" inherits="reference200 reference400 optimized800lcufull optimized1600XOPufull 800times2on1 800times4on1 800times8on1 SIMD128-XOPufull 1600times4on2 1600times8on2 Ket-SnP"/>
+    
+    <fragment name="Haswell" inherits="reference200 reference400 optimized800lcufull optimized1600AVX2 800times2on1 800times4on1 800times8on1 SIMD128-SSE2u2 SIMD256-AVX2u12 1600times8on4 Ket-SnP"/>
+    
+    <fragment name="KnightsLanding" inherits="reference200 reference400 optimized800lcufull optimized1600AVX512 800times2on1 800times4on1 800times8on1 SIMD512-2-AVX512u12 SIMD512-4-AVX512u12 SIMD512-8-AVX512u12 Ket-SnP"/>
+
+    
+    <fragment name="ARMv6M" inherits="optimized200ARMv6M optimized400ARMv6M optimized800ARMv6Mu2 optimized1600ARMv6Mu2 serial-fallbacks Ket-optimizedLE"/>
+    
+    <fragment name="ARMv7M" inherits="optimized200ARMv7M optimized400ARMv7M optimized800ARMv7Mu2 inplace1600ARMv7M serial-fallbacks Ket-ARMv7M"/>
+    
+    <fragment name="ARMv7A" inherits="reference200 reference400 optimized800ARMv7Au2 optimized1600ARMv7A 800times2on1 800times4ARMv7A 800times8on1 1600times2ARMV7A 1600times4on2 1600times8on2 Ket-optimizedLE"/>
+    
+    <fragment name="ARMv8A" inherits="reference200 reference400 optimized800ARMv8A optimized1600ARMv8A serial-fallbacks Ket-optimizedLE"/>
+
+    
+    <fragment name="AVR8" inherits="optimized200AVR8 optimized400AVR8 optimized800AVR8 optimized1600AVR8 serial-fallbacks Ket-SnP"/>
+
+    
+    <group all="Keccak">
+        <target name="reference/KeccakTests" inherits="reference KeccakTests"/><target name="reference/KeccakSum" inherits="reference KeccakSum"/><target name="reference/libkeccak.a" inherits="reference libkeccak.a"/><target name="reference32bits/KeccakTests" inherits="reference32bits KeccakTests"/><target name="reference32bits/KeccakSum" inherits="reference32bits KeccakSum"/><target name="reference32bits/libkeccak.a" inherits="reference32bits libkeccak.a"/><target name="compact/KeccakTests" inherits="compact KeccakTests"/><target name="compact/KeccakSum" inherits="compact KeccakSum"/><target name="compact/libkeccak.a" inherits="compact libkeccak.a"/><target name="generic32/KeccakTests" inherits="generic32 KeccakTests"/><target name="generic32/KeccakSum" inherits="generic32 KeccakSum"/><target name="generic32/libkeccak.a" inherits="generic32 libkeccak.a"/><target name="generic32lc/KeccakTests" inherits="generic32lc KeccakTests"/><target name="generic32lc/KeccakSum" inherits="generic32lc KeccakSum"/><target name="generic32lc/libkeccak.a" inherits="generic32lc libkeccak.a"/><target name="generic64/KeccakTests" inherits="generic64 KeccakTests"/><target name="generic64/KeccakSum" inherits="generic64 KeccakSum"/><target name="generic64/libkeccak.a" inherits="generic64 libkeccak.a"/><target name="generic64lc/KeccakTests" inherits="generic64lc KeccakTests"/><target name="generic64lc/KeccakSum" inherits="generic64lc KeccakSum"/><target name="generic64lc/libkeccak.a" inherits="generic64lc libkeccak.a"/><target name="asmX86-64/KeccakTests" inherits="asmX86-64 KeccakTests"/><target name="asmX86-64/KeccakSum" inherits="asmX86-64 KeccakSum"/><target name="asmX86-64/libkeccak.a" inherits="asmX86-64 libkeccak.a"/><target name="asmX86-64shld/KeccakTests" inherits="asmX86-64shld KeccakTests"/><target name="asmX86-64shld/KeccakSum" inherits="asmX86-64shld KeccakSum"/><target name="asmX86-64shld/libkeccak.a" inherits="asmX86-64shld libkeccak.a"/><target name="Nehalem/KeccakTests" inherits="Nehalem KeccakTests"/><target name="Nehalem/KeccakSum" inherits="Nehalem KeccakSum"/><target name="Nehalem/libkeccak.a" inherits="Nehalem libkeccak.a"/><target name="SandyBridge/KeccakTests" inherits="SandyBridge KeccakTests"/><target name="SandyBridge/KeccakSum" inherits="SandyBridge KeccakSum"/><target name="SandyBridge/libkeccak.a" inherits="SandyBridge libkeccak.a"/><target name="Bulldozer/KeccakTests" inherits="Bulldozer KeccakTests"/><target name="Bulldozer/KeccakSum" inherits="Bulldozer KeccakSum"/><target name="Bulldozer/libkeccak.a" inherits="Bulldozer libkeccak.a"/><target name="Haswell/KeccakTests" inherits="Haswell KeccakTests"/><target name="Haswell/KeccakSum" inherits="Haswell KeccakSum"/><target name="Haswell/libkeccak.a" inherits="Haswell libkeccak.a"/><target name="KnightsLanding/KeccakTests" inherits="KnightsLanding KeccakTests"/><target name="KnightsLanding/KeccakSum" inherits="KnightsLanding KeccakSum"/><target name="KnightsLanding/libkeccak.a" inherits="KnightsLanding libkeccak.a"/><target name="ARMv6M/KeccakTests" inherits="ARMv6M KeccakTests"/><target name="ARMv6M/KeccakSum" inherits="ARMv6M KeccakSum"/><target name="ARMv6M/libkeccak.a" inherits="ARMv6M libkeccak.a"/><target name="ARMv7M/KeccakTests" inherits="ARMv7M KeccakTests"/><target name="ARMv7M/KeccakSum" inherits="ARMv7M KeccakSum"/><target name="ARMv7M/libkeccak.a" inherits="ARMv7M libkeccak.a"/><target name="ARMv7A/KeccakTests" inherits="ARMv7A KeccakTests"/><target name="ARMv7A/KeccakSum" inherits="ARMv7A KeccakSum"/><target name="ARMv7A/libkeccak.a" inherits="ARMv7A libkeccak.a"/><target name="ARMv8A/KeccakTests" inherits="ARMv8A KeccakTests"/><target name="ARMv8A/KeccakSum" inherits="ARMv8A KeccakSum"/><target name="ARMv8A/libkeccak.a" inherits="ARMv8A libkeccak.a"/><target name="AVR8/KeccakTests" inherits="AVR8 KeccakTests"/><target name="AVR8/KeccakSum" inherits="AVR8 KeccakSum"/><target name="AVR8/libkeccak.a" inherits="AVR8 libkeccak.a"/>
+    </group>
+
+</build>

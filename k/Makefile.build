@@ -1,0 +1,169 @@
+<?xml version="1.0"?>
+<!--
+Implementation by the Keccak, Keyak and Ketje Teams, namely, Guido Bertoni,
+Joan Daemen, Michaël Peeters, Gilles Van Assche and Ronny Van Keer, hereby
+denoted as "the implementer".
+
+For more information, feedback or questions, please refer to our websites:
+http://keccak.noekeon.org/
+http://keyak.noekeon.org/
+http://ketje.noekeon.org/
+
+To the extent possible under law, the implementer has waived all copyright
+and related or neighboring rights to the source code in this file.
+http://creativecommons.org/publicdomain/zero/1.0/
+-->
+<build all="all" xmlns:xi="http://www.w3.org/2001/XInclude">
+
+    <xi:include href="HighLevel.build"/>
+    <xi:include href="LowLevel.build"/>
+    <xi:include href="Ketje/Ketje.build"/>
+    <xi:include href="Keyak/Keyak.build"/>
+    <xi:include href="SUPERCOP/SUPERCOP.build"/>
+    <xi:include href="HOWTO-customize.build"/>
+
+    <!-- For the name of the targets, please see the end of this file. -->
+
+    <fragment name="common">
+        <h>Common/align.h</h>
+        <h>Common/brg_endian.h</h>
+    </fragment>
+
+    <!-- *** Utilities *** -->
+
+    <!-- To run many tests -->
+    <fragment name="KeccakTests" inherits="All">
+        <c>Tests/main.c</c>
+        <c>Tests/testSnP.c</c>
+        <h>Tests/testSnP.inc</h>
+        <h>Tests/testSnP.h</h>
+        <c>Tests/testPlSnP.c</c>
+        <h>Tests/testPlSnP.inc</h>
+        <h>Tests/testPlSnP.h</h>
+        <c>Tests/testSponge.c</c>
+        <h>Tests/testSponge.inc</h>
+        <h>Tests/testSponge.h</h>
+        <c>Tests/testDuplex.c</c>
+        <h>Tests/testDuplex.inc</h>
+        <h>Tests/testDuplex.h</h>
+        <c>Tests/testMotorist.c</c>
+        <h>Tests/testMotorist.inc</h>
+        <h>Tests/testMotorist.h</h>
+        <c>Tests/testKeyakv2.c</c>
+        <h>Tests/testKeyakv2.inc</h>
+        <h>Tests/testKeyakv2.h</h>
+        <c>Tests/testKetjev2.c</c>
+        <h>Tests/testKetjev2.h</h>
+        <h>Tests/testKetjev2.inc</h>
+        <c>Tests/genKAT.c</c>
+        <h>Tests/genKAT.h</h>
+        <c>Tests/testPerformance.c</c>
+        <h>Tests/timing.h</h>
+        <h>Tests/testPerformance.h</h>
+        <h>Tests/timingSnP.inc</h>
+        <h>Tests/timingPlSnP.inc</h>
+        <h>Tests/timingSponge.inc</h>
+        <h>Tests/timingKeyak.inc</h>
+        <c>Tests/testKeccakPRG.c</c>
+        <h>Tests/testKeccakPRG.inc</h>
+        <h>Tests/testKeccakPRG.h</h>
+        <c>Tests/testKangarooTwelve.c</c>
+        <h>Tests/testKangarooTwelve.h</h>
+        <c>Tests/testKravatte.c</c>
+        <h>Tests/testKravatte.h</h>
+        <c>Tests/testKravatteModes.c</c>
+        <h>Tests/testKravatteModes.h</h>
+        <c>Tests/testSP800-185.c</c>
+        <h>Tests/testSP800-185.h</h>
+        <gcc>-lm</gcc>
+    </fragment>
+
+    <!-- To compute a hash of a file -->
+    <fragment name="KeccakSum" inherits="FIPS202 KangarooTwelve">
+        <c>KeccakSum/KeccakSum.c</c>
+        <c>KeccakSum/base64.c</c>
+        <h>KeccakSum/base64.h</h>
+    </fragment>
+
+    <!-- To make a library -->
+    <fragment name="libkeccak.a" inherits="All"/>
+
+    <!-- *** CAESAR-related targets *** -->
+
+    <fragment name="crypto_aead_test">
+        <h>CAESAR/test_crypto_aead.h</h>
+        <c>CAESAR/test_crypto_aead.c</c>
+    </fragment>
+
+    <!-- *** Targets *** -->
+
+    <fragment name="serial-fallbacks" inherits="800times2on1 800times4on1 800times8on1 1600times2on1 1600times4on1 1600times8on1"/>
+
+    <!-- Reference implementations -->
+    <fragment name="reference" inherits="reference200 reference400 reference800 reference1600 serial-fallbacks Ket-SnP">
+        <c>Tests/displayIntermediateValues.c</c>
+        <h>Tests/displayIntermediateValues.h</h>
+        <define>KeccakReference</define>
+        <gcc>-O</gcc>
+    </fragment>
+
+    <!-- Reference implementations dedicated to 32-bit platforms
+        (i.e., featuring bit interleaving for Keccak-p[1600]) -->
+    <fragment name="reference32bits" inherits="reference200 reference400 reference800 reference1600-32bits serial-fallbacks Ket-SnP">
+        <c>Tests/displayIntermediateValues.c</c>
+        <h>Tests/displayIntermediateValues.h</h>
+        <define>KeccakReference</define>
+        <define>KeccakReference32BI</define>
+        <gcc>-O</gcc>
+    </fragment>
+
+    <!-- Compact implementations -->
+    <fragment name="compact" inherits="compact200 reference400 compact800 compact1600 serial-fallbacks Ket-SnP"/>
+
+    <!-- Generically optimized 32-bit implementations -->
+    <fragment name="generic32" inherits="reference200 reference400 optimized800u2 inplace1600bi serial-fallbacks Ket-SnP"/>
+    <!-- Generically optimized 32-bit implementations, featuring lane complementing -->
+    <fragment name="generic32lc" inherits="reference200 reference400 optimized800lcu2 inplace1600bi serial-fallbacks Ket-SnP"/>
+
+    <!-- Generically optimized 64-bit implementations -->
+    <fragment name="generic64" inherits="reference200 reference400 optimized800ufull optimized1600ufull serial-fallbacks Ket-SnP"/>
+    <!-- Generically optimized 64-bit implementations, featuring lane complementing -->
+    <fragment name="generic64lc" inherits="reference200 reference400 optimized800lcufull optimized1600lcufull serial-fallbacks Ket-SnP"/>
+
+    <!-- Assembler optimized 64-bit implementations -->
+    <fragment name="asmX86-64" inherits="reference200 reference400 reference800 optimized1600AsmX86-64 serial-fallbacks Ket-SnP"/>
+    <!-- Assembler optimized 64-bit implementations -->
+    <fragment name="asmX86-64shld" inherits="reference200 reference400 reference800 optimized1600AsmX86-64shld serial-fallbacks Ket-SnP"/>
+
+    <!-- Implementations selected for the Nehalem microarchitecture -->
+    <fragment name="Nehalem" inherits="reference200 reference400 optimized800lcufull optimized1600lcufull 800times2on1 800times4on1 800times8on1 SIMD128-SSE2u2 1600times4on2 1600times8on2 Ket-SnP"/>
+    <!-- Implementations selected for the Sandy Bridge microarchitecture -->
+    <fragment name="SandyBridge" inherits="reference200 reference400 optimized800lcufull optimized1600lcufullshld 800times2on1 800times4on1 800times8on1 SIMD128-SSE2ufull 1600times4on2 1600times8on2 Ket-SnP"/>
+    <!-- Implementations selected for the Bulldozer microarchitecture -->
+    <fragment name="Bulldozer" inherits="reference200 reference400 optimized800lcufull optimized1600XOPufull 800times2on1 800times4on1 800times8on1 SIMD128-XOPufull 1600times4on2 1600times8on2 Ket-SnP"/>
+    <!-- Implementations selected for the Haswell microarchitecture -->
+    <fragment name="Haswell" inherits="reference200 reference400 optimized800lcufull optimized1600AVX2 800times2on1 800times4on1 800times8on1 SIMD128-SSE2u2 SIMD256-AVX2u12 1600times8on4 Ket-SnP"/>
+    <!-- Implementations selected for the Knights Landing microarchitecture -->
+    <fragment name="KnightsLanding" inherits="reference200 reference400 optimized800lcufull optimized1600AVX512 800times2on1 800times4on1 800times8on1 SIMD512-2-AVX512u12 SIMD512-4-AVX512u12 SIMD512-8-AVX512u12 Ket-SnP"/>
+
+    <!-- Implementations selected for ARMv6M -->
+    <fragment name="ARMv6M" inherits="optimized200ARMv6M optimized400ARMv6M optimized800ARMv6Mu2 optimized1600ARMv6Mu2 serial-fallbacks Ket-optimizedLE"/>
+    <!-- Implementations selected for ARMv7M -->
+    <fragment name="ARMv7M" inherits="optimized200ARMv7M optimized400ARMv7M optimized800ARMv7Mu2 inplace1600ARMv7M serial-fallbacks Ket-ARMv7M"/>
+    <!-- Implementations selected for ARMv7A -->
+    <fragment name="ARMv7A" inherits="reference200 reference400 optimized800ARMv7Au2 optimized1600ARMv7A 800times2on1 800times4ARMv7A 800times8on1 1600times2ARMV7A 1600times4on2 1600times8on2 Ket-optimizedLE"/>
+    <!-- Implementations selected for ARMv8A -->
+    <fragment name="ARMv8A" inherits="reference200 reference400 optimized800ARMv8A optimized1600ARMv8A serial-fallbacks Ket-optimizedLE"/>
+
+    <!-- Implementations selected for 8-bit AVR -->
+    <fragment name="AVR8" inherits="optimized200AVR8 optimized400AVR8 optimized800AVR8 optimized1600AVR8 serial-fallbacks Ket-SnP"/>
+
+    <!-- Target names are of the form x/y where x is taken from the first set and y from the second set. -->
+    <group all="Keccak">
+        <product delimiter="/">
+            <factor set="reference reference32bits compact generic32 generic32lc generic64 generic64lc asmX86-64 asmX86-64shld Nehalem SandyBridge Bulldozer Haswell KnightsLanding ARMv6M ARMv7M ARMv7A ARMv8A AVR8"/>
+            <factor set="KeccakTests KeccakSum libkeccak.a"/>
+        </product>
+    </group>
+
+</build>

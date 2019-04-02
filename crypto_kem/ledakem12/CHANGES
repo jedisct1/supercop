@@ -1,0 +1,7 @@
+All files in top directory.
+Define CATEGORY and N0 in qc_ldpc_parameters.h.
+Include crypto_kem.h in kem.c.
+Remove randombytes(), randombytes_init().
+Remove initialize_pseudo_random_generator_seed().
+Define LITTLE_ENDIAN in gf2x_limbs.h only if not already defined.
+Remove __USE_POSIX199309 definition from rng.h.

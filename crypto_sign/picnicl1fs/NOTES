@@ -1,0 +1,8 @@
+Tweaks (djb):
+* Moved api.h to apiorig.h, and adjusted #include accordingly.
+* Added minimal api.h.
+* Always include crypto_sign.h in api.c, even without -DSUPERCOP.
+* Always use libkeccak, even without -DSUPERCOP.
+* Remove PICNIC_BUILD_DEFAULT_RNG code.
+* Remove fflush(stderr) from ref/picnic.c.
+* Remove picnic_random_bytes layer; use randombytes() directly.
