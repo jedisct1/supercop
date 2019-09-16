@@ -1,4 +1,6 @@
 extern int crypto_verify(const unsigned char *,const unsigned char *);
+extern void crypto_decode(void *,const unsigned char *);
+extern void crypto_encode(unsigned char *,const void *);
 extern void crypto_sort(void *,long long);
 extern int crypto_core(unsigned char *,const unsigned char *,const unsigned char *,const unsigned char *);
 extern int crypto_hashblocks(unsigned char *,const unsigned char *,unsigned long long);

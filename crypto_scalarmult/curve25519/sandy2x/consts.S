@@ -5,6 +5,7 @@
 #include "consts_namespace.h"
 
 .data
+.section .rodata
 
 .globl v0_0
 .globl v1_0

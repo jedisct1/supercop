@@ -1529,7 +1529,7 @@ vpaddw %ymm0, %ymm1, %ymm0
 vmovdqa %ymm0, 5152(%r11)
 subq $9408, %rsp
 mov $4, %ecx
-karatsuba_loop_be5ea555555a178becbd244d4aac9ea2:
+karatsuba_loop_c02dbcaa1c33f040cf38ac60bf237ae9:
 mov %rsp, %r9
 mov %rsp, %r10
 subq $32, %rsp
@@ -2106,7 +2106,7 @@ vmovdqa 0(%rsp), %ymm11
 vinserti128 $1, %xmm1, %ymm11, %ymm14
 vmovdqa %ymm14, 2656(%r9)
 addq $32, %rsp
-innerloop_be5ea555555a178becbd244d4aac9ea2:
+innerloop_c02dbcaa1c33f040cf38ac60bf237ae9:
 vmovdqa 0(%r9), %ymm0
 vmovdqa 1408(%r9), %ymm6
 vmovdqa 32(%r9), %ymm1
@@ -2993,11 +2993,11 @@ vpaddw 6176(%rsp), %ymm0, %ymm0
 vmovdqa %ymm0, 3456(%r10)
 vmovdqa %ymm1, 3808(%r10)
 neg %ecx
-jns done_be5ea555555a178becbd244d4aac9ea2
+jns done_c02dbcaa1c33f040cf38ac60bf237ae9
 add $704, %r9
 add $1408, %r10
-jmp innerloop_be5ea555555a178becbd244d4aac9ea2
-done_be5ea555555a178becbd244d4aac9ea2:
+jmp innerloop_c02dbcaa1c33f040cf38ac60bf237ae9
+done_c02dbcaa1c33f040cf38ac60bf237ae9:
 sub $704, %r9
 sub $1408, %r10
 vmovdqa 0(%r9), %ymm0
@@ -4784,7 +4784,7 @@ add $1536, %rax
 add $1536, %r11
 add $3072, %r12
 dec %ecx
-jnz karatsuba_loop_be5ea555555a178becbd244d4aac9ea2
+jnz karatsuba_loop_c02dbcaa1c33f040cf38ac60bf237ae9
 sub $12288, %r12
 add $9408, %rsp
 subq $2400, %rsp

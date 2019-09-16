@@ -1,5 +1,6 @@
 /*
   This file is for the Gao-Mateer FFT
+  sse http://www.math.clemson.edu/~sgao/papers/GM10.pdf
 */
 
 #ifndef FFT_H

@@ -6,7 +6,7 @@
 #include "controlbits.h"
 
 #include "randombytes.h"
-#include "crypto_sort_uint32.h"
+#include "uint32_sort.h"
 #include "params.h"
 
 #include <stdint.h>
@@ -93,7 +93,7 @@ static void merge_63b(int n,uint64_t x[n],int step)
 
 static void sort(int n, uint32_t x[n])
 {
-  crypto_sort_uint32(x, n);
+  uint32_sort(x, n);
 }
 
 void sort_63b(int n, uint64_t x[n])

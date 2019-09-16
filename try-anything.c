@@ -1,5 +1,5 @@
 /*
- * try-anything.c version 20170717
+ * try-anything.c version 20190729
  * D. J. Bernstein
  * Some portions adapted from TweetNaCl by Bernstein, Janssen, Lange, Schwabe.
  * Public domain.
@@ -162,7 +162,7 @@ void input_prepare(unsigned char *x2,unsigned char *x,unsigned long long xlen)
 void input_compare(const unsigned char *x2,const unsigned char *x,unsigned long long xlen,const char *fun)
 {
   if (memcmp(x2 - 16,x - 16,xlen + 32)) {
-    printf("%s overwrites input\n",fun);
+    fprintf(stderr,"%s overwrites input\n",fun);
     exit(111);
   }
 }
@@ -176,11 +176,11 @@ void output_prepare(unsigned char *x2,unsigned char *x,unsigned long long xlen)
 void output_compare(const unsigned char *x2,const unsigned char *x,unsigned long long xlen,const char *fun)
 {
   if (memcmp(x2 - 16,x - 16,16)) {
-    printf("%s writes before output\n",fun);
+    fprintf(stderr,"%s writes before output\n",fun);
     exit(111);
   }
   if (memcmp(x2 + xlen,x + xlen,16)) {
-    printf("%s writes after output\n",fun);
+    fprintf(stderr,"%s writes after output\n",fun);
     exit(111);
   }
 }
@@ -225,7 +225,7 @@ static void printnum(long long x)
 
 void fail(const char *why)
 {
-  printf("%s\n",why);
+  fprintf(stderr,"%s\n",why);
   exit(111);
 }
 

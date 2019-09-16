@@ -69,7 +69,7 @@ mask1000:
 .word 65535
 .word 65535
 .word 65535
-mask0001:
+mask0111:
 .word 65535
 .word 65535
 .word 65535
@@ -431,7 +431,7 @@ vpsrlq $61, %ymm12, %ymm12
 vpermq $78, %ymm12, %ymm12
 vpxor %ymm12, %ymm2, %ymm2
 vpand mask1000(%rip), %ymm8, %ymm12
-vpand mask0001(%rip), %ymm3, %ymm13
+vpand mask0111(%rip), %ymm3, %ymm13
 vpxor %ymm12, %ymm13, %ymm12
 vpsllq $3, %ymm12, %ymm12
 vpermq $147, %ymm12, %ymm12
@@ -443,7 +443,7 @@ vpsrlq $61, %ymm12, %ymm12
 vpermq $78, %ymm12, %ymm12
 vpxor %ymm12, %ymm0, %ymm0
 vpand mask1000(%rip), %ymm3, %ymm12
-vpand mask0001(%rip), %ymm1, %ymm13
+vpand mask0111(%rip), %ymm1, %ymm13
 vpxor %ymm12, %ymm13, %ymm12
 vpsllq $3, %ymm12, %ymm12
 vpermq $147, %ymm12, %ymm12
@@ -455,7 +455,7 @@ vpsrlq $61, %ymm12, %ymm12
 vpermq $78, %ymm12, %ymm12
 vpxor %ymm12, %ymm8, %ymm8
 vpand mask1000(%rip), %ymm1, %ymm12
-vpand mask0001(%rip), %ymm4, %ymm13
+vpand mask0111(%rip), %ymm4, %ymm13
 vpxor %ymm12, %ymm13, %ymm12
 vpsllq $3, %ymm12, %ymm12
 vpermq $147, %ymm12, %ymm12

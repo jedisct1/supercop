@@ -290,10 +290,10 @@ mask_701:
 .word 0
 .word 0
 .text
-.hidden poly_S3_to_Rq
-.global poly_S3_to_Rq
+.hidden poly_lift
+.global poly_lift
 .att_syntax prefix
-poly_S3_to_Rq:
+poly_lift:
 mov %rsp, %r8
 andq $-32, %rsp
 subq $1408, %rsp
@@ -3114,6 +3114,6 @@ vpand const_1s(%rip), %ymm3, %ymm3
 vpor %ymm3, %ymm2, %ymm3
 vmovdqa %ymm3, 1376(%rsp)
 mov %rsp, %rsi
-call poly_Rq_mul_xm1
+call poly_Rq_mul_x_minus_1
 mov %r8, %rsp
 ret

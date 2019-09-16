@@ -1,1 +1,1 @@
-../../kyber1024/avx2/polyvec.h
+../ref/polyvec.h

@@ -1,1 +1,1 @@
-../../kyber1024/avx2/indcpa.c
+../../kyber768/avx2/indcpa.c

@@ -55,6 +55,26 @@ void doit(void)
   crypto_sort(x,TUNE);
 }
 
+/* on big-endian machines, flip into little-endian */
+/* other types of endianness are not supported */
+static void endianness(unsigned char *e,unsigned long long len)
+{
+  long long i = 1;
+
+  if (1 == *(unsigned char *) &i) return;
+
+  while (len > 0) {
+    for (i = 0;2 * i < crypto_sort_BYTES;++i) {
+      long long j = crypto_sort_BYTES - 1 - i;
+      unsigned char ei = e[i];
+      e[i] = e[j];
+      e[j] = ei;
+    }
+    e += crypto_sort_BYTES;
+    len -= 1;
+  }
+}
+
 void test(void)
 {
   long long loop,bytes;
@@ -66,18 +86,24 @@ void test(void)
     input_prepare(x2,x,bytes);
     output_prepare(y2,y,bytes);
     memcpy(y,x,bytes);
+    endianness(y,len);
     crypto_sort(y,len);
+    endianness(y,len);
     checksum(y,bytes);
     output_compare(y2,y,bytes,"crypto_sort");
     input_compare(x2,x,bytes,"crypto_sort");
 
     double_canary(y2,y,bytes);
     memcpy(y2,x,bytes);
+    endianness(y2,len);
     crypto_sort(y2,len);
+    endianness(y2,len);
     if (memcmp(y2,y,bytes) != 0) fail("crypto_sort is nondeterministic");
 
     double_canary(y2,y,bytes);
+    endianness(y2,len);
     crypto_sort(y2,len);
+    endianness(y2,len);
     if (memcmp(y2,y,bytes) != 0) fail("crypto_sort is not idempotent");
   }
 }

@@ -4,6 +4,7 @@ mkdir include
 
 (
   echo x86
+  echo midr
   echo unknown
 ) | (
   while read n

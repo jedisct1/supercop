@@ -7,7 +7,7 @@
 
 #include "gf.h"
 
-int pk_gen(unsigned char *, unsigned char *);
+int pk_gen(unsigned char *, unsigned char *, uint32_t *);
 
 #endif
 

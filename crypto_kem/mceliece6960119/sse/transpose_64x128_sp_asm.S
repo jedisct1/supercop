@@ -83,74 +83,74 @@ add $0,%r11
 sub %r11,%rsp
 
 # qhasm: mask0 aligned= mem128[ MASK5_0 ]
-# asm 1: movdqa   MASK5_0,>mask0=reg128#1
-# asm 2: movdqa   MASK5_0,>mask0=%xmm0
+# asm 1: movdqa   MASK5_0(%rip),>mask0=reg128#1
+# asm 2: movdqa   MASK5_0(%rip),>mask0=%xmm0
 movdqa   MASK5_0(%rip),%xmm0
 
 # qhasm: mask1 aligned= mem128[ MASK5_1 ]
-# asm 1: movdqa   MASK5_1,>mask1=reg128#2
-# asm 2: movdqa   MASK5_1,>mask1=%xmm1
+# asm 1: movdqa   MASK5_1(%rip),>mask1=reg128#2
+# asm 2: movdqa   MASK5_1(%rip),>mask1=%xmm1
 movdqa   MASK5_1(%rip),%xmm1
 
 # qhasm: mask2 aligned= mem128[ MASK4_0 ]
-# asm 1: movdqa   MASK4_0,>mask2=reg128#3
-# asm 2: movdqa   MASK4_0,>mask2=%xmm2
+# asm 1: movdqa   MASK4_0(%rip),>mask2=reg128#3
+# asm 2: movdqa   MASK4_0(%rip),>mask2=%xmm2
 movdqa   MASK4_0(%rip),%xmm2
 
 # qhasm: mask3 aligned= mem128[ MASK4_1 ]
-# asm 1: movdqa   MASK4_1,>mask3=reg128#4
-# asm 2: movdqa   MASK4_1,>mask3=%xmm3
+# asm 1: movdqa   MASK4_1(%rip),>mask3=reg128#4
+# asm 2: movdqa   MASK4_1(%rip),>mask3=%xmm3
 movdqa   MASK4_1(%rip),%xmm3
 
 # qhasm: mask4 aligned= mem128[ MASK3_0 ]
-# asm 1: movdqa   MASK3_0,>mask4=reg128#5
-# asm 2: movdqa   MASK3_0,>mask4=%xmm4
+# asm 1: movdqa   MASK3_0(%rip),>mask4=reg128#5
+# asm 2: movdqa   MASK3_0(%rip),>mask4=%xmm4
 movdqa   MASK3_0(%rip),%xmm4
 
 # qhasm: mask5 aligned= mem128[ MASK3_1 ]
-# asm 1: movdqa   MASK3_1,>mask5=reg128#6
-# asm 2: movdqa   MASK3_1,>mask5=%xmm5
+# asm 1: movdqa   MASK3_1(%rip),>mask5=reg128#6
+# asm 2: movdqa   MASK3_1(%rip),>mask5=%xmm5
 movdqa   MASK3_1(%rip),%xmm5
 
-# qhasm: x0 aligned= mem128[ input_0 + 0 ]
-# asm 1: movdqa   0(<input_0=int64#1),>x0=reg128#7
-# asm 2: movdqa   0(<input_0=%rdi),>x0=%xmm6
-movdqa   0(%rdi),%xmm6
+# qhasm: x0 = mem128[ input_0 + 0 ]
+# asm 1: movdqu   0(<input_0=int64#1),>x0=reg128#7
+# asm 2: movdqu   0(<input_0=%rdi),>x0=%xmm6
+movdqu   0(%rdi),%xmm6
 
-# qhasm: x1 aligned= mem128[ input_0 + 128 ]
-# asm 1: movdqa   128(<input_0=int64#1),>x1=reg128#8
-# asm 2: movdqa   128(<input_0=%rdi),>x1=%xmm7
-movdqa   128(%rdi),%xmm7
+# qhasm: x1 = mem128[ input_0 + 128 ]
+# asm 1: movdqu   128(<input_0=int64#1),>x1=reg128#8
+# asm 2: movdqu   128(<input_0=%rdi),>x1=%xmm7
+movdqu   128(%rdi),%xmm7
 
-# qhasm: x2 aligned= mem128[ input_0 + 256 ]
-# asm 1: movdqa   256(<input_0=int64#1),>x2=reg128#9
-# asm 2: movdqa   256(<input_0=%rdi),>x2=%xmm8
-movdqa   256(%rdi),%xmm8
+# qhasm: x2 = mem128[ input_0 + 256 ]
+# asm 1: movdqu   256(<input_0=int64#1),>x2=reg128#9
+# asm 2: movdqu   256(<input_0=%rdi),>x2=%xmm8
+movdqu   256(%rdi),%xmm8
 
-# qhasm: x3 aligned= mem128[ input_0 + 384 ]
-# asm 1: movdqa   384(<input_0=int64#1),>x3=reg128#10
-# asm 2: movdqa   384(<input_0=%rdi),>x3=%xmm9
-movdqa   384(%rdi),%xmm9
+# qhasm: x3 = mem128[ input_0 + 384 ]
+# asm 1: movdqu   384(<input_0=int64#1),>x3=reg128#10
+# asm 2: movdqu   384(<input_0=%rdi),>x3=%xmm9
+movdqu   384(%rdi),%xmm9
 
-# qhasm: x4 aligned= mem128[ input_0 + 512 ]
-# asm 1: movdqa   512(<input_0=int64#1),>x4=reg128#11
-# asm 2: movdqa   512(<input_0=%rdi),>x4=%xmm10
-movdqa   512(%rdi),%xmm10
+# qhasm: x4 = mem128[ input_0 + 512 ]
+# asm 1: movdqu   512(<input_0=int64#1),>x4=reg128#11
+# asm 2: movdqu   512(<input_0=%rdi),>x4=%xmm10
+movdqu   512(%rdi),%xmm10
 
-# qhasm: x5 aligned= mem128[ input_0 + 640 ]
-# asm 1: movdqa   640(<input_0=int64#1),>x5=reg128#12
-# asm 2: movdqa   640(<input_0=%rdi),>x5=%xmm11
-movdqa   640(%rdi),%xmm11
+# qhasm: x5 = mem128[ input_0 + 640 ]
+# asm 1: movdqu   640(<input_0=int64#1),>x5=reg128#12
+# asm 2: movdqu   640(<input_0=%rdi),>x5=%xmm11
+movdqu   640(%rdi),%xmm11
 
-# qhasm: x6 aligned= mem128[ input_0 + 768 ]
-# asm 1: movdqa   768(<input_0=int64#1),>x6=reg128#13
-# asm 2: movdqa   768(<input_0=%rdi),>x6=%xmm12
-movdqa   768(%rdi),%xmm12
+# qhasm: x6 = mem128[ input_0 + 768 ]
+# asm 1: movdqu   768(<input_0=int64#1),>x6=reg128#13
+# asm 2: movdqu   768(<input_0=%rdi),>x6=%xmm12
+movdqu   768(%rdi),%xmm12
 
-# qhasm: x7 aligned= mem128[ input_0 + 896 ]
-# asm 1: movdqa   896(<input_0=int64#1),>x7=reg128#14
-# asm 2: movdqa   896(<input_0=%rdi),>x7=%xmm13
-movdqa   896(%rdi),%xmm13
+# qhasm: x7 = mem128[ input_0 + 896 ]
+# asm 1: movdqu   896(<input_0=int64#1),>x7=reg128#14
+# asm 2: movdqu   896(<input_0=%rdi),>x7=%xmm13
+movdqu   896(%rdi),%xmm13
 
 # qhasm: v00 = x0 & mask0
 # asm 1: vpand <mask0=reg128#1,<x0=reg128#7,>v00=reg128#15
@@ -512,85 +512,85 @@ vpor %xmm15,%xmm12,%xmm12
 # asm 2: vpor <v11=%xmm7,<v01=%xmm6,>x7=%xmm6
 vpor %xmm7,%xmm6,%xmm6
 
-# qhasm: mem128[ input_0 + 0 ] aligned= x0
-# asm 1: movdqa   <x0=reg128#10,0(<input_0=int64#1)
-# asm 2: movdqa   <x0=%xmm9,0(<input_0=%rdi)
-movdqa   %xmm9,0(%rdi)
+# qhasm: mem128[ input_0 + 0 ] = x0
+# asm 1: movdqu   <x0=reg128#10,0(<input_0=int64#1)
+# asm 2: movdqu   <x0=%xmm9,0(<input_0=%rdi)
+movdqu   %xmm9,0(%rdi)
 
-# qhasm: mem128[ input_0 + 128 ] aligned= x1
-# asm 1: movdqa   <x1=reg128#14,128(<input_0=int64#1)
-# asm 2: movdqa   <x1=%xmm13,128(<input_0=%rdi)
-movdqa   %xmm13,128(%rdi)
+# qhasm: mem128[ input_0 + 128 ] = x1
+# asm 1: movdqu   <x1=reg128#14,128(<input_0=int64#1)
+# asm 2: movdqu   <x1=%xmm13,128(<input_0=%rdi)
+movdqu   %xmm13,128(%rdi)
 
-# qhasm: mem128[ input_0 + 256 ] aligned= x2
-# asm 1: movdqa   <x2=reg128#15,256(<input_0=int64#1)
-# asm 2: movdqa   <x2=%xmm14,256(<input_0=%rdi)
-movdqa   %xmm14,256(%rdi)
+# qhasm: mem128[ input_0 + 256 ] = x2
+# asm 1: movdqu   <x2=reg128#15,256(<input_0=int64#1)
+# asm 2: movdqu   <x2=%xmm14,256(<input_0=%rdi)
+movdqu   %xmm14,256(%rdi)
 
-# qhasm: mem128[ input_0 + 384 ] aligned= x3
-# asm 1: movdqa   <x3=reg128#11,384(<input_0=int64#1)
-# asm 2: movdqa   <x3=%xmm10,384(<input_0=%rdi)
-movdqa   %xmm10,384(%rdi)
+# qhasm: mem128[ input_0 + 384 ] = x3
+# asm 1: movdqu   <x3=reg128#11,384(<input_0=int64#1)
+# asm 2: movdqu   <x3=%xmm10,384(<input_0=%rdi)
+movdqu   %xmm10,384(%rdi)
 
-# qhasm: mem128[ input_0 + 512 ] aligned= x4
-# asm 1: movdqa   <x4=reg128#12,512(<input_0=int64#1)
-# asm 2: movdqa   <x4=%xmm11,512(<input_0=%rdi)
-movdqa   %xmm11,512(%rdi)
+# qhasm: mem128[ input_0 + 512 ] = x4
+# asm 1: movdqu   <x4=reg128#12,512(<input_0=int64#1)
+# asm 2: movdqu   <x4=%xmm11,512(<input_0=%rdi)
+movdqu   %xmm11,512(%rdi)
 
-# qhasm: mem128[ input_0 + 640 ] aligned= x5
-# asm 1: movdqa   <x5=reg128#9,640(<input_0=int64#1)
-# asm 2: movdqa   <x5=%xmm8,640(<input_0=%rdi)
-movdqa   %xmm8,640(%rdi)
+# qhasm: mem128[ input_0 + 640 ] = x5
+# asm 1: movdqu   <x5=reg128#9,640(<input_0=int64#1)
+# asm 2: movdqu   <x5=%xmm8,640(<input_0=%rdi)
+movdqu   %xmm8,640(%rdi)
 
-# qhasm: mem128[ input_0 + 768 ] aligned= x6
-# asm 1: movdqa   <x6=reg128#13,768(<input_0=int64#1)
-# asm 2: movdqa   <x6=%xmm12,768(<input_0=%rdi)
-movdqa   %xmm12,768(%rdi)
+# qhasm: mem128[ input_0 + 768 ] = x6
+# asm 1: movdqu   <x6=reg128#13,768(<input_0=int64#1)
+# asm 2: movdqu   <x6=%xmm12,768(<input_0=%rdi)
+movdqu   %xmm12,768(%rdi)
 
-# qhasm: mem128[ input_0 + 896 ] aligned= x7
-# asm 1: movdqa   <x7=reg128#7,896(<input_0=int64#1)
-# asm 2: movdqa   <x7=%xmm6,896(<input_0=%rdi)
-movdqa   %xmm6,896(%rdi)
+# qhasm: mem128[ input_0 + 896 ] = x7
+# asm 1: movdqu   <x7=reg128#7,896(<input_0=int64#1)
+# asm 2: movdqu   <x7=%xmm6,896(<input_0=%rdi)
+movdqu   %xmm6,896(%rdi)
 
-# qhasm: x0 aligned= mem128[ input_0 + 16 ]
-# asm 1: movdqa   16(<input_0=int64#1),>x0=reg128#7
-# asm 2: movdqa   16(<input_0=%rdi),>x0=%xmm6
-movdqa   16(%rdi),%xmm6
+# qhasm: x0 = mem128[ input_0 + 16 ]
+# asm 1: movdqu   16(<input_0=int64#1),>x0=reg128#7
+# asm 2: movdqu   16(<input_0=%rdi),>x0=%xmm6
+movdqu   16(%rdi),%xmm6
 
-# qhasm: x1 aligned= mem128[ input_0 + 144 ]
-# asm 1: movdqa   144(<input_0=int64#1),>x1=reg128#8
-# asm 2: movdqa   144(<input_0=%rdi),>x1=%xmm7
-movdqa   144(%rdi),%xmm7
+# qhasm: x1 = mem128[ input_0 + 144 ]
+# asm 1: movdqu   144(<input_0=int64#1),>x1=reg128#8
+# asm 2: movdqu   144(<input_0=%rdi),>x1=%xmm7
+movdqu   144(%rdi),%xmm7
 
-# qhasm: x2 aligned= mem128[ input_0 + 272 ]
-# asm 1: movdqa   272(<input_0=int64#1),>x2=reg128#9
-# asm 2: movdqa   272(<input_0=%rdi),>x2=%xmm8
-movdqa   272(%rdi),%xmm8
+# qhasm: x2 = mem128[ input_0 + 272 ]
+# asm 1: movdqu   272(<input_0=int64#1),>x2=reg128#9
+# asm 2: movdqu   272(<input_0=%rdi),>x2=%xmm8
+movdqu   272(%rdi),%xmm8
 
-# qhasm: x3 aligned= mem128[ input_0 + 400 ]
-# asm 1: movdqa   400(<input_0=int64#1),>x3=reg128#10
-# asm 2: movdqa   400(<input_0=%rdi),>x3=%xmm9
-movdqa   400(%rdi),%xmm9
+# qhasm: x3 = mem128[ input_0 + 400 ]
+# asm 1: movdqu   400(<input_0=int64#1),>x3=reg128#10
+# asm 2: movdqu   400(<input_0=%rdi),>x3=%xmm9
+movdqu   400(%rdi),%xmm9
 
-# qhasm: x4 aligned= mem128[ input_0 + 528 ]
-# asm 1: movdqa   528(<input_0=int64#1),>x4=reg128#11
-# asm 2: movdqa   528(<input_0=%rdi),>x4=%xmm10
-movdqa   528(%rdi),%xmm10
+# qhasm: x4 = mem128[ input_0 + 528 ]
+# asm 1: movdqu   528(<input_0=int64#1),>x4=reg128#11
+# asm 2: movdqu   528(<input_0=%rdi),>x4=%xmm10
+movdqu   528(%rdi),%xmm10
 
-# qhasm: x5 aligned= mem128[ input_0 + 656 ]
-# asm 1: movdqa   656(<input_0=int64#1),>x5=reg128#12
-# asm 2: movdqa   656(<input_0=%rdi),>x5=%xmm11
-movdqa   656(%rdi),%xmm11
+# qhasm: x5 = mem128[ input_0 + 656 ]
+# asm 1: movdqu   656(<input_0=int64#1),>x5=reg128#12
+# asm 2: movdqu   656(<input_0=%rdi),>x5=%xmm11
+movdqu   656(%rdi),%xmm11
 
-# qhasm: x6 aligned= mem128[ input_0 + 784 ]
-# asm 1: movdqa   784(<input_0=int64#1),>x6=reg128#13
-# asm 2: movdqa   784(<input_0=%rdi),>x6=%xmm12
-movdqa   784(%rdi),%xmm12
+# qhasm: x6 = mem128[ input_0 + 784 ]
+# asm 1: movdqu   784(<input_0=int64#1),>x6=reg128#13
+# asm 2: movdqu   784(<input_0=%rdi),>x6=%xmm12
+movdqu   784(%rdi),%xmm12
 
-# qhasm: x7 aligned= mem128[ input_0 + 912 ]
-# asm 1: movdqa   912(<input_0=int64#1),>x7=reg128#14
-# asm 2: movdqa   912(<input_0=%rdi),>x7=%xmm13
-movdqa   912(%rdi),%xmm13
+# qhasm: x7 = mem128[ input_0 + 912 ]
+# asm 1: movdqu   912(<input_0=int64#1),>x7=reg128#14
+# asm 2: movdqu   912(<input_0=%rdi),>x7=%xmm13
+movdqu   912(%rdi),%xmm13
 
 # qhasm: v00 = x0 & mask0
 # asm 1: vpand <mask0=reg128#1,<x0=reg128#7,>v00=reg128#15
@@ -952,85 +952,85 @@ vpor %xmm15,%xmm12,%xmm12
 # asm 2: vpor <v11=%xmm7,<v01=%xmm6,>x7=%xmm6
 vpor %xmm7,%xmm6,%xmm6
 
-# qhasm: mem128[ input_0 + 16 ] aligned= x0
-# asm 1: movdqa   <x0=reg128#10,16(<input_0=int64#1)
-# asm 2: movdqa   <x0=%xmm9,16(<input_0=%rdi)
-movdqa   %xmm9,16(%rdi)
+# qhasm: mem128[ input_0 + 16 ] = x0
+# asm 1: movdqu   <x0=reg128#10,16(<input_0=int64#1)
+# asm 2: movdqu   <x0=%xmm9,16(<input_0=%rdi)
+movdqu   %xmm9,16(%rdi)
 
-# qhasm: mem128[ input_0 + 144 ] aligned= x1
-# asm 1: movdqa   <x1=reg128#14,144(<input_0=int64#1)
-# asm 2: movdqa   <x1=%xmm13,144(<input_0=%rdi)
-movdqa   %xmm13,144(%rdi)
+# qhasm: mem128[ input_0 + 144 ] = x1
+# asm 1: movdqu   <x1=reg128#14,144(<input_0=int64#1)
+# asm 2: movdqu   <x1=%xmm13,144(<input_0=%rdi)
+movdqu   %xmm13,144(%rdi)
 
-# qhasm: mem128[ input_0 + 272 ] aligned= x2
-# asm 1: movdqa   <x2=reg128#15,272(<input_0=int64#1)
-# asm 2: movdqa   <x2=%xmm14,272(<input_0=%rdi)
-movdqa   %xmm14,272(%rdi)
+# qhasm: mem128[ input_0 + 272 ] = x2
+# asm 1: movdqu   <x2=reg128#15,272(<input_0=int64#1)
+# asm 2: movdqu   <x2=%xmm14,272(<input_0=%rdi)
+movdqu   %xmm14,272(%rdi)
 
-# qhasm: mem128[ input_0 + 400 ] aligned= x3
-# asm 1: movdqa   <x3=reg128#11,400(<input_0=int64#1)
-# asm 2: movdqa   <x3=%xmm10,400(<input_0=%rdi)
-movdqa   %xmm10,400(%rdi)
+# qhasm: mem128[ input_0 + 400 ] = x3
+# asm 1: movdqu   <x3=reg128#11,400(<input_0=int64#1)
+# asm 2: movdqu   <x3=%xmm10,400(<input_0=%rdi)
+movdqu   %xmm10,400(%rdi)
 
-# qhasm: mem128[ input_0 + 528 ] aligned= x4
-# asm 1: movdqa   <x4=reg128#12,528(<input_0=int64#1)
-# asm 2: movdqa   <x4=%xmm11,528(<input_0=%rdi)
-movdqa   %xmm11,528(%rdi)
+# qhasm: mem128[ input_0 + 528 ] = x4
+# asm 1: movdqu   <x4=reg128#12,528(<input_0=int64#1)
+# asm 2: movdqu   <x4=%xmm11,528(<input_0=%rdi)
+movdqu   %xmm11,528(%rdi)
 
-# qhasm: mem128[ input_0 + 656 ] aligned= x5
-# asm 1: movdqa   <x5=reg128#9,656(<input_0=int64#1)
-# asm 2: movdqa   <x5=%xmm8,656(<input_0=%rdi)
-movdqa   %xmm8,656(%rdi)
+# qhasm: mem128[ input_0 + 656 ] = x5
+# asm 1: movdqu   <x5=reg128#9,656(<input_0=int64#1)
+# asm 2: movdqu   <x5=%xmm8,656(<input_0=%rdi)
+movdqu   %xmm8,656(%rdi)
 
-# qhasm: mem128[ input_0 + 784 ] aligned= x6
-# asm 1: movdqa   <x6=reg128#13,784(<input_0=int64#1)
-# asm 2: movdqa   <x6=%xmm12,784(<input_0=%rdi)
-movdqa   %xmm12,784(%rdi)
+# qhasm: mem128[ input_0 + 784 ] = x6
+# asm 1: movdqu   <x6=reg128#13,784(<input_0=int64#1)
+# asm 2: movdqu   <x6=%xmm12,784(<input_0=%rdi)
+movdqu   %xmm12,784(%rdi)
 
-# qhasm: mem128[ input_0 + 912 ] aligned= x7
-# asm 1: movdqa   <x7=reg128#7,912(<input_0=int64#1)
-# asm 2: movdqa   <x7=%xmm6,912(<input_0=%rdi)
-movdqa   %xmm6,912(%rdi)
+# qhasm: mem128[ input_0 + 912 ] = x7
+# asm 1: movdqu   <x7=reg128#7,912(<input_0=int64#1)
+# asm 2: movdqu   <x7=%xmm6,912(<input_0=%rdi)
+movdqu   %xmm6,912(%rdi)
 
-# qhasm: x0 aligned= mem128[ input_0 + 32 ]
-# asm 1: movdqa   32(<input_0=int64#1),>x0=reg128#7
-# asm 2: movdqa   32(<input_0=%rdi),>x0=%xmm6
-movdqa   32(%rdi),%xmm6
+# qhasm: x0 = mem128[ input_0 + 32 ]
+# asm 1: movdqu   32(<input_0=int64#1),>x0=reg128#7
+# asm 2: movdqu   32(<input_0=%rdi),>x0=%xmm6
+movdqu   32(%rdi),%xmm6
 
-# qhasm: x1 aligned= mem128[ input_0 + 160 ]
-# asm 1: movdqa   160(<input_0=int64#1),>x1=reg128#8
-# asm 2: movdqa   160(<input_0=%rdi),>x1=%xmm7
-movdqa   160(%rdi),%xmm7
+# qhasm: x1 = mem128[ input_0 + 160 ]
+# asm 1: movdqu   160(<input_0=int64#1),>x1=reg128#8
+# asm 2: movdqu   160(<input_0=%rdi),>x1=%xmm7
+movdqu   160(%rdi),%xmm7
 
-# qhasm: x2 aligned= mem128[ input_0 + 288 ]
-# asm 1: movdqa   288(<input_0=int64#1),>x2=reg128#9
-# asm 2: movdqa   288(<input_0=%rdi),>x2=%xmm8
-movdqa   288(%rdi),%xmm8
+# qhasm: x2 = mem128[ input_0 + 288 ]
+# asm 1: movdqu   288(<input_0=int64#1),>x2=reg128#9
+# asm 2: movdqu   288(<input_0=%rdi),>x2=%xmm8
+movdqu   288(%rdi),%xmm8
 
-# qhasm: x3 aligned= mem128[ input_0 + 416 ]
-# asm 1: movdqa   416(<input_0=int64#1),>x3=reg128#10
-# asm 2: movdqa   416(<input_0=%rdi),>x3=%xmm9
-movdqa   416(%rdi),%xmm9
+# qhasm: x3 = mem128[ input_0 + 416 ]
+# asm 1: movdqu   416(<input_0=int64#1),>x3=reg128#10
+# asm 2: movdqu   416(<input_0=%rdi),>x3=%xmm9
+movdqu   416(%rdi),%xmm9
 
-# qhasm: x4 aligned= mem128[ input_0 + 544 ]
-# asm 1: movdqa   544(<input_0=int64#1),>x4=reg128#11
-# asm 2: movdqa   544(<input_0=%rdi),>x4=%xmm10
-movdqa   544(%rdi),%xmm10
+# qhasm: x4 = mem128[ input_0 + 544 ]
+# asm 1: movdqu   544(<input_0=int64#1),>x4=reg128#11
+# asm 2: movdqu   544(<input_0=%rdi),>x4=%xmm10
+movdqu   544(%rdi),%xmm10
 
-# qhasm: x5 aligned= mem128[ input_0 + 672 ]
-# asm 1: movdqa   672(<input_0=int64#1),>x5=reg128#12
-# asm 2: movdqa   672(<input_0=%rdi),>x5=%xmm11
-movdqa   672(%rdi),%xmm11
+# qhasm: x5 = mem128[ input_0 + 672 ]
+# asm 1: movdqu   672(<input_0=int64#1),>x5=reg128#12
+# asm 2: movdqu   672(<input_0=%rdi),>x5=%xmm11
+movdqu   672(%rdi),%xmm11
 
-# qhasm: x6 aligned= mem128[ input_0 + 800 ]
-# asm 1: movdqa   800(<input_0=int64#1),>x6=reg128#13
-# asm 2: movdqa   800(<input_0=%rdi),>x6=%xmm12
-movdqa   800(%rdi),%xmm12
+# qhasm: x6 = mem128[ input_0 + 800 ]
+# asm 1: movdqu   800(<input_0=int64#1),>x6=reg128#13
+# asm 2: movdqu   800(<input_0=%rdi),>x6=%xmm12
+movdqu   800(%rdi),%xmm12
 
-# qhasm: x7 aligned= mem128[ input_0 + 928 ]
-# asm 1: movdqa   928(<input_0=int64#1),>x7=reg128#14
-# asm 2: movdqa   928(<input_0=%rdi),>x7=%xmm13
-movdqa   928(%rdi),%xmm13
+# qhasm: x7 = mem128[ input_0 + 928 ]
+# asm 1: movdqu   928(<input_0=int64#1),>x7=reg128#14
+# asm 2: movdqu   928(<input_0=%rdi),>x7=%xmm13
+movdqu   928(%rdi),%xmm13
 
 # qhasm: v00 = x0 & mask0
 # asm 1: vpand <mask0=reg128#1,<x0=reg128#7,>v00=reg128#15
@@ -1392,85 +1392,85 @@ vpor %xmm15,%xmm12,%xmm12
 # asm 2: vpor <v11=%xmm7,<v01=%xmm6,>x7=%xmm6
 vpor %xmm7,%xmm6,%xmm6
 
-# qhasm: mem128[ input_0 + 32 ] aligned= x0
-# asm 1: movdqa   <x0=reg128#10,32(<input_0=int64#1)
-# asm 2: movdqa   <x0=%xmm9,32(<input_0=%rdi)
-movdqa   %xmm9,32(%rdi)
+# qhasm: mem128[ input_0 + 32 ] = x0
+# asm 1: movdqu   <x0=reg128#10,32(<input_0=int64#1)
+# asm 2: movdqu   <x0=%xmm9,32(<input_0=%rdi)
+movdqu   %xmm9,32(%rdi)
 
-# qhasm: mem128[ input_0 + 160 ] aligned= x1
-# asm 1: movdqa   <x1=reg128#14,160(<input_0=int64#1)
-# asm 2: movdqa   <x1=%xmm13,160(<input_0=%rdi)
-movdqa   %xmm13,160(%rdi)
+# qhasm: mem128[ input_0 + 160 ] = x1
+# asm 1: movdqu   <x1=reg128#14,160(<input_0=int64#1)
+# asm 2: movdqu   <x1=%xmm13,160(<input_0=%rdi)
+movdqu   %xmm13,160(%rdi)
 
-# qhasm: mem128[ input_0 + 288 ] aligned= x2
-# asm 1: movdqa   <x2=reg128#15,288(<input_0=int64#1)
-# asm 2: movdqa   <x2=%xmm14,288(<input_0=%rdi)
-movdqa   %xmm14,288(%rdi)
+# qhasm: mem128[ input_0 + 288 ] = x2
+# asm 1: movdqu   <x2=reg128#15,288(<input_0=int64#1)
+# asm 2: movdqu   <x2=%xmm14,288(<input_0=%rdi)
+movdqu   %xmm14,288(%rdi)
 
-# qhasm: mem128[ input_0 + 416 ] aligned= x3
-# asm 1: movdqa   <x3=reg128#11,416(<input_0=int64#1)
-# asm 2: movdqa   <x3=%xmm10,416(<input_0=%rdi)
-movdqa   %xmm10,416(%rdi)
+# qhasm: mem128[ input_0 + 416 ] = x3
+# asm 1: movdqu   <x3=reg128#11,416(<input_0=int64#1)
+# asm 2: movdqu   <x3=%xmm10,416(<input_0=%rdi)
+movdqu   %xmm10,416(%rdi)
 
-# qhasm: mem128[ input_0 + 544 ] aligned= x4
-# asm 1: movdqa   <x4=reg128#12,544(<input_0=int64#1)
-# asm 2: movdqa   <x4=%xmm11,544(<input_0=%rdi)
-movdqa   %xmm11,544(%rdi)
+# qhasm: mem128[ input_0 + 544 ] = x4
+# asm 1: movdqu   <x4=reg128#12,544(<input_0=int64#1)
+# asm 2: movdqu   <x4=%xmm11,544(<input_0=%rdi)
+movdqu   %xmm11,544(%rdi)
 
-# qhasm: mem128[ input_0 + 672 ] aligned= x5
-# asm 1: movdqa   <x5=reg128#9,672(<input_0=int64#1)
-# asm 2: movdqa   <x5=%xmm8,672(<input_0=%rdi)
-movdqa   %xmm8,672(%rdi)
+# qhasm: mem128[ input_0 + 672 ] = x5
+# asm 1: movdqu   <x5=reg128#9,672(<input_0=int64#1)
+# asm 2: movdqu   <x5=%xmm8,672(<input_0=%rdi)
+movdqu   %xmm8,672(%rdi)
 
-# qhasm: mem128[ input_0 + 800 ] aligned= x6
-# asm 1: movdqa   <x6=reg128#13,800(<input_0=int64#1)
-# asm 2: movdqa   <x6=%xmm12,800(<input_0=%rdi)
-movdqa   %xmm12,800(%rdi)
+# qhasm: mem128[ input_0 + 800 ] = x6
+# asm 1: movdqu   <x6=reg128#13,800(<input_0=int64#1)
+# asm 2: movdqu   <x6=%xmm12,800(<input_0=%rdi)
+movdqu   %xmm12,800(%rdi)
 
-# qhasm: mem128[ input_0 + 928 ] aligned= x7
-# asm 1: movdqa   <x7=reg128#7,928(<input_0=int64#1)
-# asm 2: movdqa   <x7=%xmm6,928(<input_0=%rdi)
-movdqa   %xmm6,928(%rdi)
+# qhasm: mem128[ input_0 + 928 ] = x7
+# asm 1: movdqu   <x7=reg128#7,928(<input_0=int64#1)
+# asm 2: movdqu   <x7=%xmm6,928(<input_0=%rdi)
+movdqu   %xmm6,928(%rdi)
 
-# qhasm: x0 aligned= mem128[ input_0 + 48 ]
-# asm 1: movdqa   48(<input_0=int64#1),>x0=reg128#7
-# asm 2: movdqa   48(<input_0=%rdi),>x0=%xmm6
-movdqa   48(%rdi),%xmm6
+# qhasm: x0 = mem128[ input_0 + 48 ]
+# asm 1: movdqu   48(<input_0=int64#1),>x0=reg128#7
+# asm 2: movdqu   48(<input_0=%rdi),>x0=%xmm6
+movdqu   48(%rdi),%xmm6
 
-# qhasm: x1 aligned= mem128[ input_0 + 176 ]
-# asm 1: movdqa   176(<input_0=int64#1),>x1=reg128#8
-# asm 2: movdqa   176(<input_0=%rdi),>x1=%xmm7
-movdqa   176(%rdi),%xmm7
+# qhasm: x1 = mem128[ input_0 + 176 ]
+# asm 1: movdqu   176(<input_0=int64#1),>x1=reg128#8
+# asm 2: movdqu   176(<input_0=%rdi),>x1=%xmm7
+movdqu   176(%rdi),%xmm7
 
-# qhasm: x2 aligned= mem128[ input_0 + 304 ]
-# asm 1: movdqa   304(<input_0=int64#1),>x2=reg128#9
-# asm 2: movdqa   304(<input_0=%rdi),>x2=%xmm8
-movdqa   304(%rdi),%xmm8
+# qhasm: x2 = mem128[ input_0 + 304 ]
+# asm 1: movdqu   304(<input_0=int64#1),>x2=reg128#9
+# asm 2: movdqu   304(<input_0=%rdi),>x2=%xmm8
+movdqu   304(%rdi),%xmm8
 
-# qhasm: x3 aligned= mem128[ input_0 + 432 ]
-# asm 1: movdqa   432(<input_0=int64#1),>x3=reg128#10
-# asm 2: movdqa   432(<input_0=%rdi),>x3=%xmm9
-movdqa   432(%rdi),%xmm9
+# qhasm: x3 = mem128[ input_0 + 432 ]
+# asm 1: movdqu   432(<input_0=int64#1),>x3=reg128#10
+# asm 2: movdqu   432(<input_0=%rdi),>x3=%xmm9
+movdqu   432(%rdi),%xmm9
 
-# qhasm: x4 aligned= mem128[ input_0 + 560 ]
-# asm 1: movdqa   560(<input_0=int64#1),>x4=reg128#11
-# asm 2: movdqa   560(<input_0=%rdi),>x4=%xmm10
-movdqa   560(%rdi),%xmm10
+# qhasm: x4 = mem128[ input_0 + 560 ]
+# asm 1: movdqu   560(<input_0=int64#1),>x4=reg128#11
+# asm 2: movdqu   560(<input_0=%rdi),>x4=%xmm10
+movdqu   560(%rdi),%xmm10
 
-# qhasm: x5 aligned= mem128[ input_0 + 688 ]
-# asm 1: movdqa   688(<input_0=int64#1),>x5=reg128#12
-# asm 2: movdqa   688(<input_0=%rdi),>x5=%xmm11
-movdqa   688(%rdi),%xmm11
+# qhasm: x5 = mem128[ input_0 + 688 ]
+# asm 1: movdqu   688(<input_0=int64#1),>x5=reg128#12
+# asm 2: movdqu   688(<input_0=%rdi),>x5=%xmm11
+movdqu   688(%rdi),%xmm11
 
-# qhasm: x6 aligned= mem128[ input_0 + 816 ]
-# asm 1: movdqa   816(<input_0=int64#1),>x6=reg128#13
-# asm 2: movdqa   816(<input_0=%rdi),>x6=%xmm12
-movdqa   816(%rdi),%xmm12
+# qhasm: x6 = mem128[ input_0 + 816 ]
+# asm 1: movdqu   816(<input_0=int64#1),>x6=reg128#13
+# asm 2: movdqu   816(<input_0=%rdi),>x6=%xmm12
+movdqu   816(%rdi),%xmm12
 
-# qhasm: x7 aligned= mem128[ input_0 + 944 ]
-# asm 1: movdqa   944(<input_0=int64#1),>x7=reg128#14
-# asm 2: movdqa   944(<input_0=%rdi),>x7=%xmm13
-movdqa   944(%rdi),%xmm13
+# qhasm: x7 = mem128[ input_0 + 944 ]
+# asm 1: movdqu   944(<input_0=int64#1),>x7=reg128#14
+# asm 2: movdqu   944(<input_0=%rdi),>x7=%xmm13
+movdqu   944(%rdi),%xmm13
 
 # qhasm: v00 = x0 & mask0
 # asm 1: vpand <mask0=reg128#1,<x0=reg128#7,>v00=reg128#15
@@ -1832,85 +1832,85 @@ vpor %xmm15,%xmm12,%xmm12
 # asm 2: vpor <v11=%xmm7,<v01=%xmm6,>x7=%xmm6
 vpor %xmm7,%xmm6,%xmm6
 
-# qhasm: mem128[ input_0 + 48 ] aligned= x0
-# asm 1: movdqa   <x0=reg128#10,48(<input_0=int64#1)
-# asm 2: movdqa   <x0=%xmm9,48(<input_0=%rdi)
-movdqa   %xmm9,48(%rdi)
+# qhasm: mem128[ input_0 + 48 ] = x0
+# asm 1: movdqu   <x0=reg128#10,48(<input_0=int64#1)
+# asm 2: movdqu   <x0=%xmm9,48(<input_0=%rdi)
+movdqu   %xmm9,48(%rdi)
 
-# qhasm: mem128[ input_0 + 176 ] aligned= x1
-# asm 1: movdqa   <x1=reg128#14,176(<input_0=int64#1)
-# asm 2: movdqa   <x1=%xmm13,176(<input_0=%rdi)
-movdqa   %xmm13,176(%rdi)
+# qhasm: mem128[ input_0 + 176 ] = x1
+# asm 1: movdqu   <x1=reg128#14,176(<input_0=int64#1)
+# asm 2: movdqu   <x1=%xmm13,176(<input_0=%rdi)
+movdqu   %xmm13,176(%rdi)
 
-# qhasm: mem128[ input_0 + 304 ] aligned= x2
-# asm 1: movdqa   <x2=reg128#15,304(<input_0=int64#1)
-# asm 2: movdqa   <x2=%xmm14,304(<input_0=%rdi)
-movdqa   %xmm14,304(%rdi)
+# qhasm: mem128[ input_0 + 304 ] = x2
+# asm 1: movdqu   <x2=reg128#15,304(<input_0=int64#1)
+# asm 2: movdqu   <x2=%xmm14,304(<input_0=%rdi)
+movdqu   %xmm14,304(%rdi)
 
-# qhasm: mem128[ input_0 + 432 ] aligned= x3
-# asm 1: movdqa   <x3=reg128#11,432(<input_0=int64#1)
-# asm 2: movdqa   <x3=%xmm10,432(<input_0=%rdi)
-movdqa   %xmm10,432(%rdi)
+# qhasm: mem128[ input_0 + 432 ] = x3
+# asm 1: movdqu   <x3=reg128#11,432(<input_0=int64#1)
+# asm 2: movdqu   <x3=%xmm10,432(<input_0=%rdi)
+movdqu   %xmm10,432(%rdi)
 
-# qhasm: mem128[ input_0 + 560 ] aligned= x4
-# asm 1: movdqa   <x4=reg128#12,560(<input_0=int64#1)
-# asm 2: movdqa   <x4=%xmm11,560(<input_0=%rdi)
-movdqa   %xmm11,560(%rdi)
+# qhasm: mem128[ input_0 + 560 ] = x4
+# asm 1: movdqu   <x4=reg128#12,560(<input_0=int64#1)
+# asm 2: movdqu   <x4=%xmm11,560(<input_0=%rdi)
+movdqu   %xmm11,560(%rdi)
 
-# qhasm: mem128[ input_0 + 688 ] aligned= x5
-# asm 1: movdqa   <x5=reg128#9,688(<input_0=int64#1)
-# asm 2: movdqa   <x5=%xmm8,688(<input_0=%rdi)
-movdqa   %xmm8,688(%rdi)
+# qhasm: mem128[ input_0 + 688 ] = x5
+# asm 1: movdqu   <x5=reg128#9,688(<input_0=int64#1)
+# asm 2: movdqu   <x5=%xmm8,688(<input_0=%rdi)
+movdqu   %xmm8,688(%rdi)
 
-# qhasm: mem128[ input_0 + 816 ] aligned= x6
-# asm 1: movdqa   <x6=reg128#13,816(<input_0=int64#1)
-# asm 2: movdqa   <x6=%xmm12,816(<input_0=%rdi)
-movdqa   %xmm12,816(%rdi)
+# qhasm: mem128[ input_0 + 816 ] = x6
+# asm 1: movdqu   <x6=reg128#13,816(<input_0=int64#1)
+# asm 2: movdqu   <x6=%xmm12,816(<input_0=%rdi)
+movdqu   %xmm12,816(%rdi)
 
-# qhasm: mem128[ input_0 + 944 ] aligned= x7
-# asm 1: movdqa   <x7=reg128#7,944(<input_0=int64#1)
-# asm 2: movdqa   <x7=%xmm6,944(<input_0=%rdi)
-movdqa   %xmm6,944(%rdi)
+# qhasm: mem128[ input_0 + 944 ] = x7
+# asm 1: movdqu   <x7=reg128#7,944(<input_0=int64#1)
+# asm 2: movdqu   <x7=%xmm6,944(<input_0=%rdi)
+movdqu   %xmm6,944(%rdi)
 
-# qhasm: x0 aligned= mem128[ input_0 + 64 ]
-# asm 1: movdqa   64(<input_0=int64#1),>x0=reg128#7
-# asm 2: movdqa   64(<input_0=%rdi),>x0=%xmm6
-movdqa   64(%rdi),%xmm6
+# qhasm: x0 = mem128[ input_0 + 64 ]
+# asm 1: movdqu   64(<input_0=int64#1),>x0=reg128#7
+# asm 2: movdqu   64(<input_0=%rdi),>x0=%xmm6
+movdqu   64(%rdi),%xmm6
 
-# qhasm: x1 aligned= mem128[ input_0 + 192 ]
-# asm 1: movdqa   192(<input_0=int64#1),>x1=reg128#8
-# asm 2: movdqa   192(<input_0=%rdi),>x1=%xmm7
-movdqa   192(%rdi),%xmm7
+# qhasm: x1 = mem128[ input_0 + 192 ]
+# asm 1: movdqu   192(<input_0=int64#1),>x1=reg128#8
+# asm 2: movdqu   192(<input_0=%rdi),>x1=%xmm7
+movdqu   192(%rdi),%xmm7
 
-# qhasm: x2 aligned= mem128[ input_0 + 320 ]
-# asm 1: movdqa   320(<input_0=int64#1),>x2=reg128#9
-# asm 2: movdqa   320(<input_0=%rdi),>x2=%xmm8
-movdqa   320(%rdi),%xmm8
+# qhasm: x2 = mem128[ input_0 + 320 ]
+# asm 1: movdqu   320(<input_0=int64#1),>x2=reg128#9
+# asm 2: movdqu   320(<input_0=%rdi),>x2=%xmm8
+movdqu   320(%rdi),%xmm8
 
-# qhasm: x3 aligned= mem128[ input_0 + 448 ]
-# asm 1: movdqa   448(<input_0=int64#1),>x3=reg128#10
-# asm 2: movdqa   448(<input_0=%rdi),>x3=%xmm9
-movdqa   448(%rdi),%xmm9
+# qhasm: x3 = mem128[ input_0 + 448 ]
+# asm 1: movdqu   448(<input_0=int64#1),>x3=reg128#10
+# asm 2: movdqu   448(<input_0=%rdi),>x3=%xmm9
+movdqu   448(%rdi),%xmm9
 
-# qhasm: x4 aligned= mem128[ input_0 + 576 ]
-# asm 1: movdqa   576(<input_0=int64#1),>x4=reg128#11
-# asm 2: movdqa   576(<input_0=%rdi),>x4=%xmm10
-movdqa   576(%rdi),%xmm10
+# qhasm: x4 = mem128[ input_0 + 576 ]
+# asm 1: movdqu   576(<input_0=int64#1),>x4=reg128#11
+# asm 2: movdqu   576(<input_0=%rdi),>x4=%xmm10
+movdqu   576(%rdi),%xmm10
 
-# qhasm: x5 aligned= mem128[ input_0 + 704 ]
-# asm 1: movdqa   704(<input_0=int64#1),>x5=reg128#12
-# asm 2: movdqa   704(<input_0=%rdi),>x5=%xmm11
-movdqa   704(%rdi),%xmm11
+# qhasm: x5 = mem128[ input_0 + 704 ]
+# asm 1: movdqu   704(<input_0=int64#1),>x5=reg128#12
+# asm 2: movdqu   704(<input_0=%rdi),>x5=%xmm11
+movdqu   704(%rdi),%xmm11
 
-# qhasm: x6 aligned= mem128[ input_0 + 832 ]
-# asm 1: movdqa   832(<input_0=int64#1),>x6=reg128#13
-# asm 2: movdqa   832(<input_0=%rdi),>x6=%xmm12
-movdqa   832(%rdi),%xmm12
+# qhasm: x6 = mem128[ input_0 + 832 ]
+# asm 1: movdqu   832(<input_0=int64#1),>x6=reg128#13
+# asm 2: movdqu   832(<input_0=%rdi),>x6=%xmm12
+movdqu   832(%rdi),%xmm12
 
-# qhasm: x7 aligned= mem128[ input_0 + 960 ]
-# asm 1: movdqa   960(<input_0=int64#1),>x7=reg128#14
-# asm 2: movdqa   960(<input_0=%rdi),>x7=%xmm13
-movdqa   960(%rdi),%xmm13
+# qhasm: x7 = mem128[ input_0 + 960 ]
+# asm 1: movdqu   960(<input_0=int64#1),>x7=reg128#14
+# asm 2: movdqu   960(<input_0=%rdi),>x7=%xmm13
+movdqu   960(%rdi),%xmm13
 
 # qhasm: v00 = x0 & mask0
 # asm 1: vpand <mask0=reg128#1,<x0=reg128#7,>v00=reg128#15
@@ -2272,85 +2272,85 @@ vpor %xmm15,%xmm12,%xmm12
 # asm 2: vpor <v11=%xmm7,<v01=%xmm6,>x7=%xmm6
 vpor %xmm7,%xmm6,%xmm6
 
-# qhasm: mem128[ input_0 + 64 ] aligned= x0
-# asm 1: movdqa   <x0=reg128#10,64(<input_0=int64#1)
-# asm 2: movdqa   <x0=%xmm9,64(<input_0=%rdi)
-movdqa   %xmm9,64(%rdi)
+# qhasm: mem128[ input_0 + 64 ] = x0
+# asm 1: movdqu   <x0=reg128#10,64(<input_0=int64#1)
+# asm 2: movdqu   <x0=%xmm9,64(<input_0=%rdi)
+movdqu   %xmm9,64(%rdi)
 
-# qhasm: mem128[ input_0 + 192 ] aligned= x1
-# asm 1: movdqa   <x1=reg128#14,192(<input_0=int64#1)
-# asm 2: movdqa   <x1=%xmm13,192(<input_0=%rdi)
-movdqa   %xmm13,192(%rdi)
+# qhasm: mem128[ input_0 + 192 ] = x1
+# asm 1: movdqu   <x1=reg128#14,192(<input_0=int64#1)
+# asm 2: movdqu   <x1=%xmm13,192(<input_0=%rdi)
+movdqu   %xmm13,192(%rdi)
 
-# qhasm: mem128[ input_0 + 320 ] aligned= x2
-# asm 1: movdqa   <x2=reg128#15,320(<input_0=int64#1)
-# asm 2: movdqa   <x2=%xmm14,320(<input_0=%rdi)
-movdqa   %xmm14,320(%rdi)
+# qhasm: mem128[ input_0 + 320 ] = x2
+# asm 1: movdqu   <x2=reg128#15,320(<input_0=int64#1)
+# asm 2: movdqu   <x2=%xmm14,320(<input_0=%rdi)
+movdqu   %xmm14,320(%rdi)
 
-# qhasm: mem128[ input_0 + 448 ] aligned= x3
-# asm 1: movdqa   <x3=reg128#11,448(<input_0=int64#1)
-# asm 2: movdqa   <x3=%xmm10,448(<input_0=%rdi)
-movdqa   %xmm10,448(%rdi)
+# qhasm: mem128[ input_0 + 448 ] = x3
+# asm 1: movdqu   <x3=reg128#11,448(<input_0=int64#1)
+# asm 2: movdqu   <x3=%xmm10,448(<input_0=%rdi)
+movdqu   %xmm10,448(%rdi)
 
-# qhasm: mem128[ input_0 + 576 ] aligned= x4
-# asm 1: movdqa   <x4=reg128#12,576(<input_0=int64#1)
-# asm 2: movdqa   <x4=%xmm11,576(<input_0=%rdi)
-movdqa   %xmm11,576(%rdi)
+# qhasm: mem128[ input_0 + 576 ] = x4
+# asm 1: movdqu   <x4=reg128#12,576(<input_0=int64#1)
+# asm 2: movdqu   <x4=%xmm11,576(<input_0=%rdi)
+movdqu   %xmm11,576(%rdi)
 
-# qhasm: mem128[ input_0 + 704 ] aligned= x5
-# asm 1: movdqa   <x5=reg128#9,704(<input_0=int64#1)
-# asm 2: movdqa   <x5=%xmm8,704(<input_0=%rdi)
-movdqa   %xmm8,704(%rdi)
+# qhasm: mem128[ input_0 + 704 ] = x5
+# asm 1: movdqu   <x5=reg128#9,704(<input_0=int64#1)
+# asm 2: movdqu   <x5=%xmm8,704(<input_0=%rdi)
+movdqu   %xmm8,704(%rdi)
 
-# qhasm: mem128[ input_0 + 832 ] aligned= x6
-# asm 1: movdqa   <x6=reg128#13,832(<input_0=int64#1)
-# asm 2: movdqa   <x6=%xmm12,832(<input_0=%rdi)
-movdqa   %xmm12,832(%rdi)
+# qhasm: mem128[ input_0 + 832 ] = x6
+# asm 1: movdqu   <x6=reg128#13,832(<input_0=int64#1)
+# asm 2: movdqu   <x6=%xmm12,832(<input_0=%rdi)
+movdqu   %xmm12,832(%rdi)
 
-# qhasm: mem128[ input_0 + 960 ] aligned= x7
-# asm 1: movdqa   <x7=reg128#7,960(<input_0=int64#1)
-# asm 2: movdqa   <x7=%xmm6,960(<input_0=%rdi)
-movdqa   %xmm6,960(%rdi)
+# qhasm: mem128[ input_0 + 960 ] = x7
+# asm 1: movdqu   <x7=reg128#7,960(<input_0=int64#1)
+# asm 2: movdqu   <x7=%xmm6,960(<input_0=%rdi)
+movdqu   %xmm6,960(%rdi)
 
-# qhasm: x0 aligned= mem128[ input_0 + 80 ]
-# asm 1: movdqa   80(<input_0=int64#1),>x0=reg128#7
-# asm 2: movdqa   80(<input_0=%rdi),>x0=%xmm6
-movdqa   80(%rdi),%xmm6
+# qhasm: x0 = mem128[ input_0 + 80 ]
+# asm 1: movdqu   80(<input_0=int64#1),>x0=reg128#7
+# asm 2: movdqu   80(<input_0=%rdi),>x0=%xmm6
+movdqu   80(%rdi),%xmm6
 
-# qhasm: x1 aligned= mem128[ input_0 + 208 ]
-# asm 1: movdqa   208(<input_0=int64#1),>x1=reg128#8
-# asm 2: movdqa   208(<input_0=%rdi),>x1=%xmm7
-movdqa   208(%rdi),%xmm7
+# qhasm: x1 = mem128[ input_0 + 208 ]
+# asm 1: movdqu   208(<input_0=int64#1),>x1=reg128#8
+# asm 2: movdqu   208(<input_0=%rdi),>x1=%xmm7
+movdqu   208(%rdi),%xmm7
 
-# qhasm: x2 aligned= mem128[ input_0 + 336 ]
-# asm 1: movdqa   336(<input_0=int64#1),>x2=reg128#9
-# asm 2: movdqa   336(<input_0=%rdi),>x2=%xmm8
-movdqa   336(%rdi),%xmm8
+# qhasm: x2 = mem128[ input_0 + 336 ]
+# asm 1: movdqu   336(<input_0=int64#1),>x2=reg128#9
+# asm 2: movdqu   336(<input_0=%rdi),>x2=%xmm8
+movdqu   336(%rdi),%xmm8
 
-# qhasm: x3 aligned= mem128[ input_0 + 464 ]
-# asm 1: movdqa   464(<input_0=int64#1),>x3=reg128#10
-# asm 2: movdqa   464(<input_0=%rdi),>x3=%xmm9
-movdqa   464(%rdi),%xmm9
+# qhasm: x3 = mem128[ input_0 + 464 ]
+# asm 1: movdqu   464(<input_0=int64#1),>x3=reg128#10
+# asm 2: movdqu   464(<input_0=%rdi),>x3=%xmm9
+movdqu   464(%rdi),%xmm9
 
-# qhasm: x4 aligned= mem128[ input_0 + 592 ]
-# asm 1: movdqa   592(<input_0=int64#1),>x4=reg128#11
-# asm 2: movdqa   592(<input_0=%rdi),>x4=%xmm10
-movdqa   592(%rdi),%xmm10
+# qhasm: x4 = mem128[ input_0 + 592 ]
+# asm 1: movdqu   592(<input_0=int64#1),>x4=reg128#11
+# asm 2: movdqu   592(<input_0=%rdi),>x4=%xmm10
+movdqu   592(%rdi),%xmm10
 
-# qhasm: x5 aligned= mem128[ input_0 + 720 ]
-# asm 1: movdqa   720(<input_0=int64#1),>x5=reg128#12
-# asm 2: movdqa   720(<input_0=%rdi),>x5=%xmm11
-movdqa   720(%rdi),%xmm11
+# qhasm: x5 = mem128[ input_0 + 720 ]
+# asm 1: movdqu   720(<input_0=int64#1),>x5=reg128#12
+# asm 2: movdqu   720(<input_0=%rdi),>x5=%xmm11
+movdqu   720(%rdi),%xmm11
 
-# qhasm: x6 aligned= mem128[ input_0 + 848 ]
-# asm 1: movdqa   848(<input_0=int64#1),>x6=reg128#13
-# asm 2: movdqa   848(<input_0=%rdi),>x6=%xmm12
-movdqa   848(%rdi),%xmm12
+# qhasm: x6 = mem128[ input_0 + 848 ]
+# asm 1: movdqu   848(<input_0=int64#1),>x6=reg128#13
+# asm 2: movdqu   848(<input_0=%rdi),>x6=%xmm12
+movdqu   848(%rdi),%xmm12
 
-# qhasm: x7 aligned= mem128[ input_0 + 976 ]
-# asm 1: movdqa   976(<input_0=int64#1),>x7=reg128#14
-# asm 2: movdqa   976(<input_0=%rdi),>x7=%xmm13
-movdqa   976(%rdi),%xmm13
+# qhasm: x7 = mem128[ input_0 + 976 ]
+# asm 1: movdqu   976(<input_0=int64#1),>x7=reg128#14
+# asm 2: movdqu   976(<input_0=%rdi),>x7=%xmm13
+movdqu   976(%rdi),%xmm13
 
 # qhasm: v00 = x0 & mask0
 # asm 1: vpand <mask0=reg128#1,<x0=reg128#7,>v00=reg128#15
@@ -2712,85 +2712,85 @@ vpor %xmm15,%xmm12,%xmm12
 # asm 2: vpor <v11=%xmm7,<v01=%xmm6,>x7=%xmm6
 vpor %xmm7,%xmm6,%xmm6
 
-# qhasm: mem128[ input_0 + 80 ] aligned= x0
-# asm 1: movdqa   <x0=reg128#10,80(<input_0=int64#1)
-# asm 2: movdqa   <x0=%xmm9,80(<input_0=%rdi)
-movdqa   %xmm9,80(%rdi)
+# qhasm: mem128[ input_0 + 80 ] = x0
+# asm 1: movdqu   <x0=reg128#10,80(<input_0=int64#1)
+# asm 2: movdqu   <x0=%xmm9,80(<input_0=%rdi)
+movdqu   %xmm9,80(%rdi)
 
-# qhasm: mem128[ input_0 + 208 ] aligned= x1
-# asm 1: movdqa   <x1=reg128#14,208(<input_0=int64#1)
-# asm 2: movdqa   <x1=%xmm13,208(<input_0=%rdi)
-movdqa   %xmm13,208(%rdi)
+# qhasm: mem128[ input_0 + 208 ] = x1
+# asm 1: movdqu   <x1=reg128#14,208(<input_0=int64#1)
+# asm 2: movdqu   <x1=%xmm13,208(<input_0=%rdi)
+movdqu   %xmm13,208(%rdi)
 
-# qhasm: mem128[ input_0 + 336 ] aligned= x2
-# asm 1: movdqa   <x2=reg128#15,336(<input_0=int64#1)
-# asm 2: movdqa   <x2=%xmm14,336(<input_0=%rdi)
-movdqa   %xmm14,336(%rdi)
+# qhasm: mem128[ input_0 + 336 ] = x2
+# asm 1: movdqu   <x2=reg128#15,336(<input_0=int64#1)
+# asm 2: movdqu   <x2=%xmm14,336(<input_0=%rdi)
+movdqu   %xmm14,336(%rdi)
 
-# qhasm: mem128[ input_0 + 464 ] aligned= x3
-# asm 1: movdqa   <x3=reg128#11,464(<input_0=int64#1)
-# asm 2: movdqa   <x3=%xmm10,464(<input_0=%rdi)
-movdqa   %xmm10,464(%rdi)
+# qhasm: mem128[ input_0 + 464 ] = x3
+# asm 1: movdqu   <x3=reg128#11,464(<input_0=int64#1)
+# asm 2: movdqu   <x3=%xmm10,464(<input_0=%rdi)
+movdqu   %xmm10,464(%rdi)
 
-# qhasm: mem128[ input_0 + 592 ] aligned= x4
-# asm 1: movdqa   <x4=reg128#12,592(<input_0=int64#1)
-# asm 2: movdqa   <x4=%xmm11,592(<input_0=%rdi)
-movdqa   %xmm11,592(%rdi)
+# qhasm: mem128[ input_0 + 592 ] = x4
+# asm 1: movdqu   <x4=reg128#12,592(<input_0=int64#1)
+# asm 2: movdqu   <x4=%xmm11,592(<input_0=%rdi)
+movdqu   %xmm11,592(%rdi)
 
-# qhasm: mem128[ input_0 + 720 ] aligned= x5
-# asm 1: movdqa   <x5=reg128#9,720(<input_0=int64#1)
-# asm 2: movdqa   <x5=%xmm8,720(<input_0=%rdi)
-movdqa   %xmm8,720(%rdi)
+# qhasm: mem128[ input_0 + 720 ] = x5
+# asm 1: movdqu   <x5=reg128#9,720(<input_0=int64#1)
+# asm 2: movdqu   <x5=%xmm8,720(<input_0=%rdi)
+movdqu   %xmm8,720(%rdi)
 
-# qhasm: mem128[ input_0 + 848 ] aligned= x6
-# asm 1: movdqa   <x6=reg128#13,848(<input_0=int64#1)
-# asm 2: movdqa   <x6=%xmm12,848(<input_0=%rdi)
-movdqa   %xmm12,848(%rdi)
+# qhasm: mem128[ input_0 + 848 ] = x6
+# asm 1: movdqu   <x6=reg128#13,848(<input_0=int64#1)
+# asm 2: movdqu   <x6=%xmm12,848(<input_0=%rdi)
+movdqu   %xmm12,848(%rdi)
 
-# qhasm: mem128[ input_0 + 976 ] aligned= x7
-# asm 1: movdqa   <x7=reg128#7,976(<input_0=int64#1)
-# asm 2: movdqa   <x7=%xmm6,976(<input_0=%rdi)
-movdqa   %xmm6,976(%rdi)
+# qhasm: mem128[ input_0 + 976 ] = x7
+# asm 1: movdqu   <x7=reg128#7,976(<input_0=int64#1)
+# asm 2: movdqu   <x7=%xmm6,976(<input_0=%rdi)
+movdqu   %xmm6,976(%rdi)
 
-# qhasm: x0 aligned= mem128[ input_0 + 96 ]
-# asm 1: movdqa   96(<input_0=int64#1),>x0=reg128#7
-# asm 2: movdqa   96(<input_0=%rdi),>x0=%xmm6
-movdqa   96(%rdi),%xmm6
+# qhasm: x0 = mem128[ input_0 + 96 ]
+# asm 1: movdqu   96(<input_0=int64#1),>x0=reg128#7
+# asm 2: movdqu   96(<input_0=%rdi),>x0=%xmm6
+movdqu   96(%rdi),%xmm6
 
-# qhasm: x1 aligned= mem128[ input_0 + 224 ]
-# asm 1: movdqa   224(<input_0=int64#1),>x1=reg128#8
-# asm 2: movdqa   224(<input_0=%rdi),>x1=%xmm7
-movdqa   224(%rdi),%xmm7
+# qhasm: x1 = mem128[ input_0 + 224 ]
+# asm 1: movdqu   224(<input_0=int64#1),>x1=reg128#8
+# asm 2: movdqu   224(<input_0=%rdi),>x1=%xmm7
+movdqu   224(%rdi),%xmm7
 
-# qhasm: x2 aligned= mem128[ input_0 + 352 ]
-# asm 1: movdqa   352(<input_0=int64#1),>x2=reg128#9
-# asm 2: movdqa   352(<input_0=%rdi),>x2=%xmm8
-movdqa   352(%rdi),%xmm8
+# qhasm: x2 = mem128[ input_0 + 352 ]
+# asm 1: movdqu   352(<input_0=int64#1),>x2=reg128#9
+# asm 2: movdqu   352(<input_0=%rdi),>x2=%xmm8
+movdqu   352(%rdi),%xmm8
 
-# qhasm: x3 aligned= mem128[ input_0 + 480 ]
-# asm 1: movdqa   480(<input_0=int64#1),>x3=reg128#10
-# asm 2: movdqa   480(<input_0=%rdi),>x3=%xmm9
-movdqa   480(%rdi),%xmm9
+# qhasm: x3 = mem128[ input_0 + 480 ]
+# asm 1: movdqu   480(<input_0=int64#1),>x3=reg128#10
+# asm 2: movdqu   480(<input_0=%rdi),>x3=%xmm9
+movdqu   480(%rdi),%xmm9
 
-# qhasm: x4 aligned= mem128[ input_0 + 608 ]
-# asm 1: movdqa   608(<input_0=int64#1),>x4=reg128#11
-# asm 2: movdqa   608(<input_0=%rdi),>x4=%xmm10
-movdqa   608(%rdi),%xmm10
+# qhasm: x4 = mem128[ input_0 + 608 ]
+# asm 1: movdqu   608(<input_0=int64#1),>x4=reg128#11
+# asm 2: movdqu   608(<input_0=%rdi),>x4=%xmm10
+movdqu   608(%rdi),%xmm10
 
-# qhasm: x5 aligned= mem128[ input_0 + 736 ]
-# asm 1: movdqa   736(<input_0=int64#1),>x5=reg128#12
-# asm 2: movdqa   736(<input_0=%rdi),>x5=%xmm11
-movdqa   736(%rdi),%xmm11
+# qhasm: x5 = mem128[ input_0 + 736 ]
+# asm 1: movdqu   736(<input_0=int64#1),>x5=reg128#12
+# asm 2: movdqu   736(<input_0=%rdi),>x5=%xmm11
+movdqu   736(%rdi),%xmm11
 
-# qhasm: x6 aligned= mem128[ input_0 + 864 ]
-# asm 1: movdqa   864(<input_0=int64#1),>x6=reg128#13
-# asm 2: movdqa   864(<input_0=%rdi),>x6=%xmm12
-movdqa   864(%rdi),%xmm12
+# qhasm: x6 = mem128[ input_0 + 864 ]
+# asm 1: movdqu   864(<input_0=int64#1),>x6=reg128#13
+# asm 2: movdqu   864(<input_0=%rdi),>x6=%xmm12
+movdqu   864(%rdi),%xmm12
 
-# qhasm: x7 aligned= mem128[ input_0 + 992 ]
-# asm 1: movdqa   992(<input_0=int64#1),>x7=reg128#14
-# asm 2: movdqa   992(<input_0=%rdi),>x7=%xmm13
-movdqa   992(%rdi),%xmm13
+# qhasm: x7 = mem128[ input_0 + 992 ]
+# asm 1: movdqu   992(<input_0=int64#1),>x7=reg128#14
+# asm 2: movdqu   992(<input_0=%rdi),>x7=%xmm13
+movdqu   992(%rdi),%xmm13
 
 # qhasm: v00 = x0 & mask0
 # asm 1: vpand <mask0=reg128#1,<x0=reg128#7,>v00=reg128#15
@@ -3152,85 +3152,85 @@ vpor %xmm15,%xmm12,%xmm12
 # asm 2: vpor <v11=%xmm7,<v01=%xmm6,>x7=%xmm6
 vpor %xmm7,%xmm6,%xmm6
 
-# qhasm: mem128[ input_0 + 96 ] aligned= x0
-# asm 1: movdqa   <x0=reg128#10,96(<input_0=int64#1)
-# asm 2: movdqa   <x0=%xmm9,96(<input_0=%rdi)
-movdqa   %xmm9,96(%rdi)
+# qhasm: mem128[ input_0 + 96 ] = x0
+# asm 1: movdqu   <x0=reg128#10,96(<input_0=int64#1)
+# asm 2: movdqu   <x0=%xmm9,96(<input_0=%rdi)
+movdqu   %xmm9,96(%rdi)
 
-# qhasm: mem128[ input_0 + 224 ] aligned= x1
-# asm 1: movdqa   <x1=reg128#14,224(<input_0=int64#1)
-# asm 2: movdqa   <x1=%xmm13,224(<input_0=%rdi)
-movdqa   %xmm13,224(%rdi)
+# qhasm: mem128[ input_0 + 224 ] = x1
+# asm 1: movdqu   <x1=reg128#14,224(<input_0=int64#1)
+# asm 2: movdqu   <x1=%xmm13,224(<input_0=%rdi)
+movdqu   %xmm13,224(%rdi)
 
-# qhasm: mem128[ input_0 + 352 ] aligned= x2
-# asm 1: movdqa   <x2=reg128#15,352(<input_0=int64#1)
-# asm 2: movdqa   <x2=%xmm14,352(<input_0=%rdi)
-movdqa   %xmm14,352(%rdi)
+# qhasm: mem128[ input_0 + 352 ] = x2
+# asm 1: movdqu   <x2=reg128#15,352(<input_0=int64#1)
+# asm 2: movdqu   <x2=%xmm14,352(<input_0=%rdi)
+movdqu   %xmm14,352(%rdi)
 
-# qhasm: mem128[ input_0 + 480 ] aligned= x3
-# asm 1: movdqa   <x3=reg128#11,480(<input_0=int64#1)
-# asm 2: movdqa   <x3=%xmm10,480(<input_0=%rdi)
-movdqa   %xmm10,480(%rdi)
+# qhasm: mem128[ input_0 + 480 ] = x3
+# asm 1: movdqu   <x3=reg128#11,480(<input_0=int64#1)
+# asm 2: movdqu   <x3=%xmm10,480(<input_0=%rdi)
+movdqu   %xmm10,480(%rdi)
 
-# qhasm: mem128[ input_0 + 608 ] aligned= x4
-# asm 1: movdqa   <x4=reg128#12,608(<input_0=int64#1)
-# asm 2: movdqa   <x4=%xmm11,608(<input_0=%rdi)
-movdqa   %xmm11,608(%rdi)
+# qhasm: mem128[ input_0 + 608 ] = x4
+# asm 1: movdqu   <x4=reg128#12,608(<input_0=int64#1)
+# asm 2: movdqu   <x4=%xmm11,608(<input_0=%rdi)
+movdqu   %xmm11,608(%rdi)
 
-# qhasm: mem128[ input_0 + 736 ] aligned= x5
-# asm 1: movdqa   <x5=reg128#9,736(<input_0=int64#1)
-# asm 2: movdqa   <x5=%xmm8,736(<input_0=%rdi)
-movdqa   %xmm8,736(%rdi)
+# qhasm: mem128[ input_0 + 736 ] = x5
+# asm 1: movdqu   <x5=reg128#9,736(<input_0=int64#1)
+# asm 2: movdqu   <x5=%xmm8,736(<input_0=%rdi)
+movdqu   %xmm8,736(%rdi)
 
-# qhasm: mem128[ input_0 + 864 ] aligned= x6
-# asm 1: movdqa   <x6=reg128#13,864(<input_0=int64#1)
-# asm 2: movdqa   <x6=%xmm12,864(<input_0=%rdi)
-movdqa   %xmm12,864(%rdi)
+# qhasm: mem128[ input_0 + 864 ] = x6
+# asm 1: movdqu   <x6=reg128#13,864(<input_0=int64#1)
+# asm 2: movdqu   <x6=%xmm12,864(<input_0=%rdi)
+movdqu   %xmm12,864(%rdi)
 
-# qhasm: mem128[ input_0 + 992 ] aligned= x7
-# asm 1: movdqa   <x7=reg128#7,992(<input_0=int64#1)
-# asm 2: movdqa   <x7=%xmm6,992(<input_0=%rdi)
-movdqa   %xmm6,992(%rdi)
+# qhasm: mem128[ input_0 + 992 ] = x7
+# asm 1: movdqu   <x7=reg128#7,992(<input_0=int64#1)
+# asm 2: movdqu   <x7=%xmm6,992(<input_0=%rdi)
+movdqu   %xmm6,992(%rdi)
 
-# qhasm: x0 aligned= mem128[ input_0 + 112 ]
-# asm 1: movdqa   112(<input_0=int64#1),>x0=reg128#7
-# asm 2: movdqa   112(<input_0=%rdi),>x0=%xmm6
-movdqa   112(%rdi),%xmm6
+# qhasm: x0 = mem128[ input_0 + 112 ]
+# asm 1: movdqu   112(<input_0=int64#1),>x0=reg128#7
+# asm 2: movdqu   112(<input_0=%rdi),>x0=%xmm6
+movdqu   112(%rdi),%xmm6
 
-# qhasm: x1 aligned= mem128[ input_0 + 240 ]
-# asm 1: movdqa   240(<input_0=int64#1),>x1=reg128#8
-# asm 2: movdqa   240(<input_0=%rdi),>x1=%xmm7
-movdqa   240(%rdi),%xmm7
+# qhasm: x1 = mem128[ input_0 + 240 ]
+# asm 1: movdqu   240(<input_0=int64#1),>x1=reg128#8
+# asm 2: movdqu   240(<input_0=%rdi),>x1=%xmm7
+movdqu   240(%rdi),%xmm7
 
-# qhasm: x2 aligned= mem128[ input_0 + 368 ]
-# asm 1: movdqa   368(<input_0=int64#1),>x2=reg128#9
-# asm 2: movdqa   368(<input_0=%rdi),>x2=%xmm8
-movdqa   368(%rdi),%xmm8
+# qhasm: x2 = mem128[ input_0 + 368 ]
+# asm 1: movdqu   368(<input_0=int64#1),>x2=reg128#9
+# asm 2: movdqu   368(<input_0=%rdi),>x2=%xmm8
+movdqu   368(%rdi),%xmm8
 
-# qhasm: x3 aligned= mem128[ input_0 + 496 ]
-# asm 1: movdqa   496(<input_0=int64#1),>x3=reg128#10
-# asm 2: movdqa   496(<input_0=%rdi),>x3=%xmm9
-movdqa   496(%rdi),%xmm9
+# qhasm: x3 = mem128[ input_0 + 496 ]
+# asm 1: movdqu   496(<input_0=int64#1),>x3=reg128#10
+# asm 2: movdqu   496(<input_0=%rdi),>x3=%xmm9
+movdqu   496(%rdi),%xmm9
 
-# qhasm: x4 aligned= mem128[ input_0 + 624 ]
-# asm 1: movdqa   624(<input_0=int64#1),>x4=reg128#11
-# asm 2: movdqa   624(<input_0=%rdi),>x4=%xmm10
-movdqa   624(%rdi),%xmm10
+# qhasm: x4 = mem128[ input_0 + 624 ]
+# asm 1: movdqu   624(<input_0=int64#1),>x4=reg128#11
+# asm 2: movdqu   624(<input_0=%rdi),>x4=%xmm10
+movdqu   624(%rdi),%xmm10
 
-# qhasm: x5 aligned= mem128[ input_0 + 752 ]
-# asm 1: movdqa   752(<input_0=int64#1),>x5=reg128#12
-# asm 2: movdqa   752(<input_0=%rdi),>x5=%xmm11
-movdqa   752(%rdi),%xmm11
+# qhasm: x5 = mem128[ input_0 + 752 ]
+# asm 1: movdqu   752(<input_0=int64#1),>x5=reg128#12
+# asm 2: movdqu   752(<input_0=%rdi),>x5=%xmm11
+movdqu   752(%rdi),%xmm11
 
-# qhasm: x6 aligned= mem128[ input_0 + 880 ]
-# asm 1: movdqa   880(<input_0=int64#1),>x6=reg128#13
-# asm 2: movdqa   880(<input_0=%rdi),>x6=%xmm12
-movdqa   880(%rdi),%xmm12
+# qhasm: x6 = mem128[ input_0 + 880 ]
+# asm 1: movdqu   880(<input_0=int64#1),>x6=reg128#13
+# asm 2: movdqu   880(<input_0=%rdi),>x6=%xmm12
+movdqu   880(%rdi),%xmm12
 
-# qhasm: x7 aligned= mem128[ input_0 + 1008 ]
-# asm 1: movdqa   1008(<input_0=int64#1),>x7=reg128#14
-# asm 2: movdqa   1008(<input_0=%rdi),>x7=%xmm13
-movdqa   1008(%rdi),%xmm13
+# qhasm: x7 = mem128[ input_0 + 1008 ]
+# asm 1: movdqu   1008(<input_0=int64#1),>x7=reg128#14
+# asm 2: movdqu   1008(<input_0=%rdi),>x7=%xmm13
+movdqu   1008(%rdi),%xmm13
 
 # qhasm: v00 = x0 & mask0
 # asm 1: vpand <mask0=reg128#1,<x0=reg128#7,>v00=reg128#15
@@ -3592,115 +3592,115 @@ vpor %xmm10,%xmm4,%xmm4
 # asm 2: vpor <v11=%xmm1,<v01=%xmm6,>x7=%xmm1
 vpor %xmm1,%xmm6,%xmm1
 
-# qhasm: mem128[ input_0 + 112 ] aligned= x0
-# asm 1: movdqa   <x0=reg128#4,112(<input_0=int64#1)
-# asm 2: movdqa   <x0=%xmm3,112(<input_0=%rdi)
-movdqa   %xmm3,112(%rdi)
+# qhasm: mem128[ input_0 + 112 ] = x0
+# asm 1: movdqu   <x0=reg128#4,112(<input_0=int64#1)
+# asm 2: movdqu   <x0=%xmm3,112(<input_0=%rdi)
+movdqu   %xmm3,112(%rdi)
 
-# qhasm: mem128[ input_0 + 240 ] aligned= x1
-# asm 1: movdqa   <x1=reg128#8,240(<input_0=int64#1)
-# asm 2: movdqa   <x1=%xmm7,240(<input_0=%rdi)
-movdqa   %xmm7,240(%rdi)
+# qhasm: mem128[ input_0 + 240 ] = x1
+# asm 1: movdqu   <x1=reg128#8,240(<input_0=int64#1)
+# asm 2: movdqu   <x1=%xmm7,240(<input_0=%rdi)
+movdqu   %xmm7,240(%rdi)
 
-# qhasm: mem128[ input_0 + 368 ] aligned= x2
-# asm 1: movdqa   <x2=reg128#9,368(<input_0=int64#1)
-# asm 2: movdqa   <x2=%xmm8,368(<input_0=%rdi)
-movdqa   %xmm8,368(%rdi)
+# qhasm: mem128[ input_0 + 368 ] = x2
+# asm 1: movdqu   <x2=reg128#9,368(<input_0=int64#1)
+# asm 2: movdqu   <x2=%xmm8,368(<input_0=%rdi)
+movdqu   %xmm8,368(%rdi)
 
-# qhasm: mem128[ input_0 + 496 ] aligned= x3
-# asm 1: movdqa   <x3=reg128#1,496(<input_0=int64#1)
-# asm 2: movdqa   <x3=%xmm0,496(<input_0=%rdi)
-movdqa   %xmm0,496(%rdi)
+# qhasm: mem128[ input_0 + 496 ] = x3
+# asm 1: movdqu   <x3=reg128#1,496(<input_0=int64#1)
+# asm 2: movdqu   <x3=%xmm0,496(<input_0=%rdi)
+movdqu   %xmm0,496(%rdi)
 
-# qhasm: mem128[ input_0 + 624 ] aligned= x4
-# asm 1: movdqa   <x4=reg128#10,624(<input_0=int64#1)
-# asm 2: movdqa   <x4=%xmm9,624(<input_0=%rdi)
-movdqa   %xmm9,624(%rdi)
+# qhasm: mem128[ input_0 + 624 ] = x4
+# asm 1: movdqu   <x4=reg128#10,624(<input_0=int64#1)
+# asm 2: movdqu   <x4=%xmm9,624(<input_0=%rdi)
+movdqu   %xmm9,624(%rdi)
 
-# qhasm: mem128[ input_0 + 752 ] aligned= x5
-# asm 1: movdqa   <x5=reg128#3,752(<input_0=int64#1)
-# asm 2: movdqa   <x5=%xmm2,752(<input_0=%rdi)
-movdqa   %xmm2,752(%rdi)
+# qhasm: mem128[ input_0 + 752 ] = x5
+# asm 1: movdqu   <x5=reg128#3,752(<input_0=int64#1)
+# asm 2: movdqu   <x5=%xmm2,752(<input_0=%rdi)
+movdqu   %xmm2,752(%rdi)
 
-# qhasm: mem128[ input_0 + 880 ] aligned= x6
-# asm 1: movdqa   <x6=reg128#5,880(<input_0=int64#1)
-# asm 2: movdqa   <x6=%xmm4,880(<input_0=%rdi)
-movdqa   %xmm4,880(%rdi)
+# qhasm: mem128[ input_0 + 880 ] = x6
+# asm 1: movdqu   <x6=reg128#5,880(<input_0=int64#1)
+# asm 2: movdqu   <x6=%xmm4,880(<input_0=%rdi)
+movdqu   %xmm4,880(%rdi)
 
-# qhasm: mem128[ input_0 + 1008 ] aligned= x7
-# asm 1: movdqa   <x7=reg128#2,1008(<input_0=int64#1)
-# asm 2: movdqa   <x7=%xmm1,1008(<input_0=%rdi)
-movdqa   %xmm1,1008(%rdi)
+# qhasm: mem128[ input_0 + 1008 ] = x7
+# asm 1: movdqu   <x7=reg128#2,1008(<input_0=int64#1)
+# asm 2: movdqu   <x7=%xmm1,1008(<input_0=%rdi)
+movdqu   %xmm1,1008(%rdi)
 
 # qhasm: mask0 aligned= mem128[ MASK2_0 ]
-# asm 1: movdqa   MASK2_0,>mask0=reg128#1
-# asm 2: movdqa   MASK2_0,>mask0=%xmm0
+# asm 1: movdqa   MASK2_0(%rip),>mask0=reg128#1
+# asm 2: movdqa   MASK2_0(%rip),>mask0=%xmm0
 movdqa   MASK2_0(%rip),%xmm0
 
 # qhasm: mask1 aligned= mem128[ MASK2_1 ]
-# asm 1: movdqa   MASK2_1,>mask1=reg128#2
-# asm 2: movdqa   MASK2_1,>mask1=%xmm1
+# asm 1: movdqa   MASK2_1(%rip),>mask1=reg128#2
+# asm 2: movdqa   MASK2_1(%rip),>mask1=%xmm1
 movdqa   MASK2_1(%rip),%xmm1
 
 # qhasm: mask2 aligned= mem128[ MASK1_0 ]
-# asm 1: movdqa   MASK1_0,>mask2=reg128#3
-# asm 2: movdqa   MASK1_0,>mask2=%xmm2
+# asm 1: movdqa   MASK1_0(%rip),>mask2=reg128#3
+# asm 2: movdqa   MASK1_0(%rip),>mask2=%xmm2
 movdqa   MASK1_0(%rip),%xmm2
 
 # qhasm: mask3 aligned= mem128[ MASK1_1 ]
-# asm 1: movdqa   MASK1_1,>mask3=reg128#4
-# asm 2: movdqa   MASK1_1,>mask3=%xmm3
+# asm 1: movdqa   MASK1_1(%rip),>mask3=reg128#4
+# asm 2: movdqa   MASK1_1(%rip),>mask3=%xmm3
 movdqa   MASK1_1(%rip),%xmm3
 
 # qhasm: mask4 aligned= mem128[ MASK0_0 ]
-# asm 1: movdqa   MASK0_0,>mask4=reg128#5
-# asm 2: movdqa   MASK0_0,>mask4=%xmm4
+# asm 1: movdqa   MASK0_0(%rip),>mask4=reg128#5
+# asm 2: movdqa   MASK0_0(%rip),>mask4=%xmm4
 movdqa   MASK0_0(%rip),%xmm4
 
 # qhasm: mask5 aligned= mem128[ MASK0_1 ]
-# asm 1: movdqa   MASK0_1,>mask5=reg128#6
-# asm 2: movdqa   MASK0_1,>mask5=%xmm5
+# asm 1: movdqa   MASK0_1(%rip),>mask5=reg128#6
+# asm 2: movdqa   MASK0_1(%rip),>mask5=%xmm5
 movdqa   MASK0_1(%rip),%xmm5
 
-# qhasm: x0 aligned= mem128[ input_0 + 0 ]
-# asm 1: movdqa   0(<input_0=int64#1),>x0=reg128#7
-# asm 2: movdqa   0(<input_0=%rdi),>x0=%xmm6
-movdqa   0(%rdi),%xmm6
+# qhasm: x0 = mem128[ input_0 + 0 ]
+# asm 1: movdqu   0(<input_0=int64#1),>x0=reg128#7
+# asm 2: movdqu   0(<input_0=%rdi),>x0=%xmm6
+movdqu   0(%rdi),%xmm6
 
-# qhasm: x1 aligned= mem128[ input_0 + 16 ]
-# asm 1: movdqa   16(<input_0=int64#1),>x1=reg128#8
-# asm 2: movdqa   16(<input_0=%rdi),>x1=%xmm7
-movdqa   16(%rdi),%xmm7
+# qhasm: x1 = mem128[ input_0 + 16 ]
+# asm 1: movdqu   16(<input_0=int64#1),>x1=reg128#8
+# asm 2: movdqu   16(<input_0=%rdi),>x1=%xmm7
+movdqu   16(%rdi),%xmm7
 
-# qhasm: x2 aligned= mem128[ input_0 + 32 ]
-# asm 1: movdqa   32(<input_0=int64#1),>x2=reg128#9
-# asm 2: movdqa   32(<input_0=%rdi),>x2=%xmm8
-movdqa   32(%rdi),%xmm8
+# qhasm: x2 = mem128[ input_0 + 32 ]
+# asm 1: movdqu   32(<input_0=int64#1),>x2=reg128#9
+# asm 2: movdqu   32(<input_0=%rdi),>x2=%xmm8
+movdqu   32(%rdi),%xmm8
 
-# qhasm: x3 aligned= mem128[ input_0 + 48 ]
-# asm 1: movdqa   48(<input_0=int64#1),>x3=reg128#10
-# asm 2: movdqa   48(<input_0=%rdi),>x3=%xmm9
-movdqa   48(%rdi),%xmm9
+# qhasm: x3 = mem128[ input_0 + 48 ]
+# asm 1: movdqu   48(<input_0=int64#1),>x3=reg128#10
+# asm 2: movdqu   48(<input_0=%rdi),>x3=%xmm9
+movdqu   48(%rdi),%xmm9
 
-# qhasm: x4 aligned= mem128[ input_0 + 64 ]
-# asm 1: movdqa   64(<input_0=int64#1),>x4=reg128#11
-# asm 2: movdqa   64(<input_0=%rdi),>x4=%xmm10
-movdqa   64(%rdi),%xmm10
+# qhasm: x4 = mem128[ input_0 + 64 ]
+# asm 1: movdqu   64(<input_0=int64#1),>x4=reg128#11
+# asm 2: movdqu   64(<input_0=%rdi),>x4=%xmm10
+movdqu   64(%rdi),%xmm10
 
-# qhasm: x5 aligned= mem128[ input_0 + 80 ]
-# asm 1: movdqa   80(<input_0=int64#1),>x5=reg128#12
-# asm 2: movdqa   80(<input_0=%rdi),>x5=%xmm11
-movdqa   80(%rdi),%xmm11
+# qhasm: x5 = mem128[ input_0 + 80 ]
+# asm 1: movdqu   80(<input_0=int64#1),>x5=reg128#12
+# asm 2: movdqu   80(<input_0=%rdi),>x5=%xmm11
+movdqu   80(%rdi),%xmm11
 
-# qhasm: x6 aligned= mem128[ input_0 + 96 ]
-# asm 1: movdqa   96(<input_0=int64#1),>x6=reg128#13
-# asm 2: movdqa   96(<input_0=%rdi),>x6=%xmm12
-movdqa   96(%rdi),%xmm12
+# qhasm: x6 = mem128[ input_0 + 96 ]
+# asm 1: movdqu   96(<input_0=int64#1),>x6=reg128#13
+# asm 2: movdqu   96(<input_0=%rdi),>x6=%xmm12
+movdqu   96(%rdi),%xmm12
 
-# qhasm: x7 aligned= mem128[ input_0 + 112 ]
-# asm 1: movdqa   112(<input_0=int64#1),>x7=reg128#14
-# asm 2: movdqa   112(<input_0=%rdi),>x7=%xmm13
-movdqa   112(%rdi),%xmm13
+# qhasm: x7 = mem128[ input_0 + 112 ]
+# asm 1: movdqu   112(<input_0=int64#1),>x7=reg128#14
+# asm 2: movdqu   112(<input_0=%rdi),>x7=%xmm13
+movdqu   112(%rdi),%xmm13
 
 # qhasm: v00 = x0 & mask0
 # asm 1: vpand <mask0=reg128#1,<x0=reg128#7,>v00=reg128#15
@@ -4182,85 +4182,85 @@ vpor %xmm15,%xmm12,%xmm12
 # asm 2: vpor <v11=%xmm7,<v01=%xmm6,>x7=%xmm6
 vpor %xmm7,%xmm6,%xmm6
 
-# qhasm: mem128[ input_0 + 0 ] aligned= x0
-# asm 1: movdqa   <x0=reg128#10,0(<input_0=int64#1)
-# asm 2: movdqa   <x0=%xmm9,0(<input_0=%rdi)
-movdqa   %xmm9,0(%rdi)
+# qhasm: mem128[ input_0 + 0 ] = x0
+# asm 1: movdqu   <x0=reg128#10,0(<input_0=int64#1)
+# asm 2: movdqu   <x0=%xmm9,0(<input_0=%rdi)
+movdqu   %xmm9,0(%rdi)
 
-# qhasm: mem128[ input_0 + 16 ] aligned= x1
-# asm 1: movdqa   <x1=reg128#14,16(<input_0=int64#1)
-# asm 2: movdqa   <x1=%xmm13,16(<input_0=%rdi)
-movdqa   %xmm13,16(%rdi)
+# qhasm: mem128[ input_0 + 16 ] = x1
+# asm 1: movdqu   <x1=reg128#14,16(<input_0=int64#1)
+# asm 2: movdqu   <x1=%xmm13,16(<input_0=%rdi)
+movdqu   %xmm13,16(%rdi)
 
-# qhasm: mem128[ input_0 + 32 ] aligned= x2
-# asm 1: movdqa   <x2=reg128#15,32(<input_0=int64#1)
-# asm 2: movdqa   <x2=%xmm14,32(<input_0=%rdi)
-movdqa   %xmm14,32(%rdi)
+# qhasm: mem128[ input_0 + 32 ] = x2
+# asm 1: movdqu   <x2=reg128#15,32(<input_0=int64#1)
+# asm 2: movdqu   <x2=%xmm14,32(<input_0=%rdi)
+movdqu   %xmm14,32(%rdi)
 
-# qhasm: mem128[ input_0 + 48 ] aligned= x3
-# asm 1: movdqa   <x3=reg128#11,48(<input_0=int64#1)
-# asm 2: movdqa   <x3=%xmm10,48(<input_0=%rdi)
-movdqa   %xmm10,48(%rdi)
+# qhasm: mem128[ input_0 + 48 ] = x3
+# asm 1: movdqu   <x3=reg128#11,48(<input_0=int64#1)
+# asm 2: movdqu   <x3=%xmm10,48(<input_0=%rdi)
+movdqu   %xmm10,48(%rdi)
 
-# qhasm: mem128[ input_0 + 64 ] aligned= x4
-# asm 1: movdqa   <x4=reg128#12,64(<input_0=int64#1)
-# asm 2: movdqa   <x4=%xmm11,64(<input_0=%rdi)
-movdqa   %xmm11,64(%rdi)
+# qhasm: mem128[ input_0 + 64 ] = x4
+# asm 1: movdqu   <x4=reg128#12,64(<input_0=int64#1)
+# asm 2: movdqu   <x4=%xmm11,64(<input_0=%rdi)
+movdqu   %xmm11,64(%rdi)
 
-# qhasm: mem128[ input_0 + 80 ] aligned= x5
-# asm 1: movdqa   <x5=reg128#9,80(<input_0=int64#1)
-# asm 2: movdqa   <x5=%xmm8,80(<input_0=%rdi)
-movdqa   %xmm8,80(%rdi)
+# qhasm: mem128[ input_0 + 80 ] = x5
+# asm 1: movdqu   <x5=reg128#9,80(<input_0=int64#1)
+# asm 2: movdqu   <x5=%xmm8,80(<input_0=%rdi)
+movdqu   %xmm8,80(%rdi)
 
-# qhasm: mem128[ input_0 + 96 ] aligned= x6
-# asm 1: movdqa   <x6=reg128#13,96(<input_0=int64#1)
-# asm 2: movdqa   <x6=%xmm12,96(<input_0=%rdi)
-movdqa   %xmm12,96(%rdi)
+# qhasm: mem128[ input_0 + 96 ] = x6
+# asm 1: movdqu   <x6=reg128#13,96(<input_0=int64#1)
+# asm 2: movdqu   <x6=%xmm12,96(<input_0=%rdi)
+movdqu   %xmm12,96(%rdi)
 
-# qhasm: mem128[ input_0 + 112 ] aligned= x7
-# asm 1: movdqa   <x7=reg128#7,112(<input_0=int64#1)
-# asm 2: movdqa   <x7=%xmm6,112(<input_0=%rdi)
-movdqa   %xmm6,112(%rdi)
+# qhasm: mem128[ input_0 + 112 ] = x7
+# asm 1: movdqu   <x7=reg128#7,112(<input_0=int64#1)
+# asm 2: movdqu   <x7=%xmm6,112(<input_0=%rdi)
+movdqu   %xmm6,112(%rdi)
 
-# qhasm: x0 aligned= mem128[ input_0 + 128 ]
-# asm 1: movdqa   128(<input_0=int64#1),>x0=reg128#7
-# asm 2: movdqa   128(<input_0=%rdi),>x0=%xmm6
-movdqa   128(%rdi),%xmm6
+# qhasm: x0 = mem128[ input_0 + 128 ]
+# asm 1: movdqu   128(<input_0=int64#1),>x0=reg128#7
+# asm 2: movdqu   128(<input_0=%rdi),>x0=%xmm6
+movdqu   128(%rdi),%xmm6
 
-# qhasm: x1 aligned= mem128[ input_0 + 144 ]
-# asm 1: movdqa   144(<input_0=int64#1),>x1=reg128#8
-# asm 2: movdqa   144(<input_0=%rdi),>x1=%xmm7
-movdqa   144(%rdi),%xmm7
+# qhasm: x1 = mem128[ input_0 + 144 ]
+# asm 1: movdqu   144(<input_0=int64#1),>x1=reg128#8
+# asm 2: movdqu   144(<input_0=%rdi),>x1=%xmm7
+movdqu   144(%rdi),%xmm7
 
-# qhasm: x2 aligned= mem128[ input_0 + 160 ]
-# asm 1: movdqa   160(<input_0=int64#1),>x2=reg128#9
-# asm 2: movdqa   160(<input_0=%rdi),>x2=%xmm8
-movdqa   160(%rdi),%xmm8
+# qhasm: x2 = mem128[ input_0 + 160 ]
+# asm 1: movdqu   160(<input_0=int64#1),>x2=reg128#9
+# asm 2: movdqu   160(<input_0=%rdi),>x2=%xmm8
+movdqu   160(%rdi),%xmm8
 
-# qhasm: x3 aligned= mem128[ input_0 + 176 ]
-# asm 1: movdqa   176(<input_0=int64#1),>x3=reg128#10
-# asm 2: movdqa   176(<input_0=%rdi),>x3=%xmm9
-movdqa   176(%rdi),%xmm9
+# qhasm: x3 = mem128[ input_0 + 176 ]
+# asm 1: movdqu   176(<input_0=int64#1),>x3=reg128#10
+# asm 2: movdqu   176(<input_0=%rdi),>x3=%xmm9
+movdqu   176(%rdi),%xmm9
 
-# qhasm: x4 aligned= mem128[ input_0 + 192 ]
-# asm 1: movdqa   192(<input_0=int64#1),>x4=reg128#11
-# asm 2: movdqa   192(<input_0=%rdi),>x4=%xmm10
-movdqa   192(%rdi),%xmm10
+# qhasm: x4 = mem128[ input_0 + 192 ]
+# asm 1: movdqu   192(<input_0=int64#1),>x4=reg128#11
+# asm 2: movdqu   192(<input_0=%rdi),>x4=%xmm10
+movdqu   192(%rdi),%xmm10
 
-# qhasm: x5 aligned= mem128[ input_0 + 208 ]
-# asm 1: movdqa   208(<input_0=int64#1),>x5=reg128#12
-# asm 2: movdqa   208(<input_0=%rdi),>x5=%xmm11
-movdqa   208(%rdi),%xmm11
+# qhasm: x5 = mem128[ input_0 + 208 ]
+# asm 1: movdqu   208(<input_0=int64#1),>x5=reg128#12
+# asm 2: movdqu   208(<input_0=%rdi),>x5=%xmm11
+movdqu   208(%rdi),%xmm11
 
-# qhasm: x6 aligned= mem128[ input_0 + 224 ]
-# asm 1: movdqa   224(<input_0=int64#1),>x6=reg128#13
-# asm 2: movdqa   224(<input_0=%rdi),>x6=%xmm12
-movdqa   224(%rdi),%xmm12
+# qhasm: x6 = mem128[ input_0 + 224 ]
+# asm 1: movdqu   224(<input_0=int64#1),>x6=reg128#13
+# asm 2: movdqu   224(<input_0=%rdi),>x6=%xmm12
+movdqu   224(%rdi),%xmm12
 
-# qhasm: x7 aligned= mem128[ input_0 + 240 ]
-# asm 1: movdqa   240(<input_0=int64#1),>x7=reg128#14
-# asm 2: movdqa   240(<input_0=%rdi),>x7=%xmm13
-movdqa   240(%rdi),%xmm13
+# qhasm: x7 = mem128[ input_0 + 240 ]
+# asm 1: movdqu   240(<input_0=int64#1),>x7=reg128#14
+# asm 2: movdqu   240(<input_0=%rdi),>x7=%xmm13
+movdqu   240(%rdi),%xmm13
 
 # qhasm: v00 = x0 & mask0
 # asm 1: vpand <mask0=reg128#1,<x0=reg128#7,>v00=reg128#15
@@ -4742,85 +4742,85 @@ vpor %xmm15,%xmm12,%xmm12
 # asm 2: vpor <v11=%xmm7,<v01=%xmm6,>x7=%xmm6
 vpor %xmm7,%xmm6,%xmm6
 
-# qhasm: mem128[ input_0 + 128 ] aligned= x0
-# asm 1: movdqa   <x0=reg128#10,128(<input_0=int64#1)
-# asm 2: movdqa   <x0=%xmm9,128(<input_0=%rdi)
-movdqa   %xmm9,128(%rdi)
+# qhasm: mem128[ input_0 + 128 ] = x0
+# asm 1: movdqu   <x0=reg128#10,128(<input_0=int64#1)
+# asm 2: movdqu   <x0=%xmm9,128(<input_0=%rdi)
+movdqu   %xmm9,128(%rdi)
 
-# qhasm: mem128[ input_0 + 144 ] aligned= x1
-# asm 1: movdqa   <x1=reg128#14,144(<input_0=int64#1)
-# asm 2: movdqa   <x1=%xmm13,144(<input_0=%rdi)
-movdqa   %xmm13,144(%rdi)
+# qhasm: mem128[ input_0 + 144 ] = x1
+# asm 1: movdqu   <x1=reg128#14,144(<input_0=int64#1)
+# asm 2: movdqu   <x1=%xmm13,144(<input_0=%rdi)
+movdqu   %xmm13,144(%rdi)
 
-# qhasm: mem128[ input_0 + 160 ] aligned= x2
-# asm 1: movdqa   <x2=reg128#15,160(<input_0=int64#1)
-# asm 2: movdqa   <x2=%xmm14,160(<input_0=%rdi)
-movdqa   %xmm14,160(%rdi)
+# qhasm: mem128[ input_0 + 160 ] = x2
+# asm 1: movdqu   <x2=reg128#15,160(<input_0=int64#1)
+# asm 2: movdqu   <x2=%xmm14,160(<input_0=%rdi)
+movdqu   %xmm14,160(%rdi)
 
-# qhasm: mem128[ input_0 + 176 ] aligned= x3
-# asm 1: movdqa   <x3=reg128#11,176(<input_0=int64#1)
-# asm 2: movdqa   <x3=%xmm10,176(<input_0=%rdi)
-movdqa   %xmm10,176(%rdi)
+# qhasm: mem128[ input_0 + 176 ] = x3
+# asm 1: movdqu   <x3=reg128#11,176(<input_0=int64#1)
+# asm 2: movdqu   <x3=%xmm10,176(<input_0=%rdi)
+movdqu   %xmm10,176(%rdi)
 
-# qhasm: mem128[ input_0 + 192 ] aligned= x4
-# asm 1: movdqa   <x4=reg128#12,192(<input_0=int64#1)
-# asm 2: movdqa   <x4=%xmm11,192(<input_0=%rdi)
-movdqa   %xmm11,192(%rdi)
+# qhasm: mem128[ input_0 + 192 ] = x4
+# asm 1: movdqu   <x4=reg128#12,192(<input_0=int64#1)
+# asm 2: movdqu   <x4=%xmm11,192(<input_0=%rdi)
+movdqu   %xmm11,192(%rdi)
 
-# qhasm: mem128[ input_0 + 208 ] aligned= x5
-# asm 1: movdqa   <x5=reg128#9,208(<input_0=int64#1)
-# asm 2: movdqa   <x5=%xmm8,208(<input_0=%rdi)
-movdqa   %xmm8,208(%rdi)
+# qhasm: mem128[ input_0 + 208 ] = x5
+# asm 1: movdqu   <x5=reg128#9,208(<input_0=int64#1)
+# asm 2: movdqu   <x5=%xmm8,208(<input_0=%rdi)
+movdqu   %xmm8,208(%rdi)
 
-# qhasm: mem128[ input_0 + 224 ] aligned= x6
-# asm 1: movdqa   <x6=reg128#13,224(<input_0=int64#1)
-# asm 2: movdqa   <x6=%xmm12,224(<input_0=%rdi)
-movdqa   %xmm12,224(%rdi)
+# qhasm: mem128[ input_0 + 224 ] = x6
+# asm 1: movdqu   <x6=reg128#13,224(<input_0=int64#1)
+# asm 2: movdqu   <x6=%xmm12,224(<input_0=%rdi)
+movdqu   %xmm12,224(%rdi)
 
-# qhasm: mem128[ input_0 + 240 ] aligned= x7
-# asm 1: movdqa   <x7=reg128#7,240(<input_0=int64#1)
-# asm 2: movdqa   <x7=%xmm6,240(<input_0=%rdi)
-movdqa   %xmm6,240(%rdi)
+# qhasm: mem128[ input_0 + 240 ] = x7
+# asm 1: movdqu   <x7=reg128#7,240(<input_0=int64#1)
+# asm 2: movdqu   <x7=%xmm6,240(<input_0=%rdi)
+movdqu   %xmm6,240(%rdi)
 
-# qhasm: x0 aligned= mem128[ input_0 + 256 ]
-# asm 1: movdqa   256(<input_0=int64#1),>x0=reg128#7
-# asm 2: movdqa   256(<input_0=%rdi),>x0=%xmm6
-movdqa   256(%rdi),%xmm6
+# qhasm: x0 = mem128[ input_0 + 256 ]
+# asm 1: movdqu   256(<input_0=int64#1),>x0=reg128#7
+# asm 2: movdqu   256(<input_0=%rdi),>x0=%xmm6
+movdqu   256(%rdi),%xmm6
 
-# qhasm: x1 aligned= mem128[ input_0 + 272 ]
-# asm 1: movdqa   272(<input_0=int64#1),>x1=reg128#8
-# asm 2: movdqa   272(<input_0=%rdi),>x1=%xmm7
-movdqa   272(%rdi),%xmm7
+# qhasm: x1 = mem128[ input_0 + 272 ]
+# asm 1: movdqu   272(<input_0=int64#1),>x1=reg128#8
+# asm 2: movdqu   272(<input_0=%rdi),>x1=%xmm7
+movdqu   272(%rdi),%xmm7
 
-# qhasm: x2 aligned= mem128[ input_0 + 288 ]
-# asm 1: movdqa   288(<input_0=int64#1),>x2=reg128#9
-# asm 2: movdqa   288(<input_0=%rdi),>x2=%xmm8
-movdqa   288(%rdi),%xmm8
+# qhasm: x2 = mem128[ input_0 + 288 ]
+# asm 1: movdqu   288(<input_0=int64#1),>x2=reg128#9
+# asm 2: movdqu   288(<input_0=%rdi),>x2=%xmm8
+movdqu   288(%rdi),%xmm8
 
-# qhasm: x3 aligned= mem128[ input_0 + 304 ]
-# asm 1: movdqa   304(<input_0=int64#1),>x3=reg128#10
-# asm 2: movdqa   304(<input_0=%rdi),>x3=%xmm9
-movdqa   304(%rdi),%xmm9
+# qhasm: x3 = mem128[ input_0 + 304 ]
+# asm 1: movdqu   304(<input_0=int64#1),>x3=reg128#10
+# asm 2: movdqu   304(<input_0=%rdi),>x3=%xmm9
+movdqu   304(%rdi),%xmm9
 
-# qhasm: x4 aligned= mem128[ input_0 + 320 ]
-# asm 1: movdqa   320(<input_0=int64#1),>x4=reg128#11
-# asm 2: movdqa   320(<input_0=%rdi),>x4=%xmm10
-movdqa   320(%rdi),%xmm10
+# qhasm: x4 = mem128[ input_0 + 320 ]
+# asm 1: movdqu   320(<input_0=int64#1),>x4=reg128#11
+# asm 2: movdqu   320(<input_0=%rdi),>x4=%xmm10
+movdqu   320(%rdi),%xmm10
 
-# qhasm: x5 aligned= mem128[ input_0 + 336 ]
-# asm 1: movdqa   336(<input_0=int64#1),>x5=reg128#12
-# asm 2: movdqa   336(<input_0=%rdi),>x5=%xmm11
-movdqa   336(%rdi),%xmm11
+# qhasm: x5 = mem128[ input_0 + 336 ]
+# asm 1: movdqu   336(<input_0=int64#1),>x5=reg128#12
+# asm 2: movdqu   336(<input_0=%rdi),>x5=%xmm11
+movdqu   336(%rdi),%xmm11
 
-# qhasm: x6 aligned= mem128[ input_0 + 352 ]
-# asm 1: movdqa   352(<input_0=int64#1),>x6=reg128#13
-# asm 2: movdqa   352(<input_0=%rdi),>x6=%xmm12
-movdqa   352(%rdi),%xmm12
+# qhasm: x6 = mem128[ input_0 + 352 ]
+# asm 1: movdqu   352(<input_0=int64#1),>x6=reg128#13
+# asm 2: movdqu   352(<input_0=%rdi),>x6=%xmm12
+movdqu   352(%rdi),%xmm12
 
-# qhasm: x7 aligned= mem128[ input_0 + 368 ]
-# asm 1: movdqa   368(<input_0=int64#1),>x7=reg128#14
-# asm 2: movdqa   368(<input_0=%rdi),>x7=%xmm13
-movdqa   368(%rdi),%xmm13
+# qhasm: x7 = mem128[ input_0 + 368 ]
+# asm 1: movdqu   368(<input_0=int64#1),>x7=reg128#14
+# asm 2: movdqu   368(<input_0=%rdi),>x7=%xmm13
+movdqu   368(%rdi),%xmm13
 
 # qhasm: v00 = x0 & mask0
 # asm 1: vpand <mask0=reg128#1,<x0=reg128#7,>v00=reg128#15
@@ -5302,85 +5302,85 @@ vpor %xmm15,%xmm12,%xmm12
 # asm 2: vpor <v11=%xmm7,<v01=%xmm6,>x7=%xmm6
 vpor %xmm7,%xmm6,%xmm6
 
-# qhasm: mem128[ input_0 + 256 ] aligned= x0
-# asm 1: movdqa   <x0=reg128#10,256(<input_0=int64#1)
-# asm 2: movdqa   <x0=%xmm9,256(<input_0=%rdi)
-movdqa   %xmm9,256(%rdi)
+# qhasm: mem128[ input_0 + 256 ] = x0
+# asm 1: movdqu   <x0=reg128#10,256(<input_0=int64#1)
+# asm 2: movdqu   <x0=%xmm9,256(<input_0=%rdi)
+movdqu   %xmm9,256(%rdi)
 
-# qhasm: mem128[ input_0 + 272 ] aligned= x1
-# asm 1: movdqa   <x1=reg128#14,272(<input_0=int64#1)
-# asm 2: movdqa   <x1=%xmm13,272(<input_0=%rdi)
-movdqa   %xmm13,272(%rdi)
+# qhasm: mem128[ input_0 + 272 ] = x1
+# asm 1: movdqu   <x1=reg128#14,272(<input_0=int64#1)
+# asm 2: movdqu   <x1=%xmm13,272(<input_0=%rdi)
+movdqu   %xmm13,272(%rdi)
 
-# qhasm: mem128[ input_0 + 288 ] aligned= x2
-# asm 1: movdqa   <x2=reg128#15,288(<input_0=int64#1)
-# asm 2: movdqa   <x2=%xmm14,288(<input_0=%rdi)
-movdqa   %xmm14,288(%rdi)
+# qhasm: mem128[ input_0 + 288 ] = x2
+# asm 1: movdqu   <x2=reg128#15,288(<input_0=int64#1)
+# asm 2: movdqu   <x2=%xmm14,288(<input_0=%rdi)
+movdqu   %xmm14,288(%rdi)
 
-# qhasm: mem128[ input_0 + 304 ] aligned= x3
-# asm 1: movdqa   <x3=reg128#11,304(<input_0=int64#1)
-# asm 2: movdqa   <x3=%xmm10,304(<input_0=%rdi)
-movdqa   %xmm10,304(%rdi)
+# qhasm: mem128[ input_0 + 304 ] = x3
+# asm 1: movdqu   <x3=reg128#11,304(<input_0=int64#1)
+# asm 2: movdqu   <x3=%xmm10,304(<input_0=%rdi)
+movdqu   %xmm10,304(%rdi)
 
-# qhasm: mem128[ input_0 + 320 ] aligned= x4
-# asm 1: movdqa   <x4=reg128#12,320(<input_0=int64#1)
-# asm 2: movdqa   <x4=%xmm11,320(<input_0=%rdi)
-movdqa   %xmm11,320(%rdi)
+# qhasm: mem128[ input_0 + 320 ] = x4
+# asm 1: movdqu   <x4=reg128#12,320(<input_0=int64#1)
+# asm 2: movdqu   <x4=%xmm11,320(<input_0=%rdi)
+movdqu   %xmm11,320(%rdi)
 
-# qhasm: mem128[ input_0 + 336 ] aligned= x5
-# asm 1: movdqa   <x5=reg128#9,336(<input_0=int64#1)
-# asm 2: movdqa   <x5=%xmm8,336(<input_0=%rdi)
-movdqa   %xmm8,336(%rdi)
+# qhasm: mem128[ input_0 + 336 ] = x5
+# asm 1: movdqu   <x5=reg128#9,336(<input_0=int64#1)
+# asm 2: movdqu   <x5=%xmm8,336(<input_0=%rdi)
+movdqu   %xmm8,336(%rdi)
 
-# qhasm: mem128[ input_0 + 352 ] aligned= x6
-# asm 1: movdqa   <x6=reg128#13,352(<input_0=int64#1)
-# asm 2: movdqa   <x6=%xmm12,352(<input_0=%rdi)
-movdqa   %xmm12,352(%rdi)
+# qhasm: mem128[ input_0 + 352 ] = x6
+# asm 1: movdqu   <x6=reg128#13,352(<input_0=int64#1)
+# asm 2: movdqu   <x6=%xmm12,352(<input_0=%rdi)
+movdqu   %xmm12,352(%rdi)
 
-# qhasm: mem128[ input_0 + 368 ] aligned= x7
-# asm 1: movdqa   <x7=reg128#7,368(<input_0=int64#1)
-# asm 2: movdqa   <x7=%xmm6,368(<input_0=%rdi)
-movdqa   %xmm6,368(%rdi)
+# qhasm: mem128[ input_0 + 368 ] = x7
+# asm 1: movdqu   <x7=reg128#7,368(<input_0=int64#1)
+# asm 2: movdqu   <x7=%xmm6,368(<input_0=%rdi)
+movdqu   %xmm6,368(%rdi)
 
-# qhasm: x0 aligned= mem128[ input_0 + 384 ]
-# asm 1: movdqa   384(<input_0=int64#1),>x0=reg128#7
-# asm 2: movdqa   384(<input_0=%rdi),>x0=%xmm6
-movdqa   384(%rdi),%xmm6
+# qhasm: x0 = mem128[ input_0 + 384 ]
+# asm 1: movdqu   384(<input_0=int64#1),>x0=reg128#7
+# asm 2: movdqu   384(<input_0=%rdi),>x0=%xmm6
+movdqu   384(%rdi),%xmm6
 
-# qhasm: x1 aligned= mem128[ input_0 + 400 ]
-# asm 1: movdqa   400(<input_0=int64#1),>x1=reg128#8
-# asm 2: movdqa   400(<input_0=%rdi),>x1=%xmm7
-movdqa   400(%rdi),%xmm7
+# qhasm: x1 = mem128[ input_0 + 400 ]
+# asm 1: movdqu   400(<input_0=int64#1),>x1=reg128#8
+# asm 2: movdqu   400(<input_0=%rdi),>x1=%xmm7
+movdqu   400(%rdi),%xmm7
 
-# qhasm: x2 aligned= mem128[ input_0 + 416 ]
-# asm 1: movdqa   416(<input_0=int64#1),>x2=reg128#9
-# asm 2: movdqa   416(<input_0=%rdi),>x2=%xmm8
-movdqa   416(%rdi),%xmm8
+# qhasm: x2 = mem128[ input_0 + 416 ]
+# asm 1: movdqu   416(<input_0=int64#1),>x2=reg128#9
+# asm 2: movdqu   416(<input_0=%rdi),>x2=%xmm8
+movdqu   416(%rdi),%xmm8
 
-# qhasm: x3 aligned= mem128[ input_0 + 432 ]
-# asm 1: movdqa   432(<input_0=int64#1),>x3=reg128#10
-# asm 2: movdqa   432(<input_0=%rdi),>x3=%xmm9
-movdqa   432(%rdi),%xmm9
+# qhasm: x3 = mem128[ input_0 + 432 ]
+# asm 1: movdqu   432(<input_0=int64#1),>x3=reg128#10
+# asm 2: movdqu   432(<input_0=%rdi),>x3=%xmm9
+movdqu   432(%rdi),%xmm9
 
-# qhasm: x4 aligned= mem128[ input_0 + 448 ]
-# asm 1: movdqa   448(<input_0=int64#1),>x4=reg128#11
-# asm 2: movdqa   448(<input_0=%rdi),>x4=%xmm10
-movdqa   448(%rdi),%xmm10
+# qhasm: x4 = mem128[ input_0 + 448 ]
+# asm 1: movdqu   448(<input_0=int64#1),>x4=reg128#11
+# asm 2: movdqu   448(<input_0=%rdi),>x4=%xmm10
+movdqu   448(%rdi),%xmm10
 
-# qhasm: x5 aligned= mem128[ input_0 + 464 ]
-# asm 1: movdqa   464(<input_0=int64#1),>x5=reg128#12
-# asm 2: movdqa   464(<input_0=%rdi),>x5=%xmm11
-movdqa   464(%rdi),%xmm11
+# qhasm: x5 = mem128[ input_0 + 464 ]
+# asm 1: movdqu   464(<input_0=int64#1),>x5=reg128#12
+# asm 2: movdqu   464(<input_0=%rdi),>x5=%xmm11
+movdqu   464(%rdi),%xmm11
 
-# qhasm: x6 aligned= mem128[ input_0 + 480 ]
-# asm 1: movdqa   480(<input_0=int64#1),>x6=reg128#13
-# asm 2: movdqa   480(<input_0=%rdi),>x6=%xmm12
-movdqa   480(%rdi),%xmm12
+# qhasm: x6 = mem128[ input_0 + 480 ]
+# asm 1: movdqu   480(<input_0=int64#1),>x6=reg128#13
+# asm 2: movdqu   480(<input_0=%rdi),>x6=%xmm12
+movdqu   480(%rdi),%xmm12
 
-# qhasm: x7 aligned= mem128[ input_0 + 496 ]
-# asm 1: movdqa   496(<input_0=int64#1),>x7=reg128#14
-# asm 2: movdqa   496(<input_0=%rdi),>x7=%xmm13
-movdqa   496(%rdi),%xmm13
+# qhasm: x7 = mem128[ input_0 + 496 ]
+# asm 1: movdqu   496(<input_0=int64#1),>x7=reg128#14
+# asm 2: movdqu   496(<input_0=%rdi),>x7=%xmm13
+movdqu   496(%rdi),%xmm13
 
 # qhasm: v00 = x0 & mask0
 # asm 1: vpand <mask0=reg128#1,<x0=reg128#7,>v00=reg128#15
@@ -5862,85 +5862,85 @@ vpor %xmm15,%xmm12,%xmm12
 # asm 2: vpor <v11=%xmm7,<v01=%xmm6,>x7=%xmm6
 vpor %xmm7,%xmm6,%xmm6
 
-# qhasm: mem128[ input_0 + 384 ] aligned= x0
-# asm 1: movdqa   <x0=reg128#10,384(<input_0=int64#1)
-# asm 2: movdqa   <x0=%xmm9,384(<input_0=%rdi)
-movdqa   %xmm9,384(%rdi)
+# qhasm: mem128[ input_0 + 384 ] = x0
+# asm 1: movdqu   <x0=reg128#10,384(<input_0=int64#1)
+# asm 2: movdqu   <x0=%xmm9,384(<input_0=%rdi)
+movdqu   %xmm9,384(%rdi)
 
-# qhasm: mem128[ input_0 + 400 ] aligned= x1
-# asm 1: movdqa   <x1=reg128#14,400(<input_0=int64#1)
-# asm 2: movdqa   <x1=%xmm13,400(<input_0=%rdi)
-movdqa   %xmm13,400(%rdi)
+# qhasm: mem128[ input_0 + 400 ] = x1
+# asm 1: movdqu   <x1=reg128#14,400(<input_0=int64#1)
+# asm 2: movdqu   <x1=%xmm13,400(<input_0=%rdi)
+movdqu   %xmm13,400(%rdi)
 
-# qhasm: mem128[ input_0 + 416 ] aligned= x2
-# asm 1: movdqa   <x2=reg128#15,416(<input_0=int64#1)
-# asm 2: movdqa   <x2=%xmm14,416(<input_0=%rdi)
-movdqa   %xmm14,416(%rdi)
+# qhasm: mem128[ input_0 + 416 ] = x2
+# asm 1: movdqu   <x2=reg128#15,416(<input_0=int64#1)
+# asm 2: movdqu   <x2=%xmm14,416(<input_0=%rdi)
+movdqu   %xmm14,416(%rdi)
 
-# qhasm: mem128[ input_0 + 432 ] aligned= x3
-# asm 1: movdqa   <x3=reg128#11,432(<input_0=int64#1)
-# asm 2: movdqa   <x3=%xmm10,432(<input_0=%rdi)
-movdqa   %xmm10,432(%rdi)
+# qhasm: mem128[ input_0 + 432 ] = x3
+# asm 1: movdqu   <x3=reg128#11,432(<input_0=int64#1)
+# asm 2: movdqu   <x3=%xmm10,432(<input_0=%rdi)
+movdqu   %xmm10,432(%rdi)
 
-# qhasm: mem128[ input_0 + 448 ] aligned= x4
-# asm 1: movdqa   <x4=reg128#12,448(<input_0=int64#1)
-# asm 2: movdqa   <x4=%xmm11,448(<input_0=%rdi)
-movdqa   %xmm11,448(%rdi)
+# qhasm: mem128[ input_0 + 448 ] = x4
+# asm 1: movdqu   <x4=reg128#12,448(<input_0=int64#1)
+# asm 2: movdqu   <x4=%xmm11,448(<input_0=%rdi)
+movdqu   %xmm11,448(%rdi)
 
-# qhasm: mem128[ input_0 + 464 ] aligned= x5
-# asm 1: movdqa   <x5=reg128#9,464(<input_0=int64#1)
-# asm 2: movdqa   <x5=%xmm8,464(<input_0=%rdi)
-movdqa   %xmm8,464(%rdi)
+# qhasm: mem128[ input_0 + 464 ] = x5
+# asm 1: movdqu   <x5=reg128#9,464(<input_0=int64#1)
+# asm 2: movdqu   <x5=%xmm8,464(<input_0=%rdi)
+movdqu   %xmm8,464(%rdi)
 
-# qhasm: mem128[ input_0 + 480 ] aligned= x6
-# asm 1: movdqa   <x6=reg128#13,480(<input_0=int64#1)
-# asm 2: movdqa   <x6=%xmm12,480(<input_0=%rdi)
-movdqa   %xmm12,480(%rdi)
+# qhasm: mem128[ input_0 + 480 ] = x6
+# asm 1: movdqu   <x6=reg128#13,480(<input_0=int64#1)
+# asm 2: movdqu   <x6=%xmm12,480(<input_0=%rdi)
+movdqu   %xmm12,480(%rdi)
 
-# qhasm: mem128[ input_0 + 496 ] aligned= x7
-# asm 1: movdqa   <x7=reg128#7,496(<input_0=int64#1)
-# asm 2: movdqa   <x7=%xmm6,496(<input_0=%rdi)
-movdqa   %xmm6,496(%rdi)
+# qhasm: mem128[ input_0 + 496 ] = x7
+# asm 1: movdqu   <x7=reg128#7,496(<input_0=int64#1)
+# asm 2: movdqu   <x7=%xmm6,496(<input_0=%rdi)
+movdqu   %xmm6,496(%rdi)
 
-# qhasm: x0 aligned= mem128[ input_0 + 512 ]
-# asm 1: movdqa   512(<input_0=int64#1),>x0=reg128#7
-# asm 2: movdqa   512(<input_0=%rdi),>x0=%xmm6
-movdqa   512(%rdi),%xmm6
+# qhasm: x0 = mem128[ input_0 + 512 ]
+# asm 1: movdqu   512(<input_0=int64#1),>x0=reg128#7
+# asm 2: movdqu   512(<input_0=%rdi),>x0=%xmm6
+movdqu   512(%rdi),%xmm6
 
-# qhasm: x1 aligned= mem128[ input_0 + 528 ]
-# asm 1: movdqa   528(<input_0=int64#1),>x1=reg128#8
-# asm 2: movdqa   528(<input_0=%rdi),>x1=%xmm7
-movdqa   528(%rdi),%xmm7
+# qhasm: x1 = mem128[ input_0 + 528 ]
+# asm 1: movdqu   528(<input_0=int64#1),>x1=reg128#8
+# asm 2: movdqu   528(<input_0=%rdi),>x1=%xmm7
+movdqu   528(%rdi),%xmm7
 
-# qhasm: x2 aligned= mem128[ input_0 + 544 ]
-# asm 1: movdqa   544(<input_0=int64#1),>x2=reg128#9
-# asm 2: movdqa   544(<input_0=%rdi),>x2=%xmm8
-movdqa   544(%rdi),%xmm8
+# qhasm: x2 = mem128[ input_0 + 544 ]
+# asm 1: movdqu   544(<input_0=int64#1),>x2=reg128#9
+# asm 2: movdqu   544(<input_0=%rdi),>x2=%xmm8
+movdqu   544(%rdi),%xmm8
 
-# qhasm: x3 aligned= mem128[ input_0 + 560 ]
-# asm 1: movdqa   560(<input_0=int64#1),>x3=reg128#10
-# asm 2: movdqa   560(<input_0=%rdi),>x3=%xmm9
-movdqa   560(%rdi),%xmm9
+# qhasm: x3 = mem128[ input_0 + 560 ]
+# asm 1: movdqu   560(<input_0=int64#1),>x3=reg128#10
+# asm 2: movdqu   560(<input_0=%rdi),>x3=%xmm9
+movdqu   560(%rdi),%xmm9
 
-# qhasm: x4 aligned= mem128[ input_0 + 576 ]
-# asm 1: movdqa   576(<input_0=int64#1),>x4=reg128#11
-# asm 2: movdqa   576(<input_0=%rdi),>x4=%xmm10
-movdqa   576(%rdi),%xmm10
+# qhasm: x4 = mem128[ input_0 + 576 ]
+# asm 1: movdqu   576(<input_0=int64#1),>x4=reg128#11
+# asm 2: movdqu   576(<input_0=%rdi),>x4=%xmm10
+movdqu   576(%rdi),%xmm10
 
-# qhasm: x5 aligned= mem128[ input_0 + 592 ]
-# asm 1: movdqa   592(<input_0=int64#1),>x5=reg128#12
-# asm 2: movdqa   592(<input_0=%rdi),>x5=%xmm11
-movdqa   592(%rdi),%xmm11
+# qhasm: x5 = mem128[ input_0 + 592 ]
+# asm 1: movdqu   592(<input_0=int64#1),>x5=reg128#12
+# asm 2: movdqu   592(<input_0=%rdi),>x5=%xmm11
+movdqu   592(%rdi),%xmm11
 
-# qhasm: x6 aligned= mem128[ input_0 + 608 ]
-# asm 1: movdqa   608(<input_0=int64#1),>x6=reg128#13
-# asm 2: movdqa   608(<input_0=%rdi),>x6=%xmm12
-movdqa   608(%rdi),%xmm12
+# qhasm: x6 = mem128[ input_0 + 608 ]
+# asm 1: movdqu   608(<input_0=int64#1),>x6=reg128#13
+# asm 2: movdqu   608(<input_0=%rdi),>x6=%xmm12
+movdqu   608(%rdi),%xmm12
 
-# qhasm: x7 aligned= mem128[ input_0 + 624 ]
-# asm 1: movdqa   624(<input_0=int64#1),>x7=reg128#14
-# asm 2: movdqa   624(<input_0=%rdi),>x7=%xmm13
-movdqa   624(%rdi),%xmm13
+# qhasm: x7 = mem128[ input_0 + 624 ]
+# asm 1: movdqu   624(<input_0=int64#1),>x7=reg128#14
+# asm 2: movdqu   624(<input_0=%rdi),>x7=%xmm13
+movdqu   624(%rdi),%xmm13
 
 # qhasm: v00 = x0 & mask0
 # asm 1: vpand <mask0=reg128#1,<x0=reg128#7,>v00=reg128#15
@@ -6422,85 +6422,85 @@ vpor %xmm15,%xmm12,%xmm12
 # asm 2: vpor <v11=%xmm7,<v01=%xmm6,>x7=%xmm6
 vpor %xmm7,%xmm6,%xmm6
 
-# qhasm: mem128[ input_0 + 512 ] aligned= x0
-# asm 1: movdqa   <x0=reg128#10,512(<input_0=int64#1)
-# asm 2: movdqa   <x0=%xmm9,512(<input_0=%rdi)
-movdqa   %xmm9,512(%rdi)
+# qhasm: mem128[ input_0 + 512 ] = x0
+# asm 1: movdqu   <x0=reg128#10,512(<input_0=int64#1)
+# asm 2: movdqu   <x0=%xmm9,512(<input_0=%rdi)
+movdqu   %xmm9,512(%rdi)
 
-# qhasm: mem128[ input_0 + 528 ] aligned= x1
-# asm 1: movdqa   <x1=reg128#14,528(<input_0=int64#1)
-# asm 2: movdqa   <x1=%xmm13,528(<input_0=%rdi)
-movdqa   %xmm13,528(%rdi)
+# qhasm: mem128[ input_0 + 528 ] = x1
+# asm 1: movdqu   <x1=reg128#14,528(<input_0=int64#1)
+# asm 2: movdqu   <x1=%xmm13,528(<input_0=%rdi)
+movdqu   %xmm13,528(%rdi)
 
-# qhasm: mem128[ input_0 + 544 ] aligned= x2
-# asm 1: movdqa   <x2=reg128#15,544(<input_0=int64#1)
-# asm 2: movdqa   <x2=%xmm14,544(<input_0=%rdi)
-movdqa   %xmm14,544(%rdi)
+# qhasm: mem128[ input_0 + 544 ] = x2
+# asm 1: movdqu   <x2=reg128#15,544(<input_0=int64#1)
+# asm 2: movdqu   <x2=%xmm14,544(<input_0=%rdi)
+movdqu   %xmm14,544(%rdi)
 
-# qhasm: mem128[ input_0 + 560 ] aligned= x3
-# asm 1: movdqa   <x3=reg128#11,560(<input_0=int64#1)
-# asm 2: movdqa   <x3=%xmm10,560(<input_0=%rdi)
-movdqa   %xmm10,560(%rdi)
+# qhasm: mem128[ input_0 + 560 ] = x3
+# asm 1: movdqu   <x3=reg128#11,560(<input_0=int64#1)
+# asm 2: movdqu   <x3=%xmm10,560(<input_0=%rdi)
+movdqu   %xmm10,560(%rdi)
 
-# qhasm: mem128[ input_0 + 576 ] aligned= x4
-# asm 1: movdqa   <x4=reg128#12,576(<input_0=int64#1)
-# asm 2: movdqa   <x4=%xmm11,576(<input_0=%rdi)
-movdqa   %xmm11,576(%rdi)
+# qhasm: mem128[ input_0 + 576 ] = x4
+# asm 1: movdqu   <x4=reg128#12,576(<input_0=int64#1)
+# asm 2: movdqu   <x4=%xmm11,576(<input_0=%rdi)
+movdqu   %xmm11,576(%rdi)
 
-# qhasm: mem128[ input_0 + 592 ] aligned= x5
-# asm 1: movdqa   <x5=reg128#9,592(<input_0=int64#1)
-# asm 2: movdqa   <x5=%xmm8,592(<input_0=%rdi)
-movdqa   %xmm8,592(%rdi)
+# qhasm: mem128[ input_0 + 592 ] = x5
+# asm 1: movdqu   <x5=reg128#9,592(<input_0=int64#1)
+# asm 2: movdqu   <x5=%xmm8,592(<input_0=%rdi)
+movdqu   %xmm8,592(%rdi)
 
-# qhasm: mem128[ input_0 + 608 ] aligned= x6
-# asm 1: movdqa   <x6=reg128#13,608(<input_0=int64#1)
-# asm 2: movdqa   <x6=%xmm12,608(<input_0=%rdi)
-movdqa   %xmm12,608(%rdi)
+# qhasm: mem128[ input_0 + 608 ] = x6
+# asm 1: movdqu   <x6=reg128#13,608(<input_0=int64#1)
+# asm 2: movdqu   <x6=%xmm12,608(<input_0=%rdi)
+movdqu   %xmm12,608(%rdi)
 
-# qhasm: mem128[ input_0 + 624 ] aligned= x7
-# asm 1: movdqa   <x7=reg128#7,624(<input_0=int64#1)
-# asm 2: movdqa   <x7=%xmm6,624(<input_0=%rdi)
-movdqa   %xmm6,624(%rdi)
+# qhasm: mem128[ input_0 + 624 ] = x7
+# asm 1: movdqu   <x7=reg128#7,624(<input_0=int64#1)
+# asm 2: movdqu   <x7=%xmm6,624(<input_0=%rdi)
+movdqu   %xmm6,624(%rdi)
 
-# qhasm: x0 aligned= mem128[ input_0 + 640 ]
-# asm 1: movdqa   640(<input_0=int64#1),>x0=reg128#7
-# asm 2: movdqa   640(<input_0=%rdi),>x0=%xmm6
-movdqa   640(%rdi),%xmm6
+# qhasm: x0 = mem128[ input_0 + 640 ]
+# asm 1: movdqu   640(<input_0=int64#1),>x0=reg128#7
+# asm 2: movdqu   640(<input_0=%rdi),>x0=%xmm6
+movdqu   640(%rdi),%xmm6
 
-# qhasm: x1 aligned= mem128[ input_0 + 656 ]
-# asm 1: movdqa   656(<input_0=int64#1),>x1=reg128#8
-# asm 2: movdqa   656(<input_0=%rdi),>x1=%xmm7
-movdqa   656(%rdi),%xmm7
+# qhasm: x1 = mem128[ input_0 + 656 ]
+# asm 1: movdqu   656(<input_0=int64#1),>x1=reg128#8
+# asm 2: movdqu   656(<input_0=%rdi),>x1=%xmm7
+movdqu   656(%rdi),%xmm7
 
-# qhasm: x2 aligned= mem128[ input_0 + 672 ]
-# asm 1: movdqa   672(<input_0=int64#1),>x2=reg128#9
-# asm 2: movdqa   672(<input_0=%rdi),>x2=%xmm8
-movdqa   672(%rdi),%xmm8
+# qhasm: x2 = mem128[ input_0 + 672 ]
+# asm 1: movdqu   672(<input_0=int64#1),>x2=reg128#9
+# asm 2: movdqu   672(<input_0=%rdi),>x2=%xmm8
+movdqu   672(%rdi),%xmm8
 
-# qhasm: x3 aligned= mem128[ input_0 + 688 ]
-# asm 1: movdqa   688(<input_0=int64#1),>x3=reg128#10
-# asm 2: movdqa   688(<input_0=%rdi),>x3=%xmm9
-movdqa   688(%rdi),%xmm9
+# qhasm: x3 = mem128[ input_0 + 688 ]
+# asm 1: movdqu   688(<input_0=int64#1),>x3=reg128#10
+# asm 2: movdqu   688(<input_0=%rdi),>x3=%xmm9
+movdqu   688(%rdi),%xmm9
 
-# qhasm: x4 aligned= mem128[ input_0 + 704 ]
-# asm 1: movdqa   704(<input_0=int64#1),>x4=reg128#11
-# asm 2: movdqa   704(<input_0=%rdi),>x4=%xmm10
-movdqa   704(%rdi),%xmm10
+# qhasm: x4 = mem128[ input_0 + 704 ]
+# asm 1: movdqu   704(<input_0=int64#1),>x4=reg128#11
+# asm 2: movdqu   704(<input_0=%rdi),>x4=%xmm10
+movdqu   704(%rdi),%xmm10
 
-# qhasm: x5 aligned= mem128[ input_0 + 720 ]
-# asm 1: movdqa   720(<input_0=int64#1),>x5=reg128#12
-# asm 2: movdqa   720(<input_0=%rdi),>x5=%xmm11
-movdqa   720(%rdi),%xmm11
+# qhasm: x5 = mem128[ input_0 + 720 ]
+# asm 1: movdqu   720(<input_0=int64#1),>x5=reg128#12
+# asm 2: movdqu   720(<input_0=%rdi),>x5=%xmm11
+movdqu   720(%rdi),%xmm11
 
-# qhasm: x6 aligned= mem128[ input_0 + 736 ]
-# asm 1: movdqa   736(<input_0=int64#1),>x6=reg128#13
-# asm 2: movdqa   736(<input_0=%rdi),>x6=%xmm12
-movdqa   736(%rdi),%xmm12
+# qhasm: x6 = mem128[ input_0 + 736 ]
+# asm 1: movdqu   736(<input_0=int64#1),>x6=reg128#13
+# asm 2: movdqu   736(<input_0=%rdi),>x6=%xmm12
+movdqu   736(%rdi),%xmm12
 
-# qhasm: x7 aligned= mem128[ input_0 + 752 ]
-# asm 1: movdqa   752(<input_0=int64#1),>x7=reg128#14
-# asm 2: movdqa   752(<input_0=%rdi),>x7=%xmm13
-movdqa   752(%rdi),%xmm13
+# qhasm: x7 = mem128[ input_0 + 752 ]
+# asm 1: movdqu   752(<input_0=int64#1),>x7=reg128#14
+# asm 2: movdqu   752(<input_0=%rdi),>x7=%xmm13
+movdqu   752(%rdi),%xmm13
 
 # qhasm: v00 = x0 & mask0
 # asm 1: vpand <mask0=reg128#1,<x0=reg128#7,>v00=reg128#15
@@ -6982,85 +6982,85 @@ vpor %xmm15,%xmm12,%xmm12
 # asm 2: vpor <v11=%xmm7,<v01=%xmm6,>x7=%xmm6
 vpor %xmm7,%xmm6,%xmm6
 
-# qhasm: mem128[ input_0 + 640 ] aligned= x0
-# asm 1: movdqa   <x0=reg128#10,640(<input_0=int64#1)
-# asm 2: movdqa   <x0=%xmm9,640(<input_0=%rdi)
-movdqa   %xmm9,640(%rdi)
+# qhasm: mem128[ input_0 + 640 ] = x0
+# asm 1: movdqu   <x0=reg128#10,640(<input_0=int64#1)
+# asm 2: movdqu   <x0=%xmm9,640(<input_0=%rdi)
+movdqu   %xmm9,640(%rdi)
 
-# qhasm: mem128[ input_0 + 656 ] aligned= x1
-# asm 1: movdqa   <x1=reg128#14,656(<input_0=int64#1)
-# asm 2: movdqa   <x1=%xmm13,656(<input_0=%rdi)
-movdqa   %xmm13,656(%rdi)
+# qhasm: mem128[ input_0 + 656 ] = x1
+# asm 1: movdqu   <x1=reg128#14,656(<input_0=int64#1)
+# asm 2: movdqu   <x1=%xmm13,656(<input_0=%rdi)
+movdqu   %xmm13,656(%rdi)
 
-# qhasm: mem128[ input_0 + 672 ] aligned= x2
-# asm 1: movdqa   <x2=reg128#15,672(<input_0=int64#1)
-# asm 2: movdqa   <x2=%xmm14,672(<input_0=%rdi)
-movdqa   %xmm14,672(%rdi)
+# qhasm: mem128[ input_0 + 672 ] = x2
+# asm 1: movdqu   <x2=reg128#15,672(<input_0=int64#1)
+# asm 2: movdqu   <x2=%xmm14,672(<input_0=%rdi)
+movdqu   %xmm14,672(%rdi)
 
-# qhasm: mem128[ input_0 + 688 ] aligned= x3
-# asm 1: movdqa   <x3=reg128#11,688(<input_0=int64#1)
-# asm 2: movdqa   <x3=%xmm10,688(<input_0=%rdi)
-movdqa   %xmm10,688(%rdi)
+# qhasm: mem128[ input_0 + 688 ] = x3
+# asm 1: movdqu   <x3=reg128#11,688(<input_0=int64#1)
+# asm 2: movdqu   <x3=%xmm10,688(<input_0=%rdi)
+movdqu   %xmm10,688(%rdi)
 
-# qhasm: mem128[ input_0 + 704 ] aligned= x4
-# asm 1: movdqa   <x4=reg128#12,704(<input_0=int64#1)
-# asm 2: movdqa   <x4=%xmm11,704(<input_0=%rdi)
-movdqa   %xmm11,704(%rdi)
+# qhasm: mem128[ input_0 + 704 ] = x4
+# asm 1: movdqu   <x4=reg128#12,704(<input_0=int64#1)
+# asm 2: movdqu   <x4=%xmm11,704(<input_0=%rdi)
+movdqu   %xmm11,704(%rdi)
 
-# qhasm: mem128[ input_0 + 720 ] aligned= x5
-# asm 1: movdqa   <x5=reg128#9,720(<input_0=int64#1)
-# asm 2: movdqa   <x5=%xmm8,720(<input_0=%rdi)
-movdqa   %xmm8,720(%rdi)
+# qhasm: mem128[ input_0 + 720 ] = x5
+# asm 1: movdqu   <x5=reg128#9,720(<input_0=int64#1)
+# asm 2: movdqu   <x5=%xmm8,720(<input_0=%rdi)
+movdqu   %xmm8,720(%rdi)
 
-# qhasm: mem128[ input_0 + 736 ] aligned= x6
-# asm 1: movdqa   <x6=reg128#13,736(<input_0=int64#1)
-# asm 2: movdqa   <x6=%xmm12,736(<input_0=%rdi)
-movdqa   %xmm12,736(%rdi)
+# qhasm: mem128[ input_0 + 736 ] = x6
+# asm 1: movdqu   <x6=reg128#13,736(<input_0=int64#1)
+# asm 2: movdqu   <x6=%xmm12,736(<input_0=%rdi)
+movdqu   %xmm12,736(%rdi)
 
-# qhasm: mem128[ input_0 + 752 ] aligned= x7
-# asm 1: movdqa   <x7=reg128#7,752(<input_0=int64#1)
-# asm 2: movdqa   <x7=%xmm6,752(<input_0=%rdi)
-movdqa   %xmm6,752(%rdi)
+# qhasm: mem128[ input_0 + 752 ] = x7
+# asm 1: movdqu   <x7=reg128#7,752(<input_0=int64#1)
+# asm 2: movdqu   <x7=%xmm6,752(<input_0=%rdi)
+movdqu   %xmm6,752(%rdi)
 
-# qhasm: x0 aligned= mem128[ input_0 + 768 ]
-# asm 1: movdqa   768(<input_0=int64#1),>x0=reg128#7
-# asm 2: movdqa   768(<input_0=%rdi),>x0=%xmm6
-movdqa   768(%rdi),%xmm6
+# qhasm: x0 = mem128[ input_0 + 768 ]
+# asm 1: movdqu   768(<input_0=int64#1),>x0=reg128#7
+# asm 2: movdqu   768(<input_0=%rdi),>x0=%xmm6
+movdqu   768(%rdi),%xmm6
 
-# qhasm: x1 aligned= mem128[ input_0 + 784 ]
-# asm 1: movdqa   784(<input_0=int64#1),>x1=reg128#8
-# asm 2: movdqa   784(<input_0=%rdi),>x1=%xmm7
-movdqa   784(%rdi),%xmm7
+# qhasm: x1 = mem128[ input_0 + 784 ]
+# asm 1: movdqu   784(<input_0=int64#1),>x1=reg128#8
+# asm 2: movdqu   784(<input_0=%rdi),>x1=%xmm7
+movdqu   784(%rdi),%xmm7
 
-# qhasm: x2 aligned= mem128[ input_0 + 800 ]
-# asm 1: movdqa   800(<input_0=int64#1),>x2=reg128#9
-# asm 2: movdqa   800(<input_0=%rdi),>x2=%xmm8
-movdqa   800(%rdi),%xmm8
+# qhasm: x2 = mem128[ input_0 + 800 ]
+# asm 1: movdqu   800(<input_0=int64#1),>x2=reg128#9
+# asm 2: movdqu   800(<input_0=%rdi),>x2=%xmm8
+movdqu   800(%rdi),%xmm8
 
-# qhasm: x3 aligned= mem128[ input_0 + 816 ]
-# asm 1: movdqa   816(<input_0=int64#1),>x3=reg128#10
-# asm 2: movdqa   816(<input_0=%rdi),>x3=%xmm9
-movdqa   816(%rdi),%xmm9
+# qhasm: x3 = mem128[ input_0 + 816 ]
+# asm 1: movdqu   816(<input_0=int64#1),>x3=reg128#10
+# asm 2: movdqu   816(<input_0=%rdi),>x3=%xmm9
+movdqu   816(%rdi),%xmm9
 
-# qhasm: x4 aligned= mem128[ input_0 + 832 ]
-# asm 1: movdqa   832(<input_0=int64#1),>x4=reg128#11
-# asm 2: movdqa   832(<input_0=%rdi),>x4=%xmm10
-movdqa   832(%rdi),%xmm10
+# qhasm: x4 = mem128[ input_0 + 832 ]
+# asm 1: movdqu   832(<input_0=int64#1),>x4=reg128#11
+# asm 2: movdqu   832(<input_0=%rdi),>x4=%xmm10
+movdqu   832(%rdi),%xmm10
 
-# qhasm: x5 aligned= mem128[ input_0 + 848 ]
-# asm 1: movdqa   848(<input_0=int64#1),>x5=reg128#12
-# asm 2: movdqa   848(<input_0=%rdi),>x5=%xmm11
-movdqa   848(%rdi),%xmm11
+# qhasm: x5 = mem128[ input_0 + 848 ]
+# asm 1: movdqu   848(<input_0=int64#1),>x5=reg128#12
+# asm 2: movdqu   848(<input_0=%rdi),>x5=%xmm11
+movdqu   848(%rdi),%xmm11
 
-# qhasm: x6 aligned= mem128[ input_0 + 864 ]
-# asm 1: movdqa   864(<input_0=int64#1),>x6=reg128#13
-# asm 2: movdqa   864(<input_0=%rdi),>x6=%xmm12
-movdqa   864(%rdi),%xmm12
+# qhasm: x6 = mem128[ input_0 + 864 ]
+# asm 1: movdqu   864(<input_0=int64#1),>x6=reg128#13
+# asm 2: movdqu   864(<input_0=%rdi),>x6=%xmm12
+movdqu   864(%rdi),%xmm12
 
-# qhasm: x7 aligned= mem128[ input_0 + 880 ]
-# asm 1: movdqa   880(<input_0=int64#1),>x7=reg128#14
-# asm 2: movdqa   880(<input_0=%rdi),>x7=%xmm13
-movdqa   880(%rdi),%xmm13
+# qhasm: x7 = mem128[ input_0 + 880 ]
+# asm 1: movdqu   880(<input_0=int64#1),>x7=reg128#14
+# asm 2: movdqu   880(<input_0=%rdi),>x7=%xmm13
+movdqu   880(%rdi),%xmm13
 
 # qhasm: v00 = x0 & mask0
 # asm 1: vpand <mask0=reg128#1,<x0=reg128#7,>v00=reg128#15
@@ -7542,85 +7542,85 @@ vpor %xmm15,%xmm12,%xmm12
 # asm 2: vpor <v11=%xmm7,<v01=%xmm6,>x7=%xmm6
 vpor %xmm7,%xmm6,%xmm6
 
-# qhasm: mem128[ input_0 + 768 ] aligned= x0
-# asm 1: movdqa   <x0=reg128#10,768(<input_0=int64#1)
-# asm 2: movdqa   <x0=%xmm9,768(<input_0=%rdi)
-movdqa   %xmm9,768(%rdi)
+# qhasm: mem128[ input_0 + 768 ] = x0
+# asm 1: movdqu   <x0=reg128#10,768(<input_0=int64#1)
+# asm 2: movdqu   <x0=%xmm9,768(<input_0=%rdi)
+movdqu   %xmm9,768(%rdi)
 
-# qhasm: mem128[ input_0 + 784 ] aligned= x1
-# asm 1: movdqa   <x1=reg128#14,784(<input_0=int64#1)
-# asm 2: movdqa   <x1=%xmm13,784(<input_0=%rdi)
-movdqa   %xmm13,784(%rdi)
+# qhasm: mem128[ input_0 + 784 ] = x1
+# asm 1: movdqu   <x1=reg128#14,784(<input_0=int64#1)
+# asm 2: movdqu   <x1=%xmm13,784(<input_0=%rdi)
+movdqu   %xmm13,784(%rdi)
 
-# qhasm: mem128[ input_0 + 800 ] aligned= x2
-# asm 1: movdqa   <x2=reg128#15,800(<input_0=int64#1)
-# asm 2: movdqa   <x2=%xmm14,800(<input_0=%rdi)
-movdqa   %xmm14,800(%rdi)
+# qhasm: mem128[ input_0 + 800 ] = x2
+# asm 1: movdqu   <x2=reg128#15,800(<input_0=int64#1)
+# asm 2: movdqu   <x2=%xmm14,800(<input_0=%rdi)
+movdqu   %xmm14,800(%rdi)
 
-# qhasm: mem128[ input_0 + 816 ] aligned= x3
-# asm 1: movdqa   <x3=reg128#11,816(<input_0=int64#1)
-# asm 2: movdqa   <x3=%xmm10,816(<input_0=%rdi)
-movdqa   %xmm10,816(%rdi)
+# qhasm: mem128[ input_0 + 816 ] = x3
+# asm 1: movdqu   <x3=reg128#11,816(<input_0=int64#1)
+# asm 2: movdqu   <x3=%xmm10,816(<input_0=%rdi)
+movdqu   %xmm10,816(%rdi)
 
-# qhasm: mem128[ input_0 + 832 ] aligned= x4
-# asm 1: movdqa   <x4=reg128#12,832(<input_0=int64#1)
-# asm 2: movdqa   <x4=%xmm11,832(<input_0=%rdi)
-movdqa   %xmm11,832(%rdi)
+# qhasm: mem128[ input_0 + 832 ] = x4
+# asm 1: movdqu   <x4=reg128#12,832(<input_0=int64#1)
+# asm 2: movdqu   <x4=%xmm11,832(<input_0=%rdi)
+movdqu   %xmm11,832(%rdi)
 
-# qhasm: mem128[ input_0 + 848 ] aligned= x5
-# asm 1: movdqa   <x5=reg128#9,848(<input_0=int64#1)
-# asm 2: movdqa   <x5=%xmm8,848(<input_0=%rdi)
-movdqa   %xmm8,848(%rdi)
+# qhasm: mem128[ input_0 + 848 ] = x5
+# asm 1: movdqu   <x5=reg128#9,848(<input_0=int64#1)
+# asm 2: movdqu   <x5=%xmm8,848(<input_0=%rdi)
+movdqu   %xmm8,848(%rdi)
 
-# qhasm: mem128[ input_0 + 864 ] aligned= x6
-# asm 1: movdqa   <x6=reg128#13,864(<input_0=int64#1)
-# asm 2: movdqa   <x6=%xmm12,864(<input_0=%rdi)
-movdqa   %xmm12,864(%rdi)
+# qhasm: mem128[ input_0 + 864 ] = x6
+# asm 1: movdqu   <x6=reg128#13,864(<input_0=int64#1)
+# asm 2: movdqu   <x6=%xmm12,864(<input_0=%rdi)
+movdqu   %xmm12,864(%rdi)
 
-# qhasm: mem128[ input_0 + 880 ] aligned= x7
-# asm 1: movdqa   <x7=reg128#7,880(<input_0=int64#1)
-# asm 2: movdqa   <x7=%xmm6,880(<input_0=%rdi)
-movdqa   %xmm6,880(%rdi)
+# qhasm: mem128[ input_0 + 880 ] = x7
+# asm 1: movdqu   <x7=reg128#7,880(<input_0=int64#1)
+# asm 2: movdqu   <x7=%xmm6,880(<input_0=%rdi)
+movdqu   %xmm6,880(%rdi)
 
-# qhasm: x0 aligned= mem128[ input_0 + 896 ]
-# asm 1: movdqa   896(<input_0=int64#1),>x0=reg128#7
-# asm 2: movdqa   896(<input_0=%rdi),>x0=%xmm6
-movdqa   896(%rdi),%xmm6
+# qhasm: x0 = mem128[ input_0 + 896 ]
+# asm 1: movdqu   896(<input_0=int64#1),>x0=reg128#7
+# asm 2: movdqu   896(<input_0=%rdi),>x0=%xmm6
+movdqu   896(%rdi),%xmm6
 
-# qhasm: x1 aligned= mem128[ input_0 + 912 ]
-# asm 1: movdqa   912(<input_0=int64#1),>x1=reg128#8
-# asm 2: movdqa   912(<input_0=%rdi),>x1=%xmm7
-movdqa   912(%rdi),%xmm7
+# qhasm: x1 = mem128[ input_0 + 912 ]
+# asm 1: movdqu   912(<input_0=int64#1),>x1=reg128#8
+# asm 2: movdqu   912(<input_0=%rdi),>x1=%xmm7
+movdqu   912(%rdi),%xmm7
 
-# qhasm: x2 aligned= mem128[ input_0 + 928 ]
-# asm 1: movdqa   928(<input_0=int64#1),>x2=reg128#9
-# asm 2: movdqa   928(<input_0=%rdi),>x2=%xmm8
-movdqa   928(%rdi),%xmm8
+# qhasm: x2 = mem128[ input_0 + 928 ]
+# asm 1: movdqu   928(<input_0=int64#1),>x2=reg128#9
+# asm 2: movdqu   928(<input_0=%rdi),>x2=%xmm8
+movdqu   928(%rdi),%xmm8
 
-# qhasm: x3 aligned= mem128[ input_0 + 944 ]
-# asm 1: movdqa   944(<input_0=int64#1),>x3=reg128#10
-# asm 2: movdqa   944(<input_0=%rdi),>x3=%xmm9
-movdqa   944(%rdi),%xmm9
+# qhasm: x3 = mem128[ input_0 + 944 ]
+# asm 1: movdqu   944(<input_0=int64#1),>x3=reg128#10
+# asm 2: movdqu   944(<input_0=%rdi),>x3=%xmm9
+movdqu   944(%rdi),%xmm9
 
-# qhasm: x4 aligned= mem128[ input_0 + 960 ]
-# asm 1: movdqa   960(<input_0=int64#1),>x4=reg128#11
-# asm 2: movdqa   960(<input_0=%rdi),>x4=%xmm10
-movdqa   960(%rdi),%xmm10
+# qhasm: x4 = mem128[ input_0 + 960 ]
+# asm 1: movdqu   960(<input_0=int64#1),>x4=reg128#11
+# asm 2: movdqu   960(<input_0=%rdi),>x4=%xmm10
+movdqu   960(%rdi),%xmm10
 
-# qhasm: x5 aligned= mem128[ input_0 + 976 ]
-# asm 1: movdqa   976(<input_0=int64#1),>x5=reg128#12
-# asm 2: movdqa   976(<input_0=%rdi),>x5=%xmm11
-movdqa   976(%rdi),%xmm11
+# qhasm: x5 = mem128[ input_0 + 976 ]
+# asm 1: movdqu   976(<input_0=int64#1),>x5=reg128#12
+# asm 2: movdqu   976(<input_0=%rdi),>x5=%xmm11
+movdqu   976(%rdi),%xmm11
 
-# qhasm: x6 aligned= mem128[ input_0 + 992 ]
-# asm 1: movdqa   992(<input_0=int64#1),>x6=reg128#13
-# asm 2: movdqa   992(<input_0=%rdi),>x6=%xmm12
-movdqa   992(%rdi),%xmm12
+# qhasm: x6 = mem128[ input_0 + 992 ]
+# asm 1: movdqu   992(<input_0=int64#1),>x6=reg128#13
+# asm 2: movdqu   992(<input_0=%rdi),>x6=%xmm12
+movdqu   992(%rdi),%xmm12
 
-# qhasm: x7 aligned= mem128[ input_0 + 1008 ]
-# asm 1: movdqa   1008(<input_0=int64#1),>x7=reg128#14
-# asm 2: movdqa   1008(<input_0=%rdi),>x7=%xmm13
-movdqa   1008(%rdi),%xmm13
+# qhasm: x7 = mem128[ input_0 + 1008 ]
+# asm 1: movdqu   1008(<input_0=int64#1),>x7=reg128#14
+# asm 2: movdqu   1008(<input_0=%rdi),>x7=%xmm13
+movdqu   1008(%rdi),%xmm13
 
 # qhasm: v00 = x0 & mask0
 # asm 1: vpand <mask0=reg128#1,<x0=reg128#7,>v00=reg128#15
@@ -8102,45 +8102,45 @@ vpor %xmm4,%xmm10,%xmm4
 # asm 2: vpor <v11=%xmm1,<v01=%xmm6,>x7=%xmm1
 vpor %xmm1,%xmm6,%xmm1
 
-# qhasm: mem128[ input_0 + 896 ] aligned= x0
-# asm 1: movdqa   <x0=reg128#4,896(<input_0=int64#1)
-# asm 2: movdqa   <x0=%xmm3,896(<input_0=%rdi)
-movdqa   %xmm3,896(%rdi)
+# qhasm: mem128[ input_0 + 896 ] = x0
+# asm 1: movdqu   <x0=reg128#4,896(<input_0=int64#1)
+# asm 2: movdqu   <x0=%xmm3,896(<input_0=%rdi)
+movdqu   %xmm3,896(%rdi)
 
-# qhasm: mem128[ input_0 + 912 ] aligned= x1
-# asm 1: movdqa   <x1=reg128#8,912(<input_0=int64#1)
-# asm 2: movdqa   <x1=%xmm7,912(<input_0=%rdi)
-movdqa   %xmm7,912(%rdi)
+# qhasm: mem128[ input_0 + 912 ] = x1
+# asm 1: movdqu   <x1=reg128#8,912(<input_0=int64#1)
+# asm 2: movdqu   <x1=%xmm7,912(<input_0=%rdi)
+movdqu   %xmm7,912(%rdi)
 
-# qhasm: mem128[ input_0 + 928 ] aligned= x2
-# asm 1: movdqa   <x2=reg128#9,928(<input_0=int64#1)
-# asm 2: movdqa   <x2=%xmm8,928(<input_0=%rdi)
-movdqa   %xmm8,928(%rdi)
+# qhasm: mem128[ input_0 + 928 ] = x2
+# asm 1: movdqu   <x2=reg128#9,928(<input_0=int64#1)
+# asm 2: movdqu   <x2=%xmm8,928(<input_0=%rdi)
+movdqu   %xmm8,928(%rdi)
 
-# qhasm: mem128[ input_0 + 944 ] aligned= x3
-# asm 1: movdqa   <x3=reg128#1,944(<input_0=int64#1)
-# asm 2: movdqa   <x3=%xmm0,944(<input_0=%rdi)
-movdqa   %xmm0,944(%rdi)
+# qhasm: mem128[ input_0 + 944 ] = x3
+# asm 1: movdqu   <x3=reg128#1,944(<input_0=int64#1)
+# asm 2: movdqu   <x3=%xmm0,944(<input_0=%rdi)
+movdqu   %xmm0,944(%rdi)
 
-# qhasm: mem128[ input_0 + 960 ] aligned= x4
-# asm 1: movdqa   <x4=reg128#10,960(<input_0=int64#1)
-# asm 2: movdqa   <x4=%xmm9,960(<input_0=%rdi)
-movdqa   %xmm9,960(%rdi)
+# qhasm: mem128[ input_0 + 960 ] = x4
+# asm 1: movdqu   <x4=reg128#10,960(<input_0=int64#1)
+# asm 2: movdqu   <x4=%xmm9,960(<input_0=%rdi)
+movdqu   %xmm9,960(%rdi)
 
-# qhasm: mem128[ input_0 + 976 ] aligned= x5
-# asm 1: movdqa   <x5=reg128#3,976(<input_0=int64#1)
-# asm 2: movdqa   <x5=%xmm2,976(<input_0=%rdi)
-movdqa   %xmm2,976(%rdi)
+# qhasm: mem128[ input_0 + 976 ] = x5
+# asm 1: movdqu   <x5=reg128#3,976(<input_0=int64#1)
+# asm 2: movdqu   <x5=%xmm2,976(<input_0=%rdi)
+movdqu   %xmm2,976(%rdi)
 
-# qhasm: mem128[ input_0 + 992 ] aligned= x6
-# asm 1: movdqa   <x6=reg128#5,992(<input_0=int64#1)
-# asm 2: movdqa   <x6=%xmm4,992(<input_0=%rdi)
-movdqa   %xmm4,992(%rdi)
+# qhasm: mem128[ input_0 + 992 ] = x6
+# asm 1: movdqu   <x6=reg128#5,992(<input_0=int64#1)
+# asm 2: movdqu   <x6=%xmm4,992(<input_0=%rdi)
+movdqu   %xmm4,992(%rdi)
 
-# qhasm: mem128[ input_0 + 1008 ] aligned= x7
-# asm 1: movdqa   <x7=reg128#2,1008(<input_0=int64#1)
-# asm 2: movdqa   <x7=%xmm1,1008(<input_0=%rdi)
-movdqa   %xmm1,1008(%rdi)
+# qhasm: mem128[ input_0 + 1008 ] = x7
+# asm 1: movdqu   <x7=reg128#2,1008(<input_0=int64#1)
+# asm 2: movdqu   <x7=%xmm1,1008(<input_0=%rdi)
+movdqu   %xmm1,1008(%rdi)
 
 # qhasm: return
 add %r11,%rsp

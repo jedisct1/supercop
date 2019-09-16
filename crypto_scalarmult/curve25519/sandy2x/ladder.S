@@ -469,12 +469,12 @@ movq %r14,1848(%rsp)
 # qhasm: init0 = v0_0
 # asm 1: movdqa v0_0,>init0=reg128#1
 # asm 2: movdqa v0_0,>init0=%xmm0
-movdqa v0_0,%xmm0
+movdqa v0_0(%rip),%xmm0
 
 # qhasm: init1 = v1_0
 # asm 1: movdqa v1_0,>init1=reg128#2
 # asm 2: movdqa v1_0,>init1=%xmm1
-movdqa v1_0,%xmm1
+movdqa v1_0(%rip),%xmm1
 
 # qhasm: r = mem128[input_0 + 0]
 # asm 1: movdqu   0(<input_0=int64#1),>r=reg128#3
@@ -624,7 +624,7 @@ movdqa %xmm10,176(%rsp)
 # qhasm: 2x r *= mem128[ v19_19 ]
 # asm 1: pmuludq v19_19,<r=reg128#11
 # asm 2: pmuludq v19_19,<r=%xmm10
-pmuludq v19_19,%xmm10
+pmuludq v19_19(%rip),%xmm10
 
 # qhasm: p23_19_19_stack = r
 # asm 1: movdqa <r=reg128#11,>p23_19_19_stack=stack128#13
@@ -644,7 +644,7 @@ movdqa %xmm10,208(%rsp)
 # qhasm: 2x r *= mem128[ v19_19 ]
 # asm 1: pmuludq v19_19,<r=reg128#11
 # asm 2: pmuludq v19_19,<r=%xmm10
-pmuludq v19_19,%xmm10
+pmuludq v19_19(%rip),%xmm10
 
 # qhasm: p45_19_19_stack = r
 # asm 1: movdqa <r=reg128#11,>p45_19_19_stack=stack128#15
@@ -664,7 +664,7 @@ movdqa %xmm10,240(%rsp)
 # qhasm: 2x r *= mem128[ v19_19 ]
 # asm 1: pmuludq v19_19,<r=reg128#11
 # asm 2: pmuludq v19_19,<r=%xmm10
-pmuludq v19_19,%xmm10
+pmuludq v19_19(%rip),%xmm10
 
 # qhasm: p67_19_19_stack = r
 # asm 1: movdqa <r=reg128#11,>p67_19_19_stack=stack128#17
@@ -684,7 +684,7 @@ movdqa %xmm10,272(%rsp)
 # qhasm: 2x r *= mem128[ v19_19 ]
 # asm 1: pmuludq v19_19,<r=reg128#11
 # asm 2: pmuludq v19_19,<r=%xmm10
-pmuludq v19_19,%xmm10
+pmuludq v19_19(%rip),%xmm10
 
 # qhasm: p89_19_19_stack = r
 # asm 1: movdqa <r=reg128#11,>p89_19_19_stack=stack128#19
@@ -699,7 +699,7 @@ movdqu   8(%rdi),%xmm10
 # qhasm: 2x r *= mem128[ v2_1 ]
 # asm 1: pmuludq v2_1,<r=reg128#11
 # asm 2: pmuludq v2_1,<r=%xmm10
-pmuludq v2_1,%xmm10
+pmuludq v2_1(%rip),%xmm10
 
 # qhasm: p12_2_1_stack = r
 # asm 1: movdqa <r=reg128#11,>p12_2_1_stack=stack128#20
@@ -709,7 +709,7 @@ movdqa %xmm10,304(%rsp)
 # qhasm: 2x r *= mem128[ v19_19 ]
 # asm 1: pmuludq v19_19,<r=reg128#11
 # asm 2: pmuludq v19_19,<r=%xmm10
-pmuludq v19_19,%xmm10
+pmuludq v19_19(%rip),%xmm10
 
 # qhasm: p12_38_19_stack = r
 # asm 1: movdqa <r=reg128#11,>p12_38_19_stack=stack128#21
@@ -724,7 +724,7 @@ movdqu   24(%rdi),%xmm10
 # qhasm: 2x r *= mem128[ v2_1 ]
 # asm 1: pmuludq v2_1,<r=reg128#11
 # asm 2: pmuludq v2_1,<r=%xmm10
-pmuludq v2_1,%xmm10
+pmuludq v2_1(%rip),%xmm10
 
 # qhasm: p34_2_1_stack = r
 # asm 1: movdqa <r=reg128#11,>p34_2_1_stack=stack128#22
@@ -734,7 +734,7 @@ movdqa %xmm10,336(%rsp)
 # qhasm: 2x r *= mem128[ v19_19 ]
 # asm 1: pmuludq v19_19,<r=reg128#11
 # asm 2: pmuludq v19_19,<r=%xmm10
-pmuludq v19_19,%xmm10
+pmuludq v19_19(%rip),%xmm10
 
 # qhasm: p34_38_19_stack = r
 # asm 1: movdqa <r=reg128#11,>p34_38_19_stack=stack128#23
@@ -749,7 +749,7 @@ movdqu   40(%rdi),%xmm10
 # qhasm: 2x r *= mem128[ v2_1 ]
 # asm 1: pmuludq v2_1,<r=reg128#11
 # asm 2: pmuludq v2_1,<r=%xmm10
-pmuludq v2_1,%xmm10
+pmuludq v2_1(%rip),%xmm10
 
 # qhasm: p56_2_1_stack = r
 # asm 1: movdqa <r=reg128#11,>p56_2_1_stack=stack128#24
@@ -759,7 +759,7 @@ movdqa %xmm10,368(%rsp)
 # qhasm: 2x r *= mem128[ v19_19 ]
 # asm 1: pmuludq v19_19,<r=reg128#11
 # asm 2: pmuludq v19_19,<r=%xmm10
-pmuludq v19_19,%xmm10
+pmuludq v19_19(%rip),%xmm10
 
 # qhasm: p56_38_19_stack = r
 # asm 1: movdqa <r=reg128#11,>p56_38_19_stack=stack128#25
@@ -774,7 +774,7 @@ movdqu   56(%rdi),%xmm10
 # qhasm: 2x r *= mem128[ v2_1 ]
 # asm 1: pmuludq v2_1,<r=reg128#11
 # asm 2: pmuludq v2_1,<r=%xmm10
-pmuludq v2_1,%xmm10
+pmuludq v2_1(%rip),%xmm10
 
 # qhasm: p78_2_1_stack = r
 # asm 1: movdqa <r=reg128#11,>p78_2_1_stack=stack128#26
@@ -784,7 +784,7 @@ movdqa %xmm10,400(%rsp)
 # qhasm: 2x r *= mem128[ v19_19 ]
 # asm 1: pmuludq v19_19,<r=reg128#11
 # asm 2: pmuludq v19_19,<r=%xmm10
-pmuludq v19_19,%xmm10
+pmuludq v19_19(%rip),%xmm10
 
 # qhasm: p78_38_19_stack = r
 # asm 1: movdqa <r=reg128#11,>p78_38_19_stack=stack128#27
@@ -814,7 +814,7 @@ pshufd $2,%xmm10,%xmm10
 # qhasm: 2x g_89 *= mem128[ v38_1 ]
 # asm 1: pmuludq v38_1,<g_89=reg128#11
 # asm 2: pmuludq v38_1,<g_89=%xmm10
-pmuludq v38_1,%xmm10
+pmuludq v38_1(%rip),%xmm10
 
 # qhasm: p90_38_1_stack = g_89
 # asm 1: movdqa <g_89=reg128#11,>p90_38_1_stack=stack128#28
@@ -1329,7 +1329,7 @@ movdqa %xmm14,112(%rsp)
 # qhasm: 2x r = g0 + mem128[ subc0 ]
 # asm 1: vpaddq subc0,<g0=reg128#12,>r=reg128#11
 # asm 2: vpaddq subc0,<g0=%xmm11,>r=%xmm10
-vpaddq subc0,%xmm11,%xmm10
+vpaddq subc0(%rip),%xmm11,%xmm10
 
 # qhasm: 2x r -= g1
 # asm 1: psubq <g1=reg128#13,<r=reg128#11
@@ -1359,7 +1359,7 @@ vpaddq %xmm1,%xmm0,%xmm11
 # qhasm: 2x f0 += mem128[ subc0 ]
 # asm 1: paddq subc0,<f0=reg128#1
 # asm 2: paddq subc0,<f0=%xmm0
-paddq subc0,%xmm0
+paddq subc0(%rip),%xmm0
 
 # qhasm: 2x f0 -= f1
 # asm 1: psubq <f1=reg128#2,<f0=reg128#1
@@ -1429,7 +1429,7 @@ vpaddq %xmm3,%xmm2,%xmm1
 # qhasm: 2x f2 += mem128[ subc2 ]
 # asm 1: paddq subc2,<f2=reg128#3
 # asm 2: paddq subc2,<f2=%xmm2
-paddq subc2,%xmm2
+paddq subc2(%rip),%xmm2
 
 # qhasm: 2x f2 -= f3
 # asm 1: psubq <f3=reg128#4,<f2=reg128#3
@@ -1504,7 +1504,7 @@ vpaddq %xmm5,%xmm4,%xmm3
 # qhasm: 2x f4 += mem128[ subc2 ]
 # asm 1: paddq subc2,<f4=reg128#5
 # asm 2: paddq subc2,<f4=%xmm4
-paddq subc2,%xmm4
+paddq subc2(%rip),%xmm4
 
 # qhasm: 2x f4 -= f5
 # asm 1: psubq <f5=reg128#6,<f4=reg128#5
@@ -1569,7 +1569,7 @@ vpaddq %xmm7,%xmm6,%xmm3
 # qhasm: 2x f6 += mem128[ subc2 ]
 # asm 1: paddq subc2,<f6=reg128#7
 # asm 2: paddq subc2,<f6=%xmm6
-paddq subc2,%xmm6
+paddq subc2(%rip),%xmm6
 
 # qhasm: 2x f6 -= f7
 # asm 1: psubq <f7=reg128#8,<f6=reg128#7
@@ -1604,7 +1604,7 @@ movdqa %xmm5,544(%rsp)
 # qhasm: 2x f5 *= mem128[ v19_19 ]
 # asm 1: pmuludq v19_19,<f5=reg128#6
 # asm 2: pmuludq v19_19,<f5=%xmm5
-pmuludq v19_19,%xmm5
+pmuludq v19_19(%rip),%xmm5
 
 # qhasm: f5_38_stack = f5
 # asm 1: movdqa <f5=reg128#6,>f5_38_stack=stack128#36
@@ -1649,7 +1649,7 @@ paddq %xmm14,%xmm5
 # qhasm: 2x f6 *= mem128[ v19_19 ]
 # asm 1: pmuludq v19_19,<f6=reg128#4
 # asm 2: pmuludq v19_19,<f6=%xmm3
-pmuludq v19_19,%xmm3
+pmuludq v19_19(%rip),%xmm3
 
 # qhasm: f6_19_stack = f6
 # asm 1: movdqa <f6=reg128#4,>f6_19_stack=stack128#39
@@ -1664,7 +1664,7 @@ vpaddq %xmm9,%xmm8,%xmm3
 # qhasm: 2x f8 += mem128[ subc2 ]
 # asm 1: paddq subc2,<f8=reg128#9
 # asm 2: paddq subc2,<f8=%xmm8
-paddq subc2,%xmm8
+paddq subc2(%rip),%xmm8
 
 # qhasm: 2x f8 -= f9
 # asm 1: psubq <f9=reg128#10,<f8=reg128#9
@@ -1699,7 +1699,7 @@ movdqa %xmm7,640(%rsp)
 # qhasm: 2x f7 *= mem128[ v19_19 ]
 # asm 1: pmuludq v19_19,<f7=reg128#8
 # asm 2: pmuludq v19_19,<f7=%xmm7
-pmuludq v19_19,%xmm7
+pmuludq v19_19(%rip),%xmm7
 
 # qhasm: f7_38_stack = f7
 # asm 1: movdqa <f7=reg128#8,>f7_38_stack=stack128#42
@@ -1744,7 +1744,7 @@ paddq %xmm10,%xmm7
 # qhasm: 2x f8 *= mem128[ v19_19 ]
 # asm 1: pmuludq v19_19,<f8=reg128#4
 # asm 2: pmuludq v19_19,<f8=%xmm3
-pmuludq v19_19,%xmm3
+pmuludq v19_19(%rip),%xmm3
 
 # qhasm: f8_19_stack = f8
 # asm 1: movdqa <f8=reg128#4,>f8_19_stack=stack128#44
@@ -1754,7 +1754,7 @@ movdqa %xmm3,688(%rsp)
 # qhasm: 2x g1 *= mem128[ v19_19 ]
 # asm 1: pmuludq v19_19,<g1=reg128#13
 # asm 2: pmuludq v19_19,<g1=%xmm12
-pmuludq v19_19,%xmm12
+pmuludq v19_19(%rip),%xmm12
 
 # qhasm: 2x r = g1 * f9
 # asm 1: vpmuludq <f9=reg128#10,<g1=reg128#13,>r=reg128#4
@@ -1784,7 +1784,7 @@ movdqa 16(%rsp),%xmm9
 # qhasm: 2x r = g2 + mem128[ subc2 ]
 # asm 1: vpaddq subc2,<g2=reg128#4,>r=reg128#11
 # asm 2: vpaddq subc2,<g2=%xmm3,>r=%xmm10
-vpaddq subc2,%xmm3,%xmm10
+vpaddq subc2(%rip),%xmm3,%xmm10
 
 # qhasm: 2x r -= g3
 # asm 1: psubq <g3=reg128#10,<r=reg128#11
@@ -1889,7 +1889,7 @@ paddq %xmm10,%xmm7
 # qhasm: 2x g2 *= mem128[ v19_19 ]
 # asm 1: pmuludq v19_19,<g2=reg128#4
 # asm 2: pmuludq v19_19,<g2=%xmm3
-pmuludq v19_19,%xmm3
+pmuludq v19_19(%rip),%xmm3
 
 # qhasm: 2x r2 = g2 * f8_stack
 # asm 1: vpmuludq <f8_stack=stack128#40,<g2=reg128#4,>r2=reg128#11
@@ -1984,7 +1984,7 @@ paddq %xmm3,%xmm7
 # qhasm: 2x g3 *= mem128[ v19_19 ]
 # asm 1: pmuludq v19_19,<g3=reg128#10
 # asm 2: pmuludq v19_19,<g3=%xmm9
-pmuludq v19_19,%xmm9
+pmuludq v19_19(%rip),%xmm9
 
 # qhasm: 2x r3 = g3 * f7_2_stack
 # asm 1: vpmuludq <f7_2_stack=stack128#41,<g3=reg128#10,>r3=reg128#4
@@ -2029,7 +2029,7 @@ movdqa 80(%rsp),%xmm9
 # qhasm: 2x r = g4 + mem128[ subc2 ]
 # asm 1: vpaddq subc2,<g4=reg128#4,>r=reg128#11
 # asm 2: vpaddq subc2,<g4=%xmm3,>r=%xmm10
-vpaddq subc2,%xmm3,%xmm10
+vpaddq subc2(%rip),%xmm3,%xmm10
 
 # qhasm: 2x r -= g5
 # asm 1: psubq <g5=reg128#10,<r=reg128#11
@@ -2114,7 +2114,7 @@ paddq %xmm10,%xmm7
 # qhasm: 2x g4 *= mem128[ v19_19 ]
 # asm 1: pmuludq v19_19,<g4=reg128#4
 # asm 2: pmuludq v19_19,<g4=%xmm3
-pmuludq v19_19,%xmm3
+pmuludq v19_19(%rip),%xmm3
 
 # qhasm: 2x r4 = g4 * f6_stack
 # asm 1: vpmuludq <f6_stack=stack128#38,<g4=reg128#4,>r4=reg128#11
@@ -2209,7 +2209,7 @@ paddq %xmm3,%xmm7
 # qhasm: 2x g5 *= mem128[ v19_19 ]
 # asm 1: pmuludq v19_19,<g5=reg128#10
 # asm 2: pmuludq v19_19,<g5=%xmm9
-pmuludq v19_19,%xmm9
+pmuludq v19_19(%rip),%xmm9
 
 # qhasm: 2x r5 = g5 * f5_2_stack
 # asm 1: vpmuludq <f5_2_stack=stack128#35,<g5=reg128#10,>r5=reg128#4
@@ -2274,7 +2274,7 @@ movdqa 96(%rsp),%xmm9
 # qhasm: 2x r = g6 + mem128[ subc2 ]
 # asm 1: vpaddq subc2,<g6=reg128#4,>r=reg128#11
 # asm 2: vpaddq subc2,<g6=%xmm3,>r=%xmm10
-vpaddq subc2,%xmm3,%xmm10
+vpaddq subc2(%rip),%xmm3,%xmm10
 
 # qhasm: 2x r -= g7
 # asm 1: psubq <g7=reg128#10,<r=reg128#11
@@ -2339,7 +2339,7 @@ paddq %xmm10,%xmm7
 # qhasm: 2x g6 *= mem128[ v19_19 ]
 # asm 1: pmuludq v19_19,<g6=reg128#4
 # asm 2: pmuludq v19_19,<g6=%xmm3
-pmuludq v19_19,%xmm3
+pmuludq v19_19(%rip),%xmm3
 
 # qhasm: 2x r6 = g6 * f4_stack
 # asm 1: vpmuludq <f4_stack=stack128#34,<g6=reg128#4,>r6=reg128#11
@@ -2434,7 +2434,7 @@ paddq %xmm3,%xmm7
 # qhasm: 2x g7 *= mem128[ v19_19 ]
 # asm 1: pmuludq v19_19,<g7=reg128#10
 # asm 2: pmuludq v19_19,<g7=%xmm9
-pmuludq v19_19,%xmm9
+pmuludq v19_19(%rip),%xmm9
 
 # qhasm: 2x r7 = g7 * f3_2_stack
 # asm 1: vpmuludq <f3_2_stack=stack128#32,<g7=reg128#10,>r7=reg128#4
@@ -2519,7 +2519,7 @@ movdqa 112(%rsp),%xmm9
 # qhasm: 2x r = g8 + mem128[ subc2 ]
 # asm 1: vpaddq subc2,<g8=reg128#4,>r=reg128#11
 # asm 2: vpaddq subc2,<g8=%xmm3,>r=%xmm10
-vpaddq subc2,%xmm3,%xmm10
+vpaddq subc2(%rip),%xmm3,%xmm10
 
 # qhasm: 2x r -= g9
 # asm 1: psubq <g9=reg128#10,<r=reg128#11
@@ -2564,7 +2564,7 @@ paddq %xmm10,%xmm7
 # qhasm: 2x g8 *= mem128[ v19_19 ]
 # asm 1: pmuludq v19_19,<g8=reg128#4
 # asm 2: pmuludq v19_19,<g8=%xmm3
-pmuludq v19_19,%xmm3
+pmuludq v19_19(%rip),%xmm3
 
 # qhasm: 2x r8 = g8 * f2_stack
 # asm 1: vpmuludq <f2_stack=stack128#31,<g8=reg128#4,>r8=reg128#11
@@ -2659,7 +2659,7 @@ paddq %xmm3,%xmm7
 # qhasm: 2x g9 *= mem128[ v19_19 ]
 # asm 1: pmuludq v19_19,<g9=reg128#10
 # asm 2: pmuludq v19_19,<g9=%xmm9
-pmuludq v19_19,%xmm9
+pmuludq v19_19(%rip),%xmm9
 
 # qhasm: 2x r9 = g9 * f1_2_stack
 # asm 1: vpmuludq <f1_2_stack=stack128#29,<g9=reg128#10,>r9=reg128#4
@@ -2764,7 +2764,7 @@ paddq %xmm3,%xmm6
 # qhasm: h5 &= mem128[ m25 ]
 # asm 1: pand m25,<h5=reg128#5
 # asm 2: pand m25,<h5=%xmm4
-pand m25,%xmm4
+pand m25(%rip),%xmm4
 
 # qhasm: 2x carry0 = h0 unsigned>>= 26
 # asm 1: vpsrlq $26,<h0=reg128#12,>carry0=reg128#4
@@ -2779,7 +2779,7 @@ paddq %xmm3,%xmm13
 # qhasm: h0 &= mem128[ m26 ]
 # asm 1: pand m26,<h0=reg128#12
 # asm 2: pand m26,<h0=%xmm11
-pand m26,%xmm11
+pand m26(%rip),%xmm11
 
 # qhasm: 2x carry6 = h6 unsigned>>= 26
 # asm 1: vpsrlq $26,<h6=reg128#7,>carry6=reg128#4
@@ -2794,7 +2794,7 @@ paddq %xmm3,%xmm5
 # qhasm: h6 &= mem128[ m26 ]
 # asm 1: pand m26,<h6=reg128#7
 # asm 2: pand m26,<h6=%xmm6
-pand m26,%xmm6
+pand m26(%rip),%xmm6
 
 # qhasm: 2x carry1 = h1 unsigned>>= 25
 # asm 1: vpsrlq $25,<h1=reg128#14,>carry1=reg128#4
@@ -2809,7 +2809,7 @@ paddq %xmm3,%xmm0
 # qhasm: h1 &= mem128[ m25 ]
 # asm 1: pand m25,<h1=reg128#14
 # asm 2: pand m25,<h1=%xmm13
-pand m25,%xmm13
+pand m25(%rip),%xmm13
 
 # qhasm: 2x carry7 = h7 unsigned>>= 25
 # asm 1: vpsrlq $25,<h7=reg128#6,>carry7=reg128#4
@@ -2824,7 +2824,7 @@ paddq %xmm3,%xmm8
 # qhasm: h7 &= mem128[ m25 ]
 # asm 1: pand m25,<h7=reg128#6
 # asm 2: pand m25,<h7=%xmm5
-pand m25,%xmm5
+pand m25(%rip),%xmm5
 
 # qhasm: 2x carry2 = h2 unsigned>>= 26
 # asm 1: vpsrlq $26,<h2=reg128#1,>carry2=reg128#4
@@ -2839,7 +2839,7 @@ paddq %xmm3,%xmm2
 # qhasm: h2 &= mem128[ m26 ]
 # asm 1: pand m26,<h2=reg128#1
 # asm 2: pand m26,<h2=%xmm0
-pand m26,%xmm0
+pand m26(%rip),%xmm0
 
 # qhasm: 2x carry8 = h8 unsigned>>= 26
 # asm 1: vpsrlq $26,<h8=reg128#9,>carry8=reg128#4
@@ -2854,7 +2854,7 @@ paddq %xmm3,%xmm7
 # qhasm: h8 &= mem128[ m26 ]
 # asm 1: pand m26,<h8=reg128#9
 # asm 2: pand m26,<h8=%xmm8
-pand m26,%xmm8
+pand m26(%rip),%xmm8
 
 # qhasm: 2x carry3 = h3 unsigned>>= 25
 # asm 1: vpsrlq $25,<h3=reg128#3,>carry3=reg128#4
@@ -2869,7 +2869,7 @@ paddq %xmm3,%xmm1
 # qhasm: h3 &= mem128[ m25 ]
 # asm 1: pand m25,<h3=reg128#3
 # asm 2: pand m25,<h3=%xmm2
-pand m25,%xmm2
+pand m25(%rip),%xmm2
 
 # qhasm: 2x carry9 = h9 unsigned>>= 25
 # asm 1: vpsrlq $25,<h9=reg128#8,>carry9=reg128#4
@@ -2904,7 +2904,7 @@ paddq %xmm9,%xmm11
 # qhasm: h9 &= mem128[ m25 ]
 # asm 1: pand m25,<h9=reg128#8
 # asm 2: pand m25,<h9=%xmm7
-pand m25,%xmm7
+pand m25(%rip),%xmm7
 
 # qhasm: 2x carry4 = h4 unsigned>>= 26
 # asm 1: vpsrlq $26,<h4=reg128#2,>carry4=reg128#4
@@ -2919,7 +2919,7 @@ paddq %xmm3,%xmm4
 # qhasm: h4 &= mem128[ m26 ]
 # asm 1: pand m26,<h4=reg128#2
 # asm 2: pand m26,<h4=%xmm1
-pand m26,%xmm1
+pand m26(%rip),%xmm1
 
 # qhasm: 2x carry0 = h0 unsigned>>= 26
 # asm 1: vpsrlq $26,<h0=reg128#12,>carry0=reg128#4
@@ -2934,7 +2934,7 @@ paddq %xmm3,%xmm13
 # qhasm: h0 &= mem128[ m26 ]
 # asm 1: pand m26,<h0=reg128#12
 # asm 2: pand m26,<h0=%xmm11
-pand m26,%xmm11
+pand m26(%rip),%xmm11
 
 # qhasm: 2x carry5 = h5 unsigned>>= 25
 # asm 1: vpsrlq $25,<h5=reg128#5,>carry5=reg128#4
@@ -2949,7 +2949,7 @@ paddq %xmm3,%xmm6
 # qhasm: h5 &= mem128[ m25 ]
 # asm 1: pand m25,<h5=reg128#5
 # asm 2: pand m25,<h5=%xmm4
-pand m25,%xmm4
+pand m25(%rip),%xmm4
 
 # qhasm: r = unpack_low(h0, h1)
 # asm 1: vpunpcklqdq <h1=reg128#14,<h0=reg128#12,>r=reg128#4
@@ -2964,7 +2964,7 @@ vpunpckhqdq %xmm13,%xmm11,%xmm9
 # qhasm: 2x h0 = h1 + mem128[ subc0 ]
 # asm 1: vpaddq subc0,<h1=reg128#10,>h0=reg128#11
 # asm 2: vpaddq subc0,<h1=%xmm9,>h0=%xmm10
-vpaddq subc0,%xmm9,%xmm10
+vpaddq subc0(%rip),%xmm9,%xmm10
 
 # qhasm: 2x h0 -= r
 # asm 1: psubq <r=reg128#4,<h0=reg128#11
@@ -3014,7 +3014,7 @@ vpunpckhqdq %xmm2,%xmm0,%xmm0
 # qhasm: 2x h2 = h3 + mem128[ subc2 ]
 # asm 1: vpaddq subc2,<h3=reg128#1,>h2=reg128#3
 # asm 2: vpaddq subc2,<h3=%xmm0,>h2=%xmm2
-vpaddq subc2,%xmm0,%xmm2
+vpaddq subc2(%rip),%xmm0,%xmm2
 
 # qhasm: 2x h2 -= r
 # asm 1: psubq <r=reg128#13,<h2=reg128#3
@@ -3084,7 +3084,7 @@ vpunpckhqdq %xmm4,%xmm1,%xmm1
 # qhasm: 2x h4 = h5 + mem128[ subc2 ]
 # asm 1: vpaddq subc2,<h5=reg128#2,>h4=reg128#5
 # asm 2: vpaddq subc2,<h5=%xmm1,>h4=%xmm4
-vpaddq subc2,%xmm1,%xmm4
+vpaddq subc2(%rip),%xmm1,%xmm4
 
 # qhasm: 2x h4 -= r
 # asm 1: psubq <r=reg128#15,<h4=reg128#5
@@ -3124,7 +3124,7 @@ movdqa %xmm1,16(%rsp)
 # qhasm: 2x h5 *= mem128[ v19_19 ]
 # asm 1: pmuludq v19_19,<h5=reg128#2
 # asm 2: pmuludq v19_19,<h5=%xmm1
-pmuludq v19_19,%xmm1
+pmuludq v19_19(%rip),%xmm1
 
 # qhasm: h5_38_stack = h5
 # asm 1: movdqa <h5=reg128#2,>h5_38_stack=stack128#3
@@ -3174,7 +3174,7 @@ vpunpckhqdq %xmm5,%xmm6,%xmm5
 # qhasm: 2x h6 = h7 + mem128[ subc2 ]
 # asm 1: vpaddq subc2,<h7=reg128#6,>h6=reg128#7
 # asm 2: vpaddq subc2,<h7=%xmm5,>h6=%xmm6
-vpaddq subc2,%xmm5,%xmm6
+vpaddq subc2(%rip),%xmm5,%xmm6
 
 # qhasm: 2x h6 -= r
 # asm 1: psubq <r=reg128#16,<h6=reg128#7
@@ -3204,7 +3204,7 @@ movdqa %xmm6,48(%rsp)
 # qhasm: 2x h6 *= mem128[ v19_19 ]
 # asm 1: pmuludq v19_19,<h6=reg128#7
 # asm 2: pmuludq v19_19,<h6=%xmm6
-pmuludq v19_19,%xmm6
+pmuludq v19_19(%rip),%xmm6
 
 # qhasm: h6_19_stack = h6
 # asm 1: movdqa <h6=reg128#7,>h6_19_stack=stack128#5
@@ -3219,7 +3219,7 @@ movdqa %xmm5,80(%rsp)
 # qhasm: 2x h7 *= mem128[ v38_38 ]
 # asm 1: pmuludq v38_38,<h7=reg128#6
 # asm 2: pmuludq v38_38,<h7=%xmm5
-pmuludq v38_38,%xmm5
+pmuludq v38_38(%rip),%xmm5
 
 # qhasm: h7_38_stack = h7
 # asm 1: movdqa <h7=reg128#6,>h7_38_stack=stack128#7
@@ -3294,7 +3294,7 @@ vpunpckhqdq %xmm7,%xmm8,%xmm7
 # qhasm: 2x h8 = h9 + mem128[ subc2 ]
 # asm 1: vpaddq subc2,<h9=reg128#8,>h8=reg128#9
 # asm 2: vpaddq subc2,<h9=%xmm7,>h8=%xmm8
-vpaddq subc2,%xmm7,%xmm8
+vpaddq subc2(%rip),%xmm7,%xmm8
 
 # qhasm: 2x h8 -= r
 # asm 1: psubq <r=reg128#16,<h8=reg128#9
@@ -3324,7 +3324,7 @@ movdqa %xmm8,112(%rsp)
 # qhasm: 2x h8 *= mem128[ v19_19 ]
 # asm 1: pmuludq v19_19,<h8=reg128#9
 # asm 2: pmuludq v19_19,<h8=%xmm8
-pmuludq v19_19,%xmm8
+pmuludq v19_19(%rip),%xmm8
 
 # qhasm: h8_19_stack = h8
 # asm 1: movdqa <h8=reg128#9,>h8_19_stack=stack128#29
@@ -3344,7 +3344,7 @@ vpmuludq %xmm7,%xmm10,%xmm10
 # qhasm: 2x h9_38 = h9 * mem128[ v38_38 ]
 # asm 1: vpmuludq v38_38,<h9=reg128#8,>h9_38=reg128#16
 # asm 2: vpmuludq v38_38,<h9=%xmm7,>h9_38=%xmm15
-vpmuludq v38_38,%xmm7,%xmm15
+vpmuludq v38_38(%rip),%xmm7,%xmm15
 
 # qhasm: 2x r = h9 * h9_38
 # asm 1: vpmuludq <h9_38=reg128#16,<h9=reg128#8,>r=reg128#8
@@ -3809,7 +3809,7 @@ paddq %xmm2,%xmm11
 # qhasm: m0 &= mem128[ m26 ]
 # asm 1: pand m26,<m0=reg128#4
 # asm 2: pand m26,<m0=%xmm3
-pand m26,%xmm3
+pand m26(%rip),%xmm3
 
 # qhasm: 2x carry5 = m5 unsigned>>= 25
 # asm 1: vpsrlq $25,<m5=reg128#15,>carry5=reg128#3
@@ -3824,7 +3824,7 @@ paddq %xmm2,%xmm5
 # qhasm: m5 &= mem128[ m25 ]
 # asm 1: pand m25,<m5=reg128#15
 # asm 2: pand m25,<m5=%xmm14
-pand m25,%xmm14
+pand m25(%rip),%xmm14
 
 # qhasm: 2x carry1 = m1 unsigned>>= 25
 # asm 1: vpsrlq $25,<m1=reg128#12,>carry1=reg128#3
@@ -3839,7 +3839,7 @@ paddq %xmm2,%xmm12
 # qhasm: m1 &= mem128[ m25 ]
 # asm 1: pand m25,<m1=reg128#12
 # asm 2: pand m25,<m1=%xmm11
-pand m25,%xmm11
+pand m25(%rip),%xmm11
 
 # qhasm: 2x carry6 = m6 unsigned>>= 26
 # asm 1: vpsrlq $26,<m6=reg128#6,>carry6=reg128#3
@@ -3854,7 +3854,7 @@ paddq %xmm2,%xmm0
 # qhasm: m6 &= mem128[ m26 ]
 # asm 1: pand m26,<m6=reg128#6
 # asm 2: pand m26,<m6=%xmm5
-pand m26,%xmm5
+pand m26(%rip),%xmm5
 
 # qhasm: 2x carry2 = m2 unsigned>>= 26
 # asm 1: vpsrlq $26,<m2=reg128#13,>carry2=reg128#3
@@ -3869,7 +3869,7 @@ paddq %xmm2,%xmm9
 # qhasm: m2 &= mem128[ m26 ]
 # asm 1: pand m26,<m2=reg128#13
 # asm 2: pand m26,<m2=%xmm12
-pand m26,%xmm12
+pand m26(%rip),%xmm12
 
 # qhasm: 2x carry7 = m7 unsigned>>= 25
 # asm 1: vpsrlq $25,<m7=reg128#1,>carry7=reg128#3
@@ -3884,7 +3884,7 @@ paddq %xmm2,%xmm8
 # qhasm: m7 &= mem128[ m25 ]
 # asm 1: pand m25,<m7=reg128#1
 # asm 2: pand m25,<m7=%xmm0
-pand m25,%xmm0
+pand m25(%rip),%xmm0
 
 # qhasm: 2x carry3 = m3 unsigned>>= 25
 # asm 1: vpsrlq $25,<m3=reg128#10,>carry3=reg128#3
@@ -3899,7 +3899,7 @@ paddq %xmm2,%xmm1
 # qhasm: m3 &= mem128[ m25 ]
 # asm 1: pand m25,<m3=reg128#10
 # asm 2: pand m25,<m3=%xmm9
-pand m25,%xmm9
+pand m25(%rip),%xmm9
 
 # qhasm: 2x carry8 = m8 unsigned>>= 26
 # asm 1: vpsrlq $26,<m8=reg128#9,>carry8=reg128#3
@@ -3914,7 +3914,7 @@ paddq %xmm2,%xmm10
 # qhasm: m8 &= mem128[ m26 ]
 # asm 1: pand m26,<m8=reg128#9
 # asm 2: pand m26,<m8=%xmm8
-pand m26,%xmm8
+pand m26(%rip),%xmm8
 
 # qhasm: 2x carry4 = m4 unsigned>>= 26
 # asm 1: vpsrlq $26,<m4=reg128#2,>carry4=reg128#3
@@ -3929,7 +3929,7 @@ paddq %xmm2,%xmm14
 # qhasm: m4 &= mem128[ m26 ]
 # asm 1: pand m26,<m4=reg128#2
 # asm 2: pand m26,<m4=%xmm1
-pand m26,%xmm1
+pand m26(%rip),%xmm1
 
 # qhasm: 2x carry9 = m9 unsigned>>= 25
 # asm 1: vpsrlq $25,<m9=reg128#11,>carry9=reg128#3
@@ -3964,7 +3964,7 @@ paddq %xmm4,%xmm3
 # qhasm: m9 &= mem128[ m25 ]
 # asm 1: pand m25,<m9=reg128#11
 # asm 2: pand m25,<m9=%xmm10
-pand m25,%xmm10
+pand m25(%rip),%xmm10
 
 # qhasm: 2x carry5 = m5 unsigned>>= 25
 # asm 1: vpsrlq $25,<m5=reg128#15,>carry5=reg128#3
@@ -3979,7 +3979,7 @@ paddq %xmm2,%xmm5
 # qhasm: m5 &= mem128[ m25 ]
 # asm 1: pand m25,<m5=reg128#15
 # asm 2: pand m25,<m5=%xmm14
-pand m25,%xmm14
+pand m25(%rip),%xmm14
 
 # qhasm: 2x carry0 = m0 unsigned>>= 26
 # asm 1: vpsrlq $26,<m0=reg128#4,>carry0=reg128#3
@@ -3994,7 +3994,7 @@ paddq %xmm2,%xmm11
 # qhasm: m0 &= mem128[ m26 ]
 # asm 1: pand m26,<m0=reg128#4
 # asm 2: pand m26,<m0=%xmm3
-pand m26,%xmm3
+pand m26(%rip),%xmm3
 
 # qhasm: r = unpack_high(m0, m1)
 # asm 1: vpunpckhqdq <m1=reg128#12,<m0=reg128#4,>r=reg128#3
@@ -4684,7 +4684,7 @@ vpmuludq %xmm14,%xmm0,%xmm0
 # qhasm: 2x f9_38 = f9 * mem128[ v38_38 ]
 # asm 1: vpmuludq v38_38,<f9=reg128#15,>f9_38=reg128#16
 # asm 2: vpmuludq v38_38,<f9=%xmm14,>f9_38=%xmm15
-vpmuludq v38_38,%xmm14,%xmm15
+vpmuludq v38_38(%rip),%xmm14,%xmm15
 
 # qhasm: 2x r = f9 * f9_38
 # asm 1: vpmuludq <f9_38=reg128#16,<f9=reg128#15,>r=reg128#15
@@ -5224,7 +5224,7 @@ paddq %xmm2,%xmm3
 # qhasm: h0 &= mem128[ m26 ]
 # asm 1: pand m26,<h0=reg128#2
 # asm 2: pand m26,<h0=%xmm1
-pand m26,%xmm1
+pand m26(%rip),%xmm1
 
 # qhasm: 2x carry5 = h5 unsigned>>= 25
 # asm 1: vpsrlq $25,<h5=reg128#11,>carry5=reg128#3
@@ -5239,7 +5239,7 @@ paddq %xmm2,%xmm11
 # qhasm: h5 &= mem128[ m25 ]
 # asm 1: pand m25,<h5=reg128#11
 # asm 2: pand m25,<h5=%xmm10
-pand m25,%xmm10
+pand m25(%rip),%xmm10
 
 # qhasm: 2x carry1 = h1 unsigned>>= 25
 # asm 1: vpsrlq $25,<h1=reg128#4,>carry1=reg128#3
@@ -5254,7 +5254,7 @@ paddq %xmm2,%xmm5
 # qhasm: h1 &= mem128[ m25 ]
 # asm 1: pand m25,<h1=reg128#4
 # asm 2: pand m25,<h1=%xmm3
-pand m25,%xmm3
+pand m25(%rip),%xmm3
 
 # qhasm: 2x carry6 = h6 unsigned>>= 26
 # asm 1: vpsrlq $26,<h6=reg128#12,>carry6=reg128#3
@@ -5269,7 +5269,7 @@ paddq %xmm2,%xmm12
 # qhasm: h6 &= mem128[ m26 ]
 # asm 1: pand m26,<h6=reg128#12
 # asm 2: pand m26,<h6=%xmm11
-pand m26,%xmm11
+pand m26(%rip),%xmm11
 
 # qhasm: 2x carry2 = h2 unsigned>>= 26
 # asm 1: vpsrlq $26,<h2=reg128#6,>carry2=reg128#3
@@ -5284,7 +5284,7 @@ paddq %xmm2,%xmm7
 # qhasm: h2 &= mem128[ m26 ]
 # asm 1: pand m26,<h2=reg128#6
 # asm 2: pand m26,<h2=%xmm5
-pand m26,%xmm5
+pand m26(%rip),%xmm5
 
 # qhasm: 2x carry7 = h7 unsigned>>= 25
 # asm 1: vpsrlq $25,<h7=reg128#13,>carry7=reg128#3
@@ -5299,7 +5299,7 @@ paddq %xmm2,%xmm13
 # qhasm: h7 &= mem128[ m25 ]
 # asm 1: pand m25,<h7=reg128#13
 # asm 2: pand m25,<h7=%xmm12
-pand m25,%xmm12
+pand m25(%rip),%xmm12
 
 # qhasm: 2x carry3 = h3 unsigned>>= 25
 # asm 1: vpsrlq $25,<h3=reg128#8,>carry3=reg128#3
@@ -5314,7 +5314,7 @@ paddq %xmm2,%xmm9
 # qhasm: h3 &= mem128[ m25 ]
 # asm 1: pand m25,<h3=reg128#8
 # asm 2: pand m25,<h3=%xmm7
-pand m25,%xmm7
+pand m25(%rip),%xmm7
 
 # qhasm: 2x carry8 = h8 unsigned>>= 26
 # asm 1: vpsrlq $26,<h8=reg128#14,>carry8=reg128#3
@@ -5329,7 +5329,7 @@ paddq %xmm2,%xmm0
 # qhasm: h8 &= mem128[ m26 ]
 # asm 1: pand m26,<h8=reg128#14
 # asm 2: pand m26,<h8=%xmm13
-pand m26,%xmm13
+pand m26(%rip),%xmm13
 
 # qhasm: 2x carry4 = h4 unsigned>>= 26
 # asm 1: vpsrlq $26,<h4=reg128#10,>carry4=reg128#3
@@ -5344,7 +5344,7 @@ paddq %xmm2,%xmm10
 # qhasm: h4 &= mem128[ m26 ]
 # asm 1: pand m26,<h4=reg128#10
 # asm 2: pand m26,<h4=%xmm9
-pand m26,%xmm9
+pand m26(%rip),%xmm9
 
 # qhasm: 2x carry9 = h9 unsigned>>= 25
 # asm 1: vpsrlq $25,<h9=reg128#1,>carry9=reg128#3
@@ -5379,7 +5379,7 @@ paddq %xmm4,%xmm1
 # qhasm: h9 &= mem128[ m25 ]
 # asm 1: pand m25,<h9=reg128#1
 # asm 2: pand m25,<h9=%xmm0
-pand m25,%xmm0
+pand m25(%rip),%xmm0
 
 # qhasm: 2x carry5 = h5 unsigned>>= 25
 # asm 1: vpsrlq $25,<h5=reg128#11,>carry5=reg128#3
@@ -5394,7 +5394,7 @@ paddq %xmm2,%xmm11
 # qhasm: h5 &= mem128[ m25 ]
 # asm 1: pand m25,<h5=reg128#11
 # asm 2: pand m25,<h5=%xmm10
-pand m25,%xmm10
+pand m25(%rip),%xmm10
 
 # qhasm: 2x carry0 = h0 unsigned>>= 26
 # asm 1: vpsrlq $26,<h0=reg128#2,>carry0=reg128#3
@@ -5409,7 +5409,7 @@ paddq %xmm2,%xmm3
 # qhasm: h0 &= mem128[ m26 ]
 # asm 1: pand m26,<h0=reg128#2
 # asm 2: pand m26,<h0=%xmm1
-pand m26,%xmm1
+pand m26(%rip),%xmm1
 
 # qhasm: f0 = unpack_high(h0, h1)
 # asm 1: vpunpckhqdq <h1=reg128#4,<h0=reg128#2,>f0=reg128#3
@@ -5429,7 +5429,7 @@ movdqa %xmm1,464(%rsp)
 # qhasm: 2x h1 = f0 + mem128[ subc0 ]
 # asm 1: vpaddq subc0,<f0=reg128#3,>h1=reg128#4
 # asm 2: vpaddq subc0,<f0=%xmm2,>h1=%xmm3
-vpaddq subc0,%xmm2,%xmm3
+vpaddq subc0(%rip),%xmm2,%xmm3
 
 # qhasm: 2x h1 -= h0
 # asm 1: psubq <h0=reg128#2,<h1=reg128#4
@@ -5469,7 +5469,7 @@ movdqa %xmm1,528(%rsp)
 # qhasm: 2x h1 *= mem128[ v121666_121666 ]
 # asm 1: pmuludq v121666_121666,<h1=reg128#4
 # asm 2: pmuludq v121666_121666,<h1=%xmm3
-pmuludq v121666_121666,%xmm3
+pmuludq v121666_121666(%rip),%xmm3
 
 # qhasm: r = z3_0
 # asm 1: movdqa <z3_0=stack128#6,>r=reg128#2
@@ -5504,7 +5504,7 @@ movdqa %xmm4,544(%rsp)
 # qhasm: 2x h3 = f2 + mem128[ subc2 ]
 # asm 1: vpaddq subc2,<f2=reg128#4,>h3=reg128#6
 # asm 2: vpaddq subc2,<f2=%xmm3,>h3=%xmm5
-vpaddq subc2,%xmm3,%xmm5
+vpaddq subc2(%rip),%xmm3,%xmm5
 
 # qhasm: 2x h3 -= h2
 # asm 1: psubq <h2=reg128#5,<h3=reg128#6
@@ -5544,7 +5544,7 @@ movdqa %xmm4,592(%rsp)
 # qhasm: 2x h3 *= mem128[ v121666_121666 ]
 # asm 1: pmuludq v121666_121666,<h3=reg128#6
 # asm 2: pmuludq v121666_121666,<h3=%xmm5
-pmuludq v121666_121666,%xmm5
+pmuludq v121666_121666(%rip),%xmm5
 
 # qhasm: r = z3_2
 # asm 1: movdqa <z3_2=stack128#7,>r=reg128#4
@@ -5579,7 +5579,7 @@ movdqa %xmm6,608(%rsp)
 # qhasm: 2x h5 = f4 + mem128[ subc2 ]
 # asm 1: vpaddq subc2,<f4=reg128#6,>h5=reg128#8
 # asm 2: vpaddq subc2,<f4=%xmm5,>h5=%xmm7
-vpaddq subc2,%xmm5,%xmm7
+vpaddq subc2(%rip),%xmm5,%xmm7
 
 # qhasm: 2x h5 -= h4
 # asm 1: psubq <h4=reg128#7,<h5=reg128#8
@@ -5619,7 +5619,7 @@ movdqa %xmm6,656(%rsp)
 # qhasm: 2x h5 *= mem128[ v121666_121666 ]
 # asm 1: pmuludq v121666_121666,<h5=reg128#8
 # asm 2: pmuludq v121666_121666,<h5=%xmm7
-pmuludq v121666_121666,%xmm7
+pmuludq v121666_121666(%rip),%xmm7
 
 # qhasm: r = z3_4
 # asm 1: movdqa <z3_4=stack128#8,>r=reg128#6
@@ -5654,7 +5654,7 @@ movdqa %xmm8,672(%rsp)
 # qhasm: 2x h7 = f6 + mem128[ subc2 ]
 # asm 1: vpaddq subc2,<f6=reg128#8,>h7=reg128#10
 # asm 2: vpaddq subc2,<f6=%xmm7,>h7=%xmm9
-vpaddq subc2,%xmm7,%xmm9
+vpaddq subc2(%rip),%xmm7,%xmm9
 
 # qhasm: 2x h7 -= h6
 # asm 1: psubq <h6=reg128#9,<h7=reg128#10
@@ -5694,7 +5694,7 @@ movdqa %xmm8,720(%rsp)
 # qhasm: 2x h7 *= mem128[ v121666_121666 ]
 # asm 1: pmuludq v121666_121666,<h7=reg128#10
 # asm 2: pmuludq v121666_121666,<h7=%xmm9
-pmuludq v121666_121666,%xmm9
+pmuludq v121666_121666(%rip),%xmm9
 
 # qhasm: r = z3_6
 # asm 1: movdqa <z3_6=stack128#29,>r=reg128#8
@@ -5729,7 +5729,7 @@ movdqa %xmm0,448(%rsp)
 # qhasm: 2x h9 = f8 + mem128[ subc2 ]
 # asm 1: vpaddq subc2,<f8=reg128#10,>h9=reg128#11
 # asm 2: vpaddq subc2,<f8=%xmm9,>h9=%xmm10
-vpaddq subc2,%xmm9,%xmm10
+vpaddq subc2(%rip),%xmm9,%xmm10
 
 # qhasm: 2x h9 -= h8
 # asm 1: psubq <h8=reg128#1,<h9=reg128#11
@@ -5769,7 +5769,7 @@ movdqa %xmm0,768(%rsp)
 # qhasm: 2x h9 *= mem128[ v121666_121666 ]
 # asm 1: pmuludq v121666_121666,<h9=reg128#11
 # asm 2: pmuludq v121666_121666,<h9=%xmm10
-pmuludq v121666_121666,%xmm10
+pmuludq v121666_121666(%rip),%xmm10
 
 # qhasm: r = z3_8
 # asm 1: movdqa <z3_8=stack128#32,>r=reg128#1
@@ -5799,7 +5799,7 @@ paddq %xmm10,%xmm1
 # qhasm: g0 &= mem128[ m26 ]
 # asm 1: pand m26,<g0=reg128#3
 # asm 2: pand m26,<g0=%xmm2
-pand m26,%xmm2
+pand m26(%rip),%xmm2
 
 # qhasm: 2x carry5 = g5 unsigned>>= 25
 # asm 1: vpsrlq $25,<g5=reg128#6,>carry5=reg128#11
@@ -5814,7 +5814,7 @@ paddq %xmm10,%xmm8
 # qhasm: g5 &= mem128[ m25 ]
 # asm 1: pand m25,<g5=reg128#6
 # asm 2: pand m25,<g5=%xmm5
-pand m25,%xmm5
+pand m25(%rip),%xmm5
 
 # qhasm: 2x carry1 = g1 unsigned>>= 25
 # asm 1: vpsrlq $25,<g1=reg128#2,>carry1=reg128#11
@@ -5829,7 +5829,7 @@ paddq %xmm10,%xmm4
 # qhasm: g1 &= mem128[ m25 ]
 # asm 1: pand m25,<g1=reg128#2
 # asm 2: pand m25,<g1=%xmm1
-pand m25,%xmm1
+pand m25(%rip),%xmm1
 
 # qhasm: 2x carry6 = g6 unsigned>>= 26
 # asm 1: vpsrlq $26,<g6=reg128#9,>carry6=reg128#11
@@ -5844,7 +5844,7 @@ paddq %xmm10,%xmm7
 # qhasm: g6 &= mem128[ m26 ]
 # asm 1: pand m26,<g6=reg128#9
 # asm 2: pand m26,<g6=%xmm8
-pand m26,%xmm8
+pand m26(%rip),%xmm8
 
 # qhasm: 2x carry2 = g2 unsigned>>= 26
 # asm 1: vpsrlq $26,<g2=reg128#5,>carry2=reg128#11
@@ -5859,7 +5859,7 @@ paddq %xmm10,%xmm3
 # qhasm: g2 &= mem128[ m26 ]
 # asm 1: pand m26,<g2=reg128#5
 # asm 2: pand m26,<g2=%xmm4
-pand m26,%xmm4
+pand m26(%rip),%xmm4
 
 # qhasm: 2x carry7 = g7 unsigned>>= 25
 # asm 1: vpsrlq $25,<g7=reg128#8,>carry7=reg128#11
@@ -5874,7 +5874,7 @@ paddq %xmm10,%xmm9
 # qhasm: g7 &= mem128[ m25 ]
 # asm 1: pand m25,<g7=reg128#8
 # asm 2: pand m25,<g7=%xmm7
-pand m25,%xmm7
+pand m25(%rip),%xmm7
 
 # qhasm: 2x carry3 = g3 unsigned>>= 25
 # asm 1: vpsrlq $25,<g3=reg128#4,>carry3=reg128#11
@@ -5889,7 +5889,7 @@ paddq %xmm10,%xmm6
 # qhasm: g3 &= mem128[ m25 ]
 # asm 1: pand m25,<g3=reg128#4
 # asm 2: pand m25,<g3=%xmm3
-pand m25,%xmm3
+pand m25(%rip),%xmm3
 
 # qhasm: 2x carry8 = g8 unsigned>>= 26
 # asm 1: vpsrlq $26,<g8=reg128#10,>carry8=reg128#11
@@ -5904,7 +5904,7 @@ paddq %xmm10,%xmm0
 # qhasm: g8 &= mem128[ m26 ]
 # asm 1: pand m26,<g8=reg128#10
 # asm 2: pand m26,<g8=%xmm9
-pand m26,%xmm9
+pand m26(%rip),%xmm9
 
 # qhasm: 2x carry4 = g4 unsigned>>= 26
 # asm 1: vpsrlq $26,<g4=reg128#7,>carry4=reg128#11
@@ -5919,7 +5919,7 @@ paddq %xmm10,%xmm5
 # qhasm: g4 &= mem128[ m26 ]
 # asm 1: pand m26,<g4=reg128#7
 # asm 2: pand m26,<g4=%xmm6
-pand m26,%xmm6
+pand m26(%rip),%xmm6
 
 # qhasm: 2x carry9 = g9 unsigned>>= 25
 # asm 1: vpsrlq $25,<g9=reg128#1,>carry9=reg128#11
@@ -5954,7 +5954,7 @@ paddq %xmm11,%xmm2
 # qhasm: g9 &= mem128[ m25 ]
 # asm 1: pand m25,<g9=reg128#1
 # asm 2: pand m25,<g9=%xmm0
-pand m25,%xmm0
+pand m25(%rip),%xmm0
 
 # qhasm: 2x carry5 = g5 unsigned>>= 25
 # asm 1: vpsrlq $25,<g5=reg128#6,>carry5=reg128#11
@@ -5969,7 +5969,7 @@ paddq %xmm10,%xmm8
 # qhasm: g5 &= mem128[ m25 ]
 # asm 1: pand m25,<g5=reg128#6
 # asm 2: pand m25,<g5=%xmm5
-pand m25,%xmm5
+pand m25(%rip),%xmm5
 
 # qhasm: 2x carry0 = g0 unsigned>>= 26
 # asm 1: vpsrlq $26,<g0=reg128#3,>carry0=reg128#11
@@ -5984,7 +5984,7 @@ paddq %xmm10,%xmm1
 # qhasm: g0 &= mem128[ m26 ]
 # asm 1: pand m26,<g0=reg128#3
 # asm 2: pand m26,<g0=%xmm2
-pand m26,%xmm2
+pand m26(%rip),%xmm2
 
 # qhasm: r = unpack_high(g0, g1)
 # asm 1: vpunpckhqdq <g1=reg128#2,<g0=reg128#3,>r=reg128#11
@@ -6224,7 +6224,7 @@ vpmuludq 480(%rsp),%xmm6,%xmm6
 # qhasm: 2x g1 *= mem128[ v19_19 ]
 # asm 1: pmuludq v19_19,<g1=reg128#2
 # asm 2: pmuludq v19_19,<g1=%xmm1
-pmuludq v19_19,%xmm1
+pmuludq v19_19(%rip),%xmm1
 
 # qhasm: 2x r = g1 * f9_2_stack
 # asm 1: vpmuludq <f9_2_stack=stack128#49,<g1=reg128#2,>r=reg128#2
@@ -6339,7 +6339,7 @@ paddq %xmm2,%xmm14
 # qhasm: 2x g2 *= mem128[ v19_19 ]
 # asm 1: pmuludq v19_19,<g2=reg128#16
 # asm 2: pmuludq v19_19,<g2=%xmm15
-pmuludq v19_19,%xmm15
+pmuludq v19_19(%rip),%xmm15
 
 # qhasm: 2x r2 = g2 * f8_stack
 # asm 1: vpmuludq <f8_stack=stack128#47,<g2=reg128#16,>r2=reg128#3
@@ -6434,7 +6434,7 @@ paddq %xmm2,%xmm14
 # qhasm: 2x g3 *= mem128[ v19_19 ]
 # asm 1: pmuludq v19_19,<g3=reg128#2
 # asm 2: pmuludq v19_19,<g3=%xmm1
-pmuludq v19_19,%xmm1
+pmuludq v19_19(%rip),%xmm1
 
 # qhasm: 2x r3 = g3 * f7_2_stack
 # asm 1: vpmuludq <f7_2_stack=stack128#46,<g3=reg128#2,>r3=reg128#3
@@ -6549,7 +6549,7 @@ paddq %xmm3,%xmm14
 # qhasm: 2x g4 *= mem128[ v19_19 ]
 # asm 1: pmuludq v19_19,<g4=reg128#3
 # asm 2: pmuludq v19_19,<g4=%xmm2
-pmuludq v19_19,%xmm2
+pmuludq v19_19(%rip),%xmm2
 
 # qhasm: 2x r4 = g4 * f6_stack
 # asm 1: vpmuludq <f6_stack=stack128#44,<g4=reg128#3,>r4=reg128#4
@@ -6644,7 +6644,7 @@ paddq %xmm2,%xmm14
 # qhasm: 2x g5 *= mem128[ v19_19 ]
 # asm 1: pmuludq v19_19,<g5=reg128#2
 # asm 2: pmuludq v19_19,<g5=%xmm1
-pmuludq v19_19,%xmm1
+pmuludq v19_19(%rip),%xmm1
 
 # qhasm: 2x r5 = g5 * f5_2_stack
 # asm 1: vpmuludq <f5_2_stack=stack128#42,<g5=reg128#2,>r5=reg128#3
@@ -6759,7 +6759,7 @@ paddq %xmm3,%xmm14
 # qhasm: 2x g6 *= mem128[ v19_19 ]
 # asm 1: pmuludq v19_19,<g6=reg128#3
 # asm 2: pmuludq v19_19,<g6=%xmm2
-pmuludq v19_19,%xmm2
+pmuludq v19_19(%rip),%xmm2
 
 # qhasm: 2x r6 = g6 * f4_stack
 # asm 1: vpmuludq <f4_stack=stack128#40,<g6=reg128#3,>r6=reg128#4
@@ -6854,7 +6854,7 @@ paddq %xmm2,%xmm14
 # qhasm: 2x g7 *= mem128[ v19_19 ]
 # asm 1: pmuludq v19_19,<g7=reg128#2
 # asm 2: pmuludq v19_19,<g7=%xmm1
-pmuludq v19_19,%xmm1
+pmuludq v19_19(%rip),%xmm1
 
 # qhasm: 2x r7 = g7 * f3_2_stack
 # asm 1: vpmuludq <f3_2_stack=stack128#38,<g7=reg128#2,>r7=reg128#3
@@ -6969,7 +6969,7 @@ paddq %xmm1,%xmm14
 # qhasm: 2x g8 *= mem128[ v19_19 ]
 # asm 1: pmuludq v19_19,<g8=reg128#3
 # asm 2: pmuludq v19_19,<g8=%xmm2
-pmuludq v19_19,%xmm2
+pmuludq v19_19(%rip),%xmm2
 
 # qhasm: 2x r8 = g8 * f2_stack
 # asm 1: vpmuludq <f2_stack=stack128#36,<g8=reg128#3,>r8=reg128#2
@@ -7064,7 +7064,7 @@ paddq %xmm1,%xmm14
 # qhasm: 2x g9 *= mem128[ v19_19 ]
 # asm 1: pmuludq v19_19,<g9=reg128#1
 # asm 2: pmuludq v19_19,<g9=%xmm0
-pmuludq v19_19,%xmm0
+pmuludq v19_19(%rip),%xmm0
 
 # qhasm: 2x r9 = g9 * f1_2_stack
 # asm 1: vpmuludq <f1_2_stack=stack128#34,<g9=reg128#1,>r9=reg128#2
@@ -7169,7 +7169,7 @@ paddq %xmm0,%xmm5
 # qhasm: m0 &= mem128[ m26 ]
 # asm 1: pand m26,<m0=reg128#7
 # asm 2: pand m26,<m0=%xmm6
-pand m26,%xmm6
+pand m26(%rip),%xmm6
 
 # qhasm: 2x carry5 = m5 unsigned>>= 25
 # asm 1: vpsrlq $25,<m5=reg128#11,>carry5=reg128#1
@@ -7184,7 +7184,7 @@ paddq %xmm0,%xmm11
 # qhasm: m5 &= mem128[ m25 ]
 # asm 1: pand m25,<m5=reg128#11
 # asm 2: pand m25,<m5=%xmm10
-pand m25,%xmm10
+pand m25(%rip),%xmm10
 
 # qhasm: 2x carry1 = m1 unsigned>>= 25
 # asm 1: vpsrlq $25,<m1=reg128#6,>carry1=reg128#1
@@ -7199,7 +7199,7 @@ paddq %xmm0,%xmm7
 # qhasm: m1 &= mem128[ m25 ]
 # asm 1: pand m25,<m1=reg128#6
 # asm 2: pand m25,<m1=%xmm5
-pand m25,%xmm5
+pand m25(%rip),%xmm5
 
 # qhasm: 2x carry6 = m6 unsigned>>= 26
 # asm 1: vpsrlq $26,<m6=reg128#12,>carry6=reg128#1
@@ -7214,7 +7214,7 @@ paddq %xmm0,%xmm12
 # qhasm: m6 &= mem128[ m26 ]
 # asm 1: pand m26,<m6=reg128#12
 # asm 2: pand m26,<m6=%xmm11
-pand m26,%xmm11
+pand m26(%rip),%xmm11
 
 # qhasm: 2x carry2 = m2 unsigned>>= 26
 # asm 1: vpsrlq $26,<m2=reg128#8,>carry2=reg128#1
@@ -7229,7 +7229,7 @@ paddq %xmm0,%xmm8
 # qhasm: m2 &= mem128[ m26 ]
 # asm 1: pand m26,<m2=reg128#8
 # asm 2: pand m26,<m2=%xmm7
-pand m26,%xmm7
+pand m26(%rip),%xmm7
 
 # qhasm: 2x carry7 = m7 unsigned>>= 25
 # asm 1: vpsrlq $25,<m7=reg128#13,>carry7=reg128#1
@@ -7244,7 +7244,7 @@ paddq %xmm0,%xmm13
 # qhasm: m7 &= mem128[ m25 ]
 # asm 1: pand m25,<m7=reg128#13
 # asm 2: pand m25,<m7=%xmm12
-pand m25,%xmm12
+pand m25(%rip),%xmm12
 
 # qhasm: 2x carry3 = m3 unsigned>>= 25
 # asm 1: vpsrlq $25,<m3=reg128#9,>carry3=reg128#1
@@ -7259,7 +7259,7 @@ paddq %xmm0,%xmm9
 # qhasm: m3 &= mem128[ m25 ]
 # asm 1: pand m25,<m3=reg128#9
 # asm 2: pand m25,<m3=%xmm8
-pand m25,%xmm8
+pand m25(%rip),%xmm8
 
 # qhasm: 2x carry8 = m8 unsigned>>= 26
 # asm 1: vpsrlq $26,<m8=reg128#14,>carry8=reg128#1
@@ -7274,7 +7274,7 @@ paddq %xmm0,%xmm14
 # qhasm: m8 &= mem128[ m26 ]
 # asm 1: pand m26,<m8=reg128#14
 # asm 2: pand m26,<m8=%xmm13
-pand m26,%xmm13
+pand m26(%rip),%xmm13
 
 # qhasm: 2x carry4 = m4 unsigned>>= 26
 # asm 1: vpsrlq $26,<m4=reg128#10,>carry4=reg128#1
@@ -7289,7 +7289,7 @@ paddq %xmm0,%xmm10
 # qhasm: m4 &= mem128[ m26 ]
 # asm 1: pand m26,<m4=reg128#10
 # asm 2: pand m26,<m4=%xmm9
-pand m26,%xmm9
+pand m26(%rip),%xmm9
 
 # qhasm: 2x carry9 = m9 unsigned>>= 25
 # asm 1: vpsrlq $25,<m9=reg128#15,>carry9=reg128#1
@@ -7324,7 +7324,7 @@ paddq %xmm1,%xmm6
 # qhasm: m9 &= mem128[ m25 ]
 # asm 1: pand m25,<m9=reg128#15
 # asm 2: pand m25,<m9=%xmm14
-pand m25,%xmm14
+pand m25(%rip),%xmm14
 
 # qhasm: 2x carry5 = m5 unsigned>>= 25
 # asm 1: vpsrlq $25,<m5=reg128#11,>carry5=reg128#1
@@ -7339,7 +7339,7 @@ paddq %xmm0,%xmm11
 # qhasm: m5 &= mem128[ m25 ]
 # asm 1: pand m25,<m5=reg128#11
 # asm 2: pand m25,<m5=%xmm10
-pand m25,%xmm10
+pand m25(%rip),%xmm10
 
 # qhasm: 2x carry0 = m0 unsigned>>= 26
 # asm 1: vpsrlq $26,<m0=reg128#7,>carry0=reg128#1
@@ -7354,7 +7354,7 @@ paddq %xmm0,%xmm5
 # qhasm: m0 &= mem128[ m26 ]
 # asm 1: pand m26,<m0=reg128#7
 # asm 2: pand m26,<m0=%xmm6
-pand m26,%xmm6
+pand m26(%rip),%xmm6
 
 # qhasm: f1 = unpack_high( m0, m1 )
 # asm 1: vpunpckhqdq <m1=reg128#6,<m0=reg128#7,>f1=reg128#2

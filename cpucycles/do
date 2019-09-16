@@ -47,6 +47,7 @@ okabi | (
           echo dev4ns
           ;;
 	aarch64)
+	  echo armv8
           echo cortex
           echo vct
 	  ;;
@@ -70,6 +71,8 @@ okabi | (
       echo hppapstat
       echo alpha
       echo sgi
+      echo armv8
+      echo riscv
       echo cortex
       echo dev4ns
       echo perfevent

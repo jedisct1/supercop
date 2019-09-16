@@ -411,27 +411,27 @@ mov  %r9,%r13
 # qhasm: t20 += *(uint64 *) &crypto_scalarmult_curve25519_amd64_51_2P0
 # asm 1: add  crypto_scalarmult_curve25519_amd64_51_2P0,<t20=int64#7
 # asm 2: add  crypto_scalarmult_curve25519_amd64_51_2P0,<t20=%rax
-add  crypto_scalarmult_curve25519_amd64_51_2P0,%rax
+add  crypto_scalarmult_curve25519_amd64_51_2P0(%rip),%rax
 
 # qhasm: t21 += *(uint64 *) &crypto_scalarmult_curve25519_amd64_51_2P1234
 # asm 1: add  crypto_scalarmult_curve25519_amd64_51_2P1234,<t21=int64#8
 # asm 2: add  crypto_scalarmult_curve25519_amd64_51_2P1234,<t21=%r10
-add  crypto_scalarmult_curve25519_amd64_51_2P1234,%r10
+add  crypto_scalarmult_curve25519_amd64_51_2P1234(%rip),%r10
 
 # qhasm: t22 += *(uint64 *) &crypto_scalarmult_curve25519_amd64_51_2P1234
 # asm 1: add  crypto_scalarmult_curve25519_amd64_51_2P1234,<t22=int64#9
 # asm 2: add  crypto_scalarmult_curve25519_amd64_51_2P1234,<t22=%r11
-add  crypto_scalarmult_curve25519_amd64_51_2P1234,%r11
+add  crypto_scalarmult_curve25519_amd64_51_2P1234(%rip),%r11
 
 # qhasm: t23 += *(uint64 *) &crypto_scalarmult_curve25519_amd64_51_2P1234
 # asm 1: add  crypto_scalarmult_curve25519_amd64_51_2P1234,<t23=int64#10
 # asm 2: add  crypto_scalarmult_curve25519_amd64_51_2P1234,<t23=%r12
-add  crypto_scalarmult_curve25519_amd64_51_2P1234,%r12
+add  crypto_scalarmult_curve25519_amd64_51_2P1234(%rip),%r12
 
 # qhasm: t24 += *(uint64 *) &crypto_scalarmult_curve25519_amd64_51_2P1234
 # asm 1: add  crypto_scalarmult_curve25519_amd64_51_2P1234,<t24=int64#11
 # asm 2: add  crypto_scalarmult_curve25519_amd64_51_2P1234,<t24=%r13
-add  crypto_scalarmult_curve25519_amd64_51_2P1234,%r13
+add  crypto_scalarmult_curve25519_amd64_51_2P1234(%rip),%r13
 
 # qhasm: t10 += *(uint64 *)(workp + 80)
 # asm 1: addq 80(<workp=int64#1),<t10=int64#2
@@ -896,7 +896,7 @@ adc %rdx,%r13
 # qhasm:   squareredmask = *(uint64 *) &crypto_scalarmult_curve25519_amd64_51_REDMASK51
 # asm 1: movq crypto_scalarmult_curve25519_amd64_51_REDMASK51,>squareredmask=int64#3
 # asm 2: movq crypto_scalarmult_curve25519_amd64_51_REDMASK51,>squareredmask=%rdx
-movq crypto_scalarmult_curve25519_amd64_51_REDMASK51,%rdx
+movq crypto_scalarmult_curve25519_amd64_51_REDMASK51(%rip),%rdx
 
 # qhasm:   squarer01 = (squarer01.t70) << 13
 # asm 1: shld $13,<t70=int64#2,<squarer01=int64#4
@@ -1471,7 +1471,7 @@ adc %rdx,%r13
 # qhasm:   squareredmask = *(uint64 *) &crypto_scalarmult_curve25519_amd64_51_REDMASK51
 # asm 1: movq crypto_scalarmult_curve25519_amd64_51_REDMASK51,>squareredmask=int64#3
 # asm 2: movq crypto_scalarmult_curve25519_amd64_51_REDMASK51,>squareredmask=%rdx
-movq crypto_scalarmult_curve25519_amd64_51_REDMASK51,%rdx
+movq crypto_scalarmult_curve25519_amd64_51_REDMASK51(%rip),%rdx
 
 # qhasm:   squarer01 = (squarer01.t60) << 13
 # asm 1: shld $13,<t60=int64#2,<squarer01=int64#4
@@ -1711,27 +1711,27 @@ mov  %r10,%r9
 # qhasm: t50 += *(uint64 *) &crypto_scalarmult_curve25519_amd64_51_2P0
 # asm 1: add  crypto_scalarmult_curve25519_amd64_51_2P0,<t50=int64#2
 # asm 2: add  crypto_scalarmult_curve25519_amd64_51_2P0,<t50=%rsi
-add  crypto_scalarmult_curve25519_amd64_51_2P0,%rsi
+add  crypto_scalarmult_curve25519_amd64_51_2P0(%rip),%rsi
 
 # qhasm: t51 += *(uint64 *) &crypto_scalarmult_curve25519_amd64_51_2P1234
 # asm 1: add  crypto_scalarmult_curve25519_amd64_51_2P1234,<t51=int64#3
 # asm 2: add  crypto_scalarmult_curve25519_amd64_51_2P1234,<t51=%rdx
-add  crypto_scalarmult_curve25519_amd64_51_2P1234,%rdx
+add  crypto_scalarmult_curve25519_amd64_51_2P1234(%rip),%rdx
 
 # qhasm: t52 += *(uint64 *) &crypto_scalarmult_curve25519_amd64_51_2P1234
 # asm 1: add  crypto_scalarmult_curve25519_amd64_51_2P1234,<t52=int64#4
 # asm 2: add  crypto_scalarmult_curve25519_amd64_51_2P1234,<t52=%rcx
-add  crypto_scalarmult_curve25519_amd64_51_2P1234,%rcx
+add  crypto_scalarmult_curve25519_amd64_51_2P1234(%rip),%rcx
 
 # qhasm: t53 += *(uint64 *) &crypto_scalarmult_curve25519_amd64_51_2P1234
 # asm 1: add  crypto_scalarmult_curve25519_amd64_51_2P1234,<t53=int64#5
 # asm 2: add  crypto_scalarmult_curve25519_amd64_51_2P1234,<t53=%r8
-add  crypto_scalarmult_curve25519_amd64_51_2P1234,%r8
+add  crypto_scalarmult_curve25519_amd64_51_2P1234(%rip),%r8
 
 # qhasm: t54 += *(uint64 *) &crypto_scalarmult_curve25519_amd64_51_2P1234
 # asm 1: add  crypto_scalarmult_curve25519_amd64_51_2P1234,<t54=int64#6
 # asm 2: add  crypto_scalarmult_curve25519_amd64_51_2P1234,<t54=%r9
-add  crypto_scalarmult_curve25519_amd64_51_2P1234,%r9
+add  crypto_scalarmult_curve25519_amd64_51_2P1234(%rip),%r9
 
 # qhasm: t50 -= t70_stack
 # asm 1: subq <t70_stack=stack64#18,<t50=int64#2
@@ -1836,27 +1836,27 @@ mov  %r9,%r13
 # qhasm: t40 += *(uint64 *) &crypto_scalarmult_curve25519_amd64_51_2P0
 # asm 1: add  crypto_scalarmult_curve25519_amd64_51_2P0,<t40=int64#7
 # asm 2: add  crypto_scalarmult_curve25519_amd64_51_2P0,<t40=%rax
-add  crypto_scalarmult_curve25519_amd64_51_2P0,%rax
+add  crypto_scalarmult_curve25519_amd64_51_2P0(%rip),%rax
 
 # qhasm: t41 += *(uint64 *) &crypto_scalarmult_curve25519_amd64_51_2P1234
 # asm 1: add  crypto_scalarmult_curve25519_amd64_51_2P1234,<t41=int64#8
 # asm 2: add  crypto_scalarmult_curve25519_amd64_51_2P1234,<t41=%r10
-add  crypto_scalarmult_curve25519_amd64_51_2P1234,%r10
+add  crypto_scalarmult_curve25519_amd64_51_2P1234(%rip),%r10
 
 # qhasm: t42 += *(uint64 *) &crypto_scalarmult_curve25519_amd64_51_2P1234
 # asm 1: add  crypto_scalarmult_curve25519_amd64_51_2P1234,<t42=int64#9
 # asm 2: add  crypto_scalarmult_curve25519_amd64_51_2P1234,<t42=%r11
-add  crypto_scalarmult_curve25519_amd64_51_2P1234,%r11
+add  crypto_scalarmult_curve25519_amd64_51_2P1234(%rip),%r11
 
 # qhasm: t43 += *(uint64 *) &crypto_scalarmult_curve25519_amd64_51_2P1234
 # asm 1: add  crypto_scalarmult_curve25519_amd64_51_2P1234,<t43=int64#10
 # asm 2: add  crypto_scalarmult_curve25519_amd64_51_2P1234,<t43=%r12
-add  crypto_scalarmult_curve25519_amd64_51_2P1234,%r12
+add  crypto_scalarmult_curve25519_amd64_51_2P1234(%rip),%r12
 
 # qhasm: t44 += *(uint64 *) &crypto_scalarmult_curve25519_amd64_51_2P1234
 # asm 1: add  crypto_scalarmult_curve25519_amd64_51_2P1234,<t44=int64#11
 # asm 2: add  crypto_scalarmult_curve25519_amd64_51_2P1234,<t44=%r13
-add  crypto_scalarmult_curve25519_amd64_51_2P1234,%r13
+add  crypto_scalarmult_curve25519_amd64_51_2P1234(%rip),%r13
 
 # qhasm: t30 += *(uint64 *)(workp + 160)
 # asm 1: addq 160(<workp=int64#1),<t30=int64#2
@@ -2496,7 +2496,7 @@ adc %rdx,%r13
 # qhasm:   mulredmask = *(uint64 *) &crypto_scalarmult_curve25519_amd64_51_REDMASK51
 # asm 1: movq crypto_scalarmult_curve25519_amd64_51_REDMASK51,>mulredmask=int64#3
 # asm 2: movq crypto_scalarmult_curve25519_amd64_51_REDMASK51,>mulredmask=%rdx
-movq crypto_scalarmult_curve25519_amd64_51_REDMASK51,%rdx
+movq crypto_scalarmult_curve25519_amd64_51_REDMASK51(%rip),%rdx
 
 # qhasm:   mulr01 = (mulr01.t90) << 13
 # asm 1: shld $13,<t90=int64#2,<mulr01=int64#4
@@ -3246,7 +3246,7 @@ adc %rdx,%r13
 # qhasm:   mulredmask = *(uint64 *) &crypto_scalarmult_curve25519_amd64_51_REDMASK51
 # asm 1: movq crypto_scalarmult_curve25519_amd64_51_REDMASK51,>mulredmask=int64#3
 # asm 2: movq crypto_scalarmult_curve25519_amd64_51_REDMASK51,>mulredmask=%rdx
-movq crypto_scalarmult_curve25519_amd64_51_REDMASK51,%rdx
+movq crypto_scalarmult_curve25519_amd64_51_REDMASK51(%rip),%rdx
 
 # qhasm:   mulr01 = (mulr01.t80) << 13
 # asm 1: shld $13,<t80=int64#2,<mulr01=int64#4
@@ -3461,27 +3461,27 @@ mov  %r10,%r13
 # qhasm: zq0 += *(uint64 *) &crypto_scalarmult_curve25519_amd64_51_2P0
 # asm 1: add  crypto_scalarmult_curve25519_amd64_51_2P0,<zq0=int64#3
 # asm 2: add  crypto_scalarmult_curve25519_amd64_51_2P0,<zq0=%rdx
-add  crypto_scalarmult_curve25519_amd64_51_2P0,%rdx
+add  crypto_scalarmult_curve25519_amd64_51_2P0(%rip),%rdx
 
 # qhasm: zq1 += *(uint64 *) &crypto_scalarmult_curve25519_amd64_51_2P1234
 # asm 1: add  crypto_scalarmult_curve25519_amd64_51_2P1234,<zq1=int64#4
 # asm 2: add  crypto_scalarmult_curve25519_amd64_51_2P1234,<zq1=%rcx
-add  crypto_scalarmult_curve25519_amd64_51_2P1234,%rcx
+add  crypto_scalarmult_curve25519_amd64_51_2P1234(%rip),%rcx
 
 # qhasm: zq2 += *(uint64 *) &crypto_scalarmult_curve25519_amd64_51_2P1234
 # asm 1: add  crypto_scalarmult_curve25519_amd64_51_2P1234,<zq2=int64#9
 # asm 2: add  crypto_scalarmult_curve25519_amd64_51_2P1234,<zq2=%r11
-add  crypto_scalarmult_curve25519_amd64_51_2P1234,%r11
+add  crypto_scalarmult_curve25519_amd64_51_2P1234(%rip),%r11
 
 # qhasm: zq3 += *(uint64 *) &crypto_scalarmult_curve25519_amd64_51_2P1234
 # asm 1: add  crypto_scalarmult_curve25519_amd64_51_2P1234,<zq3=int64#10
 # asm 2: add  crypto_scalarmult_curve25519_amd64_51_2P1234,<zq3=%r12
-add  crypto_scalarmult_curve25519_amd64_51_2P1234,%r12
+add  crypto_scalarmult_curve25519_amd64_51_2P1234(%rip),%r12
 
 # qhasm: zq4 += *(uint64 *) &crypto_scalarmult_curve25519_amd64_51_2P1234
 # asm 1: add  crypto_scalarmult_curve25519_amd64_51_2P1234,<zq4=int64#11
 # asm 2: add  crypto_scalarmult_curve25519_amd64_51_2P1234,<zq4=%r13
-add  crypto_scalarmult_curve25519_amd64_51_2P1234,%r13
+add  crypto_scalarmult_curve25519_amd64_51_2P1234(%rip),%r13
 
 # qhasm: t80 += t90_stack
 # asm 1: addq <t90_stack=stack64#13,<t80=int64#2
@@ -3946,7 +3946,7 @@ adc %rdx,%r13
 # qhasm:   squareredmask = *(uint64 *) &crypto_scalarmult_curve25519_amd64_51_REDMASK51
 # asm 1: movq crypto_scalarmult_curve25519_amd64_51_REDMASK51,>squareredmask=int64#3
 # asm 2: movq crypto_scalarmult_curve25519_amd64_51_REDMASK51,>squareredmask=%rdx
-movq crypto_scalarmult_curve25519_amd64_51_REDMASK51,%rdx
+movq crypto_scalarmult_curve25519_amd64_51_REDMASK51(%rip),%rdx
 
 # qhasm:   squarer01 = (squarer01.xq0) << 13
 # asm 1: shld $13,<xq0=int64#2,<squarer01=int64#4
@@ -4521,7 +4521,7 @@ adc %rdx,%r13
 # qhasm:   squareredmask = *(uint64 *) &crypto_scalarmult_curve25519_amd64_51_REDMASK51
 # asm 1: movq crypto_scalarmult_curve25519_amd64_51_REDMASK51,>squareredmask=int64#3
 # asm 2: movq crypto_scalarmult_curve25519_amd64_51_REDMASK51,>squareredmask=%rdx
-movq crypto_scalarmult_curve25519_amd64_51_REDMASK51,%rdx
+movq crypto_scalarmult_curve25519_amd64_51_REDMASK51(%rip),%rdx
 
 # qhasm:   squarer01 = (squarer01.zq0) << 13
 # asm 1: shld $13,<zq0=int64#2,<squarer01=int64#4
@@ -5271,7 +5271,7 @@ adc %rdx,%r13
 # qhasm:   mulredmask = *(uint64 *) &crypto_scalarmult_curve25519_amd64_51_REDMASK51
 # asm 1: movq crypto_scalarmult_curve25519_amd64_51_REDMASK51,>mulredmask=int64#3
 # asm 2: movq crypto_scalarmult_curve25519_amd64_51_REDMASK51,>mulredmask=%rdx
-movq crypto_scalarmult_curve25519_amd64_51_REDMASK51,%rdx
+movq crypto_scalarmult_curve25519_amd64_51_REDMASK51(%rip),%rdx
 
 # qhasm:   mulr01 = (mulr01.zq0) << 13
 # asm 1: shld $13,<zq0=int64#2,<mulr01=int64#4
@@ -6021,7 +6021,7 @@ adc %rdx,%r13
 # qhasm:   mulredmask = *(uint64 *) &crypto_scalarmult_curve25519_amd64_51_REDMASK51
 # asm 1: movq crypto_scalarmult_curve25519_amd64_51_REDMASK51,>mulredmask=int64#3
 # asm 2: movq crypto_scalarmult_curve25519_amd64_51_REDMASK51,>mulredmask=%rdx
-movq crypto_scalarmult_curve25519_amd64_51_REDMASK51,%rdx
+movq crypto_scalarmult_curve25519_amd64_51_REDMASK51(%rip),%rdx
 
 # qhasm:   mulr01 = (mulr01.xp0) << 13
 # asm 1: shld $13,<xp0=int64#2,<mulr01=int64#4
@@ -6239,7 +6239,7 @@ movq   %r10,72(%rdi)
 movq 216(%rsp),%rax
 
 # qhasm:   (uint128) mul121666rdx mul121666rax = mul121666rax * *(uint64 *) &crypto_scalarmult_curve25519_amd64_51_121666_213
-mulq  crypto_scalarmult_curve25519_amd64_51_121666_213
+mulq  crypto_scalarmult_curve25519_amd64_51_121666_213(%rip)
 
 # qhasm:   (uint64) mul121666rax >>= 13
 # asm 1: shr  $13,<mul121666rax=int64#7
@@ -6262,7 +6262,7 @@ mov  %rdx,%rcx
 movq 224(%rsp),%rax
 
 # qhasm:   (uint128) mul121666rdx mul121666rax = mul121666rax * *(uint64 *) &crypto_scalarmult_curve25519_amd64_51_121666_213
-mulq  crypto_scalarmult_curve25519_amd64_51_121666_213
+mulq  crypto_scalarmult_curve25519_amd64_51_121666_213(%rip)
 
 # qhasm:   (uint64) mul121666rax >>= 13
 # asm 1: shr  $13,<mul121666rax=int64#7
@@ -6285,7 +6285,7 @@ mov  %rdx,%r8
 movq 232(%rsp),%rax
 
 # qhasm:   (uint128) mul121666rdx mul121666rax = mul121666rax * *(uint64 *) &crypto_scalarmult_curve25519_amd64_51_121666_213
-mulq  crypto_scalarmult_curve25519_amd64_51_121666_213
+mulq  crypto_scalarmult_curve25519_amd64_51_121666_213(%rip)
 
 # qhasm:   (uint64) mul121666rax >>= 13
 # asm 1: shr  $13,<mul121666rax=int64#7
@@ -6308,7 +6308,7 @@ mov  %rdx,%r9
 movq 240(%rsp),%rax
 
 # qhasm:   (uint128) mul121666rdx mul121666rax = mul121666rax * *(uint64 *) &crypto_scalarmult_curve25519_amd64_51_121666_213
-mulq  crypto_scalarmult_curve25519_amd64_51_121666_213
+mulq  crypto_scalarmult_curve25519_amd64_51_121666_213(%rip)
 
 # qhasm:   (uint64) mul121666rax >>= 13
 # asm 1: shr  $13,<mul121666rax=int64#7
@@ -6331,7 +6331,7 @@ mov  %rdx,%r10
 movq 248(%rsp),%rax
 
 # qhasm:   (uint128) mul121666rdx mul121666rax = mul121666rax * *(uint64 *) &crypto_scalarmult_curve25519_amd64_51_121666_213
-mulq  crypto_scalarmult_curve25519_amd64_51_121666_213
+mulq  crypto_scalarmult_curve25519_amd64_51_121666_213(%rip)
 
 # qhasm:   (uint64) mul121666rax >>= 13
 # asm 1: shr  $13,<mul121666rax=int64#7
@@ -6941,7 +6941,7 @@ adc %rdx,%r13
 # qhasm:   mulredmask = *(uint64 *) &crypto_scalarmult_curve25519_amd64_51_REDMASK51
 # asm 1: movq crypto_scalarmult_curve25519_amd64_51_REDMASK51,>mulredmask=int64#3
 # asm 2: movq crypto_scalarmult_curve25519_amd64_51_REDMASK51,>mulredmask=%rdx
-movq crypto_scalarmult_curve25519_amd64_51_REDMASK51,%rdx
+movq crypto_scalarmult_curve25519_amd64_51_REDMASK51(%rip),%rdx
 
 # qhasm:   mulr01 = (mulr01.zp0) << 13
 # asm 1: shld $13,<zp0=int64#2,<mulr01=int64#4

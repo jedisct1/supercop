@@ -1,0 +1,7 @@
+
+size try *.o \
+| while read text data bss dec hex fn
+do
+  [ "$text" = "text" ] && continue
+  echo "$version $shorthostname $abi $startdate $o $p objsize $implementationdir $compilerword $text $data $bss $fn" >&5
+done

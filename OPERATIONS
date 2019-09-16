@@ -1,4 +1,6 @@
 crypto_verify
+crypto_decode
+crypto_encode
 crypto_sort
 crypto_core
 crypto_hashblocks

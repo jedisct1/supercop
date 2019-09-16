@@ -34,9 +34,9 @@ extern "C" {
 
 /* Maximum lengths in bytes */
 #define PICNIC_MAX_LOWMC_BLOCK_SIZE 32
-#define PICNIC_MAX_PUBLICKEY_SIZE  (2*PICNIC_MAX_LOWMC_BLOCK_SIZE + 1)     /**< Largest serialized public key size, in bytes */
-#define PICNIC_MAX_PRIVATEKEY_SIZE (3*PICNIC_MAX_LOWMC_BLOCK_SIZE + 2)     /**< Largest serialized private key size, in bytes */
-#define PICNIC_MAX_SIGNATURE_SIZE  209474                                  /**< Largest signature size, in bytes */
+#define PICNIC_MAX_PUBLICKEY_SIZE  (2 * PICNIC_MAX_LOWMC_BLOCK_SIZE + 1)    /**< Largest serialized public key size, in bytes */
+#define PICNIC_MAX_PRIVATEKEY_SIZE (3 * PICNIC_MAX_LOWMC_BLOCK_SIZE + 2)    /**< Largest serialized private key size, in bytes */
+#define PICNIC_MAX_SIGNATURE_SIZE  209522                                   /**< Largest signature size, in bytes */
 
 /** Parameter set names */
 typedef enum picnic_params_t {
@@ -47,20 +47,23 @@ typedef enum picnic_params_t {
     Picnic_L3_UR = 4,
     Picnic_L5_FS = 5,
     Picnic_L5_UR = 6,
-    PARAMETER_SET_MAX_INDEX = 7
+    Picnic2_L1_FS = 7,
+    Picnic2_L3_FS = 8,
+    Picnic2_L5_FS = 9,
+    PARAMETER_SET_MAX_INDEX = 10
 } picnic_params_t;
 
 /** Public key */
 typedef struct {
     picnic_params_t params;                                     /**< The parameter set used with this public key. */
-    uint8_t plaintext[PICNIC_MAX_LOWMC_BLOCK_SIZE];           /**< The input plaintext block to LowMC. */
-    uint8_t ciphertext[PICNIC_MAX_LOWMC_BLOCK_SIZE];          /**< The encryption of plaintext under the private key. */
+    uint8_t plaintext[PICNIC_MAX_LOWMC_BLOCK_SIZE];             /**< The input plaintext block to LowMC. */
+    uint8_t ciphertext[PICNIC_MAX_LOWMC_BLOCK_SIZE];            /**< The encryption of plaintext under the private key. */
 } picnic_publickey_t;
 
 /** Private key */
 typedef struct {
     picnic_params_t params;                             /**< The parameter set used with this private key. */
-    uint8_t data[PICNIC_MAX_LOWMC_BLOCK_SIZE];           /**< The private key data. */
+    uint8_t data[PICNIC_MAX_LOWMC_BLOCK_SIZE];          /**< The private key data. */
     picnic_publickey_t pk;                              /**< The corresponding public key.  */
 } picnic_privatekey_t;
 
@@ -206,9 +209,36 @@ int picnic_read_private_key(picnic_privatekey_t* key, const uint8_t* buf, size_t
  */
 int picnic_validate_keypair(const picnic_privatekey_t* privatekey, const picnic_publickey_t* publickey);
 
+/**
+ * picnic_random_bytes is used to generate random bytes in key generation.
+ * (Signing is deterministic; it derives randomness from the secret key and the
+ * message to be signed.) See the provided implementation
+ * "random_bytes_default" which uses /dev/urandom on Linux and BCryptGenRandom
+ * on Windows. The Linux implementation should work on other Unix-like systems
+ * as well.
+ *
+ * To use another RNG, make sure it has the same behavior as
+ * random_bytes_default, and change the definition of
+ * picnic_random_bytes.
+ */
+#ifdef USE_NIST_KAT_INSECURE_RNG
+/* For the NIST submission, when generating known-answer-tests (KATs), we
+ * must use an RNG with a fixed seed so that re-running the program to
+ * generate KATs prduces the same results. The function randombytes is
+ * provided by NIST, in the file rng.c. */
+    #include "NIST-KATs/rng.h"
+    #define picnic_random_bytes NIST_randombytes
+#elif SUPERCOP
+int random_bytes_supercop(uint8_t* buf, size_t len);
+    #define picnic_random_bytes random_bytes_supercop
+#else
+    #define PICNIC_BUILD_DEFAULT_RNG 1
+    #define picnic_random_bytes random_bytes_default
+#endif
+
 
 /** Parse the signature and print the individual parts. Used when creating test vectors */
-void print_siganture(const uint8_t* sigBytes, size_t sigBytesLen, picnic_params_t picnic_params);
+void print_signature(const uint8_t* sigBytes, size_t sigBytesLen, picnic_params_t picnic_params);
 
 #ifdef __cplusplus
 }

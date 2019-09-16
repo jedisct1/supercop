@@ -1,1 +1,1 @@
-../../dilithium2/ref/packing.c
+../ref/packing.c

@@ -7,6 +7,17 @@
  *  SPDX-License-Identifier: MIT
  */
 
+/* define HAVE_* for more known good configurations */
+#if !defined(HAVE_POSIX_MEMALIGN) &&                                                               \
+    ((defined(_POSIX_C_SOURCE) && _POSIX_C_SOURCE >= 200112L) || defined(__APPLE__))
+/* defined in POSIX and available on OS X */
+#define HAVE_POSIX_MEMALIGN
+#endif
+
+#if !defined(HAVE_MEMALIGN) && defined(__linux__)
+/* always availalbe on Linux */
+#define HAVE_MEMALIGN
+#endif
 
 #include "compat.h"
 #if !defined(HAVE_ALIGNED_ALLOC)

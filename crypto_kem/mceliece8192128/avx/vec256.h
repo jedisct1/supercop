@@ -50,8 +50,8 @@ static inline vec256 vec256_or(vec256 a, vec256 b)
 	return _mm256_or_si256(a, b);
 }
 
-#define vec256_sll_4x(a, s) _mm256_slli_epi64(a, s)
-#define vec256_srl_4x(a, s) _mm256_srli_epi64(a, s)
+#define vec256_sll_4x(a, s) ((vec256) _mm256_slli_epi64((vec256) (a), (s)))
+#define vec256_srl_4x(a, s) ((vec256) _mm256_srli_epi64((vec256) (a), (s)))
 
 static inline vec256 vec256_unpack_low(vec256 a, vec256 b)
 {
@@ -104,8 +104,8 @@ static inline void vec256_mul(vec256 *h, vec256 *f, const vec256 *g)
 void vec256_sq(vec256 *, vec256 *);
 void vec256_inv(vec256 *, vec256 *);
 
-extern void vec256_maa_asm(vec256 *, vec256 *, vec256 *);
-extern void vec256_ama_asm(vec256 *, vec256 *, vec256 *);
+extern void vec256_maa_asm(vec256 *, vec256 *, const vec256 *);
+extern void vec256_ama_asm(vec256 *, vec256 *, const vec256 *);
 
 #endif
 

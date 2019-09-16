@@ -1,4 +1,4 @@
-#define poly1305_auth_fn poly1305_auth_sse2
+#define poly1305_auth_fn crypto_onetimeauth_poly1305_moon_sse2_64
 
 #include <stddef.h>
 #include "crypto_onetimeauth.h"

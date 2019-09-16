@@ -1,4 +1,4 @@
-.align 5
+.p2align 5
 .data
 _rijndael256_mask:
 .byte 0x0, 0x1, 0x6, 0x7
@@ -12,7 +12,7 @@ _sel2:
 .byte 0,    0, 0xff, 0xff
 .byte 0,    0,    0, 0xff
 
-.align 5
+.p2align 5
 .text
 .global _Rijndael_k32b32_encrypt_x4
 _Rijndael_k32b32_encrypt_x4:
@@ -32,7 +32,7 @@ _Rijndael_k32b32_encrypt_x4:
 	movq	$0x1, %r8
 	movq	%r10, %rdi
 
-	.align 4
+	.p2align 4
 	Rijndael_k32b32_encrypt_x4._rounds:
 	  addq	$0x20, %rdi
 	  vpxor	%xmm3, %xmm2, %xmm0

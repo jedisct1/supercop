@@ -119,7 +119,7 @@ movq   32(%rsi),%rsi
 # qhasm: two51minus1 = *(uint64 *) &REDMASK51
 # asm 1: movq REDMASK51,>two51minus1=int64#7
 # asm 2: movq REDMASK51,>two51minus1=%rax
-movq REDMASK51,%rax
+movq REDMASK51(%rip),%rax
 
 # qhasm: two51minus19 = two51minus1 - 18
 # asm 1: lea  -18(<two51minus1=int64#7),>two51minus19=int64#8

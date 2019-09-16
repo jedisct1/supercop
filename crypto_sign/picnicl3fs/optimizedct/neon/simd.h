@@ -26,14 +26,15 @@
 #define BUILTIN_CPU_SUPPORTED
 #endif
 
-
 #include "cpu.h"
 
 #if defined(__x86_64__) || defined(_M_X64) || defined(__i386__) || defined(_M_IX86)
 #if defined(BUILTIN_CPU_SUPPORTED)
-#define CPU_SUPPORTS_AVX2 __builtin_cpu_supports("avx2")
+#define CPU_SUPPORTS_AVX2 (__builtin_cpu_supports("avx2") && __builtin_cpu_supports("bmi2"))
+#define CPU_SUPPORTS_POPCNT __builtin_cpu_supports("popcnt")
 #else
 #define CPU_SUPPORTS_AVX2 cpu_supports(CPU_CAP_AVX2)
+#define CPU_SUPPORTS_POPCNT cpu_supports(CPU_CAP_POPCNT)
 #endif
 #endif
 
@@ -66,15 +67,20 @@
   static inline void attributes name(type* restrict dst, type const* restrict src,                 \
                                      unsigned int count) {                                         \
     for (unsigned int i = count; i; --i, ++dst, ++src) {                                           \
-      *dst = (xor)(*dst, *src);                                                                    \
+      *dst = xor(*dst, *src);                                                                      \
     }                                                                                              \
+  }
+
+#define apply_mask(name, type, xor, and, attributes)                                               \
+  static inline type attributes name(const type lhs, const type rhs, const type mask) {            \
+    return xor(lhs, and(rhs, mask));                                                               \
   }
 
 #define apply_mask_region(name, type, xor, and, attributes)                                        \
   static inline void attributes name(type* restrict dst, type const* restrict src,                 \
                                      type const mask, unsigned int count) {                        \
     for (unsigned int i = count; i; --i, ++dst, ++src) {                                           \
-      *dst = (xor)(*dst, (and)(mask, *src));                                                       \
+      *dst = xor(*dst, and(*src, mask));                                                           \
     }                                                                                              \
   }
 
@@ -85,17 +91,23 @@
     const type* l = lhs;                                                                           \
     const type* r = rhs;                                                                           \
     for (unsigned int i = count; i; --i, ++d, ++l, ++r) {                                          \
-      *d = (xor)(*l, *r);                                                                          \
+      *d = xor(*l, *r);                                                                            \
     }                                                                                              \
   }
 
 
 
+typedef uint64x2_t word128;
 
-apply_region(mm128_xor_region, uint32x4_t, veorq_u32, FN_ATTRIBUTES_NEON_NP);
-apply_mask_region(mm128_xor_mask_region, uint32x4_t, veorq_u32, vandq_u32, FN_ATTRIBUTES_NEON_NP);
-apply_array(mm256_xor, uint32x4_t, veorq_u32, 2, FN_ATTRIBUTES_NEON_NP);
-apply_array(mm256_and, uint32x4_t, vandq_u32, 2, FN_ATTRIBUTES_NEON_NP);
+#define mm128_zero vmovq_n_u64(0)
+#define mm128_xor(l, r) veorq_u64(l, r)
+#define mm128_and(l, r) vandq_u64(l, r)
+
+apply_region(mm128_xor_region, word128, mm128_xor, FN_ATTRIBUTES_NEON);
+apply_mask_region(mm128_xor_mask_region, word128, mm128_xor, mm128_and, FN_ATTRIBUTES_NEON);
+apply_mask(mm128_xor_mask, word128, mm128_xor, mm128_and, FN_ATTRIBUTES_NEON_CONST);
+apply_array(mm256_xor, word128, mm128_xor, 2, FN_ATTRIBUTES_NEON);
+apply_array(mm256_and, word128, mm128_and, 2, FN_ATTRIBUTES_NEON);
 
 #if defined(_MSC_VER)
 #undef restrict

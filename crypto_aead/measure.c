@@ -32,7 +32,7 @@ void allocate(void)
   c = alignedcalloc(MAXTEST_BYTES + crypto_aead_ABYTES);
 }
 
-#define TIMINGS 15
+#define TIMINGS 7
 static long long cycles[TIMINGS + 1];
 
 void measure(void)
@@ -54,6 +54,8 @@ void measure(void)
         if (direction != 0) ++adlen;
         if (mlen > MAXTEST_BYTES) break;
         if (adlen > MAXTEST_BYTES) break;
+        if (mlen > 64) if (mlen & 31) if (adlen != mlen) continue;
+        if (adlen > 64) if (adlen & 31) if (adlen != mlen) continue;
         kernelrandombytes(k,crypto_aead_KEYBYTES);
         kernelrandombytes(nsec,crypto_aead_NSECBYTES);
         kernelrandombytes(npub,crypto_aead_NPUBBYTES);
@@ -66,6 +68,8 @@ void measure(void)
         }
         for (i = 0;i < TIMINGS;++i) cycles[i] = cycles[i + 1] - cycles[i];
         printentry(1000000 * adlen + mlen,"encrypt_cycles",cycles,TIMINGS);
+        if (mlen > 64) if (mlen & 31) continue;
+        if (adlen > 64) if (adlen & 31) continue;
         for (i = 0;i <= TIMINGS;++i) {
           cycles[i] = cpucycles();
           crypto_aead_decrypt(m,&tlen,nsec,c,clen,ad,adlen,npub,k);

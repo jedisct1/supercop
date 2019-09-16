@@ -565,7 +565,7 @@ shld $13,%r15,%rbx
 # qhasm:   squareredmask = *(uint64 *) &REDMASK51
 # asm 1: movq REDMASK51,>squareredmask=int64#3
 # asm 2: movq REDMASK51,>squareredmask=%rdx
-movq REDMASK51,%rdx
+movq REDMASK51(%rip),%rdx
 
 # qhasm:   r4 &= squareredmask
 # asm 1: and  <squareredmask=int64#3,<r4=int64#4

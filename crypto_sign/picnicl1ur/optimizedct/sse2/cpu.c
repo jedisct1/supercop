@@ -32,7 +32,7 @@ static unsigned int init_caps(void) {
   return caps;
 }
 
-#elif (defined(__x86_64__) || defined(__i386__)) && (defined(__GNUC__) || defined(_MSC_VER))
+#elif (defined(__x86_64__) || defined(__i386__) || defined(_M_IX86) || defined(_M_AMD64)) && (defined(__GNUC__) || defined(_MSC_VER))
 
 #ifdef _MSC_VER
 #include <intrin.h>
@@ -55,11 +55,14 @@ static unsigned init_caps(void) {
     if (regs.edx & (1 << 26)) {
       caps |= CPU_CAP_SSE2;
     }
+    if (regs.ecx & (1 << 23)) {
+      caps |= CPU_CAP_POPCNT;
+    }
   }
 
   if (max >= 7) {
     __cpuidex(regs.data, 7, 0);
-    if (regs.ebx & (1 << 5)) {
+    if (regs.ebx & ((1 << 5) | (1 << 8))) {
       caps |= CPU_CAP_AVX2;
     }
   }
@@ -101,10 +104,13 @@ static unsigned init_caps(void) {
     if (edx & (1 << 26)) {
       caps |= CPU_CAP_SSE2;
     }
+    if (ecx & (1 << 23)) {
+      caps |= CPU_CAP_POPCNT;
+    }
   }
 
   if (__get_cpuid(7, &eax, &ebx, &ecx, &edx)) {
-    if (ebx & (1 << 5)) {
+    if (ebx & ((1 << 5) | (1 << 8))) {
       caps |= CPU_CAP_AVX2;
     }
   }

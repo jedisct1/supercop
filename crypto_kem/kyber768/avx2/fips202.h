@@ -1,1 +1,1 @@
-../../kyber1024/avx2/fips202.h
+../ref/fips202.h

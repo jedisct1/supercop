@@ -1,1 +1,1 @@
-../../kyber1024/avx2/ntt.h
+../../kyber768/avx2/ntt.h

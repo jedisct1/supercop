@@ -1,4 +1,5 @@
 .data
+.section .rodata
 
 .globl crypto_scalarmult_curve25519_amd64_64_121666
 .globl crypto_scalarmult_curve25519_amd64_64_MU0

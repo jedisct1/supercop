@@ -1,1 +1,1 @@
-../../dilithium2/avx2/KeccakP-1600-times4-SnP.h
+../../dilithium3/avx2/KeccakP-1600-times4-SnP.h

@@ -1,1 +1,1 @@
-../../kyber1024/ref/poly.h
+../../kyber768/ref/poly.h

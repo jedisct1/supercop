@@ -220,7 +220,7 @@ unsigned long long xlen = 0;
 
 unsigned long long bits = 0;
 
-main()
+int main()
 {
   int i;
   int c;

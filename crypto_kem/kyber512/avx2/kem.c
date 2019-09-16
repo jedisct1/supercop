@@ -1,1 +1,1 @@
-../../kyber1024/ref/kem.c
+../../kyber768/ref/kem.c

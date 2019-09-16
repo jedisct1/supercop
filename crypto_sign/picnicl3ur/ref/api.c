@@ -11,13 +11,47 @@
 
 #include "picnic.h"
 
-#include "apiorig.h"
+#include "api.h"
 
+#ifdef SUPERCOP
     #include "crypto_sign.h"
+#endif
 
 #include <string.h>
-#include <endian.h>
 
+//#ifndef htole32
+static uint32_t bswap32(uint32_t x) 
+{
+      return ((x & 0xff000000) >> 24) | ((x & 0x00ff0000) >> 8) | ((x & 0x0000ff00) << 8) |
+                   ((x & 0x000000ff) << 24);
+}
+
+static int isBigEndianSystem()
+{
+    uint32_t x = 1;
+    uint8_t* xp = (uint8_t*) &x;
+    if(xp[3] == 1) {
+        return 1;
+    }
+    return 0;
+}
+
+static uint32_t htole32_portable(uint32_t x) 
+{
+    if(isBigEndianSystem()) {
+        return bswap32(x);
+    }
+    return x;
+}
+static uint32_t le32toh_portable(uint32_t x) 
+{
+    if(isBigEndianSystem()) {
+        return bswap32(x);
+    }
+    return x;
+}       
+
+//#endif
 
 picnic_params_t params = Picnic_L3_UR;
 
@@ -52,6 +86,7 @@ int crypto_sign(unsigned char *sm, unsigned long long *smlen,
     picnic_privatekey_t secret;
 
     int ret = picnic_read_private_key(&secret, sk, CRYPTO_SECRETKEYBYTES);
+
     if (ret != 0) {
         return ret;
     }
@@ -69,7 +104,7 @@ int crypto_sign(unsigned char *sm, unsigned long long *smlen,
     }
 
     *smlen = 4 + mlen + signature_len;
-    signature_len = htole32(signature_len);
+    signature_len = htole32_portable(signature_len);
     memcpy(sm, (uint8_t*)&signature_len, 4);
     memcpy(sm + 4, m, mlen);
 
@@ -90,7 +125,7 @@ int crypto_sign_open(unsigned char *m, unsigned long long *mlen,
 
     uint32_t signature_len;
     memcpy((uint8_t*)&signature_len, sm, 4);
-    signature_len = le32toh(signature_len);
+    signature_len = le32toh_portable(signature_len);
     if (signature_len > smlen - 1 - 4) {
         return -2;
     }

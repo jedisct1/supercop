@@ -1,4 +1,4 @@
-#define chacha_fn chacha_neon
+#define chacha_fn crypto_stream_chacha12_moon_neon_32
 
 #include "crypto_stream.h"
 #include <stddef.h>

@@ -1,0 +1,10 @@
+/**
+ * \file api.h
+ * \brief NIST KEM API used by ROLLO
+ */
+
+
+#define CRYPTO_SECRETKEYBYTES 2533
+#define CRYPTO_PUBLICKEYBYTES 2493
+#define CRYPTO_BYTES 64
+#define CRYPTO_CIPHERTEXTBYTES 2621

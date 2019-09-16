@@ -11,11 +11,13 @@ const long long sizes[] = { crypto_sign_BYTES, crypto_sign_PUBLICKEYBYTES, crypt
 
 #define MAXTEST_BYTES 100000
 
-static unsigned char *pk;
-static unsigned char *sk;
-static unsigned char *m; unsigned long long mlen;
-static unsigned char *sm; unsigned long long smlen;
-static unsigned char *t; unsigned long long tlen;
+#define TIMINGS 15
+
+static unsigned char *pk[TIMINGS + 1];
+static unsigned char *sk[TIMINGS + 1];
+static unsigned char *m[TIMINGS + 1]; unsigned long long mlen;
+static unsigned char *sm[TIMINGS + 1]; unsigned long long smlen[TIMINGS + 1];
+static unsigned char *t[TIMINGS + 1]; unsigned long long tlen;
 
 void preallocate(void)
 {
@@ -26,14 +28,16 @@ void preallocate(void)
 
 void allocate(void)
 {
-  pk = alignedcalloc(crypto_sign_PUBLICKEYBYTES);
-  sk = alignedcalloc(crypto_sign_SECRETKEYBYTES);
-  m = alignedcalloc(MAXTEST_BYTES + crypto_sign_BYTES);
-  sm = alignedcalloc(MAXTEST_BYTES + crypto_sign_BYTES);
-  t = alignedcalloc(MAXTEST_BYTES + crypto_sign_BYTES);
+  int i;
+  for (i = 0;i <= TIMINGS;++i) {
+    pk[i] = alignedcalloc(crypto_sign_PUBLICKEYBYTES);
+    sk[i] = alignedcalloc(crypto_sign_SECRETKEYBYTES);
+    m[i] = alignedcalloc(MAXTEST_BYTES + crypto_sign_BYTES);
+    sm[i] = alignedcalloc(MAXTEST_BYTES + crypto_sign_BYTES);
+    t[i] = alignedcalloc(MAXTEST_BYTES + crypto_sign_BYTES);
+  }
 }
 
-#define TIMINGS 31
 static long long cycles[TIMINGS + 1];
 static long long bytes[TIMINGS + 1];
 static long long rbytes[TIMINGS + 1];
@@ -49,7 +53,7 @@ void measure(void)
       cycles[i] = cpucycles();
       rbytes[i] = randombytes_bytes;
       rcalls[i] = randombytes_calls;
-      crypto_sign_keypair(pk,sk);
+      crypto_sign_keypair(pk[i],sk[i]);
     }
     for (i = 0;i < TIMINGS;++i) cycles[i] = cycles[i + 1] - cycles[i];
     for (i = 0;i < TIMINGS;++i) rbytes[i] = rbytes[i + 1] - rbytes[i];
@@ -59,14 +63,15 @@ void measure(void)
     printentry(-1,"keypair_randomcalls",rcalls,TIMINGS);
 
     for (mlen = 0;mlen <= MAXTEST_BYTES;mlen += 1 + mlen / 4) {
-      randombytes(m,mlen);
+      for (i = 0;i <= TIMINGS;++i)
+        randombytes(m[i],mlen);
 
       for (i = 0;i <= TIMINGS;++i) {
         cycles[i] = cpucycles();
         rbytes[i] = randombytes_bytes;
         rcalls[i] = randombytes_calls;
-        bytes[i] = crypto_sign(sm,&smlen,m,mlen,sk);
-	if (bytes[i] == 0) bytes[i] = smlen;
+        bytes[i] = crypto_sign(sm[i],&smlen[i],m[i],mlen,sk[i]);
+	if (bytes[i] == 0) bytes[i] = smlen[i];
       }
       for (i = 0;i < TIMINGS;++i) cycles[i] = cycles[i + 1] - cycles[i];
       for (i = 0;i < TIMINGS;++i) rbytes[i] = rbytes[i + 1] - rbytes[i];
@@ -80,7 +85,7 @@ void measure(void)
         cycles[i] = cpucycles();
         rbytes[i] = randombytes_bytes;
         rcalls[i] = randombytes_calls;
-        bytes[i] = crypto_sign_open(t,&tlen,sm,smlen,pk);
+        bytes[i] = crypto_sign_open(t[i],&tlen,sm[i],smlen[i],pk[i]);
 	if (bytes[i] == 0) bytes[i] = tlen;
       }
       for (i = 0;i < TIMINGS;++i) cycles[i] = cycles[i + 1] - cycles[i];

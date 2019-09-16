@@ -12,6 +12,7 @@
 #include "hash.h"
 #include <stdio.h>
 #include <assert.h>
+#include "sha3/brg_endian.h"
 
 void HashUpdate(HashInstance* ctx, const uint8_t* data, size_t byteLen)
 {
@@ -51,5 +52,31 @@ void HashSqueeze(HashInstance* ctx, uint8_t* digest, size_t byteLen)
 
     if (ret != SUCCESS) {
     }
+}
+
+uint16_t toLittleEndian(uint16_t x)
+{
+#if (PLATFORM_BYTE_ORDER == IS_BIG_ENDIAN)
+    return (x << 8) | (x >> 8);
+#else
+    return x;
+#endif
+
+}
+
+uint16_t fromLittleEndian(uint16_t x)
+{
+#if (PLATFORM_BYTE_ORDER == IS_BIG_ENDIAN)
+    return (x << 8) | (x >> 8);
+#else
+    return x;
+#endif
+}
+
+void HashUpdateIntLE(HashInstance* ctx, uint16_t x)
+{
+    uint16_t outputBytesLE = toLittleEndian(x);
+
+    HashUpdate(ctx, (uint8_t*)&outputBytesLE, sizeof(uint16_t));
 }
 

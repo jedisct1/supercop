@@ -62,7 +62,7 @@ typedef struct
    *
    * Put here all state variable needed during the encryption process.
    */
-} crypto_stream_chacha20_e_x86_xmm6_ECRYPT_ctx;
+} crypto_stream_chacha20_e_x86_xmm6_ECRYPT_ctx __attribute__((aligned(16)));
 
 /* ------------------------------------------------------------------------- */
 

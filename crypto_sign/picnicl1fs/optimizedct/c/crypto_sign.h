@@ -1,6 +1,6 @@
 #ifndef CRYPTO_SIGN_H
 #define CRYPTO_SIGN_H
 
-#include "apiorig.h"
+#include "api.h"
 
 #endif

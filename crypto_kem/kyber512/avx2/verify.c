@@ -1,1 +1,1 @@
-../../kyber1024/ref/verify.c
+../../kyber768/avx2/verify.c

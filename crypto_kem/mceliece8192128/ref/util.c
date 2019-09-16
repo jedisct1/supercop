@@ -23,6 +23,20 @@ uint16_t load2(const unsigned char *src)
 	return a & GFMASK;
 }
 
+uint32_t load4(const unsigned char * in)
+{
+	int i;
+	uint32_t ret = in[3];
+
+	for (i = 2; i >= 0; i--)
+	{
+		ret <<= 8;
+		ret |= in[i];
+	}
+
+	return ret;
+}
+
 void store8(unsigned char *out, uint64_t in)
 {
 	out[0] = (in >> 0x00) & 0xFF;

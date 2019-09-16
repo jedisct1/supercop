@@ -1,0 +1,20 @@
+Reverse-chronological changelog for *ntru*/ref:
+
+Renamed Hash() as Hash_prefix().
+
+Removed KAT support.
+
+Removed built-in uint32_sort.c in favor of separate crypto_sort_uint32
+library.
+
+Removed built-in sha512.c, sha512.h in favor of separate
+crypto_hash_sha512 library.
+
+Removed built-in aes256ctr.c, aes256ctr.h in favor of separate
+crypto_stream_aes256ctr library.
+
+Ported Expand() to big-endian machines. Thanks to Douglas Stebila for
+pointing out the portability problem.
+
+Started from ref code submitted to round 2 of the NIST Post-Quantum
+Standardization Project.

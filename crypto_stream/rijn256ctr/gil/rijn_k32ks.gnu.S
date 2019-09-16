@@ -1,4 +1,4 @@
-.align 5
+.p2align 5
 .data
 _Rijndael_k32_shuffle_mask:
 .byte 0xff, 0xff, 0xff, 0xff
@@ -6,7 +6,7 @@ _Rijndael_k32_shuffle_mask:
 .byte 0x4, 0x5, 0x6, 0x7
 .byte 0x8, 0x9, 0xa, 0xb
 
-.align 5
+.p2align 5
 .text
 _Rijndael_k32_expand_one:
 	vpshufd	$-0x1, %xmm2, %xmm2
@@ -31,7 +31,7 @@ _Rijndael_k32_expand_one:
 	addq	$0x20, %rdi
 	ret
 
-.align 5
+.p2align 5
 .global _Rijndael_k32b32_expandkey
 _Rijndael_k32b32_expandkey:
 	vzeroupper

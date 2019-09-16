@@ -16,6 +16,8 @@ echo "=== `date` === /usr/sbin/lsattr -El proc0"
 /usr/sbin/lsattr -El proc0 || :
 echo "=== `date` === cat /proc/cpuinfo"
 cat /proc/cpuinfo || :
+echo "=== `date` === lscpu"
+lscpu || :
 
 echo "=== `date` === grep . /dev/null /sys/devices/system/cpu/cpu*/topology/physical_package_id"
 grep . /dev/null /sys/devices/system/cpu/cpu*/topology/physical_package_id || :
@@ -37,8 +39,12 @@ echo "=== `date` === grep . /dev/null /sys/devices/system/cpu/cpu*/cpufreq/scali
 grep . /dev/null /sys/devices/system/cpu/cpu*/cpufreq/scaling_cur_freq || :
 echo "=== `date` === grep . /dev/null /sys/devices/system/cpu/cpu*/cpufreq/cpb"
 grep . /dev/null /sys/devices/system/cpu/cpu*/cpufreq/cpb || :
+echo "=== `date` === grep . /dev/null /sys/devices/system/cpu/intel_pstate/no_turbo"
+grep . /dev/null /sys/devices/system/cpu/intel_pstate/no_turbo || :
 echo "=== `date` === grep . /dev/null /sys/devices/system/cpu/cpu*/clock_tick"
 grep . /dev/null /sys/devices/system/cpu/cpu*/clock_tick || :
+echo "=== `date` === grep . /dev/null /sys/devices/system/cpu/cpu*/regs/identification/*"
+grep . /dev/null /sys/devices/system/cpu/cpu*/regs/identification/* || :
 
 echo "=== `date` === sysctl hw.model"
 sysctl hw.model || :

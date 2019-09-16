@@ -1,1 +1,1 @@
-../../dilithium2/avx2/invntt.s
+../../dilithium3/avx2/invntt.s

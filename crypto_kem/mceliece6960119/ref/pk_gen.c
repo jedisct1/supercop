@@ -7,6 +7,7 @@
 #include <assert.h>
 #include <string.h>
 
+#include "controlbits.h"
 #include "pk_gen.h"
 #include "params.h"
 #include "benes.h"
@@ -15,19 +16,21 @@
 
 /* input: secret key sk */
 /* output: public key pk */
-int pk_gen(unsigned char * pk, unsigned char * sk)
+int pk_gen(unsigned char * pk, unsigned char * sk, uint32_t * perm)
 {
 	unsigned char *pk_ptr = pk;
 
 	int i, j, k;
 	int row, c, tail;
 
+	uint64_t buf[ 1 << GFBITS ];
+
 	unsigned char mat[ GFBITS * SYS_T ][ SYS_N/8 ];
 	unsigned char mask;
 	unsigned char b;
 
-	gf g[ SYS_T+1 ];
-	gf L[ SYS_N ];
+	gf g[ SYS_T+1 ]; // Goppa polynomial
+	gf L[ SYS_N ]; // support
 	gf inv[ SYS_N ];
 
 	//
@@ -36,14 +39,24 @@ int pk_gen(unsigned char * pk, unsigned char * sk)
 
 	for (i = 0; i < SYS_T; i++) { g[i] = load2(sk); g[i] &= GFMASK; sk += 2; }
 
-	support_gen(L, sk);
+	for (i = 0; i < (1 << GFBITS); i++)
+	{
+		buf[i] = perm[i];
+		buf[i] <<= 31;
+		buf[i] |= i;
+	}
+
+	sort_63b(1 << GFBITS, buf);
+
+	for (i = 0; i < (1 << GFBITS); i++) perm[i] = buf[i] & GFMASK;
+	for (i = 0; i < SYS_N;         i++) L[i] = bitrev(perm[i]);
+
+	// filling the matrix
 
 	root(inv, g, L);
 		
 	for (i = 0; i < SYS_N; i++)
 		inv[i] = gf_inv(inv[i]);
-
-	//
 
 	for (i = 0; i < PK_NROWS; i++)
 	for (j = 0; j < SYS_N/8; j++)
@@ -71,7 +84,7 @@ int pk_gen(unsigned char * pk, unsigned char * sk)
 
 	}
 
-	//
+	// gaussian elimination
 
 	for (i = 0; i < (GFBITS * SYS_T + 7) / 8; i++)
 	for (j = 0; j < 8; j++)

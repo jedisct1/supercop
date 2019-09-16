@@ -91,7 +91,7 @@ static inline void aesni_key256_expand(const unsigned char* key, __m128i rkeys[1
 
 /** single, by-the-book AES encryption with AES-NI */
 static inline void aesni_encrypt1(unsigned char *out, unsigned char *n, __m128i rkeys[16]) {
-  __m128i nv = _mm_load_si128((const __m128i *)n);
+  __m128i nv = _mm_loadu_si128((const __m128i *)n);
   int i;
   __m128i temp = _mm_xor_si128(nv, rkeys[0]);
 #pragma unroll(13)
@@ -99,7 +99,7 @@ static inline void aesni_encrypt1(unsigned char *out, unsigned char *n, __m128i 
     temp = _mm_aesenc_si128(temp, rkeys[i]);
   }
   temp = _mm_aesenclast_si128(temp, rkeys[14]);
-  _mm_store_si128((__m128i*)(out), temp);
+  _mm_storeu_si128((__m128i*)(out), temp);
 }
 
 /** multiple-blocks-at-once AES encryption with AES-NI ;
@@ -110,7 +110,7 @@ static inline void aesni_encrypt1(unsigned char *out, unsigned char *n, __m128i 
 /* Step 1 : loading the nonce */
 /* load & increment the n vector (non-vectorized, unused for now) */
 #define NVx(a)                                                  \
-  __m128i nv##a = _mm_shuffle_epi8(_mm_load_si128((const __m128i *)n), pt);n[3]++
+  __m128i nv##a = _mm_shuffle_epi8(_mm_loadu_si128((const __m128i *)n), pt);n[3]++
 
 /* Step 2 : define value in round one (xor with subkey #0, aka key) */
 #define TEMPx(a)                                        \
@@ -126,7 +126,7 @@ static inline void aesni_encrypt1(unsigned char *out, unsigned char *n, __m128i 
 
 /* Step 5: store result */
 #define STOREx(a)                                       \
-  _mm_store_si128((__m128i*)(out+(a*16)), temp##a)
+  _mm_storeu_si128((__m128i*)(out+(a*16)), temp##a)
 
 /* all the MAKE* macros are for automatic explicit unrolling */
 #define MAKE2(X)                                \
@@ -191,7 +191,7 @@ FUNC(12, MAKE12)
 #define printv16c(p,v)                                                  \
   {                                                                     \
     ALIGN16 unsigned char temp[16];                       \
-    _mm_store_si128(temp, v);                                           \
+    _mm_storeu_si128(temp, v);                                           \
     int z;                                                              \
     printf("%8s:%8s = ",p,#v);                                          \
     for (z = 15 ; z >= 0 ; z--) {                                       \
@@ -559,7 +559,7 @@ static inline __m128i reduce8(__m128i H0, __m128i H1, __m128i H2, __m128i H3,
 #endif
 
 #define XORx(a)                                         \
-  __m128i in##a = _mm_load_si128((__m128i*)(in+a*16));  \
+  __m128i in##a = _mm_loadu_si128((__m128i*)(in+a*16));  \
   temp##a = _mm_xor_si128(temp##a, in##a)
 
 /* unused ; can be used with the MAKEN() macro, but the reduce4()
@@ -661,8 +661,8 @@ int crypto_aead_encrypt(
   const __m128i rev = _mm_set_epi8(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15);
 
   /* we store H (and it's power) byte-reverted once and for all */
-  __m128i Hv = _mm_shuffle_epi8(_mm_load_si128((const __m128i*)H), rev);
-  _mm_store_si128((__m128i*)H,Hv);
+  __m128i Hv = _mm_shuffle_epi8(_mm_loadu_si128((const __m128i*)H), rev);
+  _mm_storeu_si128((__m128i*)H,Hv);
   __m128i H2v = mulv(Hv, Hv);
   __m128i H3v = mulv(H2v, Hv);
   __m128i H4v = mulv(H3v, Hv);
@@ -832,8 +832,8 @@ int crypto_aead_decrypt(
   
   const __m128i rev = _mm_set_epi8(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15);
 
-  __m128i Hv = _mm_shuffle_epi8(_mm_load_si128((const __m128i*)H), rev);
-  _mm_store_si128((__m128i*)H,Hv);
+  __m128i Hv = _mm_shuffle_epi8(_mm_loadu_si128((const __m128i*)H), rev);
+  _mm_storeu_si128((__m128i*)H,Hv);
   __m128i H2v = mulv(Hv, Hv);
   __m128i H3v = mulv(H2v, Hv);
   __m128i H4v = mulv(H3v, Hv);

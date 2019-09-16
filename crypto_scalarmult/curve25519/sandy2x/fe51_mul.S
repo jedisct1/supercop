@@ -698,7 +698,7 @@ adc %rdx,%r15
 # qhasm:   mulredmask = *(uint64 *) &REDMASK51
 # asm 1: movq REDMASK51,>mulredmask=int64#2
 # asm 2: movq REDMASK51,>mulredmask=%rsi
-movq REDMASK51,%rsi
+movq REDMASK51(%rip),%rsi
 
 # qhasm:   mulr01 = (mulr01.r0) << 13
 # asm 1: shld $13,<r0=int64#5,<mulr01=int64#6

@@ -7,7 +7,10 @@
 
 #include "gf.h"
 
-int sk_part_gen(unsigned char *);
+#include <stdint.h>
+
+int genpoly_gen(gf *, gf *);
+int perm_check(uint32_t *);
 
 #endif
 

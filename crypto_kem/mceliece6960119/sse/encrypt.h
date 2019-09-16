@@ -1,5 +1,5 @@
 /*
-  This file is for Nieddereiter encryption
+  This file is for Niederreiter encryption
 */
 
 #ifndef ENCRYPT_H

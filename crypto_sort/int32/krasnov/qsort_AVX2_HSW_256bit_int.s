@@ -42,8 +42,8 @@
 
 # This one sorts in descending order, sort in ascending order, requires swapping the cmp operands.
 .align 16
-.globl qsort_AVX2
-qsort_AVX2:
+.globl crypto_sort_int32_krasnov_qsort_AVX2
+crypto_sort_int32_krasnov_qsort_AVX2:
 
 .set array, %rdi
 .set temp_space, %rsi

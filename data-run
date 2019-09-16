@@ -123,17 +123,17 @@ do
   
       if [ "$t1" = ntl ]
       then
-        echo "ntl 10.5.0" >&8
+        echo "ntl 11.3.2" >&8
       fi
   
       if [ "$t1" = keccak ]
       then
-        echo "keccak 20170902" >&8
+        echo "keccak 20190805" >&8
       fi
   
       if [ "$t1" = cryptopp ]
       then
-        echo "cryptopp 565" >&8
+        echo "cryptopp 820" >&8
       fi
   
       if [ "$t1" = openssl ]
@@ -286,10 +286,11 @@ do
         echo "=== `date` === trying CXX=$cpp CXXFLAGS=$cppopts"
         rm -rf "$top/$target/work"
         mkdir -p "$top/$target/work"
-        cp -pr ntl-10.5.0/* "$top/$target/work"
+        cp -pr ntl-11.3.2/* "$top/$target/work"
         ( cd "$top/$target/work/src" \
           && ./configure \
              CXX="$cpp" CXXFLAGS="$cppopts" \
+             NTL_STD_CXX11=off NTL_THREADS=off NTL_SAFE_VECTORS=off \
              INCLUDEDIR="$top/$abi/include" LIBDIR="$top/$abi/lib" \
              DOCDIR="$top/$target/work/installdoc" \
              GMP_INCDIR="$top/$abi/include" GMP_LIBDIR="$top/$abi/lib" \
@@ -346,7 +347,7 @@ do
         echo "=== `date` === trying CXX=$cpp CXXFLAGS=$cppopts"
         rm -rf "$top/$target/work"
         mkdir -p "$top/$target/work"
-        cp -pr cryptopp-565/* "$top/$target/work"
+        cp -pr cryptopp-820/* "$top/$target/work"
         ( cd "$top/$target/work" \
           && make CXX="$cpp" CXXFLAGS="-DNDEBUG $cppopts" LDFLAGS="$cppopts" \
           && cp libcryptopp.a "$top/$abi/lib/libcryptopp.a" \
@@ -376,6 +377,7 @@ do
       | while read o
       do
         rm -rf "$top/$target/CYCLES"
+        rm -rf "$top/$target/outputs"
         rm -rf "$top/$target/errors"
         rm -rf "$top/$target/work"
         rm -rf "$top/$target/compiled"
@@ -531,13 +533,14 @@ do
 	  ' >&5
           [ -f OK ] || exit 0
   
-          if sh -c 'killafter 3600 ./try || exit $?' >../errors 2>&1
+          if sh -c 'killafter 3600 ./try || exit $?' >../outputs 2>../errors
           then
-            checksumsmall=`awk '{print $1}' < ../errors`
-            cycles=`awk '{print $2}' < ../errors`
-            checksumcycles=`awk '{print $3}' < ../errors`
-            cyclespersecond=`awk '{print $4}' < ../errors`
-            impl=`awk '{print $5}' < ../errors`
+            checksumsmall=`awk '{print $1}' < ../outputs`
+            cycles=`awk '{print $2}' < ../outputs`
+            checksumcycles=`awk '{print $3}' < ../outputs`
+            cyclespersecond=`awk '{print $4}' < ../outputs`
+            impl=`awk '{print $5}' < ../outputs`
+            rm ../outputs ../errors
           else
             echo "$version $shorthostname $abi $startdate $o $p tryfails $implementationdir $compilerword error $?" >&5
             cat ../errors \
@@ -545,6 +548,7 @@ do
             do
               echo "$version $shorthostname $abi $startdate $o $p tryfails $implementationdir $compilerword $err" >&5
             done
+            rm ../outputs ../errors
             exit 0
           fi
 
@@ -567,13 +571,14 @@ do
 	  ' >&5
           [ -f OK ] || exit 0
   
-          if sh -c 'killafter 3600 ./try || exit $?' >../errors 2>&1
+          if sh -c 'killafter 3600 ./try || exit $?' >../outputs 2>../errors
           then
-            checksumbig=`awk '{print $1}' < ../errors`
-            cycles=`awk '{print $2}' < ../errors`
-            checksumcycles=`awk '{print $3}' < ../errors`
-            cyclespersecond=`awk '{print $4}' < ../errors`
-            impl=`awk '{print $5}' < ../errors`
+            checksumbig=`awk '{print $1}' < ../outputs`
+            cycles=`awk '{print $2}' < ../outputs`
+            checksumcycles=`awk '{print $3}' < ../outputs`
+            cyclespersecond=`awk '{print $4}' < ../outputs`
+            impl=`awk '{print $5}' < ../outputs`
+            rm ../outputs ../errors
           else
             echo "$version $shorthostname $abi $startdate $o $p tryfails $implementationdir $compilerword error $?" >&5
             cat ../errors \
@@ -581,6 +586,7 @@ do
             do
               echo "$version $shorthostname $abi $startdate $o $p tryfails $implementationdir $compilerword $err" >&5
             done
+            rm ../outputs ../errors
             exit 0
           fi
 
@@ -609,6 +615,8 @@ do
 	    }
 	  ' >&5
           [ -f OK ] || exit 0
+
+          compiledinfo "$version" "$shorthostname" "$abi" "$startdate" "$o" "$p" "$implementationdir" "$compilerword" "$opi" "$language"
 
 	  rm -rf ../compiled || exit 0
 	  mkdir ../compiled || exit 0

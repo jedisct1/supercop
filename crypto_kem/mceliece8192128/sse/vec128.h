@@ -23,7 +23,7 @@ static inline vec128 vec128_setzero()
 	return _mm_setzero_si128();
 }
 
-#define vec128_extract(a, i) _mm_extract_epi64(a, i)
+#define vec128_extract(a, i) ((uint64_t) _mm_extract_epi64((vec128) (a), (i)))
 
 static inline int vec128_testz(vec128 a) 
 {
@@ -45,8 +45,8 @@ static inline vec128 vec128_or(vec128 a, vec128 b)
 	return _mm_or_si128(a, b);
 }
 
-#define vec128_sll_2x(a, s) _mm_slli_epi64(a, s)
-#define vec128_srl_2x(a, s) _mm_srli_epi64(a, s)
+#define vec128_sll_2x(a, s) ((vec128) _mm_slli_epi64((vec128) (a), (s)))
+#define vec128_srl_2x(a, s) ((vec128) _mm_srli_epi64((vec128) (a), (s)))
 
 static inline vec128 vec128_set2x(uint64_t a0, uint64_t a1)
 {
@@ -96,10 +96,10 @@ static inline vec128 vec128_or_reduce(vec128 * a)
 	return ret;
 }
 
-extern void vec128_mul_asm(vec128 *, vec128 *, vec128 *);
+extern void vec128_mul_asm(vec128 *, vec128 *, const vec128 *);
 
 /* bitsliced field multiplications */
-static inline void vec128_mul(vec128 *h, vec128 *f, vec128 *g)
+static inline void vec128_mul(vec128 *h, vec128 *f, const vec128 *g)
 {
         vec128_mul_asm(h, f, g);
 }

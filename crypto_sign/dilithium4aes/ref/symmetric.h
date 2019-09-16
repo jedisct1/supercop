@@ -1,0 +1,1 @@
+../../dilithium3/ref/symmetric.h

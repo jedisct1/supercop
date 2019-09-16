@@ -9,7 +9,7 @@ typedef struct {
   uint16_t coeffs[NTRU_N_PADDED] __attribute__((aligned(32)));
 } poly;
 
-uint16_t mod3(uint16_t a)
+static uint16_t mod3(uint16_t a)
 {
   uint16_t r;
   int16_t t, c;

@@ -96,6 +96,13 @@ then
   ( cd "$work" && sh do )
   cp -p "$work"/bin/* "$bin"
   
+  echo "=== `date` === building compiledinfo"
+  rm -rf "$work"
+  mkdir -p "$work"
+  cp -pr compiledinfo/* "$work"
+  ( cd "$work" && sh do )
+  cp -p "$work"/bin/* "$bin"
+  
   echo "=== `date` === building sinceepoch"
   rm -rf "$work"
   mkdir -p "$work"
@@ -187,10 +194,11 @@ do
     echo "=== `date` === trying CXX=$cpp CXXFLAGS=$cppopts"
     rm -rf "$work"
     mkdir -p "$work"
-    cp -pr ntl-10.5.0/* "$work"
+    cp -pr ntl-11.3.2/* "$work"
     ( cd "$work/src" \
       && ./configure \
          CXX="$cpp" CXXFLAGS="$cppopts" \
+         NTL_STD_CXX11=off NTL_THREADS=off NTL_SAFE_VECTORS=off \
          INCLUDEDIR="$include/$abi" LIBDIR="$lib/$abi" \
          DOCDIR="$work/installdoc" \
          GMP_INCDIR="$include/$abi" GMP_LIBDIR="$lib/$abi" \
@@ -248,7 +256,7 @@ do
     echo "=== `date` === trying CXX=$cpp CXXFLAGS=$cppopts"
     rm -rf "$work"
     mkdir -p "$work"
-    cp -pr cryptopp-565/* "$work"
+    cp -pr cryptopp-820/* "$work"
     ( cd "$work" \
       && make CXX="$cpp" CXXFLAGS="-DNDEBUG $cppopts" LDFLAGS="$cppopts" \
       && cp libcryptopp.a "$lib/$abi/libcryptopp.a" \
@@ -515,6 +523,8 @@ do
 	    [ "x$expectedchecksumsmall" = "x" ] && checksumok=unknown
 	    [ "x$expectedchecksumbig" = "x" ] && checksumok=unknown
 	    echo "$version $shorthostname $abi $startdate $o $p try $checksumsmall/$checksumbig $checksumok $cycles $checksumcycles $cyclespersecond $impl $compilerword" >&5
+
+            compiledinfo "$version" "$shorthostname" "$abi" "$startdate" "$o" "$p" "$implementationdir" "$compilerword" "$opi" "$language"
 
 	    [ -s ../bestc/median ] && [ `cat ../bestc/median` -le $cycles ] && continue
 

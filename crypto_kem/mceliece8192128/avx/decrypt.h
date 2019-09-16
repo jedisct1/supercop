@@ -1,5 +1,5 @@
 /*
-  This file is for Nieddereiter decryption
+  This file is for Niederreiter decryption
 */
 
 #ifndef DECRYPT_H

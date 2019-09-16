@@ -12,13 +12,20 @@
 
 #include "lowmc_pars.h"
 
-/**
- * Implements LowMC encryption
- *
- * \param  lowmc the lowmc parameters
- * \param  p     the plaintext
- * \return       the ciphertext
- */
-mzd_local_t* lowmc_call(lowmc_t const* lowmc, lowmc_key_t const* lowmc_key, mzd_local_t const* p);
+typedef struct {
+  mzd_local_t** state;
+} recorded_state_t;
+
+// forward decleration to picnic2_types.h since we get some cyclic dependencies otherwise
+typedef struct randomTape_t randomTape_t;
+
+typedef void (*lowmc_implementation_f)(lowmc_key_t const*, mzd_local_t const*, mzd_local_t*);
+typedef void (*lowmc_store_implementation_f)(lowmc_key_t const*, mzd_local_t const*,
+                                             recorded_state_t* state);
+typedef void (*lowmc_compute_aux_implementation_f)(lowmc_key_t const*, randomTape_t* tapes);
+
+lowmc_implementation_f lowmc_get_implementation(const lowmc_t* lowmc);
+lowmc_store_implementation_f lowmc_store_get_implementation(const lowmc_t* lowmc);
+lowmc_compute_aux_implementation_f lowmc_compute_aux_get_implementation(const lowmc_t* lowmc);
 
 #endif

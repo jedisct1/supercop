@@ -4,13 +4,19 @@
 #define C 701 /* C coeffs in polys */
 #define PADDED 704 /* C coeffs stored in PADDED */
 
-static uint8_t mod3(uint8_t a) /* a between 0 and 9 */
+static inline uint8_t mod3(uint8_t a) /* a between 0 and 9 */
 {
   int16_t t, c;
-  a = (a >> 2) + (a & 0x3); /* between 0 and 4 */
+  a = (a >> 2) + (a & 3); /* between 0 and 4 */
   t = a - 3;
   c = t >> 5;
   return t^(c&(a^t));
+}
+
+/* return -1 if x<0 and y<0; otherwise return 0 */
+static inline int both_negative_mask(int x,int y)
+{
+  return (x & y) >> 15;
 }
 
 int crypto_core(unsigned char *out,const unsigned char *in,const unsigned char *kunused,const unsigned char *cunused)
@@ -37,7 +43,7 @@ int crypto_core(unsigned char *out,const unsigned char *in,const unsigned char *
     v[0] = 0;
 
     sign = mod3(2 * g[0] * f[0]);
-    swap = -(g[0] && (delta > 0));
+    swap = both_negative_mask(-delta,-(int) g[0]);
     delta ^= swap & (delta ^ -delta);
     delta += 1;
 

@@ -1,4 +1,5 @@
 .data
+.section .rodata
 
 .globl crypto_scalarmult_curve25519_amd64_51_REDMASK51
 .globl crypto_scalarmult_curve25519_amd64_51_121666_213

@@ -102,6 +102,12 @@ mkdir -p "$top/killafter"
 cp -pr killafter/* "$top/killafter"
 ( cd "$top/killafter" && sh do )
 
+echo "=== `date` === building compiledinfo"
+rm -rf "$top/compiledinfo"
+mkdir -p "$top/compiledinfo"
+cp -pr compiledinfo/* "$top/compiledinfo"
+( cd "$top/compiledinfo" && sh do )
+
 echo "=== `date` === building sinceepoch"
 rm -rf "$top/sinceepoch"
 mkdir -p "$top/sinceepoch"

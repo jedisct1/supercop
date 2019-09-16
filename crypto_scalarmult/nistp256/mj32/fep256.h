@@ -3,6 +3,17 @@
 
 #include "fe.h"
 
+#define fep256_mul crypto_scalarmult_nistp256_mj32_fep256_mul
+#define fep256_sq crypto_scalarmult_nistp256_mj32_fep256_sq
+#define fep256_mul2 crypto_scalarmult_nistp256_mj32_fep256_mul2
+#define fep256_mulx_ crypto_scalarmult_nistp256_mj32_fep256_mulx_
+#define fep256_inv crypto_scalarmult_nistp256_mj32_fep256_inv
+#define fep256_add crypto_scalarmult_nistp256_mj32_fep256_add
+#define fep256_sub crypto_scalarmult_nistp256_mj32_fep256_sub
+#define fep256_tobytes crypto_scalarmult_nistp256_mj32_fep256_tobytes
+#define fep256_frombytes crypto_scalarmult_nistp256_mj32_fep256_frombytes
+#define fep256_isnonzero crypto_scalarmult_nistp256_mj32_fep256_isnonzero
+
 extern void fep256_mul(fe, const fe, const fe);
 extern void fep256_sq(fe, const fe);
 extern void fep256_mul2(fe, const fe);

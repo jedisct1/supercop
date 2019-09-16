@@ -3,6 +3,12 @@
 
 #include "fe.h"
 
+#define gep256_scalarmult crypto_scalarmult_nistp256_mj32_gep256_scalarmult
+#define gep256_scalarmult_base crypto_scalarmult_nistp256_mj32_scalarmult_base
+#define gep256_tobytes crypto_scalarmult_nistp256_mj32_gep256_tobytes
+#define gep256_frombytes crypto_scalarmult_nistp256_mj32_gep256_frombytes
+#define gep256_add crypto_scalarmult_nistp256_mj32_gep256_add
+
 typedef fe gep256[3];           /* X, Y, Z */
 typedef fe gep256_precomp[2];   /* X, Y    */
 

@@ -2,13 +2,13 @@
 
 SECTION_TEXT
 
-GLOBAL_HIDDEN_FN_EXT poly1305_block_size_avx,0,0
+GLOBAL_HIDDEN_FN_EXT crypto_onetimeauth_poly1305_moon_avx_64_block_size_avx,0,0
 movl $32, %eax
 ret
-FN_END poly1305_block_size_avx
+FN_END crypto_onetimeauth_poly1305_moon_avx_64_block_size_avx
 
-GLOBAL_HIDDEN_FN_EXT poly1305_init_ext_avx,4,1
-poly1305_init_ext_avx_local:
+GLOBAL_HIDDEN_FN_EXT crypto_onetimeauth_poly1305_moon_avx_64_init_ext_avx,4,1
+crypto_onetimeauth_poly1305_moon_avx_64_init_ext_avx_local:
 pushq %r15
 pushq %r14
 pushq %r13
@@ -179,12 +179,12 @@ popq %r13
 popq %r14
 popq %r15
 ret
-FN_END poly1305_init_ext_avx
+FN_END crypto_onetimeauth_poly1305_moon_avx_64_init_ext_avx
 
 
 
-GLOBAL_HIDDEN_FN poly1305_blocks_avx
-poly1305_blocks_avx_local:
+GLOBAL_HIDDEN_FN crypto_onetimeauth_poly1305_moon_avx_64_blocks_avx
+crypto_onetimeauth_poly1305_moon_avx_64_blocks_avx_local:
 pushq %rbp
 movq %rsp, %rbp
 pushq %rbx
@@ -714,10 +714,10 @@ movq %rdx, 16(%rdi)
 movq -8(%rbp), %rbx
 leave
 ret
-FN_END poly1305_blocks_avx
+FN_END crypto_onetimeauth_poly1305_moon_avx_64_blocks_avx
 
-GLOBAL_HIDDEN_FN poly1305_finish_ext_avx
-poly1305_finish_ext_avx_local:
+GLOBAL_HIDDEN_FN crypto_onetimeauth_poly1305_moon_avx_64_finish_ext_avx
+crypto_onetimeauth_poly1305_moon_avx_64_finish_ext_avx_local:
 pushq %r12
 pushq %rbp
 pushq %rbx
@@ -776,7 +776,7 @@ movq %rax, 120(%rbx)
 movq %rsp, %rsi
 movl $32, %edx
 movq %rbx, %rdi
-call poly1305_blocks_avx_local
+call crypto_onetimeauth_poly1305_moon_avx_64_blocks_avx_local
 .L30:
 movq 120(%rbx), %rax
 testb $1, %al
@@ -794,7 +794,7 @@ movq %rax, 120(%rbx)
 movl $32, %edx
 movl $0, %esi
 movq %rbx, %rdi
-call poly1305_blocks_avx_local
+call crypto_onetimeauth_poly1305_moon_avx_64_blocks_avx_local
 .L38:
 movq 8(%rbx), %rax
 movq %rax, %rdx
@@ -830,9 +830,9 @@ popq %rbx
 popq %rbp
 popq %r12
 ret
-FN_END poly1305_finish_ext_avx
+FN_END crypto_onetimeauth_poly1305_moon_avx_64_finish_ext_avx
 
-GLOBAL_HIDDEN_FN poly1305_auth_avx
+GLOBAL_HIDDEN_FN crypto_onetimeauth_poly1305_moon_avx_64
 pushq %rbp
 movq %rsp, %rbp
 pushq %r14
@@ -846,14 +846,14 @@ movq %rsi, %r12
 movq %rdx, %rbx
 movq %rsp, %rdi
 movq %rcx, %rsi
-call poly1305_init_ext_avx_local
+call crypto_onetimeauth_poly1305_moon_avx_64_init_ext_avx_local
 movq %rbx, %r13
 andq $-32, %r13
 je .L46
 movq %rsp, %rdi
 movq %r13, %rdx
 movq %r12, %rsi
-call poly1305_blocks_avx_local
+call crypto_onetimeauth_poly1305_moon_avx_64_blocks_avx_local
 addq %r13, %r12
 subq %r13, %rbx
 .L46:
@@ -861,7 +861,7 @@ movq %rsp, %rdi
 movq %r14, %rcx
 movq %rbx, %rdx
 movq %r12, %rsi
-call poly1305_finish_ext_avx_local
+call crypto_onetimeauth_poly1305_moon_avx_64_finish_ext_avx_local
 leaq -32(%rbp), %rsp
 popq %rbx
 popq %r12
@@ -869,4 +869,4 @@ popq %r13
 popq %r14
 popq %rbp
 ret
-FN_END poly1305_auth_avx
+FN_END crypto_onetimeauth_poly1305_moon_avx_64
