@@ -217,41 +217,6 @@ static const block_t nl_part_block_masks[] = {
     }},
 };
 
-/* transpose a 64x64 bit matrix using Eklundh's algorithm
-   this variant assumes that the bit with index 0 is the lsb of byte 0
-   e.g., 76543210 fedcba98 ...
- */
-void transpose_64_64_lsb(const uint64_t* in, uint64_t* out) {
-  static const uint64_t TRANSPOSE_MASKS64[6] = {
-      UINT64_C(0x00000000FFFFFFFF), UINT64_C(0x0000FFFF0000FFFF), UINT64_C(0x00FF00FF00FF00FF),
-      UINT64_C(0x0F0F0F0F0F0F0F0F), UINT64_C(0x3333333333333333), UINT64_C(0x5555555555555555)};
-
-  uint32_t width = 32, nswaps = 1;
-  const uint32_t logn = 6;
-
-  // copy in to out and transpose in-place
-  memcpy(out, in, 64 * sizeof(uint64_t));
-
-  for (uint32_t i = 0; i < logn; i++) {
-    uint64_t mask     = TRANSPOSE_MASKS64[i];
-    uint64_t inv_mask = ~mask;
-
-    for (uint32_t j = 0; j < nswaps; j++) {
-      for (uint32_t k = 0; k < width; k++) {
-        uint32_t i1 = k + 2 * width * j;
-        uint32_t i2 = k + width + 2 * width * j;
-
-        uint64_t t1 = out[i1];
-        uint64_t t2 = out[i2];
-
-        out[i1] = (t1 & mask) ^ ((t2 & mask) << width);
-        out[i2] = (t2 & inv_mask) ^ ((t1 & inv_mask) >> width);
-      }
-    }
-    nswaps *= 2;
-    width /= 2;
-  }
-}
 
 /* transpose a 64x64 bit matrix using Eklundh's algorithm
    this variant assumes that the bit with index 0 is the msb of byte 0
@@ -266,9 +231,8 @@ static void transpose_64_64_uint64(const uint64_t* in, uint64_t* out) {
   const uint32_t logn = 6;
 
   // copy in to out and transpose in-place
-  memcpy(out, in, 64 * sizeof(uint64_t));
   for (uint32_t i = 0; i < 64; i++) {
-    out[i] = bswap64(out[i]);
+    out[i] = bswap64(in[i]);
   }
 
   for (uint32_t i = 0; i < logn; i++) {
@@ -297,7 +261,6 @@ static void transpose_64_64_uint64(const uint64_t* in, uint64_t* out) {
 
 
 void transpose_64_64(const uint64_t* in, uint64_t* out) {
-
   transpose_64_64_uint64(in, out);
 }
 
@@ -342,12 +305,6 @@ void reconstructShares(uint32_t* output, shares_t* shares) {
 void xor_word_array(uint32_t* out, const uint32_t* in1, const uint32_t* in2, uint32_t length) {
   for (uint32_t i = 0; i < length; i++) {
     out[i] = in1[i] ^ in2[i];
-  }
-}
-
-void xor_array_RC(uint8_t* out, const uint8_t* in1, const uint8_t* in2, uint32_t length) {
-  for (uint32_t i = 0; i < length; i++) {
-    out[i] = in1[i] ^ in2[length - 1 - i];
   }
 }
 

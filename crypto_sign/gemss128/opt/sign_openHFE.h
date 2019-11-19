@@ -1,13 +1,15 @@
 #ifndef _SIGN_OPENHFE_H
 #define _SIGN_OPENHFE_H
 
-#include "config_HFE.h"
+#include "prefix_name.h"
+#include "arch.h"
 #include <stddef.h>
 
-/* Verify a signature: m is the original message, sm is the signed message, 
+/* Verify a signature: m is the original message, sm8 is the signed message, 
  * pk is the public key. */
-int sign_openHFE(const unsigned char* m, size_t len, const UINT* sm, 
-                 const UINT* pk);
+int PREFIX_NAME(sign_openHFE)(const unsigned char* m, size_t len, \
+                              const unsigned char* sm8, const UINT* pk);
+#define sign_openHFE PREFIX_NAME(sign_openHFE)
 
 
 #endif

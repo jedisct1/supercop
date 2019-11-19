@@ -21,10 +21,6 @@
 #define XOR_MC XOR_MC_10
 #include "lowmc_impl.c.i"
 
-#undef N_LOWMC
-#define N_LOWMC CONCAT(LOWMC, store_10)
-#define RECORD_STATE
-#include "lowmc_impl.c.i"
 
 #undef N_LOWMC
 #undef RECORD_STATE

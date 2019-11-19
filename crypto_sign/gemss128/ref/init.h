@@ -74,6 +74,10 @@
     COPY448(c,a); \
     (c)[7]=(a)[7];
 
+#define COPY576(c,a) \
+    COPY512(c,a); \
+    (c)[8]=(a)[8];
+
 
 /* Init to 0 */
 #define SET0_64(c) \
@@ -103,6 +107,14 @@
     SET0_384(c);\
     (c)[6]=0UL;
 
+#define SET0_512(c) \
+    SET0_448(c);\
+    (c)[7]=0UL;
+
+#define SET0_576(c) \
+    SET0_512(c);\
+    (c)[8]=0UL;
+
 /* Init to 1 */
 #define SET1_64(c) \
     (c)[0]=1UL; \
@@ -127,6 +139,18 @@
     SET1_64(c);\
     SET0_320(c+1);
 
+#define SET1_448(c) \
+    SET1_64(c);\
+    SET0_384(c+1);
+
+#define SET1_512(c) \
+    SET1_64(c);\
+    SET0_448(c+1);
+
+#define SET1_576(c) \
+    SET1_64(c);\
+    SET0_512(c+1);
+
 
 /* Permutation */
 /* a,b = b,a */
@@ -143,6 +167,8 @@
 #define PERMUTATION320(a,b) PERMUTATION(ADD320_2,a,b);
 #define PERMUTATION384(a,b) PERMUTATION(ADD384_2,a,b);
 #define PERMUTATION448(a,b) PERMUTATION(ADD448_2,a,b);
+#define PERMUTATION512(a,b) PERMUTATION(ADD512_2,a,b);
+#define PERMUTATION576(a,b) PERMUTATION(ADD576_2,a,b);
 
 #endif
 

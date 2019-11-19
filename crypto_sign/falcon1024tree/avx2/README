@@ -1,5 +1,6 @@
 This is an implementation of the post-quantum signature algorithm
-Falcon-1024, as per NIST PQC (round 2).
+Falcon-1024, as per NIST PQC (round 2). This version includes the
+2019/09/18 fixes.
 
 
 PRIVATE KEY FORMAT

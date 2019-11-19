@@ -6,3 +6,4 @@ clang -march=native -O3 -fomit-frame-pointer -fwrapv -Qunused-arguments -fPIC -f
 clang -march=native -Os -fomit-frame-pointer -fwrapv -Qunused-arguments -fPIC -fPIE
 clang -march=native -O2 -fomit-frame-pointer -fwrapv -Qunused-arguments -fPIC -fPIE
 clang -march=native -O -fomit-frame-pointer -fwrapv -Qunused-arguments -fPIC -fPIE
+clang -mcpu=native -O3 -fomit-frame-pointer -fwrapv -Qunused-arguments -fPIC -fPIE

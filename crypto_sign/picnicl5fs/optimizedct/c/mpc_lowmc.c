@@ -8,7 +8,6 @@
  */
 
 
-#include "lowmc_pars.h"
 #include "mpc_lowmc.h"
 #include "mzd_additional.h"
 

@@ -11,7 +11,7 @@
     /* 2^i */\
     exp_i=1U<<i;\
     /* Quadratic cases : j!=i */\
-    for(j=0;j<NB_IT;++j)\
+    for(;j<NB_IT;++j)\
     {\
         /* 2^j */\
         exp_j=1U<<j;\
@@ -197,15 +197,33 @@ void genSecretMQS(mat_GF2E& Q, const GF2EX& F, const UINT* F2)
         /* for each monom X^(2^i + 2^j) of univariate HFE polynom */
         for(i=0;i<HFEDegI;++i)
         {
+            #if ENABLED_REMOVE_ODD_DEGREE
+                j=(((1U<<i)+1U)<=HFE_odd_degree)?0:1;
+            #else
+                j=0;
+            #endif
             QUADRATIC_CASE(i);
             LINEAR_CASE;
             #if HFEv
                 V_lin+=MLv_GFqn_SIZE+nb_quad*NB_WORD_GFqn;
-                ++nb_quad;
+                #if ENABLED_REMOVE_ODD_DEGREE
+                    /* If i == (LOG_odd_degree-1), the gap does not change */
+                    if(i!=(LOG_odd_degree-1))
+                    {
+                        ++nb_quad;
+                    }
+                #else
+                    ++nb_quad;
+                #endif
             #endif
         }
 
         /* X^(2^HFEDegI + 2^j), j<HFEDegJ */
+        #if ENABLED_REMOVE_ODD_DEGREE
+            j=(((1U<<i)+1U)<=HFE_odd_degree)?0:1;
+        #else
+            j=0;
+        #endif
         QUADRATIC_CASE(HFEDegJ);
 
         /* j = HFEDegJ */

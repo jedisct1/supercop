@@ -21,11 +21,6 @@
 #include <arm_neon.h>
 #endif
 
-#if defined(__GNUC__) && !(defined(__APPLE__) && (__clang_major__ <= 8)) &&                        \
-    !defined(__MINGW32__) && !defined(__MINGW64__)
-#define BUILTIN_CPU_SUPPORTED
-#endif
-
 #include "cpu.h"
 
 #if defined(__x86_64__) || defined(_M_X64) || defined(__i386__) || defined(_M_IX86)
@@ -100,8 +95,13 @@
 typedef uint64x2_t word128;
 
 #define mm128_zero vmovq_n_u64(0)
-#define mm128_xor(l, r) veorq_u64(l, r)
-#define mm128_and(l, r) vandq_u64(l, r)
+#define mm128_xor(l, r) veorq_u64((l), (r))
+#define mm128_and(l, r) vandq_u64((l), (r))
+/* !l & r, requires l to be an immediate */
+#define mm128_nand(l, r) vbicq_u64((r), (l))
+#define mm128_broadcast_u64(x) vdupq_n_u64((x))
+#define mm128_sl_u64(x, s) vshlq_n_u64((x), (s))
+#define mm128_sr_u64(x, s) vshrq_n_u64((x), (s))
 
 apply_region(mm128_xor_region, word128, mm128_xor, FN_ATTRIBUTES_NEON);
 apply_mask_region(mm128_xor_mask_region, word128, mm128_xor, mm128_and, FN_ATTRIBUTES_NEON);

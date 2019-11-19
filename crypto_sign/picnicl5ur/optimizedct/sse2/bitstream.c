@@ -85,30 +85,6 @@ uint32_t bitstream_get_bits_32(bitstream_t* bs, unsigned int num_bits) {
   return ret;
 }
 
-void bitstream_put_bits(bitstream_t* bs, uint64_t value, unsigned int num_bits) {
-  ASSUME(1 <= num_bits && num_bits <= 64);
-
-  const unsigned int skip_bits = bs->position % 8;
-  uint8_t* p                   = &bs->buffer.w[bs->position / 8];
-
-  bs->position += num_bits;
-  if (skip_bits) {
-    // the upper skip_bits of current pos have already been taken
-    const unsigned int start_bits = 8 - skip_bits;
-    const unsigned int bits       = num_bits < start_bits ? num_bits : start_bits;
-
-    *p++ |= (value >> (num_bits - bits)) << (8 - skip_bits - bits);
-    num_bits -= bits;
-  }
-
-  for (; num_bits >= 8; num_bits -= 8, ++p) {
-    *p = value >> (num_bits - 8);
-  }
-
-  if (num_bits > 0) {
-    *p = (value & ((1 << num_bits) - 1)) << (8 - num_bits);
-  }
-}
 
 void bitstream_put_bits_8(bitstream_t* bs, uint8_t value, unsigned int num_bits) {
   ASSUME(1 <= num_bits && num_bits <= 8);

@@ -8,7 +8,6 @@
  */
 
 
-#include "lowmc_pars.h"
 #include "mpc_lowmc.h"
 #include "mzd_additional.h"
 
@@ -328,17 +327,23 @@ static void mzd_share_uint64_256(mzd_local_t* r, const mzd_local_t* v1, const mz
   mzd_xor_uint64_256(r, r, v3);
 }
 
+#define FN_ATTR
+
+FN_ATTR
 static void mzd_share_s128_128(mzd_local_t* r, const mzd_local_t* v1, const mzd_local_t* v2,
                                const mzd_local_t* v3) {
   mzd_xor_s128_128(r, v1, v2);
   mzd_xor_s128_128(r, r, v3);
 }
 
+FN_ATTR
 static void mzd_share_s128_256(mzd_local_t* r, const mzd_local_t* v1, const mzd_local_t* v2,
                                const mzd_local_t* v3) {
   mzd_xor_s128_256(r, v1, v2);
   mzd_xor_s128_256(r, r, v3);
 }
+
+#undef FN_ATTR
 
 
 zkbpp_share_implementation_f get_zkbpp_share_implentation(const lowmc_t* lowmc) {

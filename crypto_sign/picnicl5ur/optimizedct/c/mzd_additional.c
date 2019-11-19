@@ -715,13 +715,13 @@ void mzd_addmul_v_s256_30_128(mzd_local_t* c, mzd_local_t const* v, mzd_local_t 
   }
   cval[0] = mm256_xor_mask(cval[0], Ablock[0].w256, mm256_compute_mask_2(idx, 0));
 
-  cval[0] = _mm256_xor_si256(cval[0], cval[1]);
+  cval[0] = mm256_xor(cval[0], cval[1]);
   cblock->w128[0] =
-      _mm_xor_si128(_mm256_extractf128_si256(cval[0], 0), _mm256_extractf128_si256(cval[0], 1));
+      mm128_xor(_mm256_extractf128_si256(cval[0], 0), _mm256_extractf128_si256(cval[0], 1));
 }
 
 ATTR_TARGET_AVX2
-static void mzd_addmul_v_s256_30_256_idx(mzd_local_t* c, mzd_local_t const* A, word idx) {
+static inline void mzd_addmul_v_s256_30_256_idx(mzd_local_t* c, mzd_local_t const* A, word idx) {
   block_t* cblock       = BLOCK(c, 0);
   const block_t* Ablock = CONST_BLOCK(A, 0);
 
@@ -764,7 +764,7 @@ void mzd_addmul_v_s256_3_128(mzd_local_t* c, mzd_local_t const* v, mzd_local_t c
 }
 
 ATTR_TARGET_AVX2
-static void mzd_addmul_v_s256_3_256_idx(mzd_local_t* c, mzd_local_t const* A, const word idx) {
+static inline void mzd_addmul_v_s256_3_256_idx(mzd_local_t* c, mzd_local_t const* A, const word idx) {
   block_t* cblock       = BLOCK(c, 0);
   const block_t* Ablock = CONST_BLOCK(A, 0);
 
@@ -810,14 +810,17 @@ static inline void mzd_shuffle_pext_30_idx(mzd_local_t* x, const word mask, unsi
   BLOCK(x, 0)->w64[idx] = a | _pext_u64(w, ~mask);
 }
 
+ATTR_TARGET_AVX2
 void mzd_shuffle_pext_128_30(mzd_local_t* x, const word mask) {
   mzd_shuffle_pext_30_idx(x, mask, 1);
 }
 
+ATTR_TARGET_AVX2
 void mzd_shuffle_pext_192_30(mzd_local_t* x, const word mask) {
   mzd_shuffle_pext_30_idx(x, mask, 2);
 }
 
+ATTR_TARGET_AVX2
 void mzd_shuffle_pext_256_30(mzd_local_t* x, const word mask) {
   mzd_shuffle_pext_30_idx(x, mask, 3);
 }

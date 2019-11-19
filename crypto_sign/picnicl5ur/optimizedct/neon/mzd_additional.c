@@ -364,7 +364,7 @@ void mzd_mul_v_parity_uint64_256_3(mzd_local_t* c, mzd_local_t const* v, mzd_loc
 
 ATTR_TARGET_S128 ATTR_CONST static inline word128 mm128_compute_mask(const word idx,
                                                                      const size_t bit) {
-  return vdupq_n_u64(-((idx >> bit) & 1));
+  return mm128_broadcast_u64(-((idx >> bit) & 1));
 }
 
 ATTR_TARGET_S128

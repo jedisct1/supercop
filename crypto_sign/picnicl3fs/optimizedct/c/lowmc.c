@@ -10,10 +10,7 @@
 
 #include "io.h"
 #include "lowmc.h"
-#include "lowmc_pars.h"
 #include "mzd_additional.h"
-#include "picnic2_impl.h"
-
 
 #if !defined(_MSC_VER)
 #include <stdalign.h>
@@ -94,17 +91,3 @@ lowmc_store_implementation_f lowmc_store_get_implementation(const lowmc_t* lowmc
   return NULL;
 }
 
-lowmc_compute_aux_implementation_f lowmc_compute_aux_get_implementation(const lowmc_t* lowmc) {
-  ASSUME(lowmc->m == 10);
-  ASSUME(lowmc->n == 128 || lowmc->n == 192 || lowmc->n == 256);
-
-
-  if (lowmc->m == 10) {
-    switch (lowmc->n) {
-    case 192:
-      return lowmc_uint64_192_compute_aux_10;
-    }
-  }
-
-  return NULL;
-}

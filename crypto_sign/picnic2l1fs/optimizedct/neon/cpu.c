@@ -7,11 +7,7 @@
  *  SPDX-License-Identifier: MIT
  */
 
-
-#include "cpu.h"
-
 /* If cmake checks were not run, define some known values. */
-
 #if !defined(HAVE_SYS_AUXV_H) && defined(__linux__)
 #define HAVE_SYS_AUXV_H
 #endif
@@ -20,6 +16,9 @@
 #define HAVE_ASM_HWCAP_H
 #endif
 
+#include "cpu.h"
+
+#if !defined(BUILTIN_CPU_SUPPORTED)
 #if defined(__arm__) && defined(HAVE_SYS_AUXV_H) && defined(HAVE_ASM_HWCAP_H)
 #include <asm/hwcap.h>
 #include <sys/auxv.h>
@@ -138,3 +137,4 @@ bool cpu_supports(unsigned int caps) {
 
   return cpu_caps & caps;
 }
+#endif

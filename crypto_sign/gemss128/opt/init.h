@@ -1,21 +1,25 @@
 #ifndef _INIT_H
 #define _INIT_H
 
-/* Macros to initialize */
-
-#include "add.h"
+/* init.h: macros to initialize */
 
 
-/* Requirement: negative number */
+#include "add_gf2x.h"
+
+
+/** A negative integer for the failure of a memory allocation. */
 #define ERROR_ALLOC (-2)
 
-/* To verify if the allocation by malloc or calloc suceeds */
+/** Verify if the allocation by malloc or calloc succeeds. 
+ *  Exit in the failure case. */
 #define VERIFY_ALLOC(p) \
     if(!p) \
     {\
         exit(ERROR_ALLOC);\
     }
 
+/** Verify if the allocation by malloc or calloc succeeds. 
+ *  Return ERROR_ALLOC in the failure case. */
 #define VERIFY_ALLOC_RET(p) \
     if(!p) \
     {\
@@ -24,23 +28,23 @@
 
 
 
-#include "arch.h"
-#if (NB_BITS_UINT!=64U)
-    #define COPY(c,a,SIZE) \
-        FOR_LOOP((c)[RESERVED_VARIABLE]=(a)[RESERVED_VARIABLE],SIZE)
+#define PERMUTATION(ADD2,a,b,SIZE) \
+    ADD2(a,b,SIZE); \
+    ADD2(b,a,SIZE); \
+    ADD2(a,b,SIZE);
 
-    #define SET0(c,SIZE) \
-        FOR_LOOP((c)[RESERVED_VARIABLE]=0,SIZE)
+#define COPY(c,a,SIZE) \
+    FOR_LOOP((c)[RESERVED_VARIABLE]=(a)[RESERVED_VARIABLE],SIZE)
 
-    #define SET1(c,SIZE) \
-        (c)[0]=1;\
-        FOR_LOOP((c)[RESERVED_VARIABLE+1]=0,(SIZE)-1)
+#define SET0(c,SIZE) \
+    FOR_LOOP((c)[RESERVED_VARIABLE]=0UL,SIZE)
 
-    #define PERMUTATION(ADD2,a,b,SIZE) \
-        ADD2(a,b,SIZE); \
-        ADD2(b,a,SIZE); \
-        ADD2(a,b,SIZE);
-#else
+#define SET1(c,SIZE) \
+    (c)[0]=1UL;\
+    FOR_LOOP((c)[RESERVED_VARIABLE+1]=0UL,(SIZE)-1)
+
+
+#if (NB_BITS_UINT==64U)
 
 /* Copy */
 #define COPY64(c,a) \
@@ -73,6 +77,10 @@
 #define COPY512(c,a) \
     COPY448(c,a); \
     (c)[7]=(a)[7];
+
+#define COPY576(c,a) \
+    COPY512(c,a); \
+    (c)[8]=(a)[8];
 
 
 /* Init to 0 */
@@ -130,21 +138,22 @@
 
 /* Permutation */
 /* a,b = b,a */
-#define PERMUTATION(ADD2,a,b) \
+#define PERMUTATION_(ADD2,a,b) \
     ADD2(a,b); \
     ADD2(b,a); \
     ADD2(a,b);
 
-#define PERMUTATION64(a,b) PERMUTATION(ADD64_2,a,b);
-#define PERMUTATION64_TAB(a,b) PERMUTATION(ADD64_TAB2,a,b);
-#define PERMUTATION128(a,b) PERMUTATION(ADD128_2,a,b);
-#define PERMUTATION192(a,b) PERMUTATION(ADD192_2,a,b);
-#define PERMUTATION256(a,b) PERMUTATION(ADD256_2,a,b);
-#define PERMUTATION320(a,b) PERMUTATION(ADD320_2,a,b);
-#define PERMUTATION384(a,b) PERMUTATION(ADD384_2,a,b);
-#define PERMUTATION448(a,b) PERMUTATION(ADD448_2,a,b);
+#define PERMUTATION64(a,b) PERMUTATION_(ADD64_2,a,b);
+#define PERMUTATION64_TAB(a,b) PERMUTATION_(ADD64_TAB2,a,b);
+#define PERMUTATION128(a,b) PERMUTATION_(ADD128_2,a,b);
+#define PERMUTATION192(a,b) PERMUTATION_(ADD192_2,a,b);
+#define PERMUTATION256(a,b) PERMUTATION_(ADD256_2,a,b);
+#define PERMUTATION320(a,b) PERMUTATION_(ADD320_2,a,b);
+#define PERMUTATION384(a,b) PERMUTATION_(ADD384_2,a,b);
+#define PERMUTATION448(a,b) PERMUTATION_(ADD448_2,a,b);
 
 #endif
+
 
 
 #endif
