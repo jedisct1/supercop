@@ -1,4 +1,4 @@
-.data
+.section .rodata
 
 .globl crypto_sign_ed25519_amd64_51_30k_batch_REDMASK51
 .globl crypto_sign_ed25519_amd64_51_30k_batch_121666_213

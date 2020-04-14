@@ -15,22 +15,22 @@ typedef int16_t int16;
 #define mulhrs_x16 _mm256_mulhrs_epi16
 #define signmask_x16(x) _mm256_srai_epi16((x),15)
 
-static int16x16 squeeze_4621_x16(int16x16 x)
+static inline int16x16 squeeze_4621_x16(int16x16 x)
 {
   return sub_x16(x,mullo_x16(mulhrs_x16(x,const_x16(7)),const_x16(4621)));
 }
 
-static int16x16 squeeze_7681_x16(int16x16 x)
+static inline int16x16 squeeze_7681_x16(int16x16 x)
 {
   return sub_x16(x,mullo_x16(mulhrs_x16(x,const_x16(4)),const_x16(7681)));
 }
 
-static int16x16 squeeze_10753_x16(int16x16 x)
+static inline int16x16 squeeze_10753_x16(int16x16 x)
 {
   return sub_x16(x,mullo_x16(mulhrs_x16(x,const_x16(3)),const_x16(10753)));
 }
 
-static int16x16 mulmod_4621_x16(int16x16 x,int16x16 y)
+static inline int16x16 mulmod_4621_x16(int16x16 x,int16x16 y)
 {
   int16x16 yqinv = mullo_x16(y,const_x16(-29499)); /* XXX: precompute */
   int16x16 b = mulhi_x16(x,y);
@@ -39,7 +39,7 @@ static int16x16 mulmod_4621_x16(int16x16 x,int16x16 y)
   return sub_x16(b,e);
 }
 
-static int16x16 mulmod_7681_x16(int16x16 x,int16x16 y)
+static inline int16x16 mulmod_7681_x16(int16x16 x,int16x16 y)
 {
   int16x16 yqinv = mullo_x16(y,const_x16(-7679)); /* XXX: precompute */
   int16x16 b = mulhi_x16(x,y);
@@ -48,7 +48,7 @@ static int16x16 mulmod_7681_x16(int16x16 x,int16x16 y)
   return sub_x16(b,e);
 }
 
-static int16x16 mulmod_10753_x16(int16x16 x,int16x16 y)
+static inline int16x16 mulmod_10753_x16(int16x16 x,int16x16 y)
 {
   int16x16 yqinv = mullo_x16(y,const_x16(-10751)); /* XXX: precompute */
   int16x16 b = mulhi_x16(x,y);

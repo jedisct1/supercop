@@ -367,6 +367,9 @@ do
 	cp -p "try-anything.c" "$work/compile/try-anything.$language"
 	cp -p "measure-anything.c" "$work/compile/measure-anything.$language"
 
+        touch "$work/compile/test-more.inc"
+        [ -f "$o/$p/supercop/test-more.inc" ] && cp -p "$o/$p/supercop/test-more.inc" "$work/compile/test-more.inc"
+
         cp -p MACROS "$work/compile/MACROS"
         cp -p PROTOTYPES.c "$work/compile/PROTOTYPES.c"
 
@@ -561,6 +564,7 @@ do
 
       echo "=== `date` === $abi $o/$p measuring"
 
+      killafter 86400 \
       "$work/best/measure" \
       | while read measurement
       do

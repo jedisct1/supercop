@@ -1,3 +1,4 @@
+#include "crypto_kem.h" /* for namespacing */
 #include <immintrin.h>
 #include "swap.h"
 

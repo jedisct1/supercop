@@ -445,6 +445,9 @@ do
         cp -p "try-anything.c" "$top/$target/work/try-anything.$language"
         cp -p "measure-anything.c" "$top/$target/work/measure-anything.$language"
 
+        touch "$top/$target/work/test-more.inc"
+        [ -f "$o/$p/supercop/test-more.inc" ] && cp -p "$o/$p/supercop/test-more.inc" "$top/$target/work/test-more.inc"
+
         cp -p MACROS "$top/$target/work/MACROS"
         cp -p PROTOTYPES.c "$top/$target/work/PROTOTYPES.c"
 
@@ -718,6 +721,7 @@ do
 	cat "$top/$target/best" \
 	| while read source
 	do
+	  killafter 86400 \
 	  "$top/$abi/$source/compiled/measure" \
           | while read measurement
           do

@@ -28,7 +28,7 @@ sub %r11,%rsp
 # qhasm:  matrix = crypto_hashblocks_rfsb509_core2_matrix
 # asm 1: mov  $crypto_hashblocks_rfsb509_core2_matrix,>matrix=int64#4
 # asm 2: mov  $crypto_hashblocks_rfsb509_core2_matrix,>matrix=%rcx
-mov  $crypto_hashblocks_rfsb509_core2_matrix,%rcx
+lea crypto_hashblocks_rfsb509_core2_matrix(%rip),%rcx
 
 # qhasm:  assign 4 to matrix
 
@@ -8038,7 +8038,7 @@ movdqa %xmm4,%xmm2
 # qhasm:  f111 &= crypto_hashblocks_rfsb509_core2_MASK125
 # asm 1: pand  crypto_hashblocks_rfsb509_core2_MASK125,<f111=int6464#5
 # asm 2: pand  crypto_hashblocks_rfsb509_core2_MASK125,<f111=%xmm4
-pand  crypto_hashblocks_rfsb509_core2_MASK125,%xmm4
+pand  crypto_hashblocks_rfsb509_core2_MASK125(%rip),%xmm4
 
 # qhasm:  pos55 = f111
 # asm 1: movd   <f111=int6464#5,>pos55=int64#14

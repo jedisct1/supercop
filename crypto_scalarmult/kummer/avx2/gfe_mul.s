@@ -233,7 +233,7 @@ shld $1,%r10,%r8
 # asm 1: movq mask63,>mask=int64#3
 # asm 2: movq mask63,>mask=%rdx
 # bytes: 8 uops: 1
-movq mask63,%rdx
+movq mask63(%rip),%rdx
 # block pos: 129 160 uops: 6
 
 # qhasm:   r1 &= mask

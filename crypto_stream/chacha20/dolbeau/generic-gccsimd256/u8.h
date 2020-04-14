@@ -16,7 +16,7 @@ typedef unsigned long hV64 __attribute__ ((vector_size(16)));
     int z;                                                              \
     printf("%8s:%8s = ",p,#v);                                          \
     for (z = 7 ; z >= 0 ; z--) {                                       \
-      printf("%08hhx", v[z]);                                        \
+      printf("0x%08x", ((V)v)[z]);                                        \
       if ((z%1)==0) printf(" ");                                        \
     }                                                                   \
     printf("\n");                                                       \
@@ -104,37 +104,27 @@ if (bytes>=512) {
     x_14 = orig14;
     x_15 = orig15;
 
-
-
-    const V64 addv12 = (V64){4,5,6,7};
-    const V64 addv13 = (V64){0,1,2,3};
-    V64 t12, t13;
-    in12 = x[12];
-    in13 = x[13];
+    in12 = (x[12]);
+    in13 = (x[13]);
     u64 in1213 = ((u64)in12) | (((u64)in13) << 32);
-    t12 = (V64){in1213,in1213,in1213,in1213};
-    t13 = (V64){in1213,in1213,in1213,in1213};
-
-    V t0, t1;
-
-    t12 = t12 + addv12;
-    t13 = t13 + addv13;
-
-    t1 = *(V*)&(t12);
-    t0 = *(V*)&(t13); /* fixme */
-
-/*     uint32x4x2_t t; */
-/*     t = vuzpq_u32(x_13,x_12); */
-/*     x_12 = t.val[0]; */
-/*     x_13 = t.val[1]; */
-
-#if __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
-    x_12 = (V){t0[0], t0[2], t0[4], t0[6], t1[0], t1[2], t1[4], t1[6]};
-    x_13 = (V){t0[1], t0[3], t0[5], t0[7], t1[1], t1[3], t1[5], t1[7]};
-#else
-    x_13 = (V){t0[0], t0[2], t0[4], t0[6], t1[0], t1[2], t1[4], t1[6]};
-    x_12 = (V){t0[1], t0[3], t0[5], t0[7], t1[1], t1[3], t1[5], t1[7]};
-#endif
+    x_12 = (V)
+      { (unsigned int)(in1213+0)&0xFFFFFFFF,
+        (unsigned int)(in1213+1)&0xFFFFFFFF,
+        (unsigned int)(in1213+2)&0xFFFFFFFF,
+        (unsigned int)(in1213+3)&0xFFFFFFFF,
+        (unsigned int)(in1213+4)&0xFFFFFFFF,
+        (unsigned int)(in1213+5)&0xFFFFFFFF,
+        (unsigned int)(in1213+6)&0xFFFFFFFF,
+        (unsigned int)(in1213+7)&0xFFFFFFFF };
+    x_13 = (V)
+      { (unsigned int)((in1213+0)>>32)&0xFFFFFFFF,
+        (unsigned int)((in1213+1)>>32)&0xFFFFFFFF,
+        (unsigned int)((in1213+2)>>32)&0xFFFFFFFF,
+        (unsigned int)((in1213+3)>>32)&0xFFFFFFFF,
+        (unsigned int)((in1213+4)>>32)&0xFFFFFFFF,
+        (unsigned int)((in1213+5)>>32)&0xFFFFFFFF,
+        (unsigned int)((in1213+6)>>32)&0xFFFFFFFF,
+        (unsigned int)((in1213+7)>>32)&0xFFFFFFFF };
 
     orig12 = x_12;
     orig13 = x_13;

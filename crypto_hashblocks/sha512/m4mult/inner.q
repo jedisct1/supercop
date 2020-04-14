@@ -62,6 +62,7 @@ int32 inlen
 ptr constants
 stackptr in_stack
 stackptr statebytes_stack
+stackptr constants_stack
 stack32 inlen_stack
 stack32 i_stack
 
@@ -72,6 +73,8 @@ in_stack = input_1
 
 inlen = input_2 - 128
 inlen_stack = inlen
+
+constants_stack = input_3
 
 r0 = flip mem64[input_0]
 r1 = flip mem64[input_0+8]
@@ -112,8 +115,6 @@ r4_spill = r4
 r5_spill = r5
 r6_spill = r6
 r7_spill = r7
-
-constants = input_3
 
 mainloop:
 
@@ -195,6 +196,8 @@ mainloop:
     assign 6 to r6_spill
     assign 7 to r7_spill
 
+    constants = constants_stack
+
       r3 = r3_spill
       r4 = r4_spill
       r5 = r5_spill
@@ -202,12 +205,14 @@ mainloop:
       r7 = r7_spill
 
       w0 = w0_spill
+    Sigma1_setup
     r7 += w0 + mem64[constants] + Sigma1(r4) + Ch(r4,r5,r6); constants += 8
     r3 += r7
       r3_spill = r3
       r0 = r0_spill
       r1 = r1_spill
       r2 = r2_spill
+    Sigma0_setup
     r7 += Sigma0(r0) + Maj(r0,r1,r2)
       r7_spill = r7
 
@@ -215,12 +220,14 @@ mainloop:
       r5 = r5_spill
       r6 = r6_spill
       w1 = w1_spill
+    Sigma1_setup
     r6 += w1 + mem64[constants] + Sigma1(r3) + Ch(r3,r4,r5); constants += 8
     r2 += r6
       r2_spill = r2
       r7 = r7_spill
       r0 = r0_spill
       r1 = r1_spill
+    Sigma0_setup
     r6 += Sigma0(r7) + Maj(r7,r0,r1)
       r6_spill = r6
 
@@ -237,12 +244,14 @@ mainloop:
       r4 = r4_spill
       r5 = r5_spill
       w2 = w2_spill
+    Sigma1_setup
     r5 += w2 + mem64[constants] + Sigma1(r2) + Ch(r2,r3,r4); constants += 8
     r1 += r5
       r1_spill = r1
       r6 = r6_spill
       r7 = r7_spill
       r0 = r0_spill
+    Sigma0_setup
     r5 += Sigma0(r6) + Maj(r6,r7,r0)
       r5_spill = r5
 
@@ -250,12 +259,14 @@ mainloop:
       r3 = r3_spill
       r4 = r4_spill
       w3 = w3_spill
+    Sigma1_setup
     r4 += w3 + mem64[constants] + Sigma1(r1) + Ch(r1,r2,r3); constants += 8
     r0 += r4
       r0_spill = r0
       r5 = r5_spill
       r6 = r6_spill
       r7 = r7_spill
+    Sigma0_setup
     r4 += Sigma0(r5) + Maj(r5,r6,r7)
       r4_spill = r4
 
@@ -272,12 +283,14 @@ mainloop:
       r2 = r2_spill
       r3 = r3_spill
       w4 = w4_spill
+    Sigma1_setup
     r3 += w4 + mem64[constants] + Sigma1(r0) + Ch(r0,r1,r2); constants += 8
     r7 += r3
       r7_spill = r7
       r4 = r4_spill
       r5 = r5_spill
       r6 = r6_spill
+    Sigma0_setup
     r3 += Sigma0(r4) + Maj(r4,r5,r6)
       r3_spill = r3
 
@@ -285,12 +298,14 @@ mainloop:
       r1 = r1_spill
       r2 = r2_spill
       w5 = w5_spill
+    Sigma1_setup
     r2 += w5 + mem64[constants] + Sigma1(r7) + Ch(r7,r0,r1); constants += 8
     r6 += r2
       r6_spill = r6
       r3 = r3_spill
       r4 = r4_spill
       r5 = r5_spill
+    Sigma0_setup
     r2 += Sigma0(r3) + Maj(r3,r4,r5)
       r2_spill = r2
 
@@ -307,12 +322,14 @@ mainloop:
       r0 = r0_spill
       r1 = r1_spill
       w6 = w6_spill
+    Sigma1_setup
     r1 += w6 + mem64[constants] + Sigma1(r6) + Ch(r6,r7,r0); constants += 8
     r5 += r1
       r5_spill = r5
       r2 = r2_spill
       r3 = r3_spill
       r4 = r4_spill
+    Sigma0_setup
     r1 += Sigma0(r2) + Maj(r2,r3,r4)
       r1_spill = r1
 
@@ -320,14 +337,18 @@ mainloop:
       r7 = r7_spill
       r0 = r0_spill
       w7 = w7_spill
+    Sigma1_setup
     r0 += w7 + mem64[constants] + Sigma1(r5) + Ch(r5,r6,r7); constants += 8
     r4 += r0
       r4_spill = r4
       r1 = r1_spill
       r2 = r2_spill
       r3 = r3_spill
+    Sigma0_setup
     r0 += Sigma0(r1) + Maj(r1,r2,r3)
       r0_spill = r0
+
+    constants_stack = constants
 
     assign 8 to w0_spill
     assign 9 to w1_spill
@@ -345,6 +366,9 @@ mainloop:
 
                     =? i - 8
     goto nearend if =
+
+      sigma1_setup
+      sigma0_setup
 
       w8 = w0_spill
       w9 = w1_spill
@@ -453,7 +477,9 @@ mainloop:
     goto innerloop
   endinnerloop:
 
+  constants = constants_stack
   constants -= 640
+  constants_stack = constants
 
   r0 = r0_spill
   r1 = r1_spill

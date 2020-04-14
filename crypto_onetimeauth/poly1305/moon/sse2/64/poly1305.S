@@ -955,6 +955,7 @@ popq %r12
 popq %r13
 popq %r14
 popq %rbp
+xor %rax,%rax
 ret
 FN_END crypto_onetimeauth_poly1305_moon_sse2_64
 

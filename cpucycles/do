@@ -43,6 +43,7 @@ okabi | (
           echo sgi
 	  ;;
 	arm*)
+	  echo arm1176
 	  echo cortex
           echo dev4ns
           ;;

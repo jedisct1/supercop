@@ -1,12 +1,3 @@
-/* This file is based on the output of D. J. Bernstein's r3_recipgen.py
- * The line
- *    f = [-1,-1] + [0]*(p-2) + [1]
- * was changed to
- *    f = [1]*(p+1)
- * The program was then run as
- *    python3 r3_recipgen.py 676
- */
-
 #include "poly.h"
 
 #include <immintrin.h>
@@ -368,9 +359,9 @@ int __poly_S3_inv(unsigned char *outbytes,const unsigned char *inbytes)
   vec256 swapvec;
 
   vec256_init(G0,G1,in);
-  F0[0] = _mm256_set_epi32(4294967295,4294967295,4294967295,4294967295,4294967295,4294967295,4294967295,4294967295);
-  F0[1] = _mm256_set_epi32(4294967295,4294967295,4294967295,4294967295,4294967295,4294967295,4294967295,4294967295);
-  F0[2] = _mm256_set_epi32(511,4294967295,511,4294967295,511,4294967295,1023,4294967295);
+  F0[0] = _mm256_set_epi32(-1,-1,-1,-1,-1,-1,-1,-1);
+  F0[1] = _mm256_set_epi32(-1,-1,-1,-1,-1,-1,-1,-1);
+  F0[2] = _mm256_set_epi32(511,-1,511,-1,511,-1,1023,-1);
   F1[0] = _mm256_set1_epi32(0);
   F1[1] = _mm256_set1_epi32(0);
   F1[2] = _mm256_set1_epi32(0);
@@ -544,13 +535,13 @@ void poly_S3_inv(poly *r_out, const poly *a) {
   const unsigned char *in = (void*) a;
   unsigned char *out = (void*) r_out;
 
-  small input[768];
-  small output[768];
+  small input[ppad];
+  small output[ppad];
   int i;
 
   /* XXX: obviously input/output format should be packed into bytes */
 
-  for (i = 0;i < 676;++i) {
+  for (i = 0;i < p;++i) {
     small x = in[2*i]&3; /* 0 1 2 3 */
     x += 1; /* 0 1 2 3 4 5 6, offset by 1 */
     x &= (x-3)>>5; /* 0 1 2, offset by 1 */
@@ -560,7 +551,7 @@ void poly_S3_inv(poly *r_out, const poly *a) {
 
   __poly_S3_inv((unsigned char *)output,(unsigned char *)input);
 
-  for (i = 0;i < 676;++i) {
+  for (i = 0;i < p;++i) {
     out[2*i] = (3 & output[i]) ^ ((3 & output[i]) >> 1);
     out[2*i+1] = 0;
   }

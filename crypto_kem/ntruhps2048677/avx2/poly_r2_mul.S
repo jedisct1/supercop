@@ -102,6 +102,7 @@ low165:
 .word 0
 .word 0
 .word 0
+.word 0
 .text
 .hidden poly_R2_mul
 .global poly_R2_mul

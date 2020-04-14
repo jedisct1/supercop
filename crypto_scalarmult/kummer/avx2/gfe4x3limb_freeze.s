@@ -91,7 +91,7 @@ vmovapd   128(%rsi),%ymm2
 # asm 1: vmulpd _2pm43,<freeze_r0=reg256#1,>freeze_c=reg256#4
 # asm 2: vmulpd _2pm43,<freeze_r0=%ymm0,>freeze_c=%ymm3
 # bytes: 9 uops: 1
-vmulpd _2pm43,%ymm0,%ymm3
+vmulpd _2pm43(%rip),%ymm0,%ymm3
 
 # qhasm:   4x freeze_c = round(freeze_c)
 # asm 1: vroundpd $8,<freeze_c=reg256#4,>freeze_c=reg256#4
@@ -103,7 +103,7 @@ vroundpd $8,%ymm3,%ymm3
 # asm 1: vmulpd _2p43,<freeze_c=reg256#4,>freeze_c=reg256#4
 # asm 2: vmulpd _2p43,<freeze_c=%ymm3,>freeze_c=%ymm3
 # bytes: 9 uops: 1
-vmulpd _2p43,%ymm3,%ymm3
+vmulpd _2p43(%rip),%ymm3,%ymm3
 # block pos: 64 96 uops: 5
 
 # qhasm:   4x freeze_r2 approx+= freeze_c
@@ -122,7 +122,7 @@ vsubpd %ymm3,%ymm0,%ymm0
 # asm 1: vmulpd _2pm85,<freeze_r2=reg256#2,>freeze_c=reg256#4
 # asm 2: vmulpd _2pm85,<freeze_r2=%ymm1,>freeze_c=%ymm3
 # bytes: 9 uops: 1
-vmulpd _2pm85,%ymm1,%ymm3
+vmulpd _2pm85(%rip),%ymm1,%ymm3
 
 # qhasm:   4x freeze_c = round(freeze_c)
 # asm 1: vroundpd $8,<freeze_c=reg256#4,>freeze_c=reg256#4
@@ -134,7 +134,7 @@ vroundpd $8,%ymm3,%ymm3
 # asm 1: vmulpd _2p85,<freeze_c=reg256#4,>freeze_c=reg256#4
 # asm 2: vmulpd _2p85,<freeze_c=%ymm3,>freeze_c=%ymm3
 # bytes: 9 uops: 1
-vmulpd _2p85,%ymm3,%ymm3
+vmulpd _2p85(%rip),%ymm3,%ymm3
 # block pos: 96 132 uops: 6
 
 # qhasm:   4x freeze_r4 approx+= freeze_c
@@ -153,7 +153,7 @@ vsubpd %ymm3,%ymm1,%ymm1
 # asm 1: vmulpd _2pm127,<freeze_r4=reg256#3,>freeze_c=reg256#4
 # asm 2: vmulpd _2pm127,<freeze_r4=%ymm2,>freeze_c=%ymm3
 # bytes: 9 uops: 1
-vmulpd _2pm127,%ymm2,%ymm3
+vmulpd _2pm127(%rip),%ymm2,%ymm3
 
 # qhasm:   4x freeze_c = round(freeze_c)
 # asm 1: vroundpd $8,<freeze_c=reg256#4,>freeze_c=reg256#4
@@ -171,7 +171,7 @@ vaddpd %ymm3,%ymm0,%ymm0
 # asm 1: vmulpd _2p127,<freeze_c=reg256#4,>freeze_c=reg256#4
 # asm 2: vmulpd _2p127,<freeze_c=%ymm3,>freeze_c=%ymm3
 # bytes: 9 uops: 1
-vmulpd _2p127,%ymm3,%ymm3
+vmulpd _2p127(%rip),%ymm3,%ymm3
 # block pos: 132 160 uops: 4
 
 # qhasm:   4x freeze_r4 approx-= freeze_c
@@ -184,13 +184,13 @@ vsubpd %ymm3,%ymm2,%ymm2
 # asm 1: vaddpd _2p44m2,<freeze_r0=reg256#1,>freeze_r0=reg256#1
 # asm 2: vaddpd _2p44m2,<freeze_r0=%ymm0,>freeze_r0=%ymm0
 # bytes: 9 uops: 1
-vaddpd _2p44m2,%ymm0,%ymm0
+vaddpd _2p44m2(%rip),%ymm0,%ymm0
 
 # qhasm:   4x freeze_c = approx freeze_r0 * mem256[_2pm43]
 # asm 1: vmulpd _2pm43,<freeze_r0=reg256#1,>freeze_c=reg256#4
 # asm 2: vmulpd _2pm43,<freeze_r0=%ymm0,>freeze_c=%ymm3
 # bytes: 9 uops: 1
-vmulpd _2pm43,%ymm0,%ymm3
+vmulpd _2pm43(%rip),%ymm0,%ymm3
 
 # qhasm:   4x freeze_c = trunc(freeze_c)
 # asm 1: vroundpd $11,<freeze_c=reg256#4,>freeze_c=reg256#4
@@ -203,7 +203,7 @@ vroundpd $11,%ymm3,%ymm3
 # asm 1: vmulpd _2p43,<freeze_c=reg256#4,>freeze_c=reg256#4
 # asm 2: vmulpd _2p43,<freeze_c=%ymm3,>freeze_c=%ymm3
 # bytes: 9 uops: 1
-vmulpd _2p43,%ymm3,%ymm3
+vmulpd _2p43(%rip),%ymm3,%ymm3
 
 # qhasm:   4x freeze_r2 approx+= freeze_c
 # asm 1: vaddpd <freeze_c=reg256#4,<freeze_r2=reg256#2,>freeze_r2=reg256#2
@@ -221,13 +221,13 @@ vsubpd %ymm3,%ymm0,%ymm0
 # asm 1: vaddpd _2p86m2p44,<freeze_r2=reg256#2,>freeze_r2=reg256#2
 # asm 2: vaddpd _2p86m2p44,<freeze_r2=%ymm1,>freeze_r2=%ymm1
 # bytes: 9 uops: 1
-vaddpd _2p86m2p44,%ymm1,%ymm1
+vaddpd _2p86m2p44(%rip),%ymm1,%ymm1
 
 # qhasm:   4x freeze_c = approx freeze_r2 * mem256[_2pm85]
 # asm 1: vmulpd _2pm85,<freeze_r2=reg256#2,>freeze_c=reg256#4
 # asm 2: vmulpd _2pm85,<freeze_r2=%ymm1,>freeze_c=%ymm3
 # bytes: 9 uops: 1
-vmulpd _2pm85,%ymm1,%ymm3
+vmulpd _2pm85(%rip),%ymm1,%ymm3
 # block pos: 195 227 uops: 5
 
 # qhasm:   4x freeze_c = trunc(freeze_c)
@@ -240,7 +240,7 @@ vroundpd $11,%ymm3,%ymm3
 # asm 1: vmulpd _2p85,<freeze_c=reg256#4,>freeze_c=reg256#4
 # asm 2: vmulpd _2p85,<freeze_c=%ymm3,>freeze_c=%ymm3
 # bytes: 9 uops: 1
-vmulpd _2p85,%ymm3,%ymm3
+vmulpd _2p85(%rip),%ymm3,%ymm3
 
 # qhasm:   4x freeze_r4 approx+= freeze_c
 # asm 1: vaddpd <freeze_c=reg256#4,<freeze_r4=reg256#3,>freeze_r4=reg256#3
@@ -258,14 +258,14 @@ vsubpd %ymm3,%ymm1,%ymm1
 # asm 1: vaddpd _2p128m2p86,<freeze_r4=reg256#3,>freeze_r4=reg256#3
 # asm 2: vaddpd _2p128m2p86,<freeze_r4=%ymm2,>freeze_r4=%ymm2
 # bytes: 9 uops: 1
-vaddpd _2p128m2p86,%ymm2,%ymm2
+vaddpd _2p128m2p86(%rip),%ymm2,%ymm2
 # block pos: 227 259 uops: 5
 
 # qhasm:   4x freeze_c = approx freeze_r4 * mem256[_2pm127]
 # asm 1: vmulpd _2pm127,<freeze_r4=reg256#3,>freeze_c=reg256#4
 # asm 2: vmulpd _2pm127,<freeze_r4=%ymm2,>freeze_c=%ymm3
 # bytes: 9 uops: 1
-vmulpd _2pm127,%ymm2,%ymm3
+vmulpd _2pm127(%rip),%ymm2,%ymm3
 
 # qhasm:   4x freeze_c = trunc(freeze_c)
 # asm 1: vroundpd $11,<freeze_c=reg256#4,>freeze_c=reg256#4
@@ -283,7 +283,7 @@ vaddpd %ymm3,%ymm0,%ymm0
 # asm 1: vmulpd _2p127,<freeze_c=reg256#4,>freeze_c=reg256#4
 # asm 2: vmulpd _2p127,<freeze_c=%ymm3,>freeze_c=%ymm3
 # bytes: 9 uops: 1
-vmulpd _2p127,%ymm3,%ymm3
+vmulpd _2p127(%rip),%ymm3,%ymm3
 
 # qhasm:   4x freeze_r4 approx-= freeze_c
 # asm 1: vsubpd <freeze_c=reg256#4,<freeze_r4=reg256#3,>freeze_r4=reg256#3
@@ -296,7 +296,7 @@ vsubpd %ymm3,%ymm2,%ymm2
 # asm 1: vmulpd _2pm43,<freeze_r0=reg256#1,>freeze_c=reg256#4
 # asm 2: vmulpd _2pm43,<freeze_r0=%ymm0,>freeze_c=%ymm3
 # bytes: 9 uops: 1
-vmulpd _2pm43,%ymm0,%ymm3
+vmulpd _2pm43(%rip),%ymm0,%ymm3
 
 # qhasm:   4x freeze_c = trunc(freeze_c)
 # asm 1: vroundpd $11,<freeze_c=reg256#4,>freeze_c=reg256#4
@@ -308,7 +308,7 @@ vroundpd $11,%ymm3,%ymm3
 # asm 1: vmulpd _2p43,<freeze_c=reg256#4,>freeze_c=reg256#4
 # asm 2: vmulpd _2p43,<freeze_c=%ymm3,>freeze_c=%ymm3
 # bytes: 9 uops: 1
-vmulpd _2p43,%ymm3,%ymm3
+vmulpd _2p43(%rip),%ymm3,%ymm3
 
 # qhasm:   4x freeze_r2 approx+= freeze_c
 # asm 1: vaddpd <freeze_c=reg256#4,<freeze_r2=reg256#2,>freeze_r2=reg256#2
@@ -327,7 +327,7 @@ vsubpd %ymm3,%ymm0,%ymm0
 # asm 1: vmulpd _2pm85,<freeze_r2=reg256#2,>freeze_c=reg256#4
 # asm 2: vmulpd _2pm85,<freeze_r2=%ymm1,>freeze_c=%ymm3
 # bytes: 9 uops: 1
-vmulpd _2pm85,%ymm1,%ymm3
+vmulpd _2pm85(%rip),%ymm1,%ymm3
 
 # qhasm:   4x freeze_c = trunc(freeze_c)
 # asm 1: vroundpd $11,<freeze_c=reg256#4,>freeze_c=reg256#4
@@ -339,7 +339,7 @@ vroundpd $11,%ymm3,%ymm3
 # asm 1: vmulpd _2p85,<freeze_c=reg256#4,>freeze_c=reg256#4
 # asm 2: vmulpd _2p85,<freeze_c=%ymm3,>freeze_c=%ymm3
 # bytes: 9 uops: 1
-vmulpd _2p85,%ymm3,%ymm3
+vmulpd _2p85(%rip),%ymm3,%ymm3
 
 # qhasm:   4x freeze_r4 approx+= freeze_c
 # asm 1: vaddpd <freeze_c=reg256#4,<freeze_r4=reg256#3,>freeze_r4=reg256#3
@@ -358,7 +358,7 @@ vsubpd %ymm3,%ymm1,%ymm1
 # asm 1: vmulpd _2pm127,<freeze_r4=reg256#3,>freeze_c=reg256#4
 # asm 2: vmulpd _2pm127,<freeze_r4=%ymm2,>freeze_c=%ymm3
 # bytes: 9 uops: 1
-vmulpd _2pm127,%ymm2,%ymm3
+vmulpd _2pm127(%rip),%ymm2,%ymm3
 
 # qhasm:   4x freeze_c = trunc(freeze_c)
 # asm 1: vroundpd $11,<freeze_c=reg256#4,>freeze_c=reg256#4
@@ -376,7 +376,7 @@ vaddpd %ymm3,%ymm0,%ymm0
 # asm 1: vmulpd _2p127,<freeze_c=reg256#4,>freeze_c=reg256#4
 # asm 2: vmulpd _2p127,<freeze_c=%ymm3,>freeze_c=%ymm3
 # bytes: 9 uops: 1
-vmulpd _2p127,%ymm3,%ymm3
+vmulpd _2p127(%rip),%ymm3,%ymm3
 
 # qhasm:   4x freeze_r4 approx-= freeze_c
 # asm 1: vsubpd <freeze_c=reg256#4,<freeze_r4=reg256#3,>freeze_r4=reg256#3
@@ -389,13 +389,13 @@ vsubpd %ymm3,%ymm2,%ymm2
 # asm 1: vmulpd _2pm43,<freeze_r2=reg256#2,>freeze_r2=reg256#2
 # asm 2: vmulpd _2pm43,<freeze_r2=%ymm1,>freeze_r2=%ymm1
 # bytes: 9 uops: 1
-vmulpd _2pm43,%ymm1,%ymm1
+vmulpd _2pm43(%rip),%ymm1,%ymm1
 
 # qhasm:   4x freeze_r4 approx*= mem256[_2pm85]
 # asm 1: vmulpd _2pm85,<freeze_r4=reg256#3,>freeze_r4=reg256#3
 # asm 2: vmulpd _2pm85,<freeze_r4=%ymm2,>freeze_r4=%ymm2
 # bytes: 9 uops: 1
-vmulpd _2pm85,%ymm2,%ymm2
+vmulpd _2pm85(%rip),%ymm2,%ymm2
 
 # qhasm:   mem256[input_0 +   0] aligned= freeze_r0
 # asm 1: vmovapd   <freeze_r0=reg256#1,0(<input_0=int64#1)

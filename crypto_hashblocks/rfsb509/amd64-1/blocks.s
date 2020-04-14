@@ -115,7 +115,7 @@ movq %rbp,112(%rsp)
 # qhasm: matrix = crypto_hashblocks_rfsb509_amd64_1_matrix
 # asm 1: mov  $crypto_hashblocks_rfsb509_amd64_1_matrix,>matrix=int64#4
 # asm 2: mov  $crypto_hashblocks_rfsb509_amd64_1_matrix,>matrix=%rcx
-mov  $crypto_hashblocks_rfsb509_amd64_1_matrix,%rcx
+lea crypto_hashblocks_rfsb509_amd64_1_matrix(%rip),%rcx
 
 # qhasm: assign 4 to matrix
 
@@ -8581,7 +8581,7 @@ pxor  %xmm0,%xmm4
 # qhasm: f111 &= crypto_hashblocks_rfsb509_amd64_1_MASK125
 # asm 1: pand  crypto_hashblocks_rfsb509_amd64_1_MASK125,<f111=int6464#4
 # asm 2: pand  crypto_hashblocks_rfsb509_amd64_1_MASK125,<f111=%xmm3
-pand  crypto_hashblocks_rfsb509_amd64_1_MASK125,%xmm3
+pand  crypto_hashblocks_rfsb509_amd64_1_MASK125(%rip),%xmm3
 
 # qhasm: state3 = f111
 # asm 1: movdqa <f111=int6464#4,>state3=stack128#4

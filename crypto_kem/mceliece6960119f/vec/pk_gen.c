@@ -244,7 +244,7 @@ int pk_gen(unsigned char * pk, const unsigned char * irr, uint32_t * perm)
 				return -1;
 		}
 
-		for (k = row + 1; k < min(row + 32, PK_NROWS); k++)
+		for (k = row + 1; k < PK_NROWS; k++)
 		{
 			mask = mat[ row ][ i ] >> j;
 			mask &= 1;

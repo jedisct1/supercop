@@ -1,3 +1,4 @@
+#include "crypto_core.h"
 #include "ntt.h"
 
 /* auto-generated; do not edit */
@@ -282,8 +283,7 @@ static inline __m256i sub_x16(__m256i a,__m256i b)
 
 static inline __m256i add_x16(__m256i a,__m256i b)
 {
-  __asm__("vpaddw %1,%0,%0" : "+x"(a),"+x"(b));
-  return a;
+  return _mm256_add_epi16(a,b);
 }
 
 static inline __m256i reduce_x16(const __m256i *qdata,__m256i x)
@@ -321,6 +321,14 @@ static void ntt128(int16 *f,int reps,const __m256i *qdata)
   __m256i f0,f1,f2,f3,g0,g1,g2,g3,h0,h1,h2,h3;
   int16 *origf = f;
   int rep;
+  __m256i zetainv_128_0 = zetainv(128,0);
+  __m256i zetainv_qinv_128_0 = zetainv_qinv(128,0);
+  __m256i zetainv_x4_32_0 = zetainv_x4(32,0);
+  __m256i zetainv_x4_qinv_32_0 = zetainv_x4_qinv(32,0);
+  __m256i zetainv_128_1 = zetainv(128,1);
+  __m256i zetainv_qinv_128_1 = zetainv_qinv(128,1);
+  __m256i zetainv_x4_32_1 = zetainv_x4(32,1);
+  __m256i zetainv_x4_qinv_32_1 = zetainv_x4_qinv(32,1);
   for (rep = 0;rep < reps;++rep) {
     f1 = _mm256_loadu_si256((__m256i *) (f + 32));
     f3 = _mm256_loadu_si256((__m256i *) (f + 96));
@@ -335,7 +343,7 @@ static void ntt128(int16 *f,int reps,const __m256i *qdata)
     
     f3 = sub_x16(g3,g2);
     f2 = add_x16(g2,g3);
-    f3 = mulmod_x16_scaled(qdata,f3,zetainv(128,0),zetainv_qinv(128,0));
+    f3 = mulmod_x16_scaled(qdata,f3,zetainv_128_0,zetainv_qinv_128_0);
     f2 = mulmod_x16_scaled(qdata,f2,zeta(128,0),zeta_qinv(128,0));
     
     g2 = _mm256_unpacklo_epi16(f2,f3);
@@ -352,14 +360,14 @@ static void ntt128(int16 *f,int reps,const __m256i *qdata)
     g1 = _mm256_unpackhi_epi16(f0,f1);
     h2 = _mm256_unpacklo_epi32(g1,g3);
     h3 = _mm256_unpackhi_epi32(g1,g3);
-    f1 = _mm256_permute2x128_si256(h2,h3,0x20);
-    f3 = _mm256_permute2x128_si256(h2,h3,0x31);
     f0 = _mm256_permute2x128_si256(h0,h1,0x20);
     f2 = _mm256_permute2x128_si256(h0,h1,0x31);
+    f1 = _mm256_permute2x128_si256(h2,h3,0x20);
+    f3 = _mm256_permute2x128_si256(h2,h3,0x31);
     
     _mm256_storeu_si256((__m256i *) (f + 0),f0);
-    _mm256_storeu_si256((__m256i *) (f + 32),f1);
     _mm256_storeu_si256((__m256i *) (f + 64),f2);
+    _mm256_storeu_si256((__m256i *) (f + 32),f1);
     _mm256_storeu_si256((__m256i *) (f + 96),f3);
     
     f1 = _mm256_loadu_si256((__m256i *) (f + 48));
@@ -375,7 +383,7 @@ static void ntt128(int16 *f,int reps,const __m256i *qdata)
     
     f3 = sub_x16(g3,g2);
     f2 = add_x16(g2,g3);
-    f3 = mulmod_x16_scaled(qdata,f3,zetainv(128,1),zetainv_qinv(128,1));
+    f3 = mulmod_x16_scaled(qdata,f3,zetainv_128_1,zetainv_qinv_128_1);
     f2 = mulmod_x16_scaled(qdata,f2,zeta(128,1),zeta_qinv(128,1));
     
     g2 = _mm256_unpacklo_epi16(f2,f3);
@@ -392,14 +400,14 @@ static void ntt128(int16 *f,int reps,const __m256i *qdata)
     g1 = _mm256_unpackhi_epi16(f0,f1);
     h2 = _mm256_unpacklo_epi32(g1,g3);
     h3 = _mm256_unpackhi_epi32(g1,g3);
-    f1 = _mm256_permute2x128_si256(h2,h3,0x20);
-    f3 = _mm256_permute2x128_si256(h2,h3,0x31);
     f0 = _mm256_permute2x128_si256(h0,h1,0x20);
     f2 = _mm256_permute2x128_si256(h0,h1,0x31);
+    f1 = _mm256_permute2x128_si256(h2,h3,0x20);
+    f3 = _mm256_permute2x128_si256(h2,h3,0x31);
     
     _mm256_storeu_si256((__m256i *) (f + 16),f0);
-    _mm256_storeu_si256((__m256i *) (f + 48),f1);
     _mm256_storeu_si256((__m256i *) (f + 80),f2);
+    _mm256_storeu_si256((__m256i *) (f + 48),f1);
     _mm256_storeu_si256((__m256i *) (f + 112),f3);
     
     f += 128;
@@ -419,7 +427,7 @@ static void ntt128(int16 *f,int reps,const __m256i *qdata)
     
     f3 = sub_x16(g3,g2);
     f2 = add_x16(g2,g3);
-    f3 = mulmod_x16_scaled(qdata,f3,zetainv_x4(32,0),zetainv_x4_qinv(32,0));
+    f3 = mulmod_x16_scaled(qdata,f3,zetainv_x4_32_0,zetainv_x4_qinv_32_0);
     f2 = mulmod_x16_scaled(qdata,f2,zeta_x4(32,0),zeta_x4_qinv(32,0));
     
     g2 = _mm256_unpacklo_epi64(f2,f3);
@@ -430,17 +438,17 @@ static void ntt128(int16 *f,int reps,const __m256i *qdata)
     f1 = mulmod_x16_scaled(qdata,f1,zeta_x4(16,0),zeta_x4_qinv(16,0));
     f0 = reduce_x16(qdata,f0);
     
-    g0 = _mm256_unpacklo_epi64(f0,f1);
     g1 = _mm256_unpackhi_epi64(f0,f1);
+    g0 = _mm256_unpacklo_epi64(f0,f1);
     f1 = _mm256_permute2x128_si256(g1,g3,0x20);
     f3 = _mm256_permute2x128_si256(g1,g3,0x31);
     f0 = _mm256_permute2x128_si256(g0,g2,0x20);
     f2 = _mm256_permute2x128_si256(g0,g2,0x31);
     
-    _mm256_storeu_si256((__m256i *) (f + 0),f0);
     _mm256_storeu_si256((__m256i *) (f + 64),f1);
-    _mm256_storeu_si256((__m256i *) (f + 16),f2);
     _mm256_storeu_si256((__m256i *) (f + 80),f3);
+    _mm256_storeu_si256((__m256i *) (f + 0),f0);
+    _mm256_storeu_si256((__m256i *) (f + 16),f2);
     
     f1 = _mm256_loadu_si256((__m256i *) (f + 96));
     f3 = _mm256_loadu_si256((__m256i *) (f + 112));
@@ -455,7 +463,7 @@ static void ntt128(int16 *f,int reps,const __m256i *qdata)
     
     f3 = sub_x16(g3,g2);
     f2 = add_x16(g2,g3);
-    f3 = mulmod_x16_scaled(qdata,f3,zetainv_x4(32,1),zetainv_x4_qinv(32,1));
+    f3 = mulmod_x16_scaled(qdata,f3,zetainv_x4_32_1,zetainv_x4_qinv_32_1);
     f2 = mulmod_x16_scaled(qdata,f2,zeta_x4(32,1),zeta_x4_qinv(32,1));
     
     g2 = _mm256_unpacklo_epi64(f2,f3);
@@ -466,17 +474,17 @@ static void ntt128(int16 *f,int reps,const __m256i *qdata)
     f1 = mulmod_x16_scaled(qdata,f1,zeta_x4(16,1),zeta_x4_qinv(16,1));
     f0 = reduce_x16(qdata,f0);
     
-    g0 = _mm256_unpacklo_epi64(f0,f1);
     g1 = _mm256_unpackhi_epi64(f0,f1);
+    g0 = _mm256_unpacklo_epi64(f0,f1);
     f1 = _mm256_permute2x128_si256(g1,g3,0x20);
     f3 = _mm256_permute2x128_si256(g1,g3,0x31);
     f0 = _mm256_permute2x128_si256(g0,g2,0x20);
     f2 = _mm256_permute2x128_si256(g0,g2,0x31);
     
-    _mm256_storeu_si256((__m256i *) (f + 32),f0);
     _mm256_storeu_si256((__m256i *) (f + 96),f1);
-    _mm256_storeu_si256((__m256i *) (f + 48),f2);
     _mm256_storeu_si256((__m256i *) (f + 112),f3);
+    _mm256_storeu_si256((__m256i *) (f + 32),f0);
+    _mm256_storeu_si256((__m256i *) (f + 48),f2);
     
     f += 128;
   }
@@ -554,9 +562,12 @@ static void ntt512(int16 *f,int reps,const __m256i *qdata)
   __m256i f0,f1,f2,f3,g0,g1,g2,g3,h0,h1,h2,h3;
   int16 *origf = f;
   int rep;
+  __m256i zetainv_512[8];
+  __m256i zetainv_qinv_512[8];
+  int i;
+  for (i = 0;i < 8;++i) zetainv_512[i] = zetainv(512,i);
+  for (i = 0;i < 8;++i) zetainv_qinv_512[i] = zetainv_qinv(512,i);
   for (rep = 0;rep < reps;++rep) {
-    int i;
-    
     for (i = 0;i < 8;++i) {
       f1 = _mm256_loadu_si256((__m256i *) (f + 16*i + 128));
       f3 = _mm256_loadu_si256((__m256i *) (f + 16*i + 384));
@@ -571,7 +582,7 @@ static void ntt512(int16 *f,int reps,const __m256i *qdata)
       
       f3 = sub_x16(g3,g2);
       f2 = add_x16(g2,g3);
-      f3 = mulmod_x16_scaled(qdata,f3,zetainv(512,i),zetainv_qinv(512,i));
+      f3 = mulmod_x16_scaled(qdata,f3,zetainv_512[i],zetainv_qinv_512[i]);
       f2 = mulmod_x16_scaled(qdata,f2,zeta(512,i),zeta_qinv(512,i));
       
       f1 = sub_x16(g0,g1);
@@ -579,10 +590,10 @@ static void ntt512(int16 *f,int reps,const __m256i *qdata)
       f1 = mulmod_x16_scaled(qdata,f1,zeta(256,i),zeta_qinv(256,i));
       f0 = reduce_x16(qdata,f0);
       
-      _mm256_storeu_si256((__m256i *) (f + 16*i),f0);
-      _mm256_storeu_si256((__m256i *) (f + 16*i + 128),f1);
-      _mm256_storeu_si256((__m256i *) (f + 16*i + 256),f2);
       _mm256_storeu_si256((__m256i *) (f + 16*i + 384),f3);
+      _mm256_storeu_si256((__m256i *) (f + 16*i + 256),f2);
+      _mm256_storeu_si256((__m256i *) (f + 16*i + 128),f1);
+      _mm256_storeu_si256((__m256i *) (f + 16*i),f0);
       
     }
     f += 512;
@@ -606,6 +617,22 @@ static void invntt128(int16 *f,int reps,const __m256i *qdata)
   __m256i f0,f1,f2,f3,g0,g1,g2,g3,h0,h1,h2,h3;
   int16 *origf = f;
   int rep;
+  __m256i zetainv_x4_16_0 = zetainv_x4(16,0);
+  __m256i zetainv_x4_qinv_16_0 = zetainv_x4_qinv(16,0);
+  __m256i zetainv_x4_32_0 = zetainv_x4(32,0);
+  __m256i zetainv_x4_qinv_32_0 = zetainv_x4_qinv(32,0);
+  __m256i zetainv_64_0 = zetainv(64,0);
+  __m256i zetainv_qinv_64_0 = zetainv_qinv(64,0);
+  __m256i zetainv_128_0 = zetainv(128,0);
+  __m256i zetainv_qinv_128_0 = zetainv_qinv(128,0);
+  __m256i zetainv_x4_16_1 = zetainv_x4(16,1);
+  __m256i zetainv_x4_qinv_16_1 = zetainv_x4_qinv(16,1);
+  __m256i zetainv_x4_32_1 = zetainv_x4(32,1);
+  __m256i zetainv_x4_qinv_32_1 = zetainv_x4_qinv(32,1);
+  __m256i zetainv_64_1 = zetainv(64,1);
+  __m256i zetainv_qinv_64_1 = zetainv_qinv(64,1);
+  __m256i zetainv_128_1 = zetainv(128,1);
+  __m256i zetainv_qinv_128_1 = zetainv_qinv(128,1);
   for (rep = 0;rep < reps;++rep) {
     f0 = _mm256_loadu_si256((__m256i *) (f +   0));
     f1 = _mm256_loadu_si256((__m256i *) (f +  64));
@@ -678,7 +705,7 @@ static void invntt128(int16 *f,int reps,const __m256i *qdata)
     f0 = _mm256_permute2x128_si256(g0,g1,0x20);
     f1 = _mm256_permute2x128_si256(g2,g3,0x20);
     
-    f2 = mulmod_x16_scaled(qdata,f2,zetainv_x4(32,0),zetainv_x4_qinv(32,0));
+    f2 = mulmod_x16_scaled(qdata,f2,zetainv_x4_32_0,zetainv_x4_qinv_32_0);
     f3 = mulmod_x16_scaled(qdata,f3,zeta_x4(32,0),zeta_x4_qinv(32,0));
     
     g3 = add_x16(f3,f2);
@@ -686,7 +713,7 @@ static void invntt128(int16 *f,int reps,const __m256i *qdata)
     g2 = sub_x16(f3,f2);
     
     f0 = reduce_x16(qdata,f0);
-    f1 = mulmod_x16_scaled(qdata,f1,zetainv_x4(16,0),zetainv_x4_qinv(16,0));
+    f1 = mulmod_x16_scaled(qdata,f1,zetainv_x4_16_0,zetainv_x4_qinv_16_0);
     
     g1 = add_x16(f0,f1);
     g0 = sub_x16(f0,f1);
@@ -715,7 +742,7 @@ static void invntt128(int16 *f,int reps,const __m256i *qdata)
     f0 = _mm256_permute2x128_si256(g0,g1,0x20);
     f1 = _mm256_permute2x128_si256(g2,g3,0x20);
     
-    f2 = mulmod_x16_scaled(qdata,f2,zetainv_x4(32,1),zetainv_x4_qinv(32,1));
+    f2 = mulmod_x16_scaled(qdata,f2,zetainv_x4_32_1,zetainv_x4_qinv_32_1);
     f3 = mulmod_x16_scaled(qdata,f3,zeta_x4(32,1),zeta_x4_qinv(32,1));
     
     g3 = add_x16(f3,f2);
@@ -723,7 +750,7 @@ static void invntt128(int16 *f,int reps,const __m256i *qdata)
     g2 = sub_x16(f3,f2);
     
     f0 = reduce_x16(qdata,f0);
-    f1 = mulmod_x16_scaled(qdata,f1,zetainv_x4(16,1),zetainv_x4_qinv(16,1));
+    f1 = mulmod_x16_scaled(qdata,f1,zetainv_x4_16_1,zetainv_x4_qinv_16_1);
     
     g1 = add_x16(f0,f1);
     g0 = sub_x16(f0,f1);
@@ -764,15 +791,15 @@ static void invntt128(int16 *f,int reps,const __m256i *qdata)
     f0 = _mm256_unpacklo_epi64(g0,g2);
     f1 = _mm256_unpackhi_epi64(g0,g2);
     
-    f2 = mulmod_x16_scaled(qdata,f2,zetainv(128,0),zetainv_qinv(128,0));
+    f2 = mulmod_x16_scaled(qdata,f2,zetainv_128_0,zetainv_qinv_128_0);
     f3 = mulmod_x16_scaled(qdata,f3,zeta(128,0),zeta_qinv(128,0));
     f0 = reduce_x16(qdata,f0);
-    f1 = mulmod_x16_scaled(qdata,f1,zetainv(64,0),zetainv_qinv(64,0));
+    f1 = mulmod_x16_scaled(qdata,f1,zetainv_64_0,zetainv_qinv_64_0);
     
     g3 = add_x16(f3,f2);
     g3 = mulmod_x16_scaled(qdata,g3,zeta4_x16,zeta4_x16_qinv);
-    g2 = sub_x16(f3,f2);
     g1 = add_x16(f0,f1);
+    g2 = sub_x16(f3,f2);
     g0 = sub_x16(f0,f1);
     
     f1 = add_x16(g1,g3);
@@ -807,15 +834,15 @@ static void invntt128(int16 *f,int reps,const __m256i *qdata)
     f0 = _mm256_unpacklo_epi64(g0,g2);
     f1 = _mm256_unpackhi_epi64(g0,g2);
     
-    f2 = mulmod_x16_scaled(qdata,f2,zetainv(128,1),zetainv_qinv(128,1));
+    f2 = mulmod_x16_scaled(qdata,f2,zetainv_128_1,zetainv_qinv_128_1);
     f3 = mulmod_x16_scaled(qdata,f3,zeta(128,1),zeta_qinv(128,1));
     f0 = reduce_x16(qdata,f0);
-    f1 = mulmod_x16_scaled(qdata,f1,zetainv(64,1),zetainv_qinv(64,1));
+    f1 = mulmod_x16_scaled(qdata,f1,zetainv_64_1,zetainv_qinv_64_1);
     
     g3 = add_x16(f3,f2);
     g3 = mulmod_x16_scaled(qdata,g3,zeta4_x16,zeta4_x16_qinv);
-    g2 = sub_x16(f3,f2);
     g1 = add_x16(f0,f1);
+    g2 = sub_x16(f3,f2);
     g0 = sub_x16(f0,f1);
     
     f1 = add_x16(g1,g3);
@@ -837,14 +864,22 @@ static void invntt512(int16 *f,int reps,const __m256i *qdata)
   __m256i f0,f1,f2,f3,g0,g1,g2,g3,h0,h1,h2,h3;
   int16 *origf = f;
   int rep;
+  __m256i zetainv_512[8];
+  __m256i zetainv_qinv_512[8];
+  __m256i zetainv_256[8];
+  __m256i zetainv_qinv_256[8];
   int i;
+  for (i = 0;i < 8;++i) zetainv_512[i] = zetainv(512,i);
+  for (i = 0;i < 8;++i) zetainv_qinv_512[i] = zetainv_qinv(512,i);
+  for (i = 0;i < 8;++i) zetainv_256[i] = zetainv(256,i);
+  for (i = 0;i < 8;++i) zetainv_qinv_256[i] = zetainv_qinv(256,i);
   invntt128(f,4*reps,qdata);
   for (rep = 0;rep < reps;++rep) {
-    for(i = 0; i < 8;++i) {
+    for(i = 0;i < 8;++i) {
       f2 = _mm256_loadu_si256((__m256i *) (f + 16*i + 256));
       f3 = _mm256_loadu_si256((__m256i *) (f + 16*i + 384));
       
-      f2 = mulmod_x16_scaled(qdata,f2,zetainv(512,i),zetainv_qinv(512,i));
+      f2 = mulmod_x16_scaled(qdata,f2,zetainv_512[i],zetainv_qinv_512[i]);
       f3 = mulmod_x16_scaled(qdata,f3,zeta(512,i),zeta_qinv(512,i));
       g3 = add_x16(f3,f2);
       g3 = mulmod_x16_scaled(qdata,g3,zeta4_x16,zeta4_x16_qinv);
@@ -854,9 +889,9 @@ static void invntt512(int16 *f,int reps,const __m256i *qdata)
       f1 = _mm256_loadu_si256((__m256i *) (f + 16*i + 128));
       
       f0 = reduce_x16(qdata,f0);
-      f1 = mulmod_x16_scaled(qdata,f1,zetainv(256,i),zetainv_qinv(256,i));
-      g0 = sub_x16(f0,f1);
+      f1 = mulmod_x16_scaled(qdata,f1,zetainv_256[i],zetainv_qinv_256[i]);
       g1 = add_x16(f0,f1);
+      g0 = sub_x16(f0,f1);
       
       f1 = add_x16(g1,g3);
       f3 = sub_x16(g1,g3);
@@ -868,7 +903,7 @@ static void invntt512(int16 *f,int reps,const __m256i *qdata)
       _mm256_storeu_si256((__m256i *) (f + 16*i + 0),f0);
       _mm256_storeu_si256((__m256i *) (f + 16*i + 256),f2);
     }
-  f += 512;
+    f += 512;
   }
 }
 

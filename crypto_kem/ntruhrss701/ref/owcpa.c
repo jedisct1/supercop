@@ -15,7 +15,7 @@ static int owcpa_check_r(const poly *r)
     t |= c & (NTRU_Q-4);  /* 0 if c is in {0,1,2,3} */
     t |= (c + 1) & 0x4;   /* 0 if c is in {0,1,2} */
   }
-  t |= r->coeffs[NTRU_N-1]; /* Coefficient n-1 must be zero */
+  t |= MODQ(r->coeffs[NTRU_N-1]); /* Coefficient n-1 must be zero */
   t = (-t) >> 63;
   return t;
 }
@@ -42,17 +42,6 @@ static int owcpa_check_m(const poly *m)
 }
 #endif
 
-void owcpa_samplemsg(unsigned char msg[NTRU_OWCPA_MSGBYTES],
-                     const unsigned char seed[NTRU_SAMPLE_RM_BYTES])
-{
-  poly r, m;
-
-  sample_rm(&r, &m, seed);
-
-  poly_S3_tobytes(msg, &r);
-  poly_S3_tobytes(msg+NTRU_PACK_TRINARY_BYTES, &m);
-}
-
 void owcpa_keypair(unsigned char *pk,
                    unsigned char *sk,
                    const unsigned char seed[NTRU_SAMPLE_FG_BYTES])
@@ -61,8 +50,7 @@ void owcpa_keypair(unsigned char *pk,
 
   poly x1, x2, x3, x4, x5;
 
-  poly *f=&x1, *invf_mod3=&x2;
-  poly *g=&x3, *G=&x2;
+  poly *f=&x1, *g=&x2, *invf_mod3=&x3;
   poly *Gf=&x3, *invGf=&x4, *tmp=&x5;
   poly *invh=&x3, *h=&x3;
 
@@ -77,19 +65,19 @@ void owcpa_keypair(unsigned char *pk,
   poly_Z3_to_Zq(g);
 
 #ifdef NTRU_HRSS
-  /* G = 3*(x-1)*g */
-  poly_Rq_mul_x_minus_1(G, g);
-  for(i=0; i<NTRU_N; i++)
-    G->coeffs[i] = MODQ(3 * G->coeffs[i]);
+  /* g = 3*(x-1)*g */
+  for(i=NTRU_N-1; i>0; i--)
+    g->coeffs[i] = 3*(g->coeffs[i-1] - g->coeffs[i]);
+  g->coeffs[0] = -(3*g->coeffs[0]);
 #endif
 
 #ifdef NTRU_HPS
-  /* G = 3*g */
+  /* g = 3*g */
   for(i=0; i<NTRU_N; i++)
-    G->coeffs[i] = MODQ(3 * g->coeffs[i]);
+    g->coeffs[i] = 3 * g->coeffs[i];
 #endif
 
-  poly_Rq_mul(Gf, G, f);
+  poly_Rq_mul(Gf, g, f);
 
   poly_Rq_inv(invGf, Gf);
 
@@ -97,33 +85,29 @@ void owcpa_keypair(unsigned char *pk,
   poly_Sq_mul(invh, tmp, f);
   poly_Sq_tobytes(sk+2*NTRU_PACK_TRINARY_BYTES, invh);
 
-  poly_Rq_mul(tmp, invGf, G);
-  poly_Rq_mul(h, tmp, G);
+  poly_Rq_mul(tmp, invGf, g);
+  poly_Rq_mul(h, tmp, g);
   poly_Rq_sum_zero_tobytes(pk, h);
 }
 
 
 void owcpa_enc(unsigned char *c,
-               const unsigned char *rm,
+               const poly *r,
+               const poly *m,
                const unsigned char *pk)
 {
   int i;
-  poly x1, x2, x3;
+  poly x1, x2;
   poly *h = &x1, *liftm = &x1;
-  poly *r = &x2, *m = &x2;
-  poly *ct = &x3;
+  poly *ct = &x2;
 
   poly_Rq_sum_zero_frombytes(h, pk);
 
-  poly_S3_frombytes(r, rm);
-  poly_Z3_to_Zq(r);
-
   poly_Rq_mul(ct, r, h);
 
-  poly_S3_frombytes(m, rm+NTRU_PACK_TRINARY_BYTES);
   poly_lift(liftm, m);
   for(i=0; i<NTRU_N; i++)
-    ct->coeffs[i] = MODQ(ct->coeffs[i] + liftm->coeffs[i]);
+    ct->coeffs[i] = ct->coeffs[i] + liftm->coeffs[i];
 
   poly_Rq_sum_zero_tobytes(c, ct);
 }
@@ -164,7 +148,7 @@ int owcpa_dec(unsigned char *rm,
   /* b = c - Lift(m) mod (q, x^n - 1) */
   poly_lift(liftm, m);
   for(i=0; i<NTRU_N; i++)
-    b->coeffs[i] = MODQ(c->coeffs[i] - liftm->coeffs[i]);
+    b->coeffs[i] = c->coeffs[i] - liftm->coeffs[i];
 
   /* r = b / h mod (q, Phi_n) */
   poly_Sq_frombytes(invh, secretkey+2*NTRU_PACK_TRINARY_BYTES);

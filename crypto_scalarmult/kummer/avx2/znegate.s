@@ -68,7 +68,7 @@ sub %r11,%rsp
 # asm 1: vmovapd minusz,>s=reg256#1
 # asm 2: vmovapd minusz,>s=%ymm0
 # bytes: 9 uops: 1
-vmovapd minusz,%ymm0
+vmovapd minusz(%rip),%ymm0
 
 # qhasm: 4x r0 = approx s * mem256[input_0 + 0]
 # asm 1: vmulpd 0(<input_0=int64#1),<s=reg256#1,>r0=reg256#2

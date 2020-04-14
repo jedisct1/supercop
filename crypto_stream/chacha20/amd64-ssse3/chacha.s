@@ -3,10 +3,7 @@
 # Derived from the 'amd64-xmm6' implementation by Daniel Bernstein
 # Requires SSSE3 extensions (i.e. Core 2, Core i7, Atom)
 
-.data
-
-.globl R16
-.globl R08
+.section .rodata
 
 .p2align 6
 
@@ -237,7 +234,7 @@ movdqa %xmm6,256(%rsp)
 
 ._mainloop1:
 
-movdqa R16, %xmm6 # load
+movdqa R16(%rip), %xmm6 # load
 
 paddd %xmm9,%xmm8
 
@@ -283,7 +280,7 @@ pslld $12,%xmm6
 
 pxor  %xmm6,%xmm13
 
-movdqa R08, %xmm6 # load
+movdqa R08(%rip), %xmm6 # load
 
 paddd %xmm9,%xmm8
 
@@ -333,7 +330,7 @@ movdqa %xmm14,272(%rsp)
 
 movdqa 256(%rsp),%xmm6
 
-movdqa R16, %xmm14  # load
+movdqa R16(%rip), %xmm14  # load
 
 paddd %xmm1,%xmm0
 
@@ -379,7 +376,7 @@ pslld $12,%xmm14
 
 pxor  %xmm14,%xmm5
 
-movdqa R08, %xmm14 # load 
+movdqa R08(%rip), %xmm14 # load 
 
 paddd %xmm1,%xmm0
 
@@ -425,7 +422,7 @@ pslld $7,%xmm14
 
 pxor  %xmm14,%xmm5
 
-movdqa R16, %xmm14 # load
+movdqa R16(%rip), %xmm14 # load
 
 paddd %xmm13,%xmm8
 
@@ -471,7 +468,7 @@ pslld $12,%xmm14
 
 pxor  %xmm14,%xmm1
 
-movdqa R08, %xmm14 # load
+movdqa R08(%rip), %xmm14 # load
 
 paddd %xmm13,%xmm8
 
@@ -521,7 +518,7 @@ movdqa %xmm6,256(%rsp)
 
 movdqa 272(%rsp),%xmm14
 
-movdqa R16, %xmm6 # load
+movdqa R16(%rip), %xmm6 # load
 
 paddd %xmm5,%xmm0
 
@@ -569,7 +566,7 @@ pslld $12,%xmm6
 
 pxor  %xmm6,%xmm9
 
-movdqa R08, %xmm6 # load
+movdqa R08(%rip), %xmm6 # load
 
 paddd %xmm5,%xmm0
 
@@ -1189,7 +1186,7 @@ pxor  %xmm0,%xmm3
 #pslld $16,%xmm3
 #psrld $16,%xmm4
 #pxor  %xmm4,%xmm3
-pshufb (R16), %xmm3
+pshufb R16(%rip), %xmm3
 
 paddd %xmm3,%xmm2
 
@@ -1214,7 +1211,7 @@ pxor  %xmm0,%xmm3
 pshufd $0x93,%xmm0,%xmm0
 
 #pxor  %xmm4,%xmm3
-pshufb (R08), %xmm3
+pshufb R08(%rip), %xmm3
 
 paddd %xmm3,%xmm2
 
@@ -1242,7 +1239,7 @@ pxor  %xmm0,%xmm3
 #pslld $16,%xmm3
 #psrld $16,%xmm4
 #pxor  %xmm4,%xmm3
-pshufb (R16), %xmm3
+pshufb R16(%rip), %xmm3
 
 paddd %xmm3,%xmm2
 
@@ -1267,7 +1264,7 @@ pxor  %xmm0,%xmm3
 pshufd $0x39,%xmm0,%xmm0
 
 #pxor  %xmm4,%xmm3
-pshufb (R08), %xmm3
+pshufb R08(%rip), %xmm3
 
 paddd %xmm3,%xmm2
 

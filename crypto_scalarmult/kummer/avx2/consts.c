@@ -232,8 +232,8 @@ const double newABCD[4]__attribute__ ((aligned (32)))
                         = {833,-561,1617,-2499};
 
 
-unsigned long long mask63 __attribute__ ((aligned (32)))
+const unsigned long long mask63 __attribute__ ((aligned (32)))
                         = 0x7fffffffffffffff;
 
-unsigned char _one[16]__attribute__ ((aligned (32)))
+const unsigned char _one[16]__attribute__ ((aligned (32)))
                         = {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};

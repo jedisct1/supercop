@@ -75,22 +75,22 @@
   #include <stdio.h>
 
   #if (VERBOSE == 3)
-    #define MSG(...)     { printf(__VA_ARGS__); }
+    #define MSG(...)     { fprintf(stderr,__VA_ARGS__); }
     #define DMSG(...)    MSG(__VA_ARGS__)
     #define EDMSG(...)   MSG(__VA_ARGS__)
     #define SEDMSG(...)  MSG(__VA_ARGS__)
   #elif (VERBOSE == 2)
-    #define MSG(...)     { printf(__VA_ARGS__); }
+    #define MSG(...)     { fprintf(stderr,__VA_ARGS__); }
     #define DMSG(...)    MSG(__VA_ARGS__)
     #define EDMSG(...)   MSG(__VA_ARGS__)
     #define SEDMSG(...)
   #elif (VERBOSE == 1)
-    #define MSG(...)     { printf(__VA_ARGS__); }
+    #define MSG(...)     { fprintf(stderr,__VA_ARGS__); }
     #define DMSG(...)    MSG(__VA_ARGS__)
     #define EDMSG(...)
     #define SEDMSG(...)
   #else
-    #define MSG(...)     { printf(__VA_ARGS__); }
+    #define MSG(...)     { fprintf(stderr,__VA_ARGS__); }
     #define DMSG(...)
     #define EDMSG(...)
     #define SEDMSG(...)

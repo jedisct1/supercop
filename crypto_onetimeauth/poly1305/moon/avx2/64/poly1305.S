@@ -48,6 +48,7 @@ popq %r14
 popq %r12
 movq %rbp, %rsp
 popq %rbp
+xor %rax,%rax
 ret
 FN_END crypto_onetimeauth_poly1305_moon_avx2_64
 

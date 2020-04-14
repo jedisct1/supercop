@@ -109,7 +109,7 @@ movq   8(%rsi),%rsi
 # asm 1: movq mask63,>mask=int64#6
 # asm 2: movq mask63,>mask=%r9
 # bytes: 8 uops: 1
-movq mask63,%r9
+movq mask63(%rip),%r9
 
 # qhasm: loop:
 ._loop:

@@ -1,4 +1,7 @@
-int32 twopower
+int32 two13
+int32 two23
+int32 two24
+int32 two25
 int32 lotmp
 int32 lotmp2
 int32 hitmp
@@ -83,6 +86,7 @@ stack32 o0
 stack32 o1
 stack32 o2
 stack32 o3
+stack32 o4
 # qhasm: int32 input_0
 # qhasm: int32 input_1
 # qhasm: int32 input_2
@@ -151,6 +155,7 @@ stack32 o3
 # qhasm: ptr constants
 # qhasm: stackptr in_stack
 # qhasm: stackptr statebytes_stack
+# qhasm: stackptr constants_stack
 # qhasm: stack32 inlen_stack
 # qhasm: stack32 i_stack
 # qhasm: pushenter crypto_hashblocks_sha512_m4mult_inner
@@ -171,6 +176,10 @@ input_1 = input_2 - 128
 # asm 1: >inlen_stack=stack32#3 = <inlen=int32#2
 # asm 2: >inlen_stack=o2 = <inlen=input_1
 o2 = input_1
+# qhasm: constants_stack = input_3
+# asm 1: >constants_stack=stack32#4 = <input_3=int32#4
+# asm 2: >constants_stack=o3 = <input_3=input_3
+o3 = input_3
 # qhasm: r0 = flip mem64[input_0]
 # asm 1: hi>r0=int64#1 = mem32[<input_0=int32#1]
 # asm 2: hi>r0=u0 = mem32[<input_0=input_0]
@@ -395,10 +404,6 @@ lod7 = lou3
 # asm 1: hi>r7_spill=spill64#8 = hi<r7=int64#4
 # asm 2: hi>r7_spill=d7 = hi<r7=u3
 hid7 = hiu3
-# qhasm: constants = input_3
-# asm 1: >constants=int32#2 = <input_3=int32#4
-# asm 2: >constants=input_1 = <input_3=input_3
-input_1 = input_3
 # qhasm: mainloop:
 mainloop:
 # qhasm:   in = in_stack
@@ -750,9 +755,9 @@ o1 = input_0
 # asm 2: >i=input_0 = 80 simple
 input_0 = 80 simple
 # qhasm:   i_stack = i
-# asm 1: >i_stack=stack32#4 = <i=int32#1
-# asm 2: >i_stack=o3 = <i=input_0
-o3 = input_0
+# asm 1: >i_stack=stack32#5 = <i=int32#1
+# asm 2: >i_stack=o4 = <i=input_0
+o4 = input_0
 # qhasm:   innerloop:
 innerloop:
 # qhasm:     assign 0 to r0_spill
@@ -811,6 +816,10 @@ assign 14 to lod7
 # asm 1: assign 15 to hi<r7_spill=spill64#8
 # asm 2: assign 15 to hi<r7_spill=d7
 assign 15 to hid7
+# qhasm:     constants = constants_stack
+# asm 1: >constants=int32#1 = <constants_stack=stack32#4
+# asm 2: >constants=input_0 = <constants_stack=o3
+input_0 = o3
 # qhasm:       r3 = r3_spill
 # asm 1: lo>r3=int64#1 = lo<r3_spill=spill64#4
 # asm 2: lo>r3=u0 = lo<r3_spill=d3
@@ -853,6 +862,8 @@ lou5 = lod8
 # asm 1: hi>w0=int64#6 = hi<w0_spill=spill64#9
 # asm 2: hi>w0=u5 = hi<w0_spill=d8
 hiu5 = hid8
+# qhasm:     Sigma1_setup
+two23 = 0x800000 simple
 # qhasm:     r7 += w0 + mem64[constants] + Sigma1(r4) + Ch(r4,r5,r6); constants += 8
 # asm 1: carry?  lo<r7=int64#5 += lo<w0=int64#6
 # asm 2: carry?  lo<r7=u4 += lo<w0=u5
@@ -860,25 +871,24 @@ carry?  lou4 += lou5
 # asm 1: hi<r7=int64#5 += hi<w0=int64#6 + carry
 # asm 2: hi<r7=u4 += hi<w0=u5 + carry
 hiu4 += hiu5 + carry
-# asm 1: lotmp = mem32[<constants=int32#2]; <constants=int32#2 += 4
-# asm 2: lotmp = mem32[<constants=input_1]; <constants=input_1 += 4
-lotmp = mem32[input_1]; input_1 += 4
-# asm 1: hitmp = mem32[<constants=int32#2]; <constants=int32#2 += 4
-# asm 2: hitmp = mem32[<constants=input_1]; <constants=input_1 += 4
-hitmp = mem32[input_1]; input_1 += 4
+# asm 1: lotmp = mem32[<constants=int32#1]; <constants=int32#1 += 4
+# asm 2: lotmp = mem32[<constants=input_0]; <constants=input_0 += 4
+lotmp = mem32[input_0]; input_0 += 4
+# asm 1: hitmp = mem32[<constants=int32#1]; <constants=int32#1 += 4
+# asm 2: hitmp = mem32[<constants=input_0]; <constants=input_0 += 4
+hitmp = mem32[input_0]; input_0 += 4
 # asm 1: carry? lo<r7=int64#5 += lotmp
 # asm 2: carry? lo<r7=u4 += lotmp
 carry? lou4 += lotmp
 # asm 1: hi<r7=int64#5 += hitmp + carry
 # asm 2: hi<r7=u4 += hitmp + carry
 hiu4 += hitmp + carry
-twopower = 0x800000 simple
-# asm 1: hitmp lotmp = lo<r4=int64#2 * twopower
-# asm 2: hitmp lotmp = lo<r4=u1 * twopower
-hitmp lotmp = lou1 * twopower
-# asm 1: lotmp hitmp += hi<r4=int64#2 * twopower
-# asm 2: lotmp hitmp += hi<r4=u1 * twopower
-lotmp hitmp += hiu1 * twopower
+# asm 1: hitmp lotmp = lo<r4=int64#2 * two23
+# asm 2: hitmp lotmp = lo<r4=u1 * two23
+hitmp lotmp = lou1 * two23
+# asm 1: lotmp hitmp += hi<r4=int64#2 * two23
+# asm 2: lotmp hitmp += hi<r4=u1 * two23
+lotmp hitmp += hiu1 * two23
 # asm 1: lotmp ^= (lo<r4=int64#2 unsigned>> 18)
 # asm 2: lotmp ^= (lo<r4=u1 unsigned>> 18)
 lotmp ^= (lou1 unsigned>> 18)
@@ -964,14 +974,15 @@ lou3 = lod2
 # asm 1: hi>r2=int64#4 = hi<r2_spill=spill64#3
 # asm 2: hi>r2=u3 = hi<r2_spill=d2
 hiu3 = hid2
+# qhasm:     Sigma0_setup
+two25 = 0x2000000 simple
 # qhasm:     r7 += Sigma0(r0) + Maj(r0,r1,r2)
-twopower = 0x2000000 simple
-# asm 1: hitmp lotmp = lo<r0=int64#2 * twopower
-# asm 2: hitmp lotmp = lo<r0=u1 * twopower
-hitmp lotmp = lou1 * twopower
-# asm 1: lotmp hitmp += hi<r0=int64#2 * twopower
-# asm 2: lotmp hitmp += hi<r0=u1 * twopower
-lotmp hitmp += hiu1 * twopower
+# asm 1: hitmp lotmp = lo<r0=int64#2 * two25
+# asm 2: hitmp lotmp = lo<r0=u1 * two25
+hitmp lotmp = lou1 * two25
+# asm 1: lotmp hitmp += hi<r0=int64#2 * two25
+# asm 2: lotmp hitmp += hi<r0=u1 * two25
+lotmp hitmp += hiu1 * two25
 # asm 1: lotmp ^= (hi<r0=int64#2 unsigned>> 2)
 # asm 2: lotmp ^= (hi<r0=u1 unsigned>> 2)
 lotmp ^= (hiu1 unsigned>> 2)
@@ -1063,6 +1074,8 @@ lou5 = lod9
 # asm 1: hi>w1=int64#6 = hi<w1_spill=spill64#10
 # asm 2: hi>w1=u5 = hi<w1_spill=d9
 hiu5 = hid9
+# qhasm:     Sigma1_setup
+two23 = 0x800000 simple
 # qhasm:     r6 += w1 + mem64[constants] + Sigma1(r3) + Ch(r3,r4,r5); constants += 8
 # asm 1: carry?  lo<r6=int64#5 += lo<w1=int64#6
 # asm 2: carry?  lo<r6=u4 += lo<w1=u5
@@ -1070,25 +1083,24 @@ carry?  lou4 += lou5
 # asm 1: hi<r6=int64#5 += hi<w1=int64#6 + carry
 # asm 2: hi<r6=u4 += hi<w1=u5 + carry
 hiu4 += hiu5 + carry
-# asm 1: lotmp = mem32[<constants=int32#2]; <constants=int32#2 += 4
-# asm 2: lotmp = mem32[<constants=input_1]; <constants=input_1 += 4
-lotmp = mem32[input_1]; input_1 += 4
-# asm 1: hitmp = mem32[<constants=int32#2]; <constants=int32#2 += 4
-# asm 2: hitmp = mem32[<constants=input_1]; <constants=input_1 += 4
-hitmp = mem32[input_1]; input_1 += 4
+# asm 1: lotmp = mem32[<constants=int32#1]; <constants=int32#1 += 4
+# asm 2: lotmp = mem32[<constants=input_0]; <constants=input_0 += 4
+lotmp = mem32[input_0]; input_0 += 4
+# asm 1: hitmp = mem32[<constants=int32#1]; <constants=int32#1 += 4
+# asm 2: hitmp = mem32[<constants=input_0]; <constants=input_0 += 4
+hitmp = mem32[input_0]; input_0 += 4
 # asm 1: carry? lo<r6=int64#5 += lotmp
 # asm 2: carry? lo<r6=u4 += lotmp
 carry? lou4 += lotmp
 # asm 1: hi<r6=int64#5 += hitmp + carry
 # asm 2: hi<r6=u4 += hitmp + carry
 hiu4 += hitmp + carry
-twopower = 0x800000 simple
-# asm 1: hitmp lotmp = lo<r3=int64#1 * twopower
-# asm 2: hitmp lotmp = lo<r3=u0 * twopower
-hitmp lotmp = lou0 * twopower
-# asm 1: lotmp hitmp += hi<r3=int64#1 * twopower
-# asm 2: lotmp hitmp += hi<r3=u0 * twopower
-lotmp hitmp += hiu0 * twopower
+# asm 1: hitmp lotmp = lo<r3=int64#1 * two23
+# asm 2: hitmp lotmp = lo<r3=u0 * two23
+hitmp lotmp = lou0 * two23
+# asm 1: lotmp hitmp += hi<r3=int64#1 * two23
+# asm 2: lotmp hitmp += hi<r3=u0 * two23
+lotmp hitmp += hiu0 * two23
 # asm 1: lotmp ^= (lo<r3=int64#1 unsigned>> 18)
 # asm 2: lotmp ^= (lo<r3=u0 unsigned>> 18)
 lotmp ^= (lou0 unsigned>> 18)
@@ -1174,14 +1186,15 @@ lou2 = lod1
 # asm 1: hi>r1=int64#3 = hi<r1_spill=spill64#2
 # asm 2: hi>r1=u2 = hi<r1_spill=d1
 hiu2 = hid1
+# qhasm:     Sigma0_setup
+two25 = 0x2000000 simple
 # qhasm:     r6 += Sigma0(r7) + Maj(r7,r0,r1)
-twopower = 0x2000000 simple
-# asm 1: hitmp lotmp = lo<r7=int64#1 * twopower
-# asm 2: hitmp lotmp = lo<r7=u0 * twopower
-hitmp lotmp = lou0 * twopower
-# asm 1: lotmp hitmp += hi<r7=int64#1 * twopower
-# asm 2: lotmp hitmp += hi<r7=u0 * twopower
-lotmp hitmp += hiu0 * twopower
+# asm 1: hitmp lotmp = lo<r7=int64#1 * two25
+# asm 2: hitmp lotmp = lo<r7=u0 * two25
+hitmp lotmp = lou0 * two25
+# asm 1: lotmp hitmp += hi<r7=int64#1 * two25
+# asm 2: lotmp hitmp += hi<r7=u0 * two25
+lotmp hitmp += hiu0 * two25
 # asm 1: lotmp ^= (hi<r7=int64#1 unsigned>> 2)
 # asm 2: lotmp ^= (hi<r7=u0 unsigned>> 2)
 lotmp ^= (hiu0 unsigned>> 2)
@@ -1329,6 +1342,8 @@ lou5 = lod10
 # asm 1: hi>w2=int64#6 = hi<w2_spill=spill64#11
 # asm 2: hi>w2=u5 = hi<w2_spill=d10
 hiu5 = hid10
+# qhasm:     Sigma1_setup
+two23 = 0x800000 simple
 # qhasm:     r5 += w2 + mem64[constants] + Sigma1(r2) + Ch(r2,r3,r4); constants += 8
 # asm 1: carry?  lo<r5=int64#5 += lo<w2=int64#6
 # asm 2: carry?  lo<r5=u4 += lo<w2=u5
@@ -1336,25 +1351,24 @@ carry?  lou4 += lou5
 # asm 1: hi<r5=int64#5 += hi<w2=int64#6 + carry
 # asm 2: hi<r5=u4 += hi<w2=u5 + carry
 hiu4 += hiu5 + carry
-# asm 1: lotmp = mem32[<constants=int32#2]; <constants=int32#2 += 4
-# asm 2: lotmp = mem32[<constants=input_1]; <constants=input_1 += 4
-lotmp = mem32[input_1]; input_1 += 4
-# asm 1: hitmp = mem32[<constants=int32#2]; <constants=int32#2 += 4
-# asm 2: hitmp = mem32[<constants=input_1]; <constants=input_1 += 4
-hitmp = mem32[input_1]; input_1 += 4
+# asm 1: lotmp = mem32[<constants=int32#1]; <constants=int32#1 += 4
+# asm 2: lotmp = mem32[<constants=input_0]; <constants=input_0 += 4
+lotmp = mem32[input_0]; input_0 += 4
+# asm 1: hitmp = mem32[<constants=int32#1]; <constants=int32#1 += 4
+# asm 2: hitmp = mem32[<constants=input_0]; <constants=input_0 += 4
+hitmp = mem32[input_0]; input_0 += 4
 # asm 1: carry? lo<r5=int64#5 += lotmp
 # asm 2: carry? lo<r5=u4 += lotmp
 carry? lou4 += lotmp
 # asm 1: hi<r5=int64#5 += hitmp + carry
 # asm 2: hi<r5=u4 += hitmp + carry
 hiu4 += hitmp + carry
-twopower = 0x800000 simple
-# asm 1: hitmp lotmp = lo<r2=int64#4 * twopower
-# asm 2: hitmp lotmp = lo<r2=u3 * twopower
-hitmp lotmp = lou3 * twopower
-# asm 1: lotmp hitmp += hi<r2=int64#4 * twopower
-# asm 2: lotmp hitmp += hi<r2=u3 * twopower
-lotmp hitmp += hiu3 * twopower
+# asm 1: hitmp lotmp = lo<r2=int64#4 * two23
+# asm 2: hitmp lotmp = lo<r2=u3 * two23
+hitmp lotmp = lou3 * two23
+# asm 1: lotmp hitmp += hi<r2=int64#4 * two23
+# asm 2: lotmp hitmp += hi<r2=u3 * two23
+lotmp hitmp += hiu3 * two23
 # asm 1: lotmp ^= (lo<r2=int64#4 unsigned>> 18)
 # asm 2: lotmp ^= (lo<r2=u3 unsigned>> 18)
 lotmp ^= (lou3 unsigned>> 18)
@@ -1440,14 +1454,15 @@ lou3 = lod0
 # asm 1: hi>r0=int64#4 = hi<r0_spill=spill64#1
 # asm 2: hi>r0=u3 = hi<r0_spill=d0
 hiu3 = hid0
+# qhasm:     Sigma0_setup
+two25 = 0x2000000 simple
 # qhasm:     r5 += Sigma0(r6) + Maj(r6,r7,r0)
-twopower = 0x2000000 simple
-# asm 1: hitmp lotmp = lo<r6=int64#1 * twopower
-# asm 2: hitmp lotmp = lo<r6=u0 * twopower
-hitmp lotmp = lou0 * twopower
-# asm 1: lotmp hitmp += hi<r6=int64#1 * twopower
-# asm 2: lotmp hitmp += hi<r6=u0 * twopower
-lotmp hitmp += hiu0 * twopower
+# asm 1: hitmp lotmp = lo<r6=int64#1 * two25
+# asm 2: hitmp lotmp = lo<r6=u0 * two25
+hitmp lotmp = lou0 * two25
+# asm 1: lotmp hitmp += hi<r6=int64#1 * two25
+# asm 2: lotmp hitmp += hi<r6=u0 * two25
+lotmp hitmp += hiu0 * two25
 # asm 1: lotmp ^= (hi<r6=int64#1 unsigned>> 2)
 # asm 2: lotmp ^= (hi<r6=u0 unsigned>> 2)
 lotmp ^= (hiu0 unsigned>> 2)
@@ -1539,6 +1554,8 @@ lou5 = lod11
 # asm 1: hi>w3=int64#6 = hi<w3_spill=spill64#12
 # asm 2: hi>w3=u5 = hi<w3_spill=d11
 hiu5 = hid11
+# qhasm:     Sigma1_setup
+two23 = 0x800000 simple
 # qhasm:     r4 += w3 + mem64[constants] + Sigma1(r1) + Ch(r1,r2,r3); constants += 8
 # asm 1: carry?  lo<r4=int64#5 += lo<w3=int64#6
 # asm 2: carry?  lo<r4=u4 += lo<w3=u5
@@ -1546,25 +1563,24 @@ carry?  lou4 += lou5
 # asm 1: hi<r4=int64#5 += hi<w3=int64#6 + carry
 # asm 2: hi<r4=u4 += hi<w3=u5 + carry
 hiu4 += hiu5 + carry
-# asm 1: lotmp = mem32[<constants=int32#2]; <constants=int32#2 += 4
-# asm 2: lotmp = mem32[<constants=input_1]; <constants=input_1 += 4
-lotmp = mem32[input_1]; input_1 += 4
-# asm 1: hitmp = mem32[<constants=int32#2]; <constants=int32#2 += 4
-# asm 2: hitmp = mem32[<constants=input_1]; <constants=input_1 += 4
-hitmp = mem32[input_1]; input_1 += 4
+# asm 1: lotmp = mem32[<constants=int32#1]; <constants=int32#1 += 4
+# asm 2: lotmp = mem32[<constants=input_0]; <constants=input_0 += 4
+lotmp = mem32[input_0]; input_0 += 4
+# asm 1: hitmp = mem32[<constants=int32#1]; <constants=int32#1 += 4
+# asm 2: hitmp = mem32[<constants=input_0]; <constants=input_0 += 4
+hitmp = mem32[input_0]; input_0 += 4
 # asm 1: carry? lo<r4=int64#5 += lotmp
 # asm 2: carry? lo<r4=u4 += lotmp
 carry? lou4 += lotmp
 # asm 1: hi<r4=int64#5 += hitmp + carry
 # asm 2: hi<r4=u4 += hitmp + carry
 hiu4 += hitmp + carry
-twopower = 0x800000 simple
-# asm 1: hitmp lotmp = lo<r1=int64#3 * twopower
-# asm 2: hitmp lotmp = lo<r1=u2 * twopower
-hitmp lotmp = lou2 * twopower
-# asm 1: lotmp hitmp += hi<r1=int64#3 * twopower
-# asm 2: lotmp hitmp += hi<r1=u2 * twopower
-lotmp hitmp += hiu2 * twopower
+# asm 1: hitmp lotmp = lo<r1=int64#3 * two23
+# asm 2: hitmp lotmp = lo<r1=u2 * two23
+hitmp lotmp = lou2 * two23
+# asm 1: lotmp hitmp += hi<r1=int64#3 * two23
+# asm 2: lotmp hitmp += hi<r1=u2 * two23
+lotmp hitmp += hiu2 * two23
 # asm 1: lotmp ^= (lo<r1=int64#3 unsigned>> 18)
 # asm 2: lotmp ^= (lo<r1=u2 unsigned>> 18)
 lotmp ^= (lou2 unsigned>> 18)
@@ -1650,14 +1666,15 @@ lou2 = lod7
 # asm 1: hi>r7=int64#3 = hi<r7_spill=spill64#8
 # asm 2: hi>r7=u2 = hi<r7_spill=d7
 hiu2 = hid7
+# qhasm:     Sigma0_setup
+two25 = 0x2000000 simple
 # qhasm:     r4 += Sigma0(r5) + Maj(r5,r6,r7)
-twopower = 0x2000000 simple
-# asm 1: hitmp lotmp = lo<r5=int64#1 * twopower
-# asm 2: hitmp lotmp = lo<r5=u0 * twopower
-hitmp lotmp = lou0 * twopower
-# asm 1: lotmp hitmp += hi<r5=int64#1 * twopower
-# asm 2: lotmp hitmp += hi<r5=u0 * twopower
-lotmp hitmp += hiu0 * twopower
+# asm 1: hitmp lotmp = lo<r5=int64#1 * two25
+# asm 2: hitmp lotmp = lo<r5=u0 * two25
+hitmp lotmp = lou0 * two25
+# asm 1: lotmp hitmp += hi<r5=int64#1 * two25
+# asm 2: lotmp hitmp += hi<r5=u0 * two25
+lotmp hitmp += hiu0 * two25
 # asm 1: lotmp ^= (hi<r5=int64#1 unsigned>> 2)
 # asm 2: lotmp ^= (hi<r5=u0 unsigned>> 2)
 lotmp ^= (hiu0 unsigned>> 2)
@@ -1805,6 +1822,8 @@ lou5 = lod12
 # asm 1: hi>w4=int64#6 = hi<w4_spill=spill64#13
 # asm 2: hi>w4=u5 = hi<w4_spill=d12
 hiu5 = hid12
+# qhasm:     Sigma1_setup
+two23 = 0x800000 simple
 # qhasm:     r3 += w4 + mem64[constants] + Sigma1(r0) + Ch(r0,r1,r2); constants += 8
 # asm 1: carry?  lo<r3=int64#5 += lo<w4=int64#6
 # asm 2: carry?  lo<r3=u4 += lo<w4=u5
@@ -1812,25 +1831,24 @@ carry?  lou4 += lou5
 # asm 1: hi<r3=int64#5 += hi<w4=int64#6 + carry
 # asm 2: hi<r3=u4 += hi<w4=u5 + carry
 hiu4 += hiu5 + carry
-# asm 1: lotmp = mem32[<constants=int32#2]; <constants=int32#2 += 4
-# asm 2: lotmp = mem32[<constants=input_1]; <constants=input_1 += 4
-lotmp = mem32[input_1]; input_1 += 4
-# asm 1: hitmp = mem32[<constants=int32#2]; <constants=int32#2 += 4
-# asm 2: hitmp = mem32[<constants=input_1]; <constants=input_1 += 4
-hitmp = mem32[input_1]; input_1 += 4
+# asm 1: lotmp = mem32[<constants=int32#1]; <constants=int32#1 += 4
+# asm 2: lotmp = mem32[<constants=input_0]; <constants=input_0 += 4
+lotmp = mem32[input_0]; input_0 += 4
+# asm 1: hitmp = mem32[<constants=int32#1]; <constants=int32#1 += 4
+# asm 2: hitmp = mem32[<constants=input_0]; <constants=input_0 += 4
+hitmp = mem32[input_0]; input_0 += 4
 # asm 1: carry? lo<r3=int64#5 += lotmp
 # asm 2: carry? lo<r3=u4 += lotmp
 carry? lou4 += lotmp
 # asm 1: hi<r3=int64#5 += hitmp + carry
 # asm 2: hi<r3=u4 += hitmp + carry
 hiu4 += hitmp + carry
-twopower = 0x800000 simple
-# asm 1: hitmp lotmp = lo<r0=int64#4 * twopower
-# asm 2: hitmp lotmp = lo<r0=u3 * twopower
-hitmp lotmp = lou3 * twopower
-# asm 1: lotmp hitmp += hi<r0=int64#4 * twopower
-# asm 2: lotmp hitmp += hi<r0=u3 * twopower
-lotmp hitmp += hiu3 * twopower
+# asm 1: hitmp lotmp = lo<r0=int64#4 * two23
+# asm 2: hitmp lotmp = lo<r0=u3 * two23
+hitmp lotmp = lou3 * two23
+# asm 1: lotmp hitmp += hi<r0=int64#4 * two23
+# asm 2: lotmp hitmp += hi<r0=u3 * two23
+lotmp hitmp += hiu3 * two23
 # asm 1: lotmp ^= (lo<r0=int64#4 unsigned>> 18)
 # asm 2: lotmp ^= (lo<r0=u3 unsigned>> 18)
 lotmp ^= (lou3 unsigned>> 18)
@@ -1916,14 +1934,15 @@ lou3 = lod6
 # asm 1: hi>r6=int64#4 = hi<r6_spill=spill64#7
 # asm 2: hi>r6=u3 = hi<r6_spill=d6
 hiu3 = hid6
+# qhasm:     Sigma0_setup
+two25 = 0x2000000 simple
 # qhasm:     r3 += Sigma0(r4) + Maj(r4,r5,r6)
-twopower = 0x2000000 simple
-# asm 1: hitmp lotmp = lo<r4=int64#1 * twopower
-# asm 2: hitmp lotmp = lo<r4=u0 * twopower
-hitmp lotmp = lou0 * twopower
-# asm 1: lotmp hitmp += hi<r4=int64#1 * twopower
-# asm 2: lotmp hitmp += hi<r4=u0 * twopower
-lotmp hitmp += hiu0 * twopower
+# asm 1: hitmp lotmp = lo<r4=int64#1 * two25
+# asm 2: hitmp lotmp = lo<r4=u0 * two25
+hitmp lotmp = lou0 * two25
+# asm 1: lotmp hitmp += hi<r4=int64#1 * two25
+# asm 2: lotmp hitmp += hi<r4=u0 * two25
+lotmp hitmp += hiu0 * two25
 # asm 1: lotmp ^= (hi<r4=int64#1 unsigned>> 2)
 # asm 2: lotmp ^= (hi<r4=u0 unsigned>> 2)
 lotmp ^= (hiu0 unsigned>> 2)
@@ -2015,6 +2034,8 @@ lou5 = lod13
 # asm 1: hi>w5=int64#6 = hi<w5_spill=spill64#14
 # asm 2: hi>w5=u5 = hi<w5_spill=d13
 hiu5 = hid13
+# qhasm:     Sigma1_setup
+two23 = 0x800000 simple
 # qhasm:     r2 += w5 + mem64[constants] + Sigma1(r7) + Ch(r7,r0,r1); constants += 8
 # asm 1: carry?  lo<r2=int64#5 += lo<w5=int64#6
 # asm 2: carry?  lo<r2=u4 += lo<w5=u5
@@ -2022,25 +2043,24 @@ carry?  lou4 += lou5
 # asm 1: hi<r2=int64#5 += hi<w5=int64#6 + carry
 # asm 2: hi<r2=u4 += hi<w5=u5 + carry
 hiu4 += hiu5 + carry
-# asm 1: lotmp = mem32[<constants=int32#2]; <constants=int32#2 += 4
-# asm 2: lotmp = mem32[<constants=input_1]; <constants=input_1 += 4
-lotmp = mem32[input_1]; input_1 += 4
-# asm 1: hitmp = mem32[<constants=int32#2]; <constants=int32#2 += 4
-# asm 2: hitmp = mem32[<constants=input_1]; <constants=input_1 += 4
-hitmp = mem32[input_1]; input_1 += 4
+# asm 1: lotmp = mem32[<constants=int32#1]; <constants=int32#1 += 4
+# asm 2: lotmp = mem32[<constants=input_0]; <constants=input_0 += 4
+lotmp = mem32[input_0]; input_0 += 4
+# asm 1: hitmp = mem32[<constants=int32#1]; <constants=int32#1 += 4
+# asm 2: hitmp = mem32[<constants=input_0]; <constants=input_0 += 4
+hitmp = mem32[input_0]; input_0 += 4
 # asm 1: carry? lo<r2=int64#5 += lotmp
 # asm 2: carry? lo<r2=u4 += lotmp
 carry? lou4 += lotmp
 # asm 1: hi<r2=int64#5 += hitmp + carry
 # asm 2: hi<r2=u4 += hitmp + carry
 hiu4 += hitmp + carry
-twopower = 0x800000 simple
-# asm 1: hitmp lotmp = lo<r7=int64#3 * twopower
-# asm 2: hitmp lotmp = lo<r7=u2 * twopower
-hitmp lotmp = lou2 * twopower
-# asm 1: lotmp hitmp += hi<r7=int64#3 * twopower
-# asm 2: lotmp hitmp += hi<r7=u2 * twopower
-lotmp hitmp += hiu2 * twopower
+# asm 1: hitmp lotmp = lo<r7=int64#3 * two23
+# asm 2: hitmp lotmp = lo<r7=u2 * two23
+hitmp lotmp = lou2 * two23
+# asm 1: lotmp hitmp += hi<r7=int64#3 * two23
+# asm 2: lotmp hitmp += hi<r7=u2 * two23
+lotmp hitmp += hiu2 * two23
 # asm 1: lotmp ^= (lo<r7=int64#3 unsigned>> 18)
 # asm 2: lotmp ^= (lo<r7=u2 unsigned>> 18)
 lotmp ^= (lou2 unsigned>> 18)
@@ -2126,14 +2146,15 @@ lou2 = lod5
 # asm 1: hi>r5=int64#3 = hi<r5_spill=spill64#6
 # asm 2: hi>r5=u2 = hi<r5_spill=d5
 hiu2 = hid5
+# qhasm:     Sigma0_setup
+two25 = 0x2000000 simple
 # qhasm:     r2 += Sigma0(r3) + Maj(r3,r4,r5)
-twopower = 0x2000000 simple
-# asm 1: hitmp lotmp = lo<r3=int64#1 * twopower
-# asm 2: hitmp lotmp = lo<r3=u0 * twopower
-hitmp lotmp = lou0 * twopower
-# asm 1: lotmp hitmp += hi<r3=int64#1 * twopower
-# asm 2: lotmp hitmp += hi<r3=u0 * twopower
-lotmp hitmp += hiu0 * twopower
+# asm 1: hitmp lotmp = lo<r3=int64#1 * two25
+# asm 2: hitmp lotmp = lo<r3=u0 * two25
+hitmp lotmp = lou0 * two25
+# asm 1: lotmp hitmp += hi<r3=int64#1 * two25
+# asm 2: lotmp hitmp += hi<r3=u0 * two25
+lotmp hitmp += hiu0 * two25
 # asm 1: lotmp ^= (hi<r3=int64#1 unsigned>> 2)
 # asm 2: lotmp ^= (hi<r3=u0 unsigned>> 2)
 lotmp ^= (hiu0 unsigned>> 2)
@@ -2281,6 +2302,8 @@ lou5 = lod14
 # asm 1: hi>w6=int64#6 = hi<w6_spill=spill64#15
 # asm 2: hi>w6=u5 = hi<w6_spill=d14
 hiu5 = hid14
+# qhasm:     Sigma1_setup
+two23 = 0x800000 simple
 # qhasm:     r1 += w6 + mem64[constants] + Sigma1(r6) + Ch(r6,r7,r0); constants += 8
 # asm 1: carry?  lo<r1=int64#5 += lo<w6=int64#6
 # asm 2: carry?  lo<r1=u4 += lo<w6=u5
@@ -2288,25 +2311,24 @@ carry?  lou4 += lou5
 # asm 1: hi<r1=int64#5 += hi<w6=int64#6 + carry
 # asm 2: hi<r1=u4 += hi<w6=u5 + carry
 hiu4 += hiu5 + carry
-# asm 1: lotmp = mem32[<constants=int32#2]; <constants=int32#2 += 4
-# asm 2: lotmp = mem32[<constants=input_1]; <constants=input_1 += 4
-lotmp = mem32[input_1]; input_1 += 4
-# asm 1: hitmp = mem32[<constants=int32#2]; <constants=int32#2 += 4
-# asm 2: hitmp = mem32[<constants=input_1]; <constants=input_1 += 4
-hitmp = mem32[input_1]; input_1 += 4
+# asm 1: lotmp = mem32[<constants=int32#1]; <constants=int32#1 += 4
+# asm 2: lotmp = mem32[<constants=input_0]; <constants=input_0 += 4
+lotmp = mem32[input_0]; input_0 += 4
+# asm 1: hitmp = mem32[<constants=int32#1]; <constants=int32#1 += 4
+# asm 2: hitmp = mem32[<constants=input_0]; <constants=input_0 += 4
+hitmp = mem32[input_0]; input_0 += 4
 # asm 1: carry? lo<r1=int64#5 += lotmp
 # asm 2: carry? lo<r1=u4 += lotmp
 carry? lou4 += lotmp
 # asm 1: hi<r1=int64#5 += hitmp + carry
 # asm 2: hi<r1=u4 += hitmp + carry
 hiu4 += hitmp + carry
-twopower = 0x800000 simple
-# asm 1: hitmp lotmp = lo<r6=int64#4 * twopower
-# asm 2: hitmp lotmp = lo<r6=u3 * twopower
-hitmp lotmp = lou3 * twopower
-# asm 1: lotmp hitmp += hi<r6=int64#4 * twopower
-# asm 2: lotmp hitmp += hi<r6=u3 * twopower
-lotmp hitmp += hiu3 * twopower
+# asm 1: hitmp lotmp = lo<r6=int64#4 * two23
+# asm 2: hitmp lotmp = lo<r6=u3 * two23
+hitmp lotmp = lou3 * two23
+# asm 1: lotmp hitmp += hi<r6=int64#4 * two23
+# asm 2: lotmp hitmp += hi<r6=u3 * two23
+lotmp hitmp += hiu3 * two23
 # asm 1: lotmp ^= (lo<r6=int64#4 unsigned>> 18)
 # asm 2: lotmp ^= (lo<r6=u3 unsigned>> 18)
 lotmp ^= (lou3 unsigned>> 18)
@@ -2392,14 +2414,15 @@ lou3 = lod4
 # asm 1: hi>r4=int64#4 = hi<r4_spill=spill64#5
 # asm 2: hi>r4=u3 = hi<r4_spill=d4
 hiu3 = hid4
+# qhasm:     Sigma0_setup
+two25 = 0x2000000 simple
 # qhasm:     r1 += Sigma0(r2) + Maj(r2,r3,r4)
-twopower = 0x2000000 simple
-# asm 1: hitmp lotmp = lo<r2=int64#1 * twopower
-# asm 2: hitmp lotmp = lo<r2=u0 * twopower
-hitmp lotmp = lou0 * twopower
-# asm 1: lotmp hitmp += hi<r2=int64#1 * twopower
-# asm 2: lotmp hitmp += hi<r2=u0 * twopower
-lotmp hitmp += hiu0 * twopower
+# asm 1: hitmp lotmp = lo<r2=int64#1 * two25
+# asm 2: hitmp lotmp = lo<r2=u0 * two25
+hitmp lotmp = lou0 * two25
+# asm 1: lotmp hitmp += hi<r2=int64#1 * two25
+# asm 2: lotmp hitmp += hi<r2=u0 * two25
+lotmp hitmp += hiu0 * two25
 # asm 1: lotmp ^= (hi<r2=int64#1 unsigned>> 2)
 # asm 2: lotmp ^= (hi<r2=u0 unsigned>> 2)
 lotmp ^= (hiu0 unsigned>> 2)
@@ -2491,6 +2514,8 @@ lou5 = lod15
 # asm 1: hi>w7=int64#6 = hi<w7_spill=spill64#16
 # asm 2: hi>w7=u5 = hi<w7_spill=d15
 hiu5 = hid15
+# qhasm:     Sigma1_setup
+two23 = 0x800000 simple
 # qhasm:     r0 += w7 + mem64[constants] + Sigma1(r5) + Ch(r5,r6,r7); constants += 8
 # asm 1: carry?  lo<r0=int64#5 += lo<w7=int64#6
 # asm 2: carry?  lo<r0=u4 += lo<w7=u5
@@ -2498,25 +2523,24 @@ carry?  lou4 += lou5
 # asm 1: hi<r0=int64#5 += hi<w7=int64#6 + carry
 # asm 2: hi<r0=u4 += hi<w7=u5 + carry
 hiu4 += hiu5 + carry
-# asm 1: lotmp = mem32[<constants=int32#2]; <constants=int32#2 += 4
-# asm 2: lotmp = mem32[<constants=input_1]; <constants=input_1 += 4
-lotmp = mem32[input_1]; input_1 += 4
-# asm 1: hitmp = mem32[<constants=int32#2]; <constants=int32#2 += 4
-# asm 2: hitmp = mem32[<constants=input_1]; <constants=input_1 += 4
-hitmp = mem32[input_1]; input_1 += 4
+# asm 1: lotmp = mem32[<constants=int32#1]; <constants=int32#1 += 4
+# asm 2: lotmp = mem32[<constants=input_0]; <constants=input_0 += 4
+lotmp = mem32[input_0]; input_0 += 4
+# asm 1: hitmp = mem32[<constants=int32#1]; <constants=int32#1 += 4
+# asm 2: hitmp = mem32[<constants=input_0]; <constants=input_0 += 4
+hitmp = mem32[input_0]; input_0 += 4
 # asm 1: carry? lo<r0=int64#5 += lotmp
 # asm 2: carry? lo<r0=u4 += lotmp
 carry? lou4 += lotmp
 # asm 1: hi<r0=int64#5 += hitmp + carry
 # asm 2: hi<r0=u4 += hitmp + carry
 hiu4 += hitmp + carry
-twopower = 0x800000 simple
-# asm 1: hitmp lotmp = lo<r5=int64#3 * twopower
-# asm 2: hitmp lotmp = lo<r5=u2 * twopower
-hitmp lotmp = lou2 * twopower
-# asm 1: lotmp hitmp += hi<r5=int64#3 * twopower
-# asm 2: lotmp hitmp += hi<r5=u2 * twopower
-lotmp hitmp += hiu2 * twopower
+# asm 1: hitmp lotmp = lo<r5=int64#3 * two23
+# asm 2: hitmp lotmp = lo<r5=u2 * two23
+hitmp lotmp = lou2 * two23
+# asm 1: lotmp hitmp += hi<r5=int64#3 * two23
+# asm 2: lotmp hitmp += hi<r5=u2 * two23
+lotmp hitmp += hiu2 * two23
 # asm 1: lotmp ^= (lo<r5=int64#3 unsigned>> 18)
 # asm 2: lotmp ^= (lo<r5=u2 unsigned>> 18)
 lotmp ^= (lou2 unsigned>> 18)
@@ -2602,14 +2626,15 @@ lou2 = lod3
 # asm 1: hi>r3=int64#3 = hi<r3_spill=spill64#4
 # asm 2: hi>r3=u2 = hi<r3_spill=d3
 hiu2 = hid3
+# qhasm:     Sigma0_setup
+two25 = 0x2000000 simple
 # qhasm:     r0 += Sigma0(r1) + Maj(r1,r2,r3)
-twopower = 0x2000000 simple
-# asm 1: hitmp lotmp = lo<r1=int64#1 * twopower
-# asm 2: hitmp lotmp = lo<r1=u0 * twopower
-hitmp lotmp = lou0 * twopower
-# asm 1: lotmp hitmp += hi<r1=int64#1 * twopower
-# asm 2: lotmp hitmp += hi<r1=u0 * twopower
-lotmp hitmp += hiu0 * twopower
+# asm 1: hitmp lotmp = lo<r1=int64#1 * two25
+# asm 2: hitmp lotmp = lo<r1=u0 * two25
+hitmp lotmp = lou0 * two25
+# asm 1: lotmp hitmp += hi<r1=int64#1 * two25
+# asm 2: lotmp hitmp += hi<r1=u0 * two25
+lotmp hitmp += hiu0 * two25
 # asm 1: lotmp ^= (hi<r1=int64#1 unsigned>> 2)
 # asm 2: lotmp ^= (hi<r1=u0 unsigned>> 2)
 lotmp ^= (hiu0 unsigned>> 2)
@@ -2673,6 +2698,10 @@ lod0 = lou4
 # asm 1: hi>r0_spill=spill64#1 = hi<r0=int64#5
 # asm 2: hi>r0_spill=d0 = hi<r0=u4
 hid0 = hiu4
+# qhasm:     constants_stack = constants
+# asm 1: >constants_stack=stack32#4 = <constants=int32#1
+# asm 2: >constants_stack=o3 = <constants=input_0
+o3 = input_0
 # qhasm:     assign 8 to w0_spill
 # asm 1: assign 16 to lo<w0_spill=spill64#9
 # asm 2: assign 16 to lo<w0_spill=d8
@@ -2730,9 +2759,9 @@ assign 30 to lod15
 # asm 2: assign 31 to hi<w7_spill=d15
 assign 31 to hid15
 # qhasm:     i = i_stack
-# asm 1: >i=int32#1 = <i_stack=stack32#4
-# asm 2: >i=input_0 = <i_stack=o3
-input_0 = o3
+# asm 1: >i=int32#1 = <i_stack=stack32#5
+# asm 2: >i=input_0 = <i_stack=o4
+input_0 = o4
 # qhasm:                          =? i -= 8
 # asm 1: =? unsigned<? <i=int32#1 -= 8
 # asm 2: =? unsigned<? <i=input_0 -= 8
@@ -2740,15 +2769,19 @@ input_0 = o3
 # qhasm:     goto endinnerloop if =
 goto endinnerloop if =
 # qhasm:     i_stack = i
-# asm 1: >i_stack=stack32#4 = <i=int32#1
-# asm 2: >i_stack=o3 = <i=input_0
-o3 = input_0
+# asm 1: >i_stack=stack32#5 = <i=int32#1
+# asm 2: >i_stack=o4 = <i=input_0
+o4 = input_0
 # qhasm:                     =? i - 8
 # asm 1: =? <i=int32#1 - 8
 # asm 2: =? <i=input_0 - 8
 =? input_0 - 8
 # qhasm:     goto nearend if =
 goto nearend if =
+# qhasm:       sigma1_setup
+two24 = 0x1000000 simple
+# qhasm:       sigma0_setup
+two13 = 0x2000 simple
 # qhasm:       w8 = w0_spill
 # asm 1: lo>w8=int64#1 = lo<w0_spill=spill64#9
 # asm 2: lo>w8=u0 = lo<w0_spill=d8
@@ -2778,13 +2811,12 @@ lou3 = lom9
 # asm 2: hi>w1=u3 = hi<w1_next=m9
 hiu3 = him9
 # qhasm:       w8  += sigma1(w6)
-twopower = 0x2000 simple
-# asm 1: hitmp lotmp = hi<w6=int64#3 * twopower
-# asm 2: hitmp lotmp = hi<w6=u2 * twopower
-hitmp lotmp = hiu2 * twopower
-# asm 1: lotmp hitmp += lo<w6=int64#3 * twopower
-# asm 2: lotmp hitmp += lo<w6=u2 * twopower
-lotmp hitmp += lou2 * twopower
+# asm 1: hitmp lotmp = hi<w6=int64#3 * two13
+# asm 2: hitmp lotmp = hi<w6=u2 * two13
+hitmp lotmp = hiu2 * two13
+# asm 1: lotmp hitmp += lo<w6=int64#3 * two13
+# asm 2: lotmp hitmp += lo<w6=u2 * two13
+lotmp hitmp += lou2 * two13
 # asm 1: lotmp ^= (lo<w6=int64#3 unsigned>> 6)
 # asm 2: lotmp ^= (lo<w6=u2 unsigned>> 6)
 lotmp ^= (lou2 unsigned>> 6)
@@ -2813,13 +2845,12 @@ carry? lou0 += lotmp
 # asm 2: hi<w8=u0 += hitmp + carry
 hiu0 += hitmp + carry
 # qhasm:       w8  += sigma0(w9)
-twopower = 0x1000000 simple
-# asm 1: hitmp lotmp = hi<w9=int64#2 * twopower
-# asm 2: hitmp lotmp = hi<w9=u1 * twopower
-hitmp lotmp = hiu1 * twopower
-# asm 1: lotmp hitmp += lo<w9=int64#2 * twopower
-# asm 2: lotmp hitmp += lo<w9=u1 * twopower
-lotmp hitmp += lou1 * twopower
+# asm 1: hitmp lotmp = hi<w9=int64#2 * two24
+# asm 2: hitmp lotmp = hi<w9=u1 * two24
+hitmp lotmp = hiu1 * two24
+# asm 1: lotmp hitmp += lo<w9=int64#2 * two24
+# asm 2: lotmp hitmp += lo<w9=u1 * two24
+lotmp hitmp += lou1 * two24
 # asm 1: carry? lotmp ^= (lo<w9=int64#2 unsigned>> 1)
 # asm 2: carry? lotmp ^= (lo<w9=u1 unsigned>> 1)
 carry? lotmp ^= (lou1 unsigned>> 1)
@@ -2873,13 +2904,12 @@ lom15 = lou0
 # asm 2: hi>w8_stack=m15 = hi<w8=u0
 him15 = hiu0
 # qhasm:       w9  += sigma1(w7)
-twopower = 0x2000 simple
-# asm 1: hitmp lotmp = hi<w7=int64#4 * twopower
-# asm 2: hitmp lotmp = hi<w7=u3 * twopower
-hitmp lotmp = hiu3 * twopower
-# asm 1: lotmp hitmp += lo<w7=int64#4 * twopower
-# asm 2: lotmp hitmp += lo<w7=u3 * twopower
-lotmp hitmp += lou3 * twopower
+# asm 1: hitmp lotmp = hi<w7=int64#4 * two13
+# asm 2: hitmp lotmp = hi<w7=u3 * two13
+hitmp lotmp = hiu3 * two13
+# asm 1: lotmp hitmp += lo<w7=int64#4 * two13
+# asm 2: lotmp hitmp += lo<w7=u3 * two13
+lotmp hitmp += lou3 * two13
 # asm 1: lotmp ^= (lo<w7=int64#4 unsigned>> 6)
 # asm 2: lotmp ^= (lo<w7=u3 unsigned>> 6)
 lotmp ^= (lou3 unsigned>> 6)
@@ -2915,13 +2945,12 @@ lou4 = lod10
 # asm 2: hi>w10=u4 = hi<w2_spill=d10
 hiu4 = hid10
 # qhasm:       w9  += sigma0(w10)
-twopower = 0x1000000 simple
-# asm 1: hitmp lotmp = hi<w10=int64#5 * twopower
-# asm 2: hitmp lotmp = hi<w10=u4 * twopower
-hitmp lotmp = hiu4 * twopower
-# asm 1: lotmp hitmp += lo<w10=int64#5 * twopower
-# asm 2: lotmp hitmp += lo<w10=u4 * twopower
-lotmp hitmp += lou4 * twopower
+# asm 1: hitmp lotmp = hi<w10=int64#5 * two24
+# asm 2: hitmp lotmp = hi<w10=u4 * two24
+hitmp lotmp = hiu4 * two24
+# asm 1: lotmp hitmp += lo<w10=int64#5 * two24
+# asm 2: lotmp hitmp += lo<w10=u4 * two24
+lotmp hitmp += lou4 * two24
 # asm 1: carry? lotmp ^= (lo<w10=int64#5 unsigned>> 1)
 # asm 2: carry? lotmp ^= (lo<w10=u4 unsigned>> 1)
 carry? lotmp ^= (lou4 unsigned>> 1)
@@ -2975,13 +3004,12 @@ lom9 = lou1
 # asm 2: hi>w1_next=m9 = hi<w9=u1
 him9 = hiu1
 # qhasm:       w10 += sigma1(w8)
-twopower = 0x2000 simple
-# asm 1: hitmp lotmp = hi<w8=int64#1 * twopower
-# asm 2: hitmp lotmp = hi<w8=u0 * twopower
-hitmp lotmp = hiu0 * twopower
-# asm 1: lotmp hitmp += lo<w8=int64#1 * twopower
-# asm 2: lotmp hitmp += lo<w8=u0 * twopower
-lotmp hitmp += lou0 * twopower
+# asm 1: hitmp lotmp = hi<w8=int64#1 * two13
+# asm 2: hitmp lotmp = hi<w8=u0 * two13
+hitmp lotmp = hiu0 * two13
+# asm 1: lotmp hitmp += lo<w8=int64#1 * two13
+# asm 2: lotmp hitmp += lo<w8=u0 * two13
+lotmp hitmp += lou0 * two13
 # asm 1: lotmp ^= (lo<w8=int64#1 unsigned>> 6)
 # asm 2: lotmp ^= (lo<w8=u0 unsigned>> 6)
 lotmp ^= (lou0 unsigned>> 6)
@@ -3017,13 +3045,12 @@ lou0 = lod11
 # asm 2: hi>w11=u0 = hi<w3_spill=d11
 hiu0 = hid11
 # qhasm:       w10 += sigma0(w11)
-twopower = 0x1000000 simple
-# asm 1: hitmp lotmp = hi<w11=int64#1 * twopower
-# asm 2: hitmp lotmp = hi<w11=u0 * twopower
-hitmp lotmp = hiu0 * twopower
-# asm 1: lotmp hitmp += lo<w11=int64#1 * twopower
-# asm 2: lotmp hitmp += lo<w11=u0 * twopower
-lotmp hitmp += lou0 * twopower
+# asm 1: hitmp lotmp = hi<w11=int64#1 * two24
+# asm 2: hitmp lotmp = hi<w11=u0 * two24
+hitmp lotmp = hiu0 * two24
+# asm 1: lotmp hitmp += lo<w11=int64#1 * two24
+# asm 2: lotmp hitmp += lo<w11=u0 * two24
+lotmp hitmp += lou0 * two24
 # asm 1: carry? lotmp ^= (lo<w11=int64#1 unsigned>> 1)
 # asm 2: carry? lotmp ^= (lo<w11=u0 unsigned>> 1)
 carry? lotmp ^= (lou0 unsigned>> 1)
@@ -3077,13 +3104,12 @@ lom10 = lou4
 # asm 2: hi>w2_next=m10 = hi<w10=u4
 him10 = hiu4
 # qhasm:       w11 += sigma1(w9)
-twopower = 0x2000 simple
-# asm 1: hitmp lotmp = hi<w9=int64#2 * twopower
-# asm 2: hitmp lotmp = hi<w9=u1 * twopower
-hitmp lotmp = hiu1 * twopower
-# asm 1: lotmp hitmp += lo<w9=int64#2 * twopower
-# asm 2: lotmp hitmp += lo<w9=u1 * twopower
-lotmp hitmp += lou1 * twopower
+# asm 1: hitmp lotmp = hi<w9=int64#2 * two13
+# asm 2: hitmp lotmp = hi<w9=u1 * two13
+hitmp lotmp = hiu1 * two13
+# asm 1: lotmp hitmp += lo<w9=int64#2 * two13
+# asm 2: lotmp hitmp += lo<w9=u1 * two13
+lotmp hitmp += lou1 * two13
 # asm 1: lotmp ^= (lo<w9=int64#2 unsigned>> 6)
 # asm 2: lotmp ^= (lo<w9=u1 unsigned>> 6)
 lotmp ^= (lou1 unsigned>> 6)
@@ -3119,13 +3145,12 @@ lou1 = lod12
 # asm 2: hi>w12=u1 = hi<w4_spill=d12
 hiu1 = hid12
 # qhasm:       w11 += sigma0(w12)
-twopower = 0x1000000 simple
-# asm 1: hitmp lotmp = hi<w12=int64#2 * twopower
-# asm 2: hitmp lotmp = hi<w12=u1 * twopower
-hitmp lotmp = hiu1 * twopower
-# asm 1: lotmp hitmp += lo<w12=int64#2 * twopower
-# asm 2: lotmp hitmp += lo<w12=u1 * twopower
-lotmp hitmp += lou1 * twopower
+# asm 1: hitmp lotmp = hi<w12=int64#2 * two24
+# asm 2: hitmp lotmp = hi<w12=u1 * two24
+hitmp lotmp = hiu1 * two24
+# asm 1: lotmp hitmp += lo<w12=int64#2 * two24
+# asm 2: lotmp hitmp += lo<w12=u1 * two24
+lotmp hitmp += lou1 * two24
 # asm 1: carry? lotmp ^= (lo<w12=int64#2 unsigned>> 1)
 # asm 2: carry? lotmp ^= (lo<w12=u1 unsigned>> 1)
 carry? lotmp ^= (lou1 unsigned>> 1)
@@ -3179,13 +3204,12 @@ lom11 = lou0
 # asm 2: hi>w3_next=m11 = hi<w11=u0
 him11 = hiu0
 # qhasm:       w12 += sigma1(w10)
-twopower = 0x2000 simple
-# asm 1: hitmp lotmp = hi<w10=int64#5 * twopower
-# asm 2: hitmp lotmp = hi<w10=u4 * twopower
-hitmp lotmp = hiu4 * twopower
-# asm 1: lotmp hitmp += lo<w10=int64#5 * twopower
-# asm 2: lotmp hitmp += lo<w10=u4 * twopower
-lotmp hitmp += lou4 * twopower
+# asm 1: hitmp lotmp = hi<w10=int64#5 * two13
+# asm 2: hitmp lotmp = hi<w10=u4 * two13
+hitmp lotmp = hiu4 * two13
+# asm 1: lotmp hitmp += lo<w10=int64#5 * two13
+# asm 2: lotmp hitmp += lo<w10=u4 * two13
+lotmp hitmp += lou4 * two13
 # asm 1: lotmp ^= (lo<w10=int64#5 unsigned>> 6)
 # asm 2: lotmp ^= (lo<w10=u4 unsigned>> 6)
 lotmp ^= (lou4 unsigned>> 6)
@@ -3221,13 +3245,12 @@ lou4 = lod13
 # asm 2: hi>w13=u4 = hi<w5_spill=d13
 hiu4 = hid13
 # qhasm:       w12 += sigma0(w13)
-twopower = 0x1000000 simple
-# asm 1: hitmp lotmp = hi<w13=int64#5 * twopower
-# asm 2: hitmp lotmp = hi<w13=u4 * twopower
-hitmp lotmp = hiu4 * twopower
-# asm 1: lotmp hitmp += lo<w13=int64#5 * twopower
-# asm 2: lotmp hitmp += lo<w13=u4 * twopower
-lotmp hitmp += lou4 * twopower
+# asm 1: hitmp lotmp = hi<w13=int64#5 * two24
+# asm 2: hitmp lotmp = hi<w13=u4 * two24
+hitmp lotmp = hiu4 * two24
+# asm 1: lotmp hitmp += lo<w13=int64#5 * two24
+# asm 2: lotmp hitmp += lo<w13=u4 * two24
+lotmp hitmp += lou4 * two24
 # asm 1: carry? lotmp ^= (lo<w13=int64#5 unsigned>> 1)
 # asm 2: carry? lotmp ^= (lo<w13=u4 unsigned>> 1)
 carry? lotmp ^= (lou4 unsigned>> 1)
@@ -3281,13 +3304,12 @@ lom12 = lou1
 # asm 2: hi>w4_next=m12 = hi<w12=u1
 him12 = hiu1
 # qhasm:       w13 += sigma1(w11)
-twopower = 0x2000 simple
-# asm 1: hitmp lotmp = hi<w11=int64#1 * twopower
-# asm 2: hitmp lotmp = hi<w11=u0 * twopower
-hitmp lotmp = hiu0 * twopower
-# asm 1: lotmp hitmp += lo<w11=int64#1 * twopower
-# asm 2: lotmp hitmp += lo<w11=u0 * twopower
-lotmp hitmp += lou0 * twopower
+# asm 1: hitmp lotmp = hi<w11=int64#1 * two13
+# asm 2: hitmp lotmp = hi<w11=u0 * two13
+hitmp lotmp = hiu0 * two13
+# asm 1: lotmp hitmp += lo<w11=int64#1 * two13
+# asm 2: lotmp hitmp += lo<w11=u0 * two13
+lotmp hitmp += lou0 * two13
 # asm 1: lotmp ^= (lo<w11=int64#1 unsigned>> 6)
 # asm 2: lotmp ^= (lo<w11=u0 unsigned>> 6)
 lotmp ^= (lou0 unsigned>> 6)
@@ -3330,13 +3352,12 @@ lod14 = lou2
 # asm 2: hi>w6_spill=d14 = hi<w6=u2
 hid14 = hiu2
 # qhasm:       w13 += sigma0(w14)
-twopower = 0x1000000 simple
-# asm 1: hitmp lotmp = hi<w14=int64#1 * twopower
-# asm 2: hitmp lotmp = hi<w14=u0 * twopower
-hitmp lotmp = hiu0 * twopower
-# asm 1: lotmp hitmp += lo<w14=int64#1 * twopower
-# asm 2: lotmp hitmp += lo<w14=u0 * twopower
-lotmp hitmp += lou0 * twopower
+# asm 1: hitmp lotmp = hi<w14=int64#1 * two24
+# asm 2: hitmp lotmp = hi<w14=u0 * two24
+hitmp lotmp = hiu0 * two24
+# asm 1: lotmp hitmp += lo<w14=int64#1 * two24
+# asm 2: lotmp hitmp += lo<w14=u0 * two24
+lotmp hitmp += lou0 * two24
 # asm 1: carry? lotmp ^= (lo<w14=int64#1 unsigned>> 1)
 # asm 2: carry? lotmp ^= (lo<w14=u0 unsigned>> 1)
 carry? lotmp ^= (lou0 unsigned>> 1)
@@ -3376,13 +3397,12 @@ lom13 = lou4
 # asm 2: hi>w5_next=m13 = hi<w13=u4
 him13 = hiu4
 # qhasm:       w14 += sigma1(w12)
-twopower = 0x2000 simple
-# asm 1: hitmp lotmp = hi<w12=int64#2 * twopower
-# asm 2: hitmp lotmp = hi<w12=u1 * twopower
-hitmp lotmp = hiu1 * twopower
-# asm 1: lotmp hitmp += lo<w12=int64#2 * twopower
-# asm 2: lotmp hitmp += lo<w12=u1 * twopower
-lotmp hitmp += lou1 * twopower
+# asm 1: hitmp lotmp = hi<w12=int64#2 * two13
+# asm 2: hitmp lotmp = hi<w12=u1 * two13
+hitmp lotmp = hiu1 * two13
+# asm 1: lotmp hitmp += lo<w12=int64#2 * two13
+# asm 2: lotmp hitmp += lo<w12=u1 * two13
+lotmp hitmp += lou1 * two13
 # asm 1: lotmp ^= (lo<w12=int64#2 unsigned>> 6)
 # asm 2: lotmp ^= (lo<w12=u1 unsigned>> 6)
 lotmp ^= (lou1 unsigned>> 6)
@@ -3425,13 +3445,12 @@ lod15 = lou3
 # asm 2: hi>w7_spill=d15 = hi<w7=u3
 hid15 = hiu3
 # qhasm:       w14 += sigma0(w15)
-twopower = 0x1000000 simple
-# asm 1: hitmp lotmp = hi<w15=int64#2 * twopower
-# asm 2: hitmp lotmp = hi<w15=u1 * twopower
-hitmp lotmp = hiu1 * twopower
-# asm 1: lotmp hitmp += lo<w15=int64#2 * twopower
-# asm 2: lotmp hitmp += lo<w15=u1 * twopower
-lotmp hitmp += lou1 * twopower
+# asm 1: hitmp lotmp = hi<w15=int64#2 * two24
+# asm 2: hitmp lotmp = hi<w15=u1 * two24
+hitmp lotmp = hiu1 * two24
+# asm 1: lotmp hitmp += lo<w15=int64#2 * two24
+# asm 2: lotmp hitmp += lo<w15=u1 * two24
+lotmp hitmp += lou1 * two24
 # asm 1: carry? lotmp ^= (lo<w15=int64#2 unsigned>> 1)
 # asm 2: carry? lotmp ^= (lo<w15=u1 unsigned>> 1)
 carry? lotmp ^= (lou1 unsigned>> 1)
@@ -3471,13 +3490,12 @@ lom14 = lou0
 # asm 2: hi>w6_next=m14 = hi<w14=u0
 him14 = hiu0
 # qhasm:       w15 += sigma1(w13)
-twopower = 0x2000 simple
-# asm 1: hitmp lotmp = hi<w13=int64#5 * twopower
-# asm 2: hitmp lotmp = hi<w13=u4 * twopower
-hitmp lotmp = hiu4 * twopower
-# asm 1: lotmp hitmp += lo<w13=int64#5 * twopower
-# asm 2: lotmp hitmp += lo<w13=u4 * twopower
-lotmp hitmp += lou4 * twopower
+# asm 1: hitmp lotmp = hi<w13=int64#5 * two13
+# asm 2: hitmp lotmp = hi<w13=u4 * two13
+hitmp lotmp = hiu4 * two13
+# asm 1: lotmp hitmp += lo<w13=int64#5 * two13
+# asm 2: lotmp hitmp += lo<w13=u4 * two13
+lotmp hitmp += lou4 * two13
 # asm 1: lotmp ^= (lo<w13=int64#5 unsigned>> 6)
 # asm 2: lotmp ^= (lo<w13=u4 unsigned>> 6)
 lotmp ^= (lou4 unsigned>> 6)
@@ -3527,13 +3545,12 @@ lom8 = lou2
 # asm 2: hi>w0_next=m8 = hi<w8=u2
 him8 = hiu2
 # qhasm:       w15 += sigma0(w0)
-twopower = 0x1000000 simple
-# asm 1: hitmp lotmp = hi<w0=int64#1 * twopower
-# asm 2: hitmp lotmp = hi<w0=u0 * twopower
-hitmp lotmp = hiu0 * twopower
-# asm 1: lotmp hitmp += lo<w0=int64#1 * twopower
-# asm 2: lotmp hitmp += lo<w0=u0 * twopower
-lotmp hitmp += lou0 * twopower
+# asm 1: hitmp lotmp = hi<w0=int64#1 * two24
+# asm 2: hitmp lotmp = hi<w0=u0 * two24
+hitmp lotmp = hiu0 * two24
+# asm 1: lotmp hitmp += lo<w0=int64#1 * two24
+# asm 2: lotmp hitmp += lo<w0=u0 * two24
+lotmp hitmp += lou0 * two24
 # asm 1: carry? lotmp ^= (lo<w0=int64#1 unsigned>> 1)
 # asm 2: carry? lotmp ^= (lo<w0=u0 unsigned>> 1)
 carry? lotmp ^= (lou0 unsigned>> 1)
@@ -3699,10 +3716,18 @@ hid15 = hiu3
 goto innerloop
 # qhasm:   endinnerloop:
 endinnerloop:
+# qhasm:   constants = constants_stack
+# asm 1: >constants=int32#1 = <constants_stack=stack32#4
+# asm 2: >constants=input_0 = <constants_stack=o3
+input_0 = o3
 # qhasm:   constants -= 640
-# asm 1: <constants=int32#2 -= 640
-# asm 2: <constants=input_1 -= 640
-input_1 -= 640
+# asm 1: <constants=int32#1 -= 640
+# asm 2: <constants=input_0 -= 640
+input_0 -= 640
+# qhasm:   constants_stack = constants
+# asm 1: >constants_stack=stack32#4 = <constants=int32#1
+# asm 2: >constants_stack=o3 = <constants=input_0
+o3 = input_0
 # qhasm:   r0 = r0_spill
 # asm 1: lo>r0=int64#1 = lo<r0_spill=spill64#1
 # asm 2: lo>r0=u0 = lo<r0_spill=d0

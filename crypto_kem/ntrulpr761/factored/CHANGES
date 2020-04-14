@@ -1,5 +1,9 @@
 Reverse-chronological changelog for ntrulpr{653,761,857}/factored:
 
+Used crypto_verify_clen.
+
+Introduced ppadsort.
+
 Factored out crypto_core_multsntrup761. (Same for other sizes.)
 
 Special-cased reduction mod 3 for F3_freeze().

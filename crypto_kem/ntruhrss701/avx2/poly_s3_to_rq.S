@@ -255,7 +255,7 @@ const_1s:
 .word 1
 .word 1
 .word 1
-const_8191s:
+const_modq:
 .word 8191
 .word 8191
 .word 8191
@@ -272,7 +272,7 @@ const_8191s:
 .word 8191
 .word 8191
 .word 8191
-mask_701:
+mask_n:
 .word 0xFFFF
 .word 0xFFFF
 .word 0xFFFF
@@ -1344,7 +1344,7 @@ vpaddw %ymm5, %ymm1, %ymm1
 vpsllw $1, %ymm1, %ymm2
 vmovdqu %ymm2, 1350(%rsp)
 vmovdqa 1376(%rsi), %ymm1
-vpand mask_701(%rip), %ymm1, %ymm1
+vpand mask_n(%rip), %ymm1, %ymm1
 vmovdqu 1374(%rsi), %ymm4
 vmovdqu 1372(%rsi), %ymm5
 vpaddw %ymm4, %ymm1, %ymm1
@@ -2077,7 +2077,7 @@ vpand %ymm15, %ymm3, %ymm14
 vpxor %ymm14, %ymm2, %ymm3
 vpsrlq $1, %ymm3, %ymm2
 vpsubw %ymm2, %ymm0, %ymm2
-vpand const_8191s(%rip), %ymm2, %ymm2
+vpand const_modq(%rip), %ymm2, %ymm2
 vpand const_1s(%rip), %ymm3, %ymm3
 vpor %ymm3, %ymm2, %ymm3
 vmovdqa %ymm3, 0(%rsp)
@@ -2101,7 +2101,7 @@ vpand %ymm15, %ymm3, %ymm14
 vpxor %ymm14, %ymm2, %ymm3
 vpsrlq $1, %ymm3, %ymm2
 vpsubw %ymm2, %ymm0, %ymm2
-vpand const_8191s(%rip), %ymm2, %ymm2
+vpand const_modq(%rip), %ymm2, %ymm2
 vpand const_1s(%rip), %ymm3, %ymm3
 vpor %ymm3, %ymm2, %ymm3
 vmovdqa %ymm3, 32(%rsp)
@@ -2125,7 +2125,7 @@ vpand %ymm15, %ymm3, %ymm14
 vpxor %ymm14, %ymm2, %ymm3
 vpsrlq $1, %ymm3, %ymm2
 vpsubw %ymm2, %ymm0, %ymm2
-vpand const_8191s(%rip), %ymm2, %ymm2
+vpand const_modq(%rip), %ymm2, %ymm2
 vpand const_1s(%rip), %ymm3, %ymm3
 vpor %ymm3, %ymm2, %ymm3
 vmovdqa %ymm3, 64(%rsp)
@@ -2149,7 +2149,7 @@ vpand %ymm15, %ymm3, %ymm14
 vpxor %ymm14, %ymm2, %ymm3
 vpsrlq $1, %ymm3, %ymm2
 vpsubw %ymm2, %ymm0, %ymm2
-vpand const_8191s(%rip), %ymm2, %ymm2
+vpand const_modq(%rip), %ymm2, %ymm2
 vpand const_1s(%rip), %ymm3, %ymm3
 vpor %ymm3, %ymm2, %ymm3
 vmovdqa %ymm3, 96(%rsp)
@@ -2173,7 +2173,7 @@ vpand %ymm15, %ymm3, %ymm14
 vpxor %ymm14, %ymm2, %ymm3
 vpsrlq $1, %ymm3, %ymm2
 vpsubw %ymm2, %ymm0, %ymm2
-vpand const_8191s(%rip), %ymm2, %ymm2
+vpand const_modq(%rip), %ymm2, %ymm2
 vpand const_1s(%rip), %ymm3, %ymm3
 vpor %ymm3, %ymm2, %ymm3
 vmovdqa %ymm3, 128(%rsp)
@@ -2197,7 +2197,7 @@ vpand %ymm15, %ymm3, %ymm14
 vpxor %ymm14, %ymm2, %ymm3
 vpsrlq $1, %ymm3, %ymm2
 vpsubw %ymm2, %ymm0, %ymm2
-vpand const_8191s(%rip), %ymm2, %ymm2
+vpand const_modq(%rip), %ymm2, %ymm2
 vpand const_1s(%rip), %ymm3, %ymm3
 vpor %ymm3, %ymm2, %ymm3
 vmovdqa %ymm3, 160(%rsp)
@@ -2221,7 +2221,7 @@ vpand %ymm15, %ymm3, %ymm14
 vpxor %ymm14, %ymm2, %ymm3
 vpsrlq $1, %ymm3, %ymm2
 vpsubw %ymm2, %ymm0, %ymm2
-vpand const_8191s(%rip), %ymm2, %ymm2
+vpand const_modq(%rip), %ymm2, %ymm2
 vpand const_1s(%rip), %ymm3, %ymm3
 vpor %ymm3, %ymm2, %ymm3
 vmovdqa %ymm3, 192(%rsp)
@@ -2245,7 +2245,7 @@ vpand %ymm15, %ymm3, %ymm14
 vpxor %ymm14, %ymm2, %ymm3
 vpsrlq $1, %ymm3, %ymm2
 vpsubw %ymm2, %ymm0, %ymm2
-vpand const_8191s(%rip), %ymm2, %ymm2
+vpand const_modq(%rip), %ymm2, %ymm2
 vpand const_1s(%rip), %ymm3, %ymm3
 vpor %ymm3, %ymm2, %ymm3
 vmovdqa %ymm3, 224(%rsp)
@@ -2269,7 +2269,7 @@ vpand %ymm15, %ymm3, %ymm14
 vpxor %ymm14, %ymm2, %ymm3
 vpsrlq $1, %ymm3, %ymm2
 vpsubw %ymm2, %ymm0, %ymm2
-vpand const_8191s(%rip), %ymm2, %ymm2
+vpand const_modq(%rip), %ymm2, %ymm2
 vpand const_1s(%rip), %ymm3, %ymm3
 vpor %ymm3, %ymm2, %ymm3
 vmovdqa %ymm3, 256(%rsp)
@@ -2293,7 +2293,7 @@ vpand %ymm15, %ymm3, %ymm14
 vpxor %ymm14, %ymm2, %ymm3
 vpsrlq $1, %ymm3, %ymm2
 vpsubw %ymm2, %ymm0, %ymm2
-vpand const_8191s(%rip), %ymm2, %ymm2
+vpand const_modq(%rip), %ymm2, %ymm2
 vpand const_1s(%rip), %ymm3, %ymm3
 vpor %ymm3, %ymm2, %ymm3
 vmovdqa %ymm3, 288(%rsp)
@@ -2317,7 +2317,7 @@ vpand %ymm15, %ymm3, %ymm14
 vpxor %ymm14, %ymm2, %ymm3
 vpsrlq $1, %ymm3, %ymm2
 vpsubw %ymm2, %ymm0, %ymm2
-vpand const_8191s(%rip), %ymm2, %ymm2
+vpand const_modq(%rip), %ymm2, %ymm2
 vpand const_1s(%rip), %ymm3, %ymm3
 vpor %ymm3, %ymm2, %ymm3
 vmovdqa %ymm3, 320(%rsp)
@@ -2341,7 +2341,7 @@ vpand %ymm15, %ymm3, %ymm14
 vpxor %ymm14, %ymm2, %ymm3
 vpsrlq $1, %ymm3, %ymm2
 vpsubw %ymm2, %ymm0, %ymm2
-vpand const_8191s(%rip), %ymm2, %ymm2
+vpand const_modq(%rip), %ymm2, %ymm2
 vpand const_1s(%rip), %ymm3, %ymm3
 vpor %ymm3, %ymm2, %ymm3
 vmovdqa %ymm3, 352(%rsp)
@@ -2365,7 +2365,7 @@ vpand %ymm15, %ymm3, %ymm14
 vpxor %ymm14, %ymm2, %ymm3
 vpsrlq $1, %ymm3, %ymm2
 vpsubw %ymm2, %ymm0, %ymm2
-vpand const_8191s(%rip), %ymm2, %ymm2
+vpand const_modq(%rip), %ymm2, %ymm2
 vpand const_1s(%rip), %ymm3, %ymm3
 vpor %ymm3, %ymm2, %ymm3
 vmovdqa %ymm3, 384(%rsp)
@@ -2389,7 +2389,7 @@ vpand %ymm15, %ymm3, %ymm14
 vpxor %ymm14, %ymm2, %ymm3
 vpsrlq $1, %ymm3, %ymm2
 vpsubw %ymm2, %ymm0, %ymm2
-vpand const_8191s(%rip), %ymm2, %ymm2
+vpand const_modq(%rip), %ymm2, %ymm2
 vpand const_1s(%rip), %ymm3, %ymm3
 vpor %ymm3, %ymm2, %ymm3
 vmovdqa %ymm3, 416(%rsp)
@@ -2413,7 +2413,7 @@ vpand %ymm15, %ymm3, %ymm14
 vpxor %ymm14, %ymm2, %ymm3
 vpsrlq $1, %ymm3, %ymm2
 vpsubw %ymm2, %ymm0, %ymm2
-vpand const_8191s(%rip), %ymm2, %ymm2
+vpand const_modq(%rip), %ymm2, %ymm2
 vpand const_1s(%rip), %ymm3, %ymm3
 vpor %ymm3, %ymm2, %ymm3
 vmovdqa %ymm3, 448(%rsp)
@@ -2437,7 +2437,7 @@ vpand %ymm15, %ymm3, %ymm14
 vpxor %ymm14, %ymm2, %ymm3
 vpsrlq $1, %ymm3, %ymm2
 vpsubw %ymm2, %ymm0, %ymm2
-vpand const_8191s(%rip), %ymm2, %ymm2
+vpand const_modq(%rip), %ymm2, %ymm2
 vpand const_1s(%rip), %ymm3, %ymm3
 vpor %ymm3, %ymm2, %ymm3
 vmovdqa %ymm3, 480(%rsp)
@@ -2461,7 +2461,7 @@ vpand %ymm15, %ymm3, %ymm14
 vpxor %ymm14, %ymm2, %ymm3
 vpsrlq $1, %ymm3, %ymm2
 vpsubw %ymm2, %ymm0, %ymm2
-vpand const_8191s(%rip), %ymm2, %ymm2
+vpand const_modq(%rip), %ymm2, %ymm2
 vpand const_1s(%rip), %ymm3, %ymm3
 vpor %ymm3, %ymm2, %ymm3
 vmovdqa %ymm3, 512(%rsp)
@@ -2485,7 +2485,7 @@ vpand %ymm15, %ymm3, %ymm14
 vpxor %ymm14, %ymm2, %ymm3
 vpsrlq $1, %ymm3, %ymm2
 vpsubw %ymm2, %ymm0, %ymm2
-vpand const_8191s(%rip), %ymm2, %ymm2
+vpand const_modq(%rip), %ymm2, %ymm2
 vpand const_1s(%rip), %ymm3, %ymm3
 vpor %ymm3, %ymm2, %ymm3
 vmovdqa %ymm3, 544(%rsp)
@@ -2509,7 +2509,7 @@ vpand %ymm15, %ymm3, %ymm14
 vpxor %ymm14, %ymm2, %ymm3
 vpsrlq $1, %ymm3, %ymm2
 vpsubw %ymm2, %ymm0, %ymm2
-vpand const_8191s(%rip), %ymm2, %ymm2
+vpand const_modq(%rip), %ymm2, %ymm2
 vpand const_1s(%rip), %ymm3, %ymm3
 vpor %ymm3, %ymm2, %ymm3
 vmovdqa %ymm3, 576(%rsp)
@@ -2533,7 +2533,7 @@ vpand %ymm15, %ymm3, %ymm14
 vpxor %ymm14, %ymm2, %ymm3
 vpsrlq $1, %ymm3, %ymm2
 vpsubw %ymm2, %ymm0, %ymm2
-vpand const_8191s(%rip), %ymm2, %ymm2
+vpand const_modq(%rip), %ymm2, %ymm2
 vpand const_1s(%rip), %ymm3, %ymm3
 vpor %ymm3, %ymm2, %ymm3
 vmovdqa %ymm3, 608(%rsp)
@@ -2557,7 +2557,7 @@ vpand %ymm15, %ymm3, %ymm14
 vpxor %ymm14, %ymm2, %ymm3
 vpsrlq $1, %ymm3, %ymm2
 vpsubw %ymm2, %ymm0, %ymm2
-vpand const_8191s(%rip), %ymm2, %ymm2
+vpand const_modq(%rip), %ymm2, %ymm2
 vpand const_1s(%rip), %ymm3, %ymm3
 vpor %ymm3, %ymm2, %ymm3
 vmovdqa %ymm3, 640(%rsp)
@@ -2581,7 +2581,7 @@ vpand %ymm15, %ymm3, %ymm14
 vpxor %ymm14, %ymm2, %ymm3
 vpsrlq $1, %ymm3, %ymm2
 vpsubw %ymm2, %ymm0, %ymm2
-vpand const_8191s(%rip), %ymm2, %ymm2
+vpand const_modq(%rip), %ymm2, %ymm2
 vpand const_1s(%rip), %ymm3, %ymm3
 vpor %ymm3, %ymm2, %ymm3
 vmovdqa %ymm3, 672(%rsp)
@@ -2605,7 +2605,7 @@ vpand %ymm15, %ymm3, %ymm14
 vpxor %ymm14, %ymm2, %ymm3
 vpsrlq $1, %ymm3, %ymm2
 vpsubw %ymm2, %ymm0, %ymm2
-vpand const_8191s(%rip), %ymm2, %ymm2
+vpand const_modq(%rip), %ymm2, %ymm2
 vpand const_1s(%rip), %ymm3, %ymm3
 vpor %ymm3, %ymm2, %ymm3
 vmovdqa %ymm3, 704(%rsp)
@@ -2629,7 +2629,7 @@ vpand %ymm15, %ymm3, %ymm14
 vpxor %ymm14, %ymm2, %ymm3
 vpsrlq $1, %ymm3, %ymm2
 vpsubw %ymm2, %ymm0, %ymm2
-vpand const_8191s(%rip), %ymm2, %ymm2
+vpand const_modq(%rip), %ymm2, %ymm2
 vpand const_1s(%rip), %ymm3, %ymm3
 vpor %ymm3, %ymm2, %ymm3
 vmovdqa %ymm3, 736(%rsp)
@@ -2653,7 +2653,7 @@ vpand %ymm15, %ymm3, %ymm14
 vpxor %ymm14, %ymm2, %ymm3
 vpsrlq $1, %ymm3, %ymm2
 vpsubw %ymm2, %ymm0, %ymm2
-vpand const_8191s(%rip), %ymm2, %ymm2
+vpand const_modq(%rip), %ymm2, %ymm2
 vpand const_1s(%rip), %ymm3, %ymm3
 vpor %ymm3, %ymm2, %ymm3
 vmovdqa %ymm3, 768(%rsp)
@@ -2677,7 +2677,7 @@ vpand %ymm15, %ymm3, %ymm14
 vpxor %ymm14, %ymm2, %ymm3
 vpsrlq $1, %ymm3, %ymm2
 vpsubw %ymm2, %ymm0, %ymm2
-vpand const_8191s(%rip), %ymm2, %ymm2
+vpand const_modq(%rip), %ymm2, %ymm2
 vpand const_1s(%rip), %ymm3, %ymm3
 vpor %ymm3, %ymm2, %ymm3
 vmovdqa %ymm3, 800(%rsp)
@@ -2701,7 +2701,7 @@ vpand %ymm15, %ymm3, %ymm14
 vpxor %ymm14, %ymm2, %ymm3
 vpsrlq $1, %ymm3, %ymm2
 vpsubw %ymm2, %ymm0, %ymm2
-vpand const_8191s(%rip), %ymm2, %ymm2
+vpand const_modq(%rip), %ymm2, %ymm2
 vpand const_1s(%rip), %ymm3, %ymm3
 vpor %ymm3, %ymm2, %ymm3
 vmovdqa %ymm3, 832(%rsp)
@@ -2725,7 +2725,7 @@ vpand %ymm15, %ymm3, %ymm14
 vpxor %ymm14, %ymm2, %ymm3
 vpsrlq $1, %ymm3, %ymm2
 vpsubw %ymm2, %ymm0, %ymm2
-vpand const_8191s(%rip), %ymm2, %ymm2
+vpand const_modq(%rip), %ymm2, %ymm2
 vpand const_1s(%rip), %ymm3, %ymm3
 vpor %ymm3, %ymm2, %ymm3
 vmovdqa %ymm3, 864(%rsp)
@@ -2749,7 +2749,7 @@ vpand %ymm15, %ymm3, %ymm14
 vpxor %ymm14, %ymm2, %ymm3
 vpsrlq $1, %ymm3, %ymm2
 vpsubw %ymm2, %ymm0, %ymm2
-vpand const_8191s(%rip), %ymm2, %ymm2
+vpand const_modq(%rip), %ymm2, %ymm2
 vpand const_1s(%rip), %ymm3, %ymm3
 vpor %ymm3, %ymm2, %ymm3
 vmovdqa %ymm3, 896(%rsp)
@@ -2773,7 +2773,7 @@ vpand %ymm15, %ymm3, %ymm14
 vpxor %ymm14, %ymm2, %ymm3
 vpsrlq $1, %ymm3, %ymm2
 vpsubw %ymm2, %ymm0, %ymm2
-vpand const_8191s(%rip), %ymm2, %ymm2
+vpand const_modq(%rip), %ymm2, %ymm2
 vpand const_1s(%rip), %ymm3, %ymm3
 vpor %ymm3, %ymm2, %ymm3
 vmovdqa %ymm3, 928(%rsp)
@@ -2797,7 +2797,7 @@ vpand %ymm15, %ymm3, %ymm14
 vpxor %ymm14, %ymm2, %ymm3
 vpsrlq $1, %ymm3, %ymm2
 vpsubw %ymm2, %ymm0, %ymm2
-vpand const_8191s(%rip), %ymm2, %ymm2
+vpand const_modq(%rip), %ymm2, %ymm2
 vpand const_1s(%rip), %ymm3, %ymm3
 vpor %ymm3, %ymm2, %ymm3
 vmovdqa %ymm3, 960(%rsp)
@@ -2821,7 +2821,7 @@ vpand %ymm15, %ymm3, %ymm14
 vpxor %ymm14, %ymm2, %ymm3
 vpsrlq $1, %ymm3, %ymm2
 vpsubw %ymm2, %ymm0, %ymm2
-vpand const_8191s(%rip), %ymm2, %ymm2
+vpand const_modq(%rip), %ymm2, %ymm2
 vpand const_1s(%rip), %ymm3, %ymm3
 vpor %ymm3, %ymm2, %ymm3
 vmovdqa %ymm3, 992(%rsp)
@@ -2845,7 +2845,7 @@ vpand %ymm15, %ymm3, %ymm14
 vpxor %ymm14, %ymm2, %ymm3
 vpsrlq $1, %ymm3, %ymm2
 vpsubw %ymm2, %ymm0, %ymm2
-vpand const_8191s(%rip), %ymm2, %ymm2
+vpand const_modq(%rip), %ymm2, %ymm2
 vpand const_1s(%rip), %ymm3, %ymm3
 vpor %ymm3, %ymm2, %ymm3
 vmovdqa %ymm3, 1024(%rsp)
@@ -2869,7 +2869,7 @@ vpand %ymm15, %ymm3, %ymm14
 vpxor %ymm14, %ymm2, %ymm3
 vpsrlq $1, %ymm3, %ymm2
 vpsubw %ymm2, %ymm0, %ymm2
-vpand const_8191s(%rip), %ymm2, %ymm2
+vpand const_modq(%rip), %ymm2, %ymm2
 vpand const_1s(%rip), %ymm3, %ymm3
 vpor %ymm3, %ymm2, %ymm3
 vmovdqa %ymm3, 1056(%rsp)
@@ -2893,7 +2893,7 @@ vpand %ymm15, %ymm3, %ymm14
 vpxor %ymm14, %ymm2, %ymm3
 vpsrlq $1, %ymm3, %ymm2
 vpsubw %ymm2, %ymm0, %ymm2
-vpand const_8191s(%rip), %ymm2, %ymm2
+vpand const_modq(%rip), %ymm2, %ymm2
 vpand const_1s(%rip), %ymm3, %ymm3
 vpor %ymm3, %ymm2, %ymm3
 vmovdqa %ymm3, 1088(%rsp)
@@ -2917,7 +2917,7 @@ vpand %ymm15, %ymm3, %ymm14
 vpxor %ymm14, %ymm2, %ymm3
 vpsrlq $1, %ymm3, %ymm2
 vpsubw %ymm2, %ymm0, %ymm2
-vpand const_8191s(%rip), %ymm2, %ymm2
+vpand const_modq(%rip), %ymm2, %ymm2
 vpand const_1s(%rip), %ymm3, %ymm3
 vpor %ymm3, %ymm2, %ymm3
 vmovdqa %ymm3, 1120(%rsp)
@@ -2941,7 +2941,7 @@ vpand %ymm15, %ymm3, %ymm14
 vpxor %ymm14, %ymm2, %ymm3
 vpsrlq $1, %ymm3, %ymm2
 vpsubw %ymm2, %ymm0, %ymm2
-vpand const_8191s(%rip), %ymm2, %ymm2
+vpand const_modq(%rip), %ymm2, %ymm2
 vpand const_1s(%rip), %ymm3, %ymm3
 vpor %ymm3, %ymm2, %ymm3
 vmovdqa %ymm3, 1152(%rsp)
@@ -2965,7 +2965,7 @@ vpand %ymm15, %ymm3, %ymm14
 vpxor %ymm14, %ymm2, %ymm3
 vpsrlq $1, %ymm3, %ymm2
 vpsubw %ymm2, %ymm0, %ymm2
-vpand const_8191s(%rip), %ymm2, %ymm2
+vpand const_modq(%rip), %ymm2, %ymm2
 vpand const_1s(%rip), %ymm3, %ymm3
 vpor %ymm3, %ymm2, %ymm3
 vmovdqa %ymm3, 1184(%rsp)
@@ -2989,7 +2989,7 @@ vpand %ymm15, %ymm3, %ymm14
 vpxor %ymm14, %ymm2, %ymm3
 vpsrlq $1, %ymm3, %ymm2
 vpsubw %ymm2, %ymm0, %ymm2
-vpand const_8191s(%rip), %ymm2, %ymm2
+vpand const_modq(%rip), %ymm2, %ymm2
 vpand const_1s(%rip), %ymm3, %ymm3
 vpor %ymm3, %ymm2, %ymm3
 vmovdqa %ymm3, 1216(%rsp)
@@ -3013,7 +3013,7 @@ vpand %ymm15, %ymm3, %ymm14
 vpxor %ymm14, %ymm2, %ymm3
 vpsrlq $1, %ymm3, %ymm2
 vpsubw %ymm2, %ymm0, %ymm2
-vpand const_8191s(%rip), %ymm2, %ymm2
+vpand const_modq(%rip), %ymm2, %ymm2
 vpand const_1s(%rip), %ymm3, %ymm3
 vpor %ymm3, %ymm2, %ymm3
 vmovdqa %ymm3, 1248(%rsp)
@@ -3037,7 +3037,7 @@ vpand %ymm15, %ymm3, %ymm14
 vpxor %ymm14, %ymm2, %ymm3
 vpsrlq $1, %ymm3, %ymm2
 vpsubw %ymm2, %ymm0, %ymm2
-vpand const_8191s(%rip), %ymm2, %ymm2
+vpand const_modq(%rip), %ymm2, %ymm2
 vpand const_1s(%rip), %ymm3, %ymm3
 vpor %ymm3, %ymm2, %ymm3
 vmovdqa %ymm3, 1280(%rsp)
@@ -3061,7 +3061,7 @@ vpand %ymm15, %ymm3, %ymm14
 vpxor %ymm14, %ymm2, %ymm3
 vpsrlq $1, %ymm3, %ymm2
 vpsubw %ymm2, %ymm0, %ymm2
-vpand const_8191s(%rip), %ymm2, %ymm2
+vpand const_modq(%rip), %ymm2, %ymm2
 vpand const_1s(%rip), %ymm3, %ymm3
 vpor %ymm3, %ymm2, %ymm3
 vmovdqa %ymm3, 1312(%rsp)
@@ -3085,7 +3085,7 @@ vpand %ymm15, %ymm3, %ymm14
 vpxor %ymm14, %ymm2, %ymm3
 vpsrlq $1, %ymm3, %ymm2
 vpsubw %ymm2, %ymm0, %ymm2
-vpand const_8191s(%rip), %ymm2, %ymm2
+vpand const_modq(%rip), %ymm2, %ymm2
 vpand const_1s(%rip), %ymm3, %ymm3
 vpor %ymm3, %ymm2, %ymm3
 vmovdqa %ymm3, 1344(%rsp)
@@ -3109,7 +3109,7 @@ vpand %ymm15, %ymm3, %ymm14
 vpxor %ymm14, %ymm2, %ymm3
 vpsrlq $1, %ymm3, %ymm2
 vpsubw %ymm2, %ymm0, %ymm2
-vpand const_8191s(%rip), %ymm2, %ymm2
+vpand const_modq(%rip), %ymm2, %ymm2
 vpand const_1s(%rip), %ymm3, %ymm3
 vpor %ymm3, %ymm2, %ymm3
 vmovdqa %ymm3, 1376(%rsp)

@@ -1,4 +1,7 @@
-int32 twopower
+int32 two13
+int32 two23
+int32 two24
+int32 two25
 int32 lotmp
 int32 lotmp2
 int32 hitmp
@@ -83,3 +86,4 @@ stack32 o0
 stack32 o1
 stack32 o2
 stack32 o3
+stack32 o4

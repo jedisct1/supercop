@@ -1,5 +1,5 @@
 /*
- * measure-anything.c version 20170713
+ * measure-anything.c version 20200122
  * D. J. Bernstein
  * Public domain.
  */
@@ -13,7 +13,7 @@
 #include <sys/resource.h>
 #include "kernelrandombytes.h"
 #include "cpucycles.h"
-#include "cpuid.h"
+#include "supercopcpuid.h"
 #include "measure.h"
 
 static void printword(const char *s)
