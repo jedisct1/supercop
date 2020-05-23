@@ -41,9 +41,9 @@ static void sbox_layer_10_uint64(uint64_t* d) {
   *d = sbox_layer_10_bitsliced_uint64(*d);
 }
 
-
 #include "lowmc_256_256_38.h"
 
+#if !defined(NO_UINT64_FALLBACK)
 // uint64 based implementation
 #include "lowmc_fns_uint64_L1.h"
 #define LOWMC lowmc_uint64_128
@@ -58,6 +58,7 @@ static void sbox_layer_10_uint64(uint64_t* d) {
 #undef LOWMC
 #define LOWMC lowmc_uint64_256
 #include "lowmc.c.i"
+#endif
 
 
 lowmc_implementation_f lowmc_get_implementation(const lowmc_t* lowmc) {
@@ -65,6 +66,7 @@ lowmc_implementation_f lowmc_get_implementation(const lowmc_t* lowmc) {
   ASSUME(lowmc->n == 128 || lowmc->n == 192 || lowmc->n == 256);
 
 
+#if !defined(NO_UINT64_FALLBACK)
   if (lowmc->m == 10) {
     switch (lowmc->n) {
     case 256:
@@ -72,6 +74,7 @@ lowmc_implementation_f lowmc_get_implementation(const lowmc_t* lowmc) {
     }
   }
 
+#endif
 
   return NULL;
 }
@@ -82,12 +85,14 @@ lowmc_compute_aux_implementation_f lowmc_compute_aux_get_implementation(const lo
   ASSUME(lowmc->n == 128 || lowmc->n == 192 || lowmc->n == 256);
 
 
+#if !defined(NO_UINT64_FALLBACK)
   if (lowmc->m == 10) {
     switch (lowmc->n) {
     case 256:
       return lowmc_uint64_256_compute_aux_10;
     }
   }
+#endif
 
   return NULL;
 }

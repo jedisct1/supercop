@@ -10,6 +10,7 @@
 
 #include "picnic.h"
 
+#include <assert.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -89,11 +90,11 @@ int PICNIC_CALLING_CONVENTION picnic_keygen(picnic_params_t param, picnic_public
   // generate private key
   sk->data[0] = param;
   // random secret key
-  if (!rand_bytes(sk_sk, input_size)) {
+  if (rand_bits(sk_sk, instance->lowmc.k)) {
     return -1;
   }
   // random plain text
-  if (!rand_bytes(sk_pt, output_size)) {
+  if (rand_bits(sk_pt, instance->lowmc.n)) {
     return -1;
   }
   // encrypt plaintext under secret key
@@ -204,7 +205,7 @@ int PICNIC_CALLING_CONVENTION picnic_sign(const picnic_privatekey_t* sk, const u
   const uint8_t* sk_c  = SK_C(sk);
   const uint8_t* sk_pt = SK_PT(sk);
 
-  if (param == Picnic2_L1_FS || param == Picnic2_L3_FS || param == Picnic2_L5_FS) {
+  if (param == Picnic3_L1 || param == Picnic3_L3 || param == Picnic3_L5) {
     return -1;
   } else {
     return impl_sign(instance, sk_pt, sk_sk, sk_c, message, message_len, signature, signature_len);
@@ -229,7 +230,7 @@ int PICNIC_CALLING_CONVENTION picnic_verify(const picnic_publickey_t* pk, const 
   const uint8_t* pk_c  = PK_C(pk);
   const uint8_t* pk_pt = PK_PT(pk);
 
-  if (param == Picnic2_L1_FS || param == Picnic2_L3_FS || param == Picnic2_L5_FS) {
+  if (param == Picnic3_L1 || param == Picnic3_L3 || param == Picnic3_L5) {
     return -1;
   } else {
     return impl_verify(instance, pk_pt, pk_c, message, message_len, signature, signature_len);
@@ -239,18 +240,6 @@ int PICNIC_CALLING_CONVENTION picnic_verify(const picnic_publickey_t* pk, const 
 
 const char* PICNIC_CALLING_CONVENTION picnic_get_param_name(picnic_params_t parameters) {
   switch (parameters) {
-  case Picnic_L1_1_FS:
-    return "Picnic_L1_1_FS";
-  case Picnic_L1_1_UR:
-    return "Picnic_L1_1_UR";
-  case Picnic_L3_1_FS:
-    return "Picnic_L3_1_FS";
-  case Picnic_L3_1_UR:
-    return "Picnic_L3_1_UR";
-  case Picnic_L5_1_FS:
-    return "Picnic_L5_1_FS";
-  case Picnic_L5_1_UR:
-    return "Picnic_L5_1_UR";
   case Picnic_L1_FS:
     return "Picnic_L1_FS";
   case Picnic_L1_UR:
@@ -263,12 +252,18 @@ const char* PICNIC_CALLING_CONVENTION picnic_get_param_name(picnic_params_t para
     return "Picnic_L5_FS";
   case Picnic_L5_UR:
     return "Picnic_L5_UR";
-  case Picnic2_L1_FS:
-    return "Picnic2_L1_FS";
-  case Picnic2_L3_FS:
-    return "Picnic2_L3_FS";
-  case Picnic2_L5_FS:
-    return "Picnic2_L5_FS";
+  case Picnic3_L1:
+    return "Picnic3_L1";
+  case Picnic3_L3:
+    return "Picnic3_L3";
+  case Picnic3_L5:
+    return "Picnic3_L5";
+  case Picnic_L1_full:
+    return "Picnic_L1_full";
+  case Picnic_L3_full:
+    return "Picnic_L3_full";
+  case Picnic_L5_full:
+    return "Picnic_L5_full";
   default:
     return "Unknown parameter set";
   }
@@ -312,6 +307,15 @@ int PICNIC_CALLING_CONVENTION picnic_read_public_key(picnic_publickey_t* key, co
   const size_t bytes_required = 1 + 2 * output_size;
   if (buflen < bytes_required) {
     return -1;
+  }
+
+  if (param == Picnic_L1_full || param == Picnic_L5_full || param == Picnic3_L1 ||
+      param == Picnic3_L5) {
+    const unsigned int diff = output_size * 8 - instance->lowmc.n;
+    if (check_padding_bits(buf[1 + output_size - 1], diff) ||
+        check_padding_bits(buf[1 + 2 * output_size - 1], diff)) {
+      return -1;
+    }
   }
 
   memcpy(key->data, buf, bytes_required);
@@ -358,6 +362,17 @@ int PICNIC_CALLING_CONVENTION picnic_read_private_key(picnic_privatekey_t* key, 
   const size_t bytes_required = 1 + input_size + 2 * output_size;
   if (buflen < bytes_required) {
     return -1;
+  }
+
+  if (param == Picnic_L1_full || param == Picnic_L5_full || param == Picnic3_L1 ||
+      param == Picnic3_L5) {
+    const unsigned int diff = output_size * 8 - instance->lowmc.n;
+    assert(diff == input_size * 8 - instance->lowmc.k);
+    if (check_padding_bits(buf[1 + input_size - 1], diff) ||
+        check_padding_bits(buf[1 + input_size + output_size - 1], diff) ||
+        check_padding_bits(buf[1 + input_size + 2 * output_size - 1], diff)) {
+      return -1;
+    }
   }
 
   memcpy(key->data, buf, bytes_required);

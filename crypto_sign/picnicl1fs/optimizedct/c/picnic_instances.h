@@ -15,16 +15,10 @@
 #include "picnic.h"
 
 #define SALT_SIZE 32
-#define MAX_LOWMC_ROUNDS 38
-#define MAX_LOWMC_SBOXES 10
 #define MAX_DIGEST_SIZE 64
-#define MAX_NUM_ROUNDS 438
-#define MAX_VIEW_SIZE 143
-
-typedef enum { TRANSFORM_FS, TRANSFORM_UR } transform_t;
 
 typedef struct picnic_instance_t {
-  const lowmc_t* lowmc;
+  lowmc_parameters_t lowmc;
 
   uint32_t digest_size;       /* bytes */
   uint32_t seed_size;         /* bytes */
@@ -35,7 +29,7 @@ typedef struct picnic_instance_t {
   uint32_t input_size;      /* bytes */
   uint32_t output_size;     /* bytes */
   uint32_t view_size;       /* bytes */
-  uint32_t view_round_size; /* bits */
+  uint32_t view_round_size; /* bits (per round) */
 
   uint32_t collapsed_challenge_size;       /* bytes */
   uint32_t unruh_without_input_bytes_size; /* bytes */
@@ -43,7 +37,6 @@ typedef struct picnic_instance_t {
   uint32_t max_signature_size;             /* bytes */
 
   picnic_params_t params;
-  transform_t transform;
 
   struct {
     lowmc_implementation_f lowmc;
@@ -69,12 +62,12 @@ PICNIC_EXPORT size_t PICNIC_CALLING_CONVENTION picnic_get_public_key_size(picnic
 PICNIC_EXPORT int PICNIC_CALLING_CONVENTION picnic_sk_to_pk(const picnic_privatekey_t* sk,
                                                             picnic_publickey_t* pk);
 
-// Prefix values for domain separation
-extern const uint8_t HASH_PREFIX_0; // = 0
-extern const uint8_t HASH_PREFIX_1; // = 1
-extern const uint8_t HASH_PREFIX_2; // = 2
-extern const uint8_t HASH_PREFIX_3; // = 3
-extern const uint8_t HASH_PREFIX_4; // = 4
-extern const uint8_t HASH_PREFIX_5; // = 5
+/* Prefix values for domain separation */
+static const uint8_t HASH_PREFIX_0 = 0;
+static const uint8_t HASH_PREFIX_1 = 1;
+static const uint8_t HASH_PREFIX_2 = 2;
+static const uint8_t HASH_PREFIX_3 = 3;
+static const uint8_t HASH_PREFIX_4 = 4;
+static const uint8_t HASH_PREFIX_5 = 5;
 
 #endif

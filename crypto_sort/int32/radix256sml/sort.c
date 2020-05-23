@@ -38,5 +38,5 @@ void crypto_sort(void *array,long long n)
   else if (n > sortsmall_LIMIT)
     sortmedium(array,n);
   else if (n > 1)
-    sortlarge(array,n);
+    sortsmall(array,n);
 }

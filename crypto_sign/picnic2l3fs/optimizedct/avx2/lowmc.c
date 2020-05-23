@@ -42,9 +42,9 @@ static void sbox_layer_10_uint64(uint64_t* d) {
   *d = sbox_layer_10_bitsliced_uint64(*d);
 }
 
-
 #include "lowmc_192_192_30.h"
 
+#if !defined(NO_UINT64_FALLBACK)
 // uint64 based implementation
 #include "lowmc_fns_uint64_L1.h"
 #define LOWMC lowmc_uint64_128
@@ -59,6 +59,7 @@ static void sbox_layer_10_uint64(uint64_t* d) {
 #undef LOWMC
 #define LOWMC lowmc_uint64_256
 #include "lowmc.c.i"
+#endif
 
 #define FN_ATTR ATTR_TARGET_SSE2
 
@@ -126,6 +127,7 @@ lowmc_implementation_f lowmc_get_implementation(const lowmc_t* lowmc) {
     }
   }
 
+#if !defined(NO_UINT64_FALLBACK)
   if (lowmc->m == 10) {
     switch (lowmc->n) {
     case 192:
@@ -133,6 +135,7 @@ lowmc_implementation_f lowmc_get_implementation(const lowmc_t* lowmc) {
     }
   }
 
+#endif
 
   return NULL;
 }
@@ -159,12 +162,14 @@ lowmc_compute_aux_implementation_f lowmc_compute_aux_get_implementation(const lo
     }
   }
 
+#if !defined(NO_UINT64_FALLBACK)
   if (lowmc->m == 10) {
     switch (lowmc->n) {
     case 192:
       return lowmc_uint64_192_compute_aux_10;
     }
   }
+#endif
 
   return NULL;
 }

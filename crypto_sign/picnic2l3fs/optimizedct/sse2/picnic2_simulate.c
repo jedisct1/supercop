@@ -90,7 +90,7 @@ static uint8_t mpc_AND(uint8_t a, uint8_t b, uint64_t mask_a, uint64_t mask_b, r
 
 static void mpc_sbox(mzd_local_t* statein, shares_t* state_masks, randomTape_t* tapes, msgs_t* msgs,
                      uint8_t* unopenened_msg, const picnic_instance_t* params) {
-  uint8_t state[32];
+  uint8_t state[MAX_LOWMC_BLOCK_SIZE];
   mzd_to_char_array(state, statein, params->lowmc->n / 8);
   for (size_t i = 0; i < params->lowmc->m * 3; i += 3) {
     uint8_t a       = getBit((uint8_t*)state, i + 2);
@@ -164,6 +164,7 @@ static void mpc_xor_masks(shares_t* out, const shares_t* a, const shares_t* b) {
   }
 }
 
+#if !defined(NO_UINT64_FALLBACK)
 /* PICNIC2_L1_FS */
 #define XOR mzd_xor_uint64_128
 #define MPC_MUL mpc_matrix_mul_uint64_128
@@ -224,6 +225,7 @@ static void mpc_xor_masks(shares_t* out, const shares_t* a, const shares_t* b) {
 #undef LOWMC_R
 #undef LOWMC_INSTANCE
 #undef SIM_ONLINE
+#endif
 
 #define FN_ATTR ATTR_TARGET_SSE2
 /* PICNIC2_L1_FS */
@@ -294,6 +296,7 @@ lowmc_simulate_online_f lowmc_simulate_online_get_implementation(const lowmc_t* 
   ASSUME(lowmc->m == 10);
   ASSUME(lowmc->n == 128 || lowmc->n == 192 || lowmc->n == 256);
 
+
   if (CPU_SUPPORTS_SSE2 || CPU_SUPPORTS_NEON) {
     if (lowmc->m == 10) {
       switch (lowmc->n) {
@@ -302,12 +305,15 @@ lowmc_simulate_online_f lowmc_simulate_online_get_implementation(const lowmc_t* 
       }
     }
   }
+
+#if !defined(NO_UINT64_FALLBACK)
   if (lowmc->m == 10) {
     switch (lowmc->n) {
     case 192:
       return lowmc_simulate_online_uint64_192_10;
     }
   }
+#endif
 
   return NULL;
 }
