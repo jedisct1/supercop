@@ -4,6 +4,7 @@
 
 #ifndef PK_GEN_H
 #define PK_GEN_H
+#define pk_gen crypto_kem_mceliece8192128_avx_pk_gen
 
 #include <stdint.h>
 

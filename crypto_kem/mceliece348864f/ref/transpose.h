@@ -4,6 +4,7 @@
 
 #ifndef TRANSPOSE_H
 #define TRANSPOSE_H
+#define transpose_64x64 crypto_kem_mceliece348864f_ref_transpose_64x64
 
 #include <stdint.h>
 

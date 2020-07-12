@@ -5,6 +5,7 @@
 
 #ifndef BM_H
 #define BM_H
+#define bm crypto_kem_mceliece460896f_sse_bm
 
 #include "params.h"
 #include "vec128.h"

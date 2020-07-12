@@ -1,3 +1,7 @@
+#define update_asm crypto_kem_mceliece348864f_sse_update_asm
+#define _update_asm _crypto_kem_mceliece348864f_sse_update_asm
+#define vec_reduce_asm crypto_kem_mceliece348864f_sse_vec_reduce_asm
+#define _vec_reduce_asm _crypto_kem_mceliece348864f_sse_vec_reduce_asm
 /*
   This file is for the inversion-free Berlekamp-Massey algorithm
   see https://ieeexplore.ieee.org/document/87857
@@ -39,7 +43,7 @@ static inline uint64_t mask_leq(uint16_t a, uint16_t b)
 	return ret;
 }
 
-void vec_cmov(uint64_t out[][2], uint64_t mask)
+static void vec_cmov(uint64_t out[][2], uint64_t mask)
 {
 	int i;
 
@@ -47,7 +51,7 @@ void vec_cmov(uint64_t out[][2], uint64_t mask)
 		out[i][0] = (out[i][0] & ~mask) | (out[i][1] & mask);
 }
 
-void vec_mul_sp(uint64_t *h, uint64_t *f, const uint64_t g[][2])
+static void vec_mul_sp(uint64_t *h, uint64_t *f, const uint64_t g[][2])
 {
 	int i, j;
 	uint64_t result[2*GFBITS - 1];
@@ -147,9 +151,10 @@ static inline void get_coefs(gf *out, vec128 *in)
 	interleave(buf, 14, 15, mask[0], 0);
 
 	for (i = 0; i < 16; i++)
-	for (j = 0; j <  2; j++)
-	for (k = 0; k <  4; k++)
-		out[ (4*j + k)*16 + i ] = (vec128_extract(buf[i], j) >> (k*16)) & GFMASK;
+	for (k = 0; k <  4; k++) {
+		out[ (4*0 + k)*16 + i ] = (vec128_extract(buf[i], 0) >> (k*16)) & GFMASK;
+		out[ (4*1 + k)*16 + i ] = (vec128_extract(buf[i], 1) >> (k*16)) & GFMASK;
+	}
 }
 
 /* input: in, sequence of field elements */

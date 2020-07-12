@@ -308,13 +308,11 @@ void fft(uint16_t *w, const uint16_t *f, size_t f_coeffs) {
  * @param[out] error_compact Array with the error in a compact form
  * @param[in] w Array of size 2^PARAM_M
  */
-void fft_retrieve_error_poly(uint8_t* error, uint16_t* error_compact, const uint16_t* w) {
+void fft_retrieve_error_poly(uint8_t* error, const uint16_t* w) {
 	uint16_t gammas[PARAM_M-1] = {0};
 	uint16_t gammas_sums[1 << (PARAM_M-1)] = {0};
 	size_t k = 1 << (PARAM_M-1);
-	int16_t zero_pos = PARAM_DELTA - 1;
-	int16_t one_pos = -1;
-
+	
 	compute_fft_betas(gammas);
 	compute_subset_sums(gammas_sums, gammas, PARAM_M-1);
 
@@ -329,12 +327,5 @@ void fft_retrieve_error_poly(uint8_t* error, uint16_t* error_compact, const uint
 
 		index = PARAM_GF_MUL_ORDER - gf_log(gammas_sums[i] ^ 1);
 		error[index] ^= 1 ^ ((uint16_t)-w[k + i] >> 15);
-	}
-
-	for (uint16_t i = 0; i < PARAM_N1; ++i) {
-		zero_pos = zero_pos + (1 - error[i]);
-		one_pos = one_pos + error[i];
-
-		error_compact[zero_pos * (1 - error[i]) + one_pos * error[i]] = i;
 	}
 }

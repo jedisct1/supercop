@@ -213,6 +213,10 @@ int pk_gen(unsigned char * pk, const unsigned char * irr, uint32_t * perm)
 
 	sort_63b(1 << GFBITS, list);
 
+	for (i = 1; i < (1 << GFBITS); i++)
+		if ((list[i-1] >> 31) == (list[i] >> 31))
+			return -1;
+
 	to_bitslicing_2x(consts, prod, list);
 
 	for (i = 0; i < (1 << GFBITS); i++)

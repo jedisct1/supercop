@@ -147,7 +147,7 @@ int crypto_kem_dec(unsigned char *ss, const unsigned char *ct, const unsigned ch
 	sha512(ss, mc, VEC_K_SIZE_BYTES + VEC_N_SIZE_BYTES + VEC_N1N2_SIZE_BYTES);
 
 	// Abort if c != c' or d != d'
-	result = (vect_compare(u, u2, VEC_N_SIZE_BYTES) == 0 && vect_compare(v, v2, VEC_N1N2_SIZE_BYTES) == 0 && memcmp(d, d2, SHA512_BYTES) == 0);
+	result = (vect_compare(u, u2, VEC_N_SIZE_BYTES) == 0 && vect_compare(v, v2, VEC_N1N2_SIZE_BYTES) == 0 && vect_compare((uint64_t *)d, (uint64_t *)d2, SHA512_BYTES) == 0);
 	for (size_t i = 0 ; i < SHARED_SECRET_BYTES ; i++) {
 		ss[i] = result * ss[i];
 	}

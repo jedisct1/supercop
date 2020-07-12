@@ -4,11 +4,22 @@
 
 #ifndef TRANSPOSE_H
 #define TRANSPOSE_H
+#define transpose_64x128_sp_asm crypto_kem_mceliece6688128f_avx_transpose_64x128_sp_asm
+#define transpose_64x256_sp_asm crypto_kem_mceliece6688128f_avx_transpose_64x256_sp_asm
+#define transpose_64x64_asm crypto_kem_mceliece6688128f_avx_transpose_64x64_asm
 
 #include "vec128.h"
 #include "vec256.h"
 
+extern void transpose_64x64_asm(uint64_t *);
 extern void transpose_64x128_sp_asm(vec128 *);
+
+/* input: in, a 64x64 matrix over GF(2) */
+/* output: out, transpose of in */
+static inline void transpose_64x64(uint64_t * in)
+{
+	transpose_64x64_asm(in);
+}
 
 static inline void transpose_64x128_sp(vec128 *in)
 {

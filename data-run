@@ -118,12 +118,12 @@ do
 
       if [ "$t1" = gmp ]
       then
-        echo "gmp 6.1.2" >&8
+        echo "gmp 6.2.0" >&8
       fi
   
       if [ "$t1" = ntl ]
       then
-        echo "ntl 11.3.2" >&8
+        echo "ntl 11.4.3" >&8
       fi
   
       if [ "$t1" = keccak ]
@@ -253,7 +253,7 @@ do
 	    echo "=== `date` === trying CC=$c CXX=$cpp CFLAGS=$copts CXXFLAGS=$cppopts ABI=$gmpabi"
 	    rm -rf "$top/$target/work"
 	    mkdir -p "$top/$target/work"
-	    cp -pr gmp-6.1.2/* "$top/$target/work"
+	    cp -pr gmp-6.2.0/* "$top/$target/work"
 	    ( cd "$top/$target/work" \
 	      && ./configure --enable-cxx \
 	         ABI="$gmpabi" \
@@ -286,7 +286,7 @@ do
         echo "=== `date` === trying CXX=$cpp CXXFLAGS=$cppopts"
         rm -rf "$top/$target/work"
         mkdir -p "$top/$target/work"
-        cp -pr ntl-11.3.2/* "$top/$target/work"
+        cp -pr ntl-11.4.3/* "$top/$target/work"
         ( cd "$top/$target/work/src" \
           && ./configure \
              CXX="$cpp" CXXFLAGS="$cppopts" \

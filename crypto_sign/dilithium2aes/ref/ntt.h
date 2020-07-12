@@ -1,1 +1,1 @@
-../../dilithium3/ref/ntt.h
+../../dilithium2/ref/ntt.h

@@ -1,1 +1,1 @@
-../../dilithium3/ref/symmetric.h
+../../dilithium2/ref/symmetric.h

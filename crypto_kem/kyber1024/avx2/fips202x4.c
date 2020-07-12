@@ -1,1 +1,1 @@
-../../kyber768/avx2/fips202x4.c
+../../kyber512/avx2/fips202x4.c

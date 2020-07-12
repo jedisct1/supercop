@@ -1,1 +1,1 @@
-../../kyber768/ref/cbd.h
+../ref/cbd.h

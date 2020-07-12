@@ -1,1 +1,1 @@
-../../dilithium3aes/ref/aes256ctr.c
+../../dilithium2aes/ref/aes256ctr.c

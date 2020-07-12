@@ -1,3 +1,5 @@
+#define syndrome_asm crypto_kem_mceliece8192128f_sse_syndrome_asm
+#define _syndrome_asm _crypto_kem_mceliece8192128f_sse_syndrome_asm
 /*
   This file is for Niederreiter encryption
 */
@@ -20,6 +22,7 @@ static void gen_e(unsigned char *e)
 	int i, j, eq;
 
 	uint16_t ind[ SYS_T ];
+	unsigned char bytes[ sizeof(ind) ];
 	uint64_t e_int[ SYS_N/64 ];	
 	uint64_t one = 1;	
 	uint64_t mask;	
@@ -27,18 +30,19 @@ static void gen_e(unsigned char *e)
 
 	while (1)
 	{
-		randombytes((unsigned char *) ind, sizeof(ind));
+		randombytes(bytes, sizeof(bytes));
 
 		for (i = 0; i < SYS_T; i++)
-			ind[i] &= GFMASK;
+			ind[i] = load_gf(bytes + i*2);
 
 		// check for repetition
 
 		eq = 0;
 
-		for (i = 1; i < SYS_T; i++) for (j = 0; j < i; j++)
-			if (ind[i] == ind[j]) 
-				eq = 1;
+		for (i = 1; i < SYS_T; i++) 
+			for (j = 0; j < i; j++)
+				if (ind[i] == ind[j]) 
+					eq = 1;
 
 		if (eq == 0)
 			break;

@@ -4,6 +4,8 @@
 
 #ifndef ROOT_H
 #define ROOT_H
+#define eval crypto_kem_mceliece8192128f_ref_eval
+#define root crypto_kem_mceliece8192128f_ref_root
 
 #include "gf.h"
 

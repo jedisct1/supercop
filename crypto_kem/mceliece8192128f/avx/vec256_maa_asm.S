@@ -1,3 +1,5 @@
+#define vec256_maa_asm crypto_kem_mceliece8192128f_avx_vec256_maa_asm
+#define _vec256_maa_asm _crypto_kem_mceliece8192128f_avx_vec256_maa_asm
 
 # qhasm: int64 input_0
 

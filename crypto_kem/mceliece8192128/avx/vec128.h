@@ -5,8 +5,11 @@
 
 #ifndef VEC128_H
 #define VEC128_H
+#define vec128_mul_asm crypto_kem_mceliece8192128_avx_vec128_mul_asm
+#define vec128_mul_GF crypto_kem_mceliece8192128_avx_vec128_mul_GF
 
 #include "params.h"
+#include "gf.h"
 
 #include <stdint.h>
 #include <smmintrin.h>
@@ -98,6 +101,46 @@ static inline void vec128_mul(vec128 *h, vec128 *f, const vec128 *g)
 {
         vec128_mul_asm(h, f, g, 16);
 }
+
+static inline void vec128_mul_gf(vec128 out[ GFBITS ], vec128 v[ GFBITS ], gf a)
+{
+	int i;
+
+	uint64_t b; 
+	vec128 bits[GFBITS];
+
+	for (i = 0; i < GFBITS; i++)
+	{
+		b = -((a >> i) & 1);
+		bits[i] = vec128_set2x(b, b);
+	}
+
+	vec128_mul(out, v, bits);
+}
+
+static inline void vec_mul_gf(uint64_t out[ GFBITS ], uint64_t v[ GFBITS ], gf a)
+{
+	int i;
+
+	uint64_t bits[GFBITS];
+	vec128 x[GFBITS], y[GFBITS], z[GFBITS];
+
+	for (i = 0; i < GFBITS; i++)
+		bits[i] = -((a >> i) & 1);
+
+	for (i = 0; i < GFBITS; i++)
+	{
+		x[i] = vec128_set2x(v[i], 0);
+		y[i] = vec128_set2x(bits[i], 0);
+	}
+
+	vec128_mul(z, x, y);
+
+	for (i = 0; i < GFBITS; i++)
+		out[i] = vec128_extract(z[i], 0);
+}
+
+void vec128_mul_GF(vec128 [], vec128 [], gf []);
 
 #endif
 

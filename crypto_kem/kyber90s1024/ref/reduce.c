@@ -1,1 +1,1 @@
-../../kyber768/ref/reduce.c
+../../kyber512/ref/reduce.c

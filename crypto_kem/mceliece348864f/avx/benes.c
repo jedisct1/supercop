@@ -5,6 +5,7 @@
 #include "util.h"
 #include "transpose.h"
 #include "params.h"
+#include "benes.h"
 
 static void layer_0(uint64_t *bs, uint64_t *cond)
 {

@@ -189,7 +189,7 @@ int pk_gen(unsigned char * pk, unsigned char * sk, uint32_t * perm)
 
 	g[ SYS_T ] = 1;
 
-	for (i = 0; i < SYS_T; i++) { g[i] = load2(sk); g[i] &= GFMASK; sk += 2; }
+	for (i = 0; i < SYS_T; i++) { g[i] = load_gf(sk); sk += 2; }
 
 	for (i = 0; i < (1 << GFBITS); i++)
 	{
@@ -199,6 +199,10 @@ int pk_gen(unsigned char * pk, unsigned char * sk, uint32_t * perm)
 	}
 
 	sort_63b(1 << GFBITS, buf);
+
+	for (i = 1; i < (1 << GFBITS); i++)
+		if ((buf[i-1] >> 31) == (buf[i] >> 31))
+			return -1;
 
 	for (i = 0; i < (1 << GFBITS); i++) perm[i] = buf[i] & GFMASK;
 	for (i = 0; i < SYS_N;         i++) L[i] = bitrev(perm[i]);
@@ -252,7 +256,7 @@ int pk_gen(unsigned char * pk, unsigned char * sk, uint32_t * perm)
 				return -1;
 		}
 
-		for (k = row + 1; k < GFBITS * SYS_T; k++)
+		for (k = row + 1; k < PK_NROWS; k++)
 		{
 			mask = mat[ row ][ i ] ^ mat[ k ][ i ];
 			mask >>= j;

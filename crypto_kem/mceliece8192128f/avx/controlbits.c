@@ -107,7 +107,7 @@ void sort_63b(int n, uint64_t x[n])
 /* y[pi[i]] = x[i] */
 /* requires n = 2^w */
 /* requires pi to be a permutation */
-static void composeinv(int n,uint32_t y[n],uint32_t x[n],uint32_t pi[n]) // NC
+void composeinv(int n,uint32_t y[n],uint32_t x[n],uint32_t pi[n]) // NC
 {
   int i;
   uint32_t t[n];
@@ -157,7 +157,6 @@ static void flow(int w, uint32_t *x, uint32_t *y, const int t)
 static void controlbitsfrompermutation(int w, int n, int step, int off, unsigned char *c, uint32_t pi[n])
 {
   int i;
-  int j;
   int k;
   int t;
   uint32_t ip[n];
@@ -202,8 +201,7 @@ static void controlbitsfrompermutation(int w, int n, int step, int off, unsigned
   }
 
   for (i = 0;i < n;++i)
-    for (j = 0;j < w;++j)
-      piflip[i] = pi[i];
+    piflip[i] = pi[i];
 
   for (i = 0;i < n / 2;++i) c[ (off + i * step)/8 ] |= ((P[i * 2] >> w) & 1) << ((off + i * step)%8);
   for (i = 0;i < n / 2;++i) c[ (off + ((w-1)*n + i) * step)/8 ] |= ((P[n + i * 2] >> w) & 1) << ((off + ((w-1)*n + i) * step)%8);

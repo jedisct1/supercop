@@ -11,7 +11,7 @@
 
 #include <stdint.h>
 
-void radix_conversions_tr(vec128 in[ GFBITS ])
+static void radix_conversions_tr(vec128 in[ GFBITS ])
 {
 	int i, j, k;
 
@@ -63,7 +63,7 @@ void radix_conversions_tr(vec128 in[ GFBITS ])
 	}
 }
 
-void butterflies_tr(vec128 out[ GFBITS ], vec128 in[][ GFBITS ])
+static void butterflies_tr(vec128 out[ GFBITS ], vec128 in[][ GFBITS ])
 {
 	int i, j, k, s, b;
 

@@ -1,1 +1,1 @@
-../../dilithium3/ref/ntt.c
+../../dilithium2/ref/ntt.c

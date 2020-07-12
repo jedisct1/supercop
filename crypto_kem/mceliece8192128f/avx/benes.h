@@ -4,6 +4,9 @@
 
 #ifndef BENES_H
 #define BENES_H
+#define benes crypto_kem_mceliece8192128f_avx_benes
+#define load_bits crypto_kem_mceliece8192128f_avx_load_bits
+#define support_gen crypto_kem_mceliece8192128f_avx_support_gen
 
 #include "vec128.h"
 

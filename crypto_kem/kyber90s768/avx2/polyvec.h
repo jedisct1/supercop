@@ -1,1 +1,1 @@
-../../kyber768/ref/polyvec.h
+../ref/polyvec.h

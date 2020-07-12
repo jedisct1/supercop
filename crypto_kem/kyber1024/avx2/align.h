@@ -1,1 +1,1 @@
-../../kyber768/avx2/align.h
+../../kyber512/avx2/align.h

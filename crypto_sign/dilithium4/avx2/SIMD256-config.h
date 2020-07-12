@@ -1,1 +1,1 @@
-../../dilithium3/avx2/SIMD256-config.h
+../../dilithium2/avx2/SIMD256-config.h

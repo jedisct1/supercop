@@ -5,6 +5,7 @@
 
 #ifndef BM_H
 #define BM_H
+#define bm crypto_kem_mceliece8192128_ref_bm
 
 void bm(gf *, gf *);
 

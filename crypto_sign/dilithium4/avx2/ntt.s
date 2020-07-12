@@ -1,1 +1,0 @@
-../../dilithium3/avx2/ntt.s

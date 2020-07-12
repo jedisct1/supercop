@@ -1,1 +1,1 @@
-../../dilithium3/ref/fips202.c
+../../dilithium2/ref/fips202.c

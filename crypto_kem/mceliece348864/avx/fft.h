@@ -5,6 +5,7 @@
 
 #ifndef FFT_H
 #define FFT_H
+#define fft crypto_kem_mceliece348864_avx_fft
 
 #include <stdint.h>
 #include "params.h"

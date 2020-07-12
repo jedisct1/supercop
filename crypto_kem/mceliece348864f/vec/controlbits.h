@@ -5,6 +5,8 @@
 
 #ifndef CONTROLBITS_H
 #define CONTROLBITS_H
+#define controlbits crypto_kem_mceliece348864f_vec_controlbits
+#define sort_63b crypto_kem_mceliece348864f_vec_sort_63b
 
 #include <stdint.h>
 

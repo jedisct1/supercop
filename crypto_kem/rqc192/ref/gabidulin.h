@@ -1,33 +1,33 @@
 /**
  * \file gabidulin.h
- * \brief Fonctions to encode and decode messages using Gabidulin codes
+ * \brief Functions to encode and decode messages using Gabidulin codes
  *
  * The decoding algorithm provided is based on q_polynomials reconstruction, see \cite gabidulin:welch and \cite gabidulin:generalized for details.
  *
  */
 
-#ifndef GABIDULIN_H
-#define GABIDULIN_H
+#ifndef RBC_GABIDULIN_H
+#define RBC_GABIDULIN_H
 
-#include "ffi_vec.h"
-#include "ffi_qre.h"
+#include "rbc_vec.h"
+#include "rbc_qre.h"
 
 
 /**
-  * \typedef gabidulin_code
+  * \typedef rbc_gabidulin
   * \brief Structure of a gabidulin code
   */
-typedef struct gabidulin_code {
-  ffi_poly g; /**< Generator vector defining the code */
-  unsigned int k; /**< Size of vectors representing messages */
-  unsigned int n; /**< Size of vectors representing codewords */
-} gabidulin_code;
+typedef struct rbc_gabidulin {
+  rbc_poly g; /**< Generator vector defining the code */
+  uint32_t k; /**< Size of vectors representing messages */
+  uint32_t n; /**< Size of vectors representing codewords */
+} rbc_gabidulin;
 
 
-gabidulin_code gabidulin_code_init(const ffi_poly g, unsigned int k, unsigned int n);
+void rbc_gabidulin_init(rbc_gabidulin* code, const rbc_poly g, uint32_t k, uint32_t n);
 
-void gabidulin_code_encode(ffi_qre c, gabidulin_code gc, const ffi_vec m);
-void gabidulin_code_decode(ffi_vec m, gabidulin_code gc, const ffi_qre y);
+void rbc_gabidulin_encode(rbc_qre c, const rbc_gabidulin gc, const rbc_vec m);
+void rbc_gabidulin_decode(rbc_vec m, const rbc_gabidulin gc, const rbc_qre y);
 
 #endif
 

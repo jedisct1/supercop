@@ -4,6 +4,7 @@
 
 #ifndef SYND_H
 #define SYND_H
+#define synd crypto_kem_mceliece6688128f_ref_synd
 
 #include "gf.h"
 

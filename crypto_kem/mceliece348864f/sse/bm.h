@@ -5,6 +5,7 @@
 
 #ifndef BM_H
 #define BM_H
+#define bm crypto_kem_mceliece348864f_sse_bm
 
 #include <stdint.h>
 

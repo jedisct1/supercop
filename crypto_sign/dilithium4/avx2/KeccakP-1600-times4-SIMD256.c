@@ -1,1 +1,1 @@
-../../dilithium3/avx2/KeccakP-1600-times4-SIMD256.c
+../../dilithium2/avx2/KeccakP-1600-times4-SIMD256.c

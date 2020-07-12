@@ -1,3 +1,5 @@
+#define syndrome_asm crypto_kem_mceliece460896_avx_syndrome_asm
+#define _syndrome_asm _crypto_kem_mceliece460896_avx_syndrome_asm
 
 # qhasm: int64 input_0
 

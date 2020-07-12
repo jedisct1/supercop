@@ -5,6 +5,11 @@
 
 #ifndef VEC256_H
 #define VEC256_H
+#define vec256_ama_asm crypto_kem_mceliece348864_avx_vec256_ama_asm
+#define vec256_inv crypto_kem_mceliece348864_avx_vec256_inv
+#define vec256_maa_asm crypto_kem_mceliece348864_avx_vec256_maa_asm
+#define vec256_mul_asm crypto_kem_mceliece348864_avx_vec256_mul_asm
+#define vec256_sq crypto_kem_mceliece348864_avx_vec256_sq
 
 #include "vec128.h"
 
@@ -15,6 +20,11 @@ typedef __m256i vec256;
 static inline vec256 vec256_set1_16b(uint16_t a)
 {
 	return _mm256_set1_epi16(a);
+}
+
+static inline vec256 vec256_set1_32b(uint64_t a)
+{
+	return _mm256_set1_epi32(a);
 }
 
 static inline vec256 vec256_setzero()
@@ -104,8 +114,8 @@ static inline void vec256_mul(vec256 *h, vec256 *f, const vec256 *g)
 void vec256_sq(vec256 *, vec256 *);
 void vec256_inv(vec256 *, vec256 *);
 
-extern void vec256_maa_asm(vec256 *, vec256 *, vec256 *);
-extern void vec256_ama_asm(vec256 *, vec256 *, vec256 *);
+extern void vec256_maa_asm(vec256 *, vec256 *, const vec256 *);
+extern void vec256_ama_asm(vec256 *, vec256 *, const vec256 *);
 
 #endif
 

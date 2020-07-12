@@ -1,1 +1,1 @@
-../../kyber768/avx2/polyvec.c
+../../kyber512/avx2/polyvec.c

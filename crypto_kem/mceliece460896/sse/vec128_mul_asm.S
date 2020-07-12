@@ -1,3 +1,5 @@
+#define vec128_mul_asm crypto_kem_mceliece460896_sse_vec128_mul_asm
+#define _vec128_mul_asm _crypto_kem_mceliece460896_sse_vec128_mul_asm
 
 # qhasm: int64 input_0
 

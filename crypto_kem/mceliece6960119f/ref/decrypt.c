@@ -41,7 +41,7 @@ int decrypt(unsigned char *e, const unsigned char *sk, const unsigned char *c)
 	r[i-1] &= (1 << ((GFBITS * SYS_T) % 8)) - 1;
 	for (i = SYND_BYTES; i < SYS_N/8; i++) r[i] = 0;
 
-	for (i = 0; i < SYS_T; i++) { g[i] = load2(sk); g[i] &= GFMASK; sk += 2; } g[ SYS_T ] = 1;
+	for (i = 0; i < SYS_T; i++) { g[i] = load_gf(sk); sk += 2; } g[ SYS_T ] = 1;
 
 	support_gen(L, sk);
 

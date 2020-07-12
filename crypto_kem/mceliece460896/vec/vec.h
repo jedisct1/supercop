@@ -1,5 +1,8 @@
 #ifndef VEC_H
 #define VEC_H
+#define vec_inv crypto_kem_mceliece460896_vec_vec_inv
+#define vec_mul crypto_kem_mceliece460896_vec_vec_mul
+#define vec_sq crypto_kem_mceliece460896_vec_vec_sq
 
 #include "params.h"
 

@@ -1,1 +1,1 @@
-../../kyber768/avx2/KeccakP-1600-times4-SIMD256.c
+../../kyber512/avx2/KeccakP-1600-times4-SIMD256.c

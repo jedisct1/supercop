@@ -2,328 +2,310 @@
  * \file gabidulin.c
  * \brief Implementation of gabidulin.h
  *
- * The decoding algorithm provided is based on q_polynomials reconstruction, see \cite gabidulin:welch and \cite gabidulin:generalized for details.
+ * The decoding algorithm provided is based on rbc_qpolys reconstruction, see \cite gabidulin:welch and \cite gabidulin:generalized for details.
  *
  */
 
-#include "ffi_elt.h"
-#include "ffi_vec.h"
+#include "rbc_elt.h"
+#include "rbc_vec.h"
 #include "gabidulin.h"
-#include "parameters.h"
-#include "q_polynomial.h"
-
+#include "qpoly.h"
 
 /** 
- * \fn gabidulin_code gabidulin_code_init(const ffi_poly g, unsigned int k, unsigned int n)
- * \brief This function initializes a gabidulin code
+ * \fn void rbc_gabidulin_init(rbc_gabidulin* code, const rbc_poly g, uint32_t k, uint32_t n)
+ * \brief This function initializes a gabidulin code.
  *
- * \param[in] g Generator polytor defining the code
- * \param[in] k Size of polytors representing messages
- * \param[in] n Size of vetors representing codewords
- * \return Gabidulin code
+ * \param[in] code Gabidulin code
+ * \param[in] g Generator vector defining the code
+ * \param[in] k Size of vectors representing messages
+ * \param[in] n Size of vectors representing codewords
  */
-gabidulin_code gabidulin_code_init(const ffi_poly g, unsigned int k, unsigned int n) {
-  gabidulin_code code;
-
-  code.g = g;
-  code.k = k;
-  code.n = n;
-
-  return code;
+void rbc_gabidulin_init(rbc_gabidulin* code, const rbc_poly g, uint32_t k, uint32_t n) {
+  code->g = g;
+  code->k = k;
+  code->n = n;
 }
 
 
 
 /** 
- * \fn void gabidulin_code_encode(ffi_qre c, gabidulin_code gc, const ffi_vec m)
- * \brief This function encodes a message into a codeword
- *
- * This function assumes <b>FIELD_Q</b> = 2
+ * \fn void rbc_gabidulin_encode(rbc_qre c, const rbc_gabidulin gc, const rbc_vec m)
+ * \brief This function encodes a message into a codeword.
  *
  * \param[out] c Vector of size <b>n</b> representing a codeword
  * \param[in] gc Gabidulin code
  * \param[in] m Vector of size <b>k</b> representing a message
  */
-void gabidulin_code_encode(ffi_qre c, gabidulin_code gc, const ffi_vec m) {
-
+void rbc_gabidulin_encode(rbc_qre c, const rbc_gabidulin gc, const rbc_vec m) {
   // Compute generator matrix
-  ffi_elt matrix[PARAM_K][PARAM_N];
-  for(unsigned int j = 0 ; j < gc.n ; ++j) {
-    ffi_elt_set(matrix[0][j], gc.g->v[j]);
-    for(unsigned int i = 1 ; i < gc.k ; ++i) {
-      ffi_elt_sqr(matrix[i][j], matrix[i-1][j]);
+  rbc_elt matrix[gc.k][gc.n];
+  for(size_t j = 0 ; j < gc.n ; ++j) {
+    rbc_elt_set(matrix[0][j], gc.g->v[j]);
+    for(size_t i = 1 ; i < gc.k ; ++i) {
+      rbc_elt_sqr(matrix[i][j], matrix[i-1][j]);
     }
   }
 
   // Encode message
-  ffi_elt tmp;
-  ffi_elt_set_zero(tmp);
-  ffi_vec_set_zero(c->v, gc.n);
-  for(unsigned int i = 0 ; i < gc.k ; ++i) {
-    for(unsigned int j = 0 ; j < gc.n ; ++j) {
-      ffi_elt_mul(tmp, m[i], matrix[i][j]);
-      ffi_elt_add(c->v[j], c->v[j], tmp);
+  rbc_elt tmp;
+  rbc_elt_set_zero(tmp);
+  rbc_vec_set_zero(c->v, gc.n);
+  for(size_t i = 0 ; i < gc.k ; ++i) {
+    for(size_t j = 0 ; j < gc.n ; ++j) {
+      rbc_elt_mul(tmp, m[i], matrix[i][j]);
+      rbc_elt_add(c->v[j], c->v[j], tmp);
     }
   }
 
   #ifdef VERBOSE
     printf("\n\n\n# Gabidulin Encoding - Begin #");
-    printf("\n\ng: "); ffi_poly_print(gc.g);
+    printf("\n\ng: "); rbc_poly_print(gc.g);
 
-    printf("\nmatrix:[ ");
-    for(unsigned int i = 0 ; i < gc.k ; ++i) {
+    printf("\n\nmatrix:[ ");
+    for(size_t i = 0 ; i < gc.k ; ++i) {
       printf("[ ");
-      for(unsigned int j = 0 ; j < gc.n ; ++j) {
-        ffi_elt_print(matrix[i][j]);
+      for(size_t j = 0 ; j < gc.n ; ++j) {
+        rbc_elt_print(matrix[i][j]);
       }
       printf("] ");
     }
     printf("]\n");
 
-    printf("\ncodeword: "); ffi_poly_print(c);
-    printf("\n# Gabidulin Encoding - End #\n");
+    printf("\ncodeword: "); rbc_poly_print(c);
+    printf("\n\n# Gabidulin Encoding - End #\n");
   #endif
 }
 
 
 
 /** 
- * \fn void gabidulin_code_decode(ffi_vec m, gabidulin_code gc, const ffi_qre y)
- * \brief This function decodes a word
+ * \fn void rbc_gabidulin_decode(rbc_vec m, const rbc_gabidulin gc, const rbc_qre y)
+ * \brief This function decodes a word.
  *
- * As explained in the supporting documentation, the provided decoding algorithm works as follows (see \cite gabidulin:welch and \cite gabidulin:generalized for details):
+ * The provided decoding algorithm works as follows (see \cite gabidulin:welch and \cite gabidulin:generalized for details):
  *   1. Find a solution (<b>V</b>, <b>N</b>) of the q-polynomial Reconstruction2(<b>y</b>, <b>gc.g</b>, <b>gc.k</b>, (<b>gc.n</b> - <b>gc.k</b>)/2) problem using \cite gabidulin:generalized (section 4, algorithm 5) ;
  *   2. Find <b>f</b> by computing <b>V \ (N.A) + I</b> (see "Polynomials with lower degree" improvement from \cite gabidulin:generalized, section 4.4.2) ;
  *   3. Retrieve the message <b>m</b> as the k first coordinates of <b>f</b>.
- *
- *  This function assumes <b>FIELD_Q</b> = 2
  *
  * \param[out] m Vector of size <b>k</b> representing a message
  * \param[in] gc Gabidulin code
  * \param[in] y Vector of size <b>n</b> representing a word to decode
  */
-void gabidulin_code_decode(ffi_vec m, gabidulin_code gc, const ffi_qre y) {
+void rbc_gabidulin_decode(rbc_vec m, const rbc_gabidulin gc, const rbc_qre y) {
 
   /*  
    *  Step 1: Solving the q-polynomial reconstruction2 problem 
    */
 
-  int t = (gc.n - gc.k) / 2;
-  int max_degree_N = (gc.n - gc.k) % 2 == 0 ? gc.k + t - 1 : gc.k + t;
+  uint32_t t = (gc.n - gc.k) / 2;
+  int32_t max_degree_N = (gc.n - gc.k) % 2 == 0 ? gc.k + t - 1 : gc.k + t;
 
-  q_polynomial* A = q_polynomial_init(gc.k);
-  q_polynomial* I = q_polynomial_init(gc.k - 1);
+  rbc_qpoly A, I, N0, N1, V0, V1, N1_result, V1_result;
+  rbc_qpoly_init(&A, gc.k);
+  rbc_qpoly_init(&I, gc.k - 1);
+  rbc_qpoly_init(&N0, max_degree_N);
+  rbc_qpoly_init(&N1, max_degree_N);
+  rbc_qpoly_init(&V0, t);
+  rbc_qpoly_init(&V1, t);
+  rbc_qpoly_init(&N1_result, max_degree_N);
+  rbc_qpoly_init(&V1_result, t);
 
-  q_polynomial* N0 = q_polynomial_init(max_degree_N);
-  q_polynomial* N1 = q_polynomial_init(max_degree_N);
-  q_polynomial* V0 = q_polynomial_init(t);
-  q_polynomial* V1 = q_polynomial_init(t);
+  rbc_qpoly qtmp1, qtmp2, qtmp3, qtmp4, qtmp5;
+  rbc_qpoly_init(&qtmp1, max_degree_N);
+  rbc_qpoly_init(&qtmp2, max_degree_N);
+  rbc_qpoly_init(&qtmp3, max_degree_N);
+  rbc_qpoly_init(&qtmp4, t);
+  rbc_qpoly_init(&qtmp5, t);
 
-  q_polynomial* qtmp1 = q_polynomial_init(max_degree_N);
-  q_polynomial* qtmp2 = q_polynomial_init(max_degree_N);
-  q_polynomial* qtmp3 = q_polynomial_init(t);
-  q_polynomial* qtmp4 = q_polynomial_init(t);
+  rbc_vec u0, u1, rand;
+  rbc_vec_init(&u0, gc.n);
+  rbc_vec_init(&u1, gc.n);
+  rbc_vec_init(&rand, gc.n);
+  rbc_vec_set_random2(rand, gc.n);
 
-  ffi_vec u0, u1;
-  ffi_vec_init(&u0, PARAM_N);
-  ffi_vec_init(&u1, PARAM_N);
-
-  ffi_elt e1, e2, tmp1, tmp2;
-
+  rbc_elt e1, e2, tmp1, tmp2;
+  uint32_t status = 0;
 
   // Initialization step
   
   // A(g[i]) = 0 for 0 <= i <= k - 1
   // I(g[i]) = y[i] for 0 <= i <= k - 1
   
-  q_polynomial_set_interpolate_vect_and_zero(A, I, gc.g, y, gc.k);
-  q_polynomial_set_one(N0);
-  q_polynomial_set_zero(N1);
-  q_polynomial_set_zero(V0);
-  q_polynomial_set_one(V1);
+  rbc_qpoly_set_interpolate_vect_and_zero(A, I, gc.g, y, gc.k);
 
-  q_polynomial_set_zero(qtmp1);
-  q_polynomial_set_zero(qtmp2);
-  q_polynomial_set_zero(qtmp3);
-  q_polynomial_set_zero(qtmp4);
+  rbc_qpoly_set_one(N0);
+  rbc_qpoly_set_zero(N1);
+  rbc_qpoly_set_zero(V0);
+  rbc_qpoly_set_one(V1);
+
+  rbc_qpoly_set_zero(N1_result);
+  rbc_qpoly_set_one(V1_result);
+
+  rbc_qpoly_set_zero(qtmp1);
+  rbc_qpoly_set_zero(qtmp2);
+  rbc_qpoly_set_zero(qtmp3);
+  rbc_qpoly_set_zero(qtmp4);
+  rbc_qpoly_set_zero(qtmp5);
 
   // u0[i] = A(g[i]) - V0(y[i])
   // u1[i] = I(g[i]) - V1(y[i])
 
-  for(unsigned int i = 0 ; i < gc.n ; ++i) {
-    q_polynomial_evaluate(tmp1, A, gc.g->v[i]);
-    q_polynomial_evaluate(tmp2, V0, y->v[i]);
-    ffi_elt_add(tmp1, tmp1, tmp2);
-    ffi_elt_set(u0[i], tmp1);
+  for(size_t i = 0 ; i < gc.n ; ++i) {
+    rbc_qpoly_evaluate(tmp1, A, gc.g->v[i]);
+    rbc_qpoly_evaluate(tmp2, V0, y->v[i]);
+    rbc_elt_add(tmp1, tmp1, tmp2);
+    rbc_elt_set(u0[i], tmp1);
 
-    q_polynomial_evaluate(tmp1, I, gc.g->v[i]);
-    q_polynomial_evaluate(tmp2, V1, y->v[i]);
-    ffi_elt_add(tmp1, tmp1, tmp2);
-    ffi_elt_set(u1[i], tmp1);
+    rbc_qpoly_evaluate(tmp1, I, gc.g->v[i]);
+    rbc_qpoly_evaluate(tmp2, V1, y->v[i]);
+    rbc_elt_add(tmp1, tmp1, tmp2);
+    rbc_elt_set(u1[i], tmp1);
+
+    status = status | !rbc_elt_is_zero(u1[i]);
   }
 
   #ifdef VERBOSE
     printf("\n\n# Gabidulin Decoding - Begin #");
-    printf("\n\ng: "); ffi_poly_print(gc.g);
-    printf("\n\nA: "); q_polynomial_print(A);
-    printf("\nI: "); q_polynomial_print(I);
-    printf("\nN0 (init): "); q_polynomial_print(N0);
-    printf("\nN1 (init): "); q_polynomial_print(N1);
-    printf("\nV0 (init): "); q_polynomial_print(V0);
-    printf("\nV1 (init): "); q_polynomial_print(V1);
+    printf("\n\ng: "); rbc_poly_print(gc.g);
+    printf("\n\nA: "); rbc_qpoly_print(A);
+    printf("\nI: "); rbc_qpoly_print(I);
+    printf("\nN0 (init): "); rbc_qpoly_print(N0);
+    printf("\nN1 (init): "); rbc_qpoly_print(N1);
+    printf("\nV0 (init): "); rbc_qpoly_print(V0);
+    printf("\nV1 (init): "); rbc_qpoly_print(V1);
   #endif
 
   // Interpolation step 
-  int updateType = -1;
-  for(unsigned int i = gc.k ; i < gc.n ; ++i) {
+  for(size_t i = gc.k ; i < gc.n ; ++i) {
 
-    unsigned int j = i;
-    while(j < gc.n && 
-          ffi_elt_is_zero(u0[j]) == 0 &&
-          ffi_elt_is_zero(u1[j]) == 1) {
-      j++;
-    }
-    
-    if(j == gc.n) {
-      break;
-    } else {
-      if(i != j) {
-        // Permutation of the coordinates of positions i and j
-        ffi_elt_set(tmp1, u0[i]);
-        ffi_elt_set(u0[i], u0[j]);
-        ffi_elt_set(u0[j], tmp1);
+    uint32_t next = i;
+    uint32_t r = 1;
 
-        ffi_elt_set(tmp1, u1[i]);
-        ffi_elt_set(u1[i], u1[j]);
-        ffi_elt_set(u1[j], tmp1);
-      }
+    for(size_t k = i ; k < gc.n ; ++k) {
+      r &= rbc_elt_is_zero(u1[k]);
+      next = r * (next + 1) + (1 - r) * next;
     }
 
+    status = status & (next != gc.n);
+    next = next == gc.n ? next - 1 : next;
+
+    // Permutation of the coordinates of positions i and next
+    rbc_elt_set(tmp1, u0[i]);
+    rbc_elt_set_mask1(u0[i], u0[next], rand[i], status);
+    rbc_elt_set_mask2(u0[next], rand[i], tmp1, status);
+
+    rbc_elt_set(tmp2, u1[i]);
+    rbc_elt_set_mask1(u1[i], u1[next], rand[i], status);
+    rbc_elt_set_mask2(u1[next], rand[i], tmp2, status);
 
     // Update q_polynomials according to discrepancies
-    if(ffi_elt_is_zero(u1[i]) != 1) {
-      updateType = 1;
 
-      // e1 = - u1[i]^q / u1[i] 
-      // e2 = - u0[i] / u1[i]
-      // N0' = N1^q - e1.N1
-      // V0' = V1^q - e1.V1
-      // N1' = N0 - e2.N1 
-      // V1' = V0 - e2.V1
+    // e1 = - u1[i]^q / u1[i] 
+    // e2 = - u0[i] / u1[i]
+    // N0' = N1^q - e1.N1
+    // V0' = V1^q - e1.V1
+    // N1' = N0 - e2.N1 
+    // V1' = V0 - e2.V1
+    
+    rbc_elt_inv(tmp1, u1[i]);
+    rbc_elt_sqr(e1, u1[i]);
+    rbc_elt_mul(e1, e1, tmp1);
+    rbc_elt_mul(e2, u0[i], tmp1);
       
-      ffi_elt_inv(tmp1, u1[i]);
-      ffi_elt_sqr(e1, u1[i]);
-      ffi_elt_mul(e1, e1, tmp1);
-      ffi_elt_mul(e2, u0[i], tmp1);
+    rbc_qpoly_scalar_mul(qtmp1, N1, e1);
+    rbc_qpoly_qexp(qtmp2, N1);
+    rbc_qpoly_scalar_mul(qtmp4, V1, e1);
+    rbc_qpoly_qexp(qtmp5, V1);
+
+    rbc_qpoly_scalar_mul(N1, N1, e2);
+    rbc_qpoly_add(N1, N0, N1);
+
+    rbc_qpoly_scalar_mul(V1, V1, e2);
+    rbc_qpoly_add(V1, V0, V1);
       
-      q_polynomial_scalar_mul(qtmp1, N1, e1);
-      q_polynomial_qexp(qtmp2, N1);
-      q_polynomial_scalar_mul(qtmp3, V1, e1);
-      q_polynomial_qexp(qtmp4, V1);
+    rbc_qpoly_add(N0, qtmp1, qtmp2);
+    rbc_qpoly_add(V0, qtmp4, qtmp5);
 
-      q_polynomial_scalar_mul(N1, N1, e2);
-      q_polynomial_add(N1, N0, N1);
-
-      q_polynomial_scalar_mul(V1, V1, e2);
-      q_polynomial_add(V1, V0, V1);
-      
-      q_polynomial_add(N0, qtmp1, qtmp2);
-      q_polynomial_add(V0, qtmp3, qtmp4);
-    } 
-
-    if(ffi_elt_is_zero(u0[i]) == 1 && 
-       ffi_elt_is_zero(u1[i]) == 1) {
-      updateType = 2;
-
-      // N0' = N1^q 
-      // V0' = V1^q
-      // N1' = N0 
-      // V1' = V0 
-      
-      q_polynomial_qexp(qtmp1, N1);
-      q_polynomial_qexp(qtmp2, V1);
-
-      q_polynomial_set(N1, N0);
-      q_polynomial_set(V1, V0);
-      q_polynomial_set(N0, qtmp1);
-      q_polynomial_set(V0, qtmp2);
-    } 
-
+    rbc_qpoly_set_mask(N1_result, N1, N1_result, status);
+    rbc_qpoly_set_mask(V1_result, V1, V1_result, status);
 
     // Update discrepancies
-    for(unsigned int k = i + 1 ; k < gc.n ; ++k) {
-      if(updateType == 1) {
+    for(size_t k = i + 1 ; k < gc.n ; ++k) {
 
-        // u0[k]' = u1[k]^q - e1.u1[k]
-        // u1[k]' = u0[k] - e2.u1[k] 
+      // u0[k]' = u1[k]^q - e1.u1[k]
+      // u1[k]' = u0[k] - e2.u1[k] 
       
-        ffi_elt_mul(tmp1, e1, u1[k]);
-        ffi_elt_sqr(tmp2, u1[k]);
-        ffi_elt_add(tmp1, tmp1, tmp2);
+      rbc_elt_mul(tmp1, e1, u1[k]);
+      rbc_elt_sqr(tmp2, u1[k]);
+      rbc_elt_add(tmp1, tmp1, tmp2);
 
-        ffi_elt_mul(tmp2, e2, u1[k]);
-        ffi_elt_add(tmp2, tmp2, u0[k]);
-        ffi_elt_set(u1[k], tmp2);
+      rbc_elt_mul(tmp2, e2, u1[k]);
+      rbc_elt_add(tmp2, tmp2, u0[k]);
+      rbc_elt_set(u1[k], tmp2);
 
-        ffi_elt_set(u0[k], tmp1);
-      } 
-      
-      if(updateType == 2) {
-
-        // u0[k]' = u0[k]
-        // u1[k]' = u1[k]^q
-        
-        ffi_elt_sqr(tmp1, u1[k]);
-        ffi_elt_set(u1[k], tmp1);
-      }
+      rbc_elt_set(u0[k], tmp1);
     }
 
     #ifdef VERBOSE
       printf("\n");
-      printf("\nN0 (%i): ", i); q_polynomial_print(N0);
-      printf("\nN1 (%i): ", i); q_polynomial_print(N1);
-      printf("\nV0 (%i): ", i); q_polynomial_print(V0);
-      printf("\nV1 (%i): ", i); q_polynomial_print(V1);
+      printf("\nN0 (%zu): ", i); rbc_qpoly_print(N0);
+      printf("\nN1 (%zu): ", i); rbc_qpoly_print(N1);
+      printf("\nV0 (%zu): ", i); rbc_qpoly_print(V0);
+      printf("\nV1 (%zu): ", i); rbc_qpoly_print(V1);
     #endif
-            
   }
+
+
 
   /*  
    *  Step 2: Computing f (qtmp1 variable) using Loidreau's improvement for lower degree polynomials
    */
 
-  q_polynomial_mul(qtmp1, N1, A);
-  q_polynomial_left_div(qtmp3, qtmp2, qtmp1, V1);
-  q_polynomial_add(qtmp1, qtmp3, I);
+  rbc_qpoly_mul2(qtmp1, N1_result, A, t - 1, gc.k);
+
+  status = 1 - (N1_result->degree == -1 && V1_result->degree == 0);
+  rbc_qpoly_set_mask(qtmp1, qtmp1, N1, status);
+  rbc_qpoly_set_mask(V1_result, V1_result, V1, status);
+
+  rbc_qpoly_left_div2(qtmp3, qtmp2, qtmp1, V1_result, t, gc.k);
+
+  rbc_qpoly_add(qtmp1, qtmp3, I);
+  rbc_qpoly_set_mask(qtmp1, qtmp1, I, status);
+
 
 
   /*  
    *  Step 3: Decoding the message as the value of the k first coordinates of f (qtmp1 variable)
    */
-
-  ffi_vec_set(m, qtmp1->values, gc.k);
+  
+  rbc_vec_set(m, qtmp1->values, gc.k);
 
   #ifdef VERBOSE
-    printf("\nquotient: "); q_polynomial_print(qtmp1);
-    printf("\nremainder: "); q_polynomial_print(qtmp2);
-    printf("\nmu: "); ffi_vec_print(m, PARAM_K);
+    printf("\nquotient: "); rbc_qpoly_print(qtmp1);
+    printf("\nremainder: "); rbc_qpoly_print(qtmp2);
+    printf("\nmu: "); rbc_vec_print(m, gc.k);
     printf("\n# Gabidulin Decoding - End #\n");
   #endif
 
-  q_polynomial_clear(A, gc.k);
-  q_polynomial_clear(I, gc.k - 1);
+  rbc_qpoly_clear(A);
+  rbc_qpoly_clear(I);
 
-  q_polynomial_clear(N0, max_degree_N);
-  q_polynomial_clear(N1, max_degree_N);
-  q_polynomial_clear(V0, t);
-  q_polynomial_clear(V1, t);
+  rbc_qpoly_clear(N0);
+  rbc_qpoly_clear(N1);
+  rbc_qpoly_clear(V0);
+  rbc_qpoly_clear(V1);
 
-  q_polynomial_clear(qtmp1, max_degree_N);
-  q_polynomial_clear(qtmp2, max_degree_N);
-  q_polynomial_clear(qtmp3, t);
-  q_polynomial_clear(qtmp4, t);
+  rbc_qpoly_clear(N1_result);
+  rbc_qpoly_clear(V1_result);
 
-  ffi_vec_clear(u0, PARAM_N);
-  ffi_vec_clear(u1, PARAM_N);
+  rbc_qpoly_clear(qtmp1);
+  rbc_qpoly_clear(qtmp2);
+  rbc_qpoly_clear(qtmp3);
+  rbc_qpoly_clear(qtmp4);
+  rbc_qpoly_clear(qtmp5);
+
+  rbc_vec_clear(u0);
+  rbc_vec_clear(u1);
+  rbc_vec_clear(rand);
 }
 

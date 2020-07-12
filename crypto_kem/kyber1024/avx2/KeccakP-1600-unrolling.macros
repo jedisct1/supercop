@@ -1,1 +1,1 @@
-../../kyber768/avx2/KeccakP-1600-unrolling.macros
+../../kyber512/avx2/KeccakP-1600-unrolling.macros

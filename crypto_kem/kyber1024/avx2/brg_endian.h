@@ -1,1 +1,1 @@
-../../kyber768/avx2/brg_endian.h
+../../kyber512/avx2/brg_endian.h

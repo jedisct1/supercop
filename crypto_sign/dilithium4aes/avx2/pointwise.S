@@ -1,1 +1,1 @@
-../../dilithium3/avx2/pointwise.S
+../../dilithium2/avx2/pointwise.S

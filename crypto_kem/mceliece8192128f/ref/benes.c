@@ -5,6 +5,7 @@
 #include "util.h"
 #include "transpose.h"
 #include "params.h"
+#include "benes.h"
 
 /* middle layers of the benes network */
 static void layer_in(uint64_t data[2][64], uint64_t * bits, int lgs)

@@ -6,17 +6,17 @@
 #ifndef PARSING_H
 #define PARSING_H
 
-#include "rolloI_types.h"
+#include "types.h"
 
-void rolloI_secret_key_to_string(unsigned char* skString, const unsigned char* seed);
-void rolloI_secret_key_from_string(secretKey* sk, const unsigned char* skString);
-
-
-void rolloI_public_key_to_string(unsigned char* pkString, publicKey* pk);
-void rolloI_public_key_from_string(publicKey* pk, const unsigned char* pkString);
+void rolloI_secret_key_to_string(uint8_t* skString, const uint8_t* seed);
+void rolloI_secret_key_from_string(rolloI_secretKey* sk, const uint8_t* skString);
 
 
-void rolloI_ciphertext_to_string(unsigned char* ctString, ciphertext* ct);
-void rolloI_ciphertext_from_string(ciphertext* ct, const unsigned char* ctString);
+void rolloI_public_key_to_string(uint8_t* pkString, rolloI_publicKey* pk);
+void rolloI_public_key_from_string(rolloI_publicKey* pk, const uint8_t* pkString);
+
+
+void rolloI_rolloI_ciphertext_to_string(uint8_t* ctString, rolloI_ciphertext* ct);
+void rolloI_rolloI_ciphertext_from_string(rolloI_ciphertext* ct, const uint8_t* ctString);
 
 #endif

@@ -4,14 +4,25 @@
 
 #ifndef TRANSPOSE_H
 #define TRANSPOSE_H
+#define transpose_64x128_sp_asm crypto_kem_mceliece8192128_sse_transpose_64x128_sp_asm
+#define transpose_64x64_asm crypto_kem_mceliece8192128_sse_transpose_64x64_asm
 
 #include "vec128.h"
 
-void transpose_64x128_sp_asm(vec128 *);
+#include <stdint.h>
 
-static void transpose_64x128_sp(vec128 *in)
+extern void transpose_64x64_asm(uint64_t *);
+
+static inline void transpose_64x64(uint64_t *in)
 {
-        transpose_64x128_sp_asm(in);
+	transpose_64x64_asm(in);
+}
+
+extern void transpose_64x128_sp_asm(vec128 *);
+
+static inline void transpose_64x128_sp(vec128 *in)
+{
+	transpose_64x128_sp_asm(in);
 }
 
 #endif

@@ -5,11 +5,16 @@
 
 #ifndef CONTROLBITS_H
 #define CONTROLBITS_H
+#define composeinv crypto_kem_mceliece6688128f_sse_composeinv
+#define controlbits crypto_kem_mceliece6688128f_sse_controlbits
+#define sort_63b crypto_kem_mceliece6688128f_sse_sort_63b
 
 #include <stdint.h>
 
 void sort_63b(int, uint64_t []);
 void controlbits(unsigned char *, uint32_t *);
+
+void composeinv(int , uint32_t [], uint32_t [], uint32_t []);
 
 #endif
 

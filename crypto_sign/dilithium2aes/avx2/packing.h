@@ -1,1 +1,1 @@
-../../dilithium3/ref/packing.h
+../ref/packing.h

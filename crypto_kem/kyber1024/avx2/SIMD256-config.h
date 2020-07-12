@@ -1,1 +1,1 @@
-../../kyber768/avx2/SIMD256-config.h
+../../kyber512/avx2/SIMD256-config.h

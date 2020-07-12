@@ -1,1 +1,1 @@
-../../kyber768/ref/api.h
+../../kyber512/ref/api.h

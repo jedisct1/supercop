@@ -15,7 +15,7 @@
 
 #include "gf.h"
 
-static inline uint32_t same_mask(uint16_t x, uint16_t y)
+static inline unsigned char same_mask(uint16_t x, uint16_t y)
 {
 	uint32_t mask;
 
@@ -24,7 +24,7 @@ static inline uint32_t same_mask(uint16_t x, uint16_t y)
 	mask >>= 31;
 	mask = -mask;
 
-	return mask;
+	return mask & 0xFF;
 }
 
 /* output: e, an error vector of weight t */
@@ -32,24 +32,29 @@ static void gen_e(unsigned char *e)
 {
 	int i, j, eq, count;
 
-	uint16_t ind_[ SYS_T*2 ];
-	uint16_t ind[ SYS_T*2 ];
+	union 
+	{
+		uint16_t nums[ SYS_T*2 ];
+		unsigned char bytes[ SYS_T*2 * sizeof(uint16_t) ];
+	} buf;
+
+	uint16_t ind[ SYS_T ];
 	unsigned char mask;	
 	unsigned char val[ SYS_T ];	
 
 	while (1)
 	{
-		randombytes((unsigned char *) ind_, sizeof(ind_));
+		randombytes(buf.bytes, sizeof(buf));
 
 		for (i = 0; i < SYS_T*2; i++)
-			ind_[i] &= GFMASK;
+			buf.nums[i] = load_gf(buf.bytes + i*2);
 
 		// moving and counting indices in the correct range
 
 		count = 0;
-		for (i = 0; i < SYS_T*2; i++)
-			if (ind_[i] < SYS_N)
-				ind[ count++ ] = ind_[i];
+		for (i = 0; i < SYS_T*2 && count < SYS_T; i++)
+			if (buf.nums[i] < SYS_N)
+				ind[ count++ ] = buf.nums[i];
 		
 		if (count < SYS_T) continue;
 
@@ -57,9 +62,10 @@ static void gen_e(unsigned char *e)
 
 		eq = 0;
 
-		for (i = 1; i < SYS_T; i++) for (j = 0; j < i; j++)
-			if (ind[i] == ind[j]) 
-				eq = 1;
+		for (i = 1; i < SYS_T; i++) 
+			for (j = 0; j < i; j++)
+				if (ind[i] == ind[j]) 
+					eq = 1;
 
 		if (eq == 0)
 			break;
@@ -83,7 +89,7 @@ static void gen_e(unsigned char *e)
 
 /* input: public key pk, error vector e */
 /* output: syndrome s */
-void syndrome(unsigned char *s, const unsigned char *pk, unsigned char *e)
+static void syndrome(unsigned char *s, const unsigned char *pk, unsigned char *e)
 {
 	unsigned char b, row[SYS_N/8];
 	const unsigned char *pk_ptr = pk;

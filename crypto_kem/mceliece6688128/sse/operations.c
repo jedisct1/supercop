@@ -102,13 +102,12 @@ int crypto_kem_keypair
 		aes256ctr(r, sizeof(r), nonce, seed);
 		memcpy(seed, &r[ sizeof(r)-32 ], 32);
 
-		for (i = 0; i < SYS_T; i++) f[i] = load2(rp + i*2); rp += sizeof(f);
+		for (i = 0; i < SYS_T; i++) f[i] = load_gf(rp + i*2); rp += sizeof(f);
 		if (genpoly_gen(irr, f)) continue;
 
 		for (i = 0; i < (1 << GFBITS); i++) perm[i] = load4(rp + i*4); rp += sizeof(perm);
-		if (perm_check(perm)) continue;
 
-		for (i = 0; i < SYS_T;   i++) store2(sk + SYS_N/8 + i*2, irr[i]);
+		for (i = 0; i < SYS_T;   i++) store_gf(sk + SYS_N/8 + i*2, irr[i]);
 		if (pk_gen(pk, sk + SYS_N/8, perm)) continue;
 
 		memcpy(sk, rp, SYS_N/8);

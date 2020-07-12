@@ -1,1 +1,1 @@
-../../kyber768/ref/indcpa.h
+../ref/indcpa.h

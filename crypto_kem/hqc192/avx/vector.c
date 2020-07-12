@@ -165,7 +165,12 @@ void vect_add(uint64_t *o, const uint64_t *v1, const uint64_t *v2, uint32_t size
  * @returns 0 if the vectors are equals and a negative/psotive value otherwise
  */
 int vect_compare(const uint64_t *v1, const uint64_t *v2, uint32_t size) {
-	return memcmp(v1, v2, size);
+	unsigned char diff = 0;
+
+	for(uint32_t i=0 ; i < size ; i++) {
+		diff |= ((uint8_t *) v1)[i] ^ ((uint8_t *) v2)[i];
+	}
+	return diff != 0;
 }
 
 

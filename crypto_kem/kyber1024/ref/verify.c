@@ -1,1 +1,1 @@
-../../kyber768/ref/verify.c
+../../kyber512/ref/verify.c

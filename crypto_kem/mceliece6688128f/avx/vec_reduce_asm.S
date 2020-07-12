@@ -1,3 +1,5 @@
+#define vec_reduce_asm crypto_kem_mceliece6688128f_avx_vec_reduce_asm
+#define _vec_reduce_asm _crypto_kem_mceliece6688128f_avx_vec_reduce_asm
 
 # qhasm: int64 input_0
 

@@ -1,3 +1,7 @@
+#define update_asm crypto_kem_mceliece460896f_sse_update_asm
+#define _update_asm _crypto_kem_mceliece460896f_sse_update_asm
+#define vec_reduce_asm crypto_kem_mceliece460896f_sse_vec_reduce_asm
+#define _vec_reduce_asm _crypto_kem_mceliece460896f_sse_vec_reduce_asm
 /*
   This file is for the inversion-free Berlekamp-Massey algorithm
   see https://ieeexplore.ieee.org/document/87857
@@ -124,9 +128,10 @@ static inline void get_coefs(gf *out, vec128 *in)
 	interleave(buf, 14, 15, mask[0], 0);
 
 	for (i = 0; i < 16; i++)
-	for (j = 0; j <  2; j++)
-	for (k = 0; k <  4; k++)
-		out[ (4*j + k)*16 + i ] = (vec128_extract(buf[i], j) >> (k*16)) & GFMASK;
+	for (k = 0; k <  4; k++) {
+		out[ (4*0 + k)*16 + i ] = (vec128_extract(buf[i], 0) >> (k*16)) & GFMASK;
+		out[ (4*1 + k)*16 + i ] = (vec128_extract(buf[i], 1) >> (k*16)) & GFMASK;
+	}
 }
 
 /* input: in, sequence of field elements */

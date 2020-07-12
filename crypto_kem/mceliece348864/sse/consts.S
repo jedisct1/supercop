@@ -1,3 +1,27 @@
+#define MASK0_0 crypto_kem_mceliece348864_sse_MASK0_0
+#define _MASK0_0 _crypto_kem_mceliece348864_sse_MASK0_0
+#define MASK0_1 crypto_kem_mceliece348864_sse_MASK0_1
+#define _MASK0_1 _crypto_kem_mceliece348864_sse_MASK0_1
+#define MASK1_0 crypto_kem_mceliece348864_sse_MASK1_0
+#define _MASK1_0 _crypto_kem_mceliece348864_sse_MASK1_0
+#define MASK1_1 crypto_kem_mceliece348864_sse_MASK1_1
+#define _MASK1_1 _crypto_kem_mceliece348864_sse_MASK1_1
+#define MASK2_0 crypto_kem_mceliece348864_sse_MASK2_0
+#define _MASK2_0 _crypto_kem_mceliece348864_sse_MASK2_0
+#define MASK2_1 crypto_kem_mceliece348864_sse_MASK2_1
+#define _MASK2_1 _crypto_kem_mceliece348864_sse_MASK2_1
+#define MASK3_0 crypto_kem_mceliece348864_sse_MASK3_0
+#define _MASK3_0 _crypto_kem_mceliece348864_sse_MASK3_0
+#define MASK3_1 crypto_kem_mceliece348864_sse_MASK3_1
+#define _MASK3_1 _crypto_kem_mceliece348864_sse_MASK3_1
+#define MASK4_0 crypto_kem_mceliece348864_sse_MASK4_0
+#define _MASK4_0 _crypto_kem_mceliece348864_sse_MASK4_0
+#define MASK4_1 crypto_kem_mceliece348864_sse_MASK4_1
+#define _MASK4_1 _crypto_kem_mceliece348864_sse_MASK4_1
+#define MASK5_0 crypto_kem_mceliece348864_sse_MASK5_0
+#define _MASK5_0 _crypto_kem_mceliece348864_sse_MASK5_0
+#define MASK5_1 crypto_kem_mceliece348864_sse_MASK5_1
+#define _MASK5_1 _crypto_kem_mceliece348864_sse_MASK5_1
 .data
 .section .rodata
 

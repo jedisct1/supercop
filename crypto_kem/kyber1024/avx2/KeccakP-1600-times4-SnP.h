@@ -1,1 +1,1 @@
-../../kyber768/avx2/KeccakP-1600-times4-SnP.h
+../../kyber512/avx2/KeccakP-1600-times4-SnP.h

@@ -1,3 +1,5 @@
+#define update_asm crypto_kem_mceliece348864_sse_update_asm
+#define _update_asm _crypto_kem_mceliece348864_sse_update_asm
 
 # qhasm: int64 input_0
 

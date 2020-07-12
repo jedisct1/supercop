@@ -1,13 +1,15 @@
+#define syndrome_asm crypto_kem_mceliece8192128f_avx_syndrome_asm
+#define _syndrome_asm _crypto_kem_mceliece8192128f_avx_syndrome_asm
 /*
   This file is for Niederreiter encryption
 */
 
 #include "encrypt.h"
 
-#include "randombytes.h"
-#include "int32_sort.h"
-#include "params.h"
 #include "util.h"
+#include "params.h"
+#include "uint32_sort.h"
+#include "randombytes.h"
 
 #include <stdint.h>
 
@@ -20,8 +22,8 @@ static void gen_e(unsigned char *e)
 {
 	int i, j, eq;
 
-	uint16_t ind[ SYS_T ];
-	int32_t ind32[ SYS_T ];
+	uint32_t ind[ SYS_T ];
+	unsigned char bytes[ SYS_T * 2 ];
 	uint64_t e_int[ SYS_N/64 ];	
 	uint64_t one = 1;	
 	uint64_t mask;	
@@ -29,18 +31,18 @@ static void gen_e(unsigned char *e)
 
 	while (1)
 	{
-		randombytes((unsigned char *) ind, sizeof(ind));
+		randombytes(bytes, sizeof(bytes));
 
 		for (i = 0; i < SYS_T; i++)
-			ind32[i] = ind[i] &= GFMASK;
+			ind[i] = load_gf(bytes + i*2);
 
 		// check for repetition
 
-		int32_sort(ind32, SYS_T);
+		uint32_sort(ind, SYS_T);
 
 		eq = 0;
 		for (i = 1; i < SYS_T; i++)
-			if (ind32[i-1] == ind32[i])
+			if (ind[i-1] == ind[i])
 				eq = 1;
 
 		if (eq == 0)

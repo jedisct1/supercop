@@ -15,7 +15,7 @@
 
 #include "gf.h"
 
-static inline uint32_t same_mask(uint16_t x, uint16_t y)
+static inline unsigned char same_mask(uint16_t x, uint16_t y)
 {
 	uint32_t mask;
 
@@ -24,7 +24,7 @@ static inline uint32_t same_mask(uint16_t x, uint16_t y)
 	mask >>= 31;
 	mask = -mask;
 
-	return mask;
+	return mask & 0xFF;
 }
 
 /* output: e, an error vector of weight t */
@@ -33,23 +33,25 @@ static void gen_e(unsigned char *e)
 	int i, j, eq;
 
 	uint16_t ind[ SYS_T ];
+	unsigned char bytes[ sizeof(ind) ];
 	unsigned char mask;	
 	unsigned char val[ SYS_T ];	
 
 	while (1)
 	{
-		randombytes((unsigned char *) ind, sizeof(ind));
+		randombytes(bytes, sizeof(bytes));
 
 		for (i = 0; i < SYS_T; i++)
-			ind[i] &= GFMASK;
+			ind[i] = load_gf(bytes + i*2);
 
 		// check for repetition
 
 		eq = 0;
 
-		for (i = 1; i < SYS_T; i++) for (j = 0; j < i; j++)
-			if (ind[i] == ind[j]) 
-				eq = 1;
+		for (i = 1; i < SYS_T; i++) 
+			for (j = 0; j < i; j++)
+				if (ind[i] == ind[j]) 
+					eq = 1;
 
 		if (eq == 0)
 			break;
@@ -73,7 +75,7 @@ static void gen_e(unsigned char *e)
 
 /* input: public key pk, error vector e */
 /* output: syndrome s */
-void syndrome(unsigned char *s, const unsigned char *pk, unsigned char *e)
+static void syndrome(unsigned char *s, const unsigned char *pk, unsigned char *e)
 {
 	unsigned char b, row[SYS_N/8];
 	const unsigned char *pk_ptr = pk;

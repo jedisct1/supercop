@@ -1,1 +1,1 @@
-../../kyber768/ref/fips202.h
+../../kyber512/ref/fips202.h

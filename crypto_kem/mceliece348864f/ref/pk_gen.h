@@ -4,6 +4,7 @@
 
 #ifndef PK_GEN_H
 #define PK_GEN_H
+#define pk_gen crypto_kem_mceliece348864f_ref_pk_gen
 
 #include "gf.h"
 

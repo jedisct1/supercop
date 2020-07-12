@@ -1,1 +1,1 @@
-../../kyber768/avx2/cbd.c
+../../kyber512/avx2/cbd.c

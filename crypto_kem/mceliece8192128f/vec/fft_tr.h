@@ -4,6 +4,7 @@
 
 #ifndef FFT_TR_H
 #define FFT_TR_H
+#define fft_tr crypto_kem_mceliece8192128f_vec_fft_tr
 
 #include "params.h"
 #include "vec.h"

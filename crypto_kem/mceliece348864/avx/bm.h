@@ -5,6 +5,7 @@
 
 #ifndef BM_H
 #define BM_H
+#define bm crypto_kem_mceliece348864_avx_bm
 
 #include "vec128.h"
 

@@ -1,1 +1,1 @@
-../../dilithium3/avx2/brg_endian.h
+../../dilithium2/avx2/brg_endian.h
