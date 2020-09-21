@@ -117,76 +117,6 @@ void generate_B1_B2( unsigned char * sk , prng_t * prng0 )
 
 
 
-void rainbow_evaluate_cpk( unsigned char * z, const cpk_t * pk, const unsigned char *w )
-{
-    prng_t prng0;
-    prng_set( &prng0 , pk->pk_seed , LEN_PKSEED );
-
-    // assuming:
-    // 1) _O2_BYTE*(_V1*_O2) is the largest size among l1_O1, l1_Q2, ..... l2_Q1, .... l2_Q9.
-    // 2) 128 >= _O1_BYTE + _O2_BYTE
-
-#define _BUF_SIZE_1 (((_V1+1)>_O2*2)? _O2_BYTE*(N_TRIANGLE_TERMS(_V1)): _O2_BYTE*_V1*_O2)
-#if ( _O2<_O1)||(128<_O1_BYTE+_O2_BYTE)
-error: buffer size.
-#endif
-    unsigned char _ALIGN_(32) buffer[_BUF_SIZE_1 + 128];
-    // align space with pointer arithmetic
-    //unsigned char _buffer[32 + _O1_BYTE*(_V1*_O1) + 128];
-    //unsigned char * buffer = _buffer + (32 - (((uint64_t)(&_buffer[0]))&31) );
-    unsigned char * pk_seg = buffer + 128;
-
-    const unsigned char *v1 = w;
-    const unsigned char *o1 = v1 + _V1_BYTE;
-    const unsigned char *o2 = o1 + _O1_BYTE;
-    unsigned char *l1 = z;
-    unsigned char *l2 = l1 + _O1_BYTE;
-
-    prng_gen( &prng0 , pk_seg , _O1_BYTE * N_TRIANGLE_TERMS(_V1) ); // l1_F1
-    batch_quad_trimat_eval( l1 , pk_seg , v1 , _V1 , _O1_BYTE );
-
-    prng_gen( &prng0 , pk_seg , _O1_BYTE * _V1*_O1 );  // l1_F2
-    batch_quad_recmat_eval( buffer , v1 , _V1 , pk_seg , o1 , _O1 , _O1_BYTE );
-    gf256v_add( l1 , buffer , _O1_BYTE );
-
-    batch_quad_recmat_eval( buffer , v1 , _V1 , pk->l1_Q3 , o2 , _O2 , _O1_BYTE );
-    gf256v_add( l1 , buffer , _O1_BYTE );
-
-    batch_quad_trimat_eval( buffer , pk->l1_Q5 , o1 , _O1 , _O1_BYTE );
-    gf256v_add( l1 , buffer , _O1_BYTE );
-
-    batch_quad_recmat_eval( buffer , o1 , _O1 , pk->l1_Q6 , o2 , _O2 , _O1_BYTE );
-    gf256v_add( l1 , buffer , _O1_BYTE );
-
-    batch_quad_trimat_eval( buffer , pk->l1_Q9 , o2 , _O2 , _O1_BYTE );
-    gf256v_add( l1 , buffer , _O1_BYTE );
-
-    // l2
-    prng_gen( &prng0 , pk_seg , _O2_BYTE * N_TRIANGLE_TERMS(_V1) ); // l2_F1
-    batch_quad_trimat_eval( l2 , pk_seg , v1 , _V1 , _O2_BYTE );
-
-    prng_gen( &prng0 , pk_seg , _O2_BYTE * _V1*_O1 ); // l2_F2
-    batch_quad_recmat_eval( buffer , v1 , _V1 , pk_seg , o1 , _O1 , _O2_BYTE );
-    gf256v_add( l2 , buffer , _O2_BYTE );
-
-    prng_gen( &prng0 , pk_seg , _O2_BYTE * _V1*_O2 ); // l2_F3
-    batch_quad_recmat_eval( buffer , v1 , _V1 , pk_seg , o2 , _O2 , _O2_BYTE );
-    gf256v_add( l2 , buffer , _O2_BYTE );
-
-    prng_gen( &prng0 , pk_seg , _O2_BYTE * N_TRIANGLE_TERMS(_O1) ); // l2_F5
-    batch_quad_trimat_eval( buffer , pk_seg , o1 , _O1 , _O2_BYTE );
-    gf256v_add( l2 , buffer , _O2_BYTE );
-
-    prng_gen( &prng0 , pk_seg , _O2_BYTE * _O1*_O2 ); // l2_F6
-    batch_quad_recmat_eval( buffer , o1 , _O1 , pk_seg , o2 , _O2 , _O2_BYTE );
-    gf256v_add( l2 , buffer , _O2_BYTE );
-
-    batch_quad_trimat_eval( buffer , pk->l2_Q9 , o2 , _O2 , _O2_BYTE );
-    gf256v_add( l2 , buffer , _O2_BYTE );
-
-}
-
-
 int cpk_to_pk( pk_t * rpk, const cpk_t * cpk )
 {
     // procedure:  cpk_t --> extcpk_t  --> pk_t
@@ -342,9 +272,7 @@ int generate_keypair( pk_t * rpk, sk_t* sk, const unsigned char *sk_seed )
     _generate_secretkey( sk , sk_seed );
 
     // set up a temporary structure ext_cpk_t for calculating public key.
-#if defined(_USE_MEMORY_SAVE_)
-    ext_cpk_t * pk = (ext_cpk_t *)rpk;
-#elif defined(_MALLOC_)
+#if defined(_MALLOC_)
     ext_cpk_t * pk = malloc(sizeof(ext_cpk_t));
     if( NULL == pk ) return -1;
 #else
@@ -362,11 +290,7 @@ int generate_keypair( pk_t * rpk, sk_t* sk, const unsigned char *sk_seed )
     obfuscate_l1_polys( pk->l1_Q9 , pk->l2_Q9 , N_TRIANGLE_TERMS(_O2) , sk->s1 );
     // so far, the pk contains the full pk but in ext_cpk_t format.
 
-#if defined(_USE_MEMORY_SAVE_)
-    extcpk_to_pk_inplace( rpk );     // convert the public key from ext_cpk_t to pk_t.
-#else
     extcpk_to_pk( rpk , pk );     // convert the public key from ext_cpk_t to pk_t.
-#endif
 
 #if defined(_MALLOC_)
     free(pk);
@@ -378,6 +302,26 @@ int generate_keypair( pk_t * rpk, sk_t* sk, const unsigned char *sk_seed )
 
 
 /////////////////////   Cyclic   //////////////////////////////////
+
+
+#include <rng.h> // the macro _SUPERCOP_ might be defined in rng.h
+
+#if defined(_SUPERCOP_)
+
+#if defined( _RAINBOW16_36_32_32 )
+#include "crypto_core_rainbowcalsecret363232.h"
+#define calculate_F_from_Q(a,b,c)  crypto_core_rainbowcalsecret363232((unsigned char*)a,(unsigned char*)b,(unsigned char*)c,NULL)
+#elif defined( _RAINBOW256_68_32_48 )
+#include "crypto_core_rainbowcalsecret683248.h"
+#define calculate_F_from_Q(a,b,c)  crypto_core_rainbowcalsecret683248((unsigned char*)a,(unsigned char*)b,(unsigned char*)c,NULL)
+#elif defined( _RAINBOW256_96_36_64 )
+#include "crypto_core_rainbowcalsecret963664.h"
+#define calculate_F_from_Q(a,b,c)  crypto_core_rainbowcalsecret963664((unsigned char*)a,(unsigned char*)b,(unsigned char*)c,NULL)
+#else
+error.
+#endif
+#endif
+
 
 
 

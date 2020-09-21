@@ -1,9 +1,9 @@
 #ifndef UINT32_H
 #define UINT32_H
 
-#define uint32_div_uint14 crypto_kem_sntrup761_ref_uint32_div_uint14
-#define uint32_mod_uint14 crypto_kem_sntrup761_ref_uint32_mod_uint14
-#define uint32_divmod_uint14 crypto_kem_sntrup761_ref_uint32_divmod_uint14
+#define uint32_div_uint14 CRYPTO_NAMESPACE(uint32_div_uint14)
+#define uint32_mod_uint14 CRYPTO_NAMESPACE(uint32_mod_uint14)
+#define uint32_divmod_uint14 CRYPTO_NAMESPACE(uint32_divmod_uint14)
 
 #include "uint16.h"
 

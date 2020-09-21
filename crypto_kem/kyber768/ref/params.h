@@ -9,26 +9,13 @@
 
 /* Don't change parameters below this line */
 #if   (KYBER_K == 2)
-#ifdef KYBER_90S
-#define KYBER_NAMESPACE(s) crypto_kem_kyber90s512_ref##s
-#else
-#define KYBER_NAMESPACE(s) crypto_kem_kyber512_ref##s
-#endif
 #elif (KYBER_K == 3)
-#ifdef KYBER_90S
-#define KYBER_NAMESPACE(s) crypto_kem_kyber90s768_ref##s
-#else
-#define KYBER_NAMESPACE(s) crypto_kem_kyber768_ref##s
-#endif
 #elif (KYBER_K == 4)
-#ifdef KYBER_90S
-#define KYBER_NAMESPACE(s) crypto_kem_kyber90s1024_ref##s
-#else
-#define KYBER_NAMESPACE(s) crypto_kem_kyber1024_ref##s
-#endif
 #else
 #error "KYBER_K must be in {2,3,4}"
 #endif
+
+#define KYBER_NAMESPACE(s) CRYPTO_NAMESPACE(s)
 
 #define KYBER_N 256
 #define KYBER_Q 3329

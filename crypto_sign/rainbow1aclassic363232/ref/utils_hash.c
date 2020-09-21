@@ -15,26 +15,53 @@
 #endif
 
 
+#include <rng.h>
+// the macro _SUPERCOP_ might be defined in rng.h
+#if defined(_SUPERCOP_)
+#if 32 == _HASH_LEN
+#include "crypto_hash_sha256.h"
+#elif 48 == _HASH_LEN
+#include "crypto_hash_sha384.h"
+#elif 64 == _HASH_LEN
+#include "crypto_hash_sha512.h"
+#else
+error: supercop hash
+#endif
+
+#endif
+
 
 
 static inline
 int _hash( unsigned char * digest , const unsigned char * m , unsigned long long mlen )
 {
 #if 32 == _HASH_LEN
+#if defined(_SUPERCOP_)
+	crypto_hash_sha256(digest,m,mlen);
+#else
 	SHA256_CTX sha256;
 	SHA256_Init( &sha256 );
 	SHA256_Update( &sha256 , m , mlen );
 	SHA256_Final( digest , &sha256 );
+#endif
 #elif 48 == _HASH_LEN
+#if defined(_SUPERCOP_)
+	crypto_hash_sha384(digest,m,mlen);
+#else
 	SHA512_CTX sha384;
 	SHA384_Init( &sha384 );
 	SHA384_Update( &sha384 , m , mlen );
 	SHA384_Final( digest , &sha384 );
+#endif
 #elif 64 == _HASH_LEN
+#if defined(_SUPERCOP_)
+	crypto_hash_sha512(digest,m,mlen);
+#else
 	SHA512_CTX sha512;
 	SHA512_Init( &sha512 );
 	SHA512_Update( &sha512 , m , mlen );
 	SHA512_Final( digest , &sha512 );
+#endif
 #else
 error: un-supported _HASH_LEN
 #endif

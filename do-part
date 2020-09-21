@@ -15,6 +15,7 @@ shorthostname=`hostname | sed 's/\..*//' | tr -cd '[a-z][A-Z][0-9]' | tr '[A-Z]'
 top="`pwd`/bench/$shorthostname"
 bin="$top/bin"
 lib="$top/lib"
+securitymodelsdir="$top/security"
 include="$top/include"
 work="$top/work"
 
@@ -62,7 +63,7 @@ then
   echo "=== `date` === building machineinfo"
   rm -rf "$work"
   mkdir -p "$work"
-  cp -pr machineinfo/* "$work"
+  cp -pR machineinfo/* "$work"
   ( cd "$work" && sh do )
 
   echo "=== `date` === building scripts"
@@ -71,63 +72,65 @@ then
   echo "=== `date` === building okcompilers"
   rm -rf "$work"
   mkdir -p "$work"
-  cp -pr okcompilers/* "$work"
+  cp -pR okcompilers/* "$work"
   ( cd "$work" && sh do )
   cp -p "$work"/bin/* "$bin"
   
   echo "=== `date` === building cpuid"
   rm -rf "$work"
   mkdir -p "$work"
-  cp -pr cpuid/* "$work"
+  cp -pR cpuid/* "$work"
   ( cd "$work" && sh do )
-  cp -pr "$work"/include/* "$include"
+  cp -pR "$work"/include/* "$include"
   
   echo "=== `date` === building inttypes"
   rm -rf "$work"
   mkdir -p "$work"
-  cp -pr inttypes/* "$work"
+  cp -pR inttypes/* "$work"
   ( cd "$work" && sh do )
-  cp -pr "$work"/include/* "$include"
+  cp -pR "$work"/include/* "$include"
   
   echo "=== `date` === building killafter"
   rm -rf "$work"
   mkdir -p "$work"
-  cp -pr killafter/* "$work"
+  cp -pR killafter/* "$work"
   ( cd "$work" && sh do )
   cp -p "$work"/bin/* "$bin"
   
   echo "=== `date` === building compiledinfo"
   rm -rf "$work"
   mkdir -p "$work"
-  cp -pr compiledinfo/* "$work"
+  cp -pR compiledinfo/* "$work"
   ( cd "$work" && sh do )
   cp -p "$work"/bin/* "$bin"
   
   echo "=== `date` === building sinceepoch"
   rm -rf "$work"
   mkdir -p "$work"
-  cp -pr sinceepoch/* "$work"
+  cp -pR sinceepoch/* "$work"
   ( cd "$work" && sh do )
   cp -p "$work"/bin/* "$bin"
   
   echo "=== `date` === building cpucycles"
   rm -rf "$work"
   mkdir -p "$work"
-  cp -pr cpucycles/* "$work"
+  cp -pR cpucycles/* "$work"
   ( cd "$work" && sh do )
-  cp -pr "$work"/lib/* "$lib"
-  cp -pr "$work"/include/* "$include"
+  cp -pR "$work"/lib/* "$lib"
+  cp -pR "$work"/include/* "$include"
   
   echo "=== `date` === building kernelrandombytes"
   rm -rf "$work"
   mkdir -p "$work"
-  cp -pr kernelrandombytes/* "$work"
+  cp -pR kernelrandombytes/* "$work"
   ( cd "$work" && sh do )
-  cp -pr "$work"/lib/* "$lib"
+  cp -pR "$work"/lib/* "$lib"
 
   okabi \
   | while read abi
   do
+    mkdir -p "$lib/$abi"
+    mkdir -p "$include/$abi"
     rm -rf "$work"
     mkdir -p "$work"
     echo 'void crypto_'"$project"'_base(void) { ; }' > "$work/${project}_base.c"
@@ -156,26 +159,26 @@ do
     do
       for gmpabi in 64 32 2.0w 2.0n 1.0 o32 n32 aix64 mode64 mode32 standard
       do
-	[ -s "$lib/$abi/libgmp.a" ] && continue
-	echo "=== `date` === trying CC=$c CXX=$cpp CFLAGS=$copts CXXFLAGS=$cppopts ABI=$gmpabi"
-	rm -rf "$work"
-	mkdir -p "$work"
-	cp -pr gmp-6.2.0/* "$work"
-	( cd "$work" \
-	  && ./configure --enable-cxx \
-	     ABI="$gmpabi" \
-	     CC="$c" CXX="$cpp" CFLAGS="$copts" CXXFLAGS="$cppopts" LDFLAGS="$copts" \
-	  && make \
-	  && make check \
-	  && cp gmp.h gmpxx.h gmp-impl.h longlong.h \
-	  config.h gmp-mparam.h fac_table.h fib_table.h mp_bases.h "$include/$abi" \
-	  && ( ranlib ".libs/libgmp.a" || : ) \
-	  && cp .libs/libgmp.a "$lib/$abi/libgmp.a" \
-	  && chmod 644 "$lib/$abi/libgmp.a" \
-	  && ( ranlib ".libs/libgmpxx.a" || : ) \
-	  && ( cp .libs/libgmpxx.a "$lib/$abi/libgmpxx.a" || : ) \
-	  && ( chmod 644 "$lib/$abi/libgmpxx.a" || : )
-	) && break
+        [ -s "$lib/$abi/libgmp.a" ] && continue
+        echo "=== `date` === trying CC=$c CXX=$cpp CFLAGS=$copts CXXFLAGS=$cppopts ABI=$gmpabi"
+        rm -rf "$work"
+        mkdir -p "$work"
+        cp -pR gmp-6.2.0/* "$work"
+        ( cd "$work" \
+          && ./configure --enable-cxx \
+             ABI="$gmpabi" \
+             CC="$c" CXX="$cpp" CFLAGS="$copts" CXXFLAGS="$cppopts" LDFLAGS="$copts" \
+          && make \
+          && make check \
+          && cp gmp.h gmpxx.h gmp-impl.h longlong.h \
+          config.h gmp-mparam.h fac_table.h fib_table.h mp_bases.h "$include/$abi" \
+          && ( ranlib ".libs/libgmp.a" || : ) \
+          && cp .libs/libgmp.a "$lib/$abi/libgmp.a" \
+          && chmod 644 "$lib/$abi/libgmp.a" \
+          && ( ranlib ".libs/libgmpxx.a" || : ) \
+          && ( cp .libs/libgmpxx.a "$lib/$abi/libgmpxx.a" || : ) \
+          && ( chmod 644 "$lib/$abi/libgmpxx.a" || : )
+        ) && break
       done
     done
   done
@@ -194,7 +197,7 @@ do
     echo "=== `date` === trying CXX=$cpp CXXFLAGS=$cppopts"
     rm -rf "$work"
     mkdir -p "$work"
-    cp -pr ntl-11.4.3/* "$work"
+    cp -pR ntl-11.4.3/* "$work"
     ( cd "$work/src" \
       && ./configure \
          CXX="$cpp" CXXFLAGS="$cppopts" \
@@ -230,7 +233,7 @@ do
       echo "=== `date` === trying CC=$c CFLAGS=$copts TARGET=$keccaktarget"
       rm -rf "$work"
       mkdir -p "$work"
-      cp -pr k/* "$work"
+      cp -pR k/* "$work"
       ( cd "$work" \
         && env CC="$c" CFLAGS="$copts" make $keccaktarget/libkeccak.a \
         && mkdir -p "$include/$abi/libkeccak.a.headers" \
@@ -256,7 +259,7 @@ do
     echo "=== `date` === trying CXX=$cpp CXXFLAGS=$cppopts"
     rm -rf "$work"
     mkdir -p "$work"
-    cp -pr cryptopp-820/* "$work"
+    cp -pR cryptopp-820/* "$work"
     ( cd "$work" \
       && make CXX="$cpp" CXXFLAGS="-DNDEBUG $cppopts" LDFLAGS="$cppopts" \
       && cp libcryptopp.a "$lib/$abi/libcryptopp.a" \
@@ -270,6 +273,15 @@ cat OPERATIONS \
 | while read o
 do
   [ -d "$o" ] || continue
+
+  # not sure -k is portable enough, but failures aren't a disaster
+  # alternative: find "$o" -prune -perm -01000 -exec sh -c 'exit 1' '{}' +
+  if [ -k "$o" ] 2>&1
+  then
+    echo "=== `date` === sticky $o"
+    continue
+  fi
+
   [ x"$focus" = x"all" -o x"$focus" = x"used" -o x"$focus" = x"$o" ] || continue
 
   # for each operation, loop over primitives
@@ -278,6 +290,13 @@ do
   | while read p
   do
     [ -d "$o/$p" ] || continue
+
+    if [ -k "$o/$p" ] 2>&1
+    then
+      echo "=== `date` === sticky $o/$p"
+      continue
+    fi
+
     expectedchecksumbig=''
     [ -f "$o/$p/checksumbig" ] && expectedchecksumbig=`cat "$o/$p/checksumbig"`
     expectedchecksumsmall=''
@@ -325,259 +344,392 @@ do
 
       rm -rf "$work"
       mkdir -p "$work"
-      mkdir -p "$work/best"
-      mkdir -p "$work/bestc"
-
-      # for each operation primitive abi, loop over implementations
-      find "$o/$p" -follow -name "api.h" \
-      | sort \
-      | while read doth
+      for security in constbranchindex timingleaks
       do
-	implementationdir=`dirname $doth`
-	opi=`echo "$implementationdir" | tr ./- ___`
+        mkdir -p "$work/$security/best"
+        mkdir -p "$work/$security/bestc"
+        mkdir -p "$include/$abi/$security"
+        mkdir -p "$securitymodelsdir/$abi/$security"
+        rm -f "$securitymodelsdir/$abi/$security/$op"
+      done
 
-        if [ -f "$implementationdir/architectures" ]
-        then
-          if grep '^'"$abi"'$' "$implementationdir/architectures" >/dev/null 
+      for security in constbranchindex timingleaks
+      do
+
+        find "$o/$p" -follow -name "api.h" \
+        | sort \
+        | while read doth
+        do
+          implementationdir=`dirname $doth`
+          opi=`echo "$implementationdir/$security" | tr ./- ___`
+
+          if [ -k "$implementationdir" ] 2>&1
           then
-            :
-          else
-            echo "=== `date` === skipping $abi/implementation/$implementationdir"
+            echo "=== `date` === sticky $implementationdir"
             continue
           fi
+
+          rm -f "$work/$security/allowed"
+
+          if [ -f "$implementationdir/goal-constbranch" ] && [ -f "$implementationdir/goal-constindex" ]
+          then
+            # _top level_ of implementation is constbranchindex
+  
+            touch "$work/all-subroutines-allow-constbranchindex"
+            rm -f "$work/some-subroutine-allows-timingleaks"
+  
+            (
+              cat "$o/try.c"
+              cat "$o/measure.c"
+              cat "try-anything.c"
+              cat "measure-anything.c"
+              find "$implementationdir" -follow -type f \
+              | egrep '\.h$|\.c$|\.s$|\.S$|\.cc$|\.cpp$' \
+              | xargs cat
+            ) \
+            | grep '#include' \
+            | sed 's/#include[      ]*//' \
+            | sed 's_/.*/__' \
+            | sed 's_//.*__' \
+            | tr -d '<>"\040\011\014' \
+            | sed 's_\.h$__' \
+            | grep -v '_publicinputs$' \
+            | sort -u \
+            | while read incl
+            do
+              case "$incl" in
+                crypto_*_*)
+                  [ -f "$securitymodelsdir/$abi/constbranchindex/$incl" ] || rm -f "$work/all-subroutines-allow-constbranchindex"
+                  [ -f "$securitymodelsdir/$abi/timingleaks/$incl" ] && touch "$work/some-subroutine-allows-timingleaks" || :
+
+                  if [ -f "$securitymodelsdir/$abi/constbranchindex/$incl" ] || [ -f "$securitymodelsdir/$abi/timingleaks/$incl" ]
+                  then
+                    :
+                  else
+                    echo "=== `date` === missing $incl in $abi/implementation/$implementationdir"
+                  fi
+                  ;;
+              esac
+            done
+
+            [ -f "$work/all-subroutines-allow-constbranchindex" ] && touch "$work/constbranchindex/allowed" || :
+            [ -f "$work/some-subroutine-allows-timingleaks" ] && touch "$work/timingleaks/allowed" || :
+          else
+            touch "$work/timingleaks/allowed"
+          fi
+
+          [ -f "$work/$security/allowed" ] || continue
+
+          if [ -f "$implementationdir/architectures" ]
+          then
+            if grep '^'"$abi"'$' "$implementationdir/architectures" >/dev/null 
+            then
+              :
+            else
+              echo "=== `date` === skipping $abi/implementation/$implementationdir"
+              continue
+            fi
+          fi
+
+          echo "=== `date` === $abi $implementationdir $security"
+  
+          rm -rf "$work/compile"
+          mkdir -p "$work/compile"
+          cp -LpR "$implementationdir"/* "$work/compile"
+    
+          cfiles=`ls "$work/compile" | grep '\.c$' || :`
+          sfiles=`ls "$work/compile" | grep '\.[sS]$' || :`
+          ccfiles=`ls "$work/compile" | grep '\.cc$' || :`
+          cppfiles=`ls "$work/compile" | grep '\.cpp$' || :`
+  
+          language=c
+          [ "x$cppfiles" = x ] || language=cpp
+          [ "x$ccfiles" = x ] || language=cpp
+    
+          cp -p "$o/try.c" "$work/compile/try.$language"
+          cp -p "$o/measure.c" "$work/compile/measure.$language"
+          cp -p "try-anything.c" "$work/compile/try-anything.$language"
+          cp -p "measure-anything.c" "$work/compile/measure-anything.$language"
+  
+          touch "$work/compile/test-more.inc"
+          [ -f "$o/$p/supercop/test-more.inc" ] && cp -p "$o/$p/supercop/test-more.inc" "$work/compile/test-more.inc" || :
+          touch "$work/compile/test-loops.inc"
+          [ -f "$o/$p/supercop/test-loops.inc" ] && cp -p "$o/$p/supercop/test-loops.inc" "$work/compile/test-loops.inc" || :
+  
+          cp -p MACROS "$work/compile/MACROS"
+          cp -p PROTOTYPES.c "$work/compile/PROTOTYPES.c"
+  
+          (
+            cd "$work/compile"
+
+            (
+              echo "#ifndef ${o}_H"
+              echo "#define ${o}_H"
+              echo ""
+              echo "#include \"${op}.h\""
+              echo ""
+              egrep "${o}"'$|'"${o}"'\(|'"${o}"'_' < MACROS \
+              | sed "s/$o/$op/" | while read mop
+              do
+                echo "#define ${mop} ${mop}" | sed "s/$op/$o/"
+              done
+              echo "#define ${o}_PRIMITIVE \"${p}\""
+              echo "#define ${o}_IMPLEMENTATION ${op}_IMPLEMENTATION"
+              echo "#define ${o}_VERSION ${op}_VERSION"
+              echo ""
+              echo "#endif"
+            ) > "$o.h"
+            for opp in "$op" "${op}_publicinputs"
+            do
+              (
+                echo "#ifndef ${opp}_H"
+                echo "#define ${opp}_H"
+                echo ""
+                sed 's/[         ]CRYPTO_/ '"${opi}"'_/g' < api.h
+                echo ' '
+                echo '#ifdef __cplusplus'
+                echo 'extern "C" {'
+                echo '#endif'
+                egrep "${o}"'$|'"${o}"'\(|'"${o}"'_' < PROTOTYPES.c \
+                | sed "s/$o/$opi/"
+                echo '#ifdef __cplusplus'
+                echo '}'
+                echo '#endif'
+                echo ""
+                egrep "${o}"'$|'"${o}"'\(|'"${o}"'_' < MACROS \
+                | sed "s/$o/$opi/" | while read mopi
+                do
+                  echo "#define ${mopi} ${mopi}" | sed "s/$opi/$opp/"
+                done
+                echo "#define ${opp}_IMPLEMENTATION \"${implementationdir}\""
+                echo "#ifndef ${opi}_VERSION"
+                echo "#define ${opi}_VERSION \"-\""
+                echo "#endif"
+                echo "#define ${opp}_VERSION ${opi}_VERSION"
+                echo ""
+                echo "#endif"
+              ) > "$opp.h"
+            done
+  
+            ok${language}-$abi \
+            | while read compiler
+            do
+              echo "=== `date` === $abi $implementationdir $security $compiler"
+              compilerword=`echo "$compiler" | tr ' ' '_'`
+              ok=1
+              for f in $cfiles $sfiles $ccfiles $cppfiles
+              do
+                if [ "$ok" = 1 ]
+                then
+                  $compiler -DSUPERCOP \
+                    -D'CRYPTO_NAMESPACETOP='"$opi" \
+                    -D'_CRYPTO_NAMESPACETOP=_'"$opi" \
+                    -D'CRYPTO_NAMESPACE(name)='"$opi"'_##name' \
+                    -D'_CRYPTO_NAMESPACE(name)=_'"$opi"'_##name' \
+                    -I. -I"$include" -I"$include/$abi" -I"$include/$abi/$security" \
+                    -c "$f" >../errors 2>&1 || ok=0
+                  ( if [ `wc -l < ../errors` -lt 25 ]
+                    then
+                      cat ../errors
+                    else
+                      head ../errors
+                      echo ...
+                      tail ../errors
+                    fi
+                  ) \
+                  | while read err
+                  do
+                    echo "$version $shorthostname $abi $startdate $o $p/$security fromcompiler $implementationdir $compilerword $f $err" >&5
+                  done
+                fi
+              done
+  
+              [ "$ok" = 1 ] || continue
+              okar-$abi cr "$op.a" *.o || continue
+              ranlib "$op.a"
+  
+              killafter 300 \
+              $compiler -DSUPERCOP -DSMALL \
+                -I. -I"$include" -I"$include/$abi" -I"$include/$abi/$security" \
+                -o try try.$language try-anything.$language \
+                "$op.a" $trylibs >../errors 2>&1 || ok=0
+              cat ../errors \
+              | while read err
+              do
+                echo "$version $shorthostname $abi $startdate $o $p/$security fromcompiler $implementationdir $compilerword try.$language $err" >&5
+              done
+              [ "$ok" = 1 ] || continue
+  
+              if sh -c 'killafter 3600 ./try || exit $?' >../outputs 2>../errors
+              then
+                checksumsmall=`awk '{print $1}' < ../outputs`
+                cycles=`awk '{print $2}' < ../outputs`
+                checksumcycles=`awk '{print $3}' < ../outputs`
+                cyclespersecond=`awk '{print $4}' < ../outputs`
+                impl=`awk '{print $5}' < ../outputs`
+              else
+                echo "$version $shorthostname $abi $startdate $o $p/$security tryfails $implementationdir $compilerword error $?" >&5
+                cat ../outputs ../errors \
+                | while read err
+                do
+                  echo "$version $shorthostname $abi $startdate $o $p/$security tryfails $implementationdir $compilerword $err" >&5
+                done
+                continue
+              fi
+  
+              [ x"$expectedchecksumsmall" != x ] \
+              && [ x"$expectedchecksumsmall" != "x$checksumsmall" ] \
+              && echo "$version $shorthostname $abi $startdate $o $p/$security try $checksumsmall fails $cycles $checksumcycles $cyclespersecond $impl $compilerword" >&5 \
+              && continue
+  
+              killafter 300 \
+              $compiler -DSUPERCOP \
+                -I. -I"$include" -I"$include/$abi" -I"$include/$abi/$security" \
+                -o try try.$language try-anything.$language \
+                "$op.a" $trylibs >../errors 2>&1 || ok=0
+              cat ../errors \
+              | while read err
+              do
+                echo "$version $shorthostname $abi $startdate $o $p/$security fromcompiler $implementationdir $compilerword try.$language $err" >&5
+              done
+              [ "$ok" = 1 ] || continue
+  
+              if sh -c 'killafter 3600 ./try || exit $?' >../outputs 2>../errors
+              then
+                checksumbig=`awk '{print $1}' < ../outputs`
+                cycles=`awk '{print $2}' < ../outputs`
+                checksumcycles=`awk '{print $3}' < ../outputs`
+                cyclespersecond=`awk '{print $4}' < ../outputs`
+                impl=`awk '{print $5}' < ../outputs`
+              else
+                echo "$version $shorthostname $abi $startdate $o $p/$security tryfails $implementationdir $compilerword error $?" >&5
+                cat ../outputs ../errors \
+                | while read err
+                do
+                  echo "$version $shorthostname $abi $startdate $o $p/$security tryfails $implementationdir $compilerword $err" >&5
+                done
+                continue
+              fi
+  
+              [ x"$expectedchecksumbig" != x ] \
+              && [ x"$expectedchecksumbig" != "x$checksumbig" ] \
+              && echo "$version $shorthostname $abi $startdate $o $p/$security try $checksumbig fails $cycles $checksumcycles $cyclespersecond $impl $compilerword" >&5 \
+              && continue
+  
+              checksumok=ok
+              [ "x$expectedchecksumsmall" = "x" ] && checksumok=unknown
+              [ "x$expectedchecksumbig" = "x" ] && checksumok=unknown
+              echo "$version $shorthostname $abi $startdate $o $p/$security try $checksumsmall/$checksumbig $checksumok $cycles $checksumcycles $cyclespersecond $impl $compilerword" >&5
+  
+              compiledinfo "$version" "$shorthostname" "$abi" "$startdate" "$o" "$p/$security" "$implementationdir" "$compilerword" "$opi" "$language"
+
+              if [ ${TIMECOP+yes} ] && [ "$security" = "constbranchindex" ]
+              then
+                ok=1
+                killafter 300 \
+                $compiler -DSUPERCOP -DTIMECOP -DTIMECOP_LOOPS="$TIMECOP" \
+                  -I. -I"$include" -I"$include/$abi" -I"$include/$abi/$security" \
+                  -o try try.$language try-anything.$language \
+                  "$op.a" $trylibs >../errors 2>&1 || ok=0
+                cat ../errors \
+                | while read err
+                do
+                  echo "$version $shorthostname $abi $startdate $o $p/$security fromcompiler $implementationdir $compilerword try.$language $err" >&5
+                done
+                [ "$ok" = 1 ] || continue
+
+                if sh -c 'killafter 360 valgrind -q --error-exitcode=99 --track-origins=yes ./try || exit $?' >../outputs 2>../errors
+                then
+                  echo "$version $shorthostname $abi $startdate $o $p/$security timecop_pass $implementationdir $compilerword $TIMECOP $?" >&5
+                  word=timecop_output
+                else
+                  exitcode=$?
+                  if [ "$exitcode" = "99" ] && grep -q "client request" ../outputs ../errors
+                  then
+                    word=timecop_fail
+                  else
+                    word=timecop_error
+                  fi
+                  echo "$version $shorthostname $abi $startdate $o $p/$security $word $implementationdir $compilerword error $exitcode" >&5
+                fi
+
+                cat ../outputs ../errors \
+                | while read err
+                do
+                  echo "$version $shorthostname $abi $startdate $o $p/$security $word $implementationdir $compilerword $err" >&5
+                done
+
+              fi
+  
+              [ -s "../constbranchindex/bestc/median" ] && [ `cat "../constbranchindex/bestc/median"` -le $cycles ] && continue
+              [ -s "../$security/bestc/median" ] && [ `cat "../$security/bestc/median"` -le $cycles ] && continue
+  
+              killafter 3600 \
+              $compiler -D'COMPILER="'"$compiler"'"' \
+                -DSUPERCOP -DLOOPS=3 \
+                -I. -I"$include" -I"$include/$abi" -I"$include/$abi/$security" \
+                -o measure measure.$language measure-anything.$language \
+                "$op.a" $measurelibs >../errors 2>&1 || ok=0
+              cat ../errors \
+              | while read err
+              do
+                echo "$version $shorthostname $abi $startdate $o $p/$security fromcompiler $implementationdir $compilerword measure.$language $err" >&5
+              done
+              [ "$ok" = 1 ] || continue
+    
+              for b in best bestc
+              do
+                [ $language = cpp ] && [ $b = bestc ] && continue
+                [ -s "../constbranchindex/$b/median" ] && [ `cat "../constbranchindex/$b/median"` -le $cycles ] && continue
+                [ -s "../$security/$b/median" ] && [ `cat "../$security/$b/median"` -le $cycles ] && continue
+                echo "$cycles" > ../"$security/$b/median"
+                rm -f ../$security/$b/*.o ../$security/$b/measure || continue
+                for f in *.o
+                do
+                  cp -p "$f" "../$security/$b/${opi}-$f"
+                done
+                cp -p "${op}_publicinputs.h" "../$security/$b/${op}_publicinputs.h"
+                cp -p "$op.h" "../$security/$b/$op.h"
+                cp -p "$o.h" "../$security/$b/$o.h"
+                cp -p measure ../$security/$b/measure
+              done
+            done
+          )
+
+        done
+
+        [ -f "$work/$security/best/measure" ] || continue
+
+        echo "=== `date` === $abi $o/$p $security measuring"
+  
+        killafter 86400 \
+        "$work/$security/best/measure" \
+        | while read measurement
+        do
+          echo "$version $shorthostname $abi $startdate $o $p/$security $measurement" >&5
+        done
+  
+        [ -f "$o/$p/used" ] \
+        && okar-$abi cr "$lib/$abi/lib${project}.a" "$work/$security/bestc"/*.o \
+        && ( ranlib "$lib/$abi/lib${project}.a" || exit 0 ) \
+        && cp -p "$work/$security/bestc/$op.h" "$include/$abi/$security/$op.h" \
+        && cp -p "$work/$security/bestc/${op}_publicinputs.h" "$include/$abi/$security/${op}_publicinputs.h" \
+        && touch "$securitymodelsdir/$abi/$security/$op" \
+        || :
+      done
+
+      if [ -f "$securitymodelsdir/$abi/constbranchindex/$op" ]
+      then
+        if [ -f "$securitymodelsdir/$abi/timingleaks/$op" ]
+        then
+          # can use timingleaks _for public inputs_ as a constbranchindex subroutine
+          cp "$include/$abi/timingleaks/${op}_publicinputs.h" "$include/$abi/constbranchindex/${op}_publicinputs.h"
+        else
+          # can use a constbranchindex subroutine as a timingleaks subroutine
+          cp "$include/$abi/constbranchindex/${op}_publicinputs.h" "$include/$abi/timingleaks/${op}_publicinputs.h"
+          cp "$include/$abi/constbranchindex/${op}.h" "$include/$abi/timingleaks/${op}.h"
         fi
-
-	echo "=== `date` === $abi $implementationdir"
-
-	rm -rf "$work/compile"
-	mkdir -p "$work/compile"
-	cp -Lpr "$implementationdir"/* "$work/compile"
-  
-	cfiles=`ls "$work/compile" | grep '\.c$' || :`
-	sfiles=`ls "$work/compile" | grep '\.[sS]$' || :`
-	ccfiles=`ls "$work/compile" | grep '\.cc$' || :`
-	cppfiles=`ls "$work/compile" | grep '\.cpp$' || :`
-
-	language=c
-	[ "x$cppfiles" = x ] || language=cpp
-	[ "x$ccfiles" = x ] || language=cpp
-  
-	cp -p "$o/try.c" "$work/compile/try.$language"
-	cp -p "$o/measure.c" "$work/compile/measure.$language"
-	cp -p "try-anything.c" "$work/compile/try-anything.$language"
-	cp -p "measure-anything.c" "$work/compile/measure-anything.$language"
-
-        touch "$work/compile/test-more.inc"
-        [ -f "$o/$p/supercop/test-more.inc" ] && cp -p "$o/$p/supercop/test-more.inc" "$work/compile/test-more.inc"
-
-        cp -p MACROS "$work/compile/MACROS"
-        cp -p PROTOTYPES.c "$work/compile/PROTOTYPES.c"
-
-	(
-	  cd "$work/compile"
-	  (
-	    echo "#ifndef ${o}_H"
-	    echo "#define ${o}_H"
-	    echo ""
-	    echo "#include \"${op}.h\""
-	    echo ""
-            egrep "${o}"'$|'"${o}"'\(|'"${o}"'_' < MACROS \
-            | sed "s/$o/$op/" | while read mop
-            do
-              echo "#define ${mop} ${mop}" | sed "s/$op/$o/"
-            done
-	    echo "#define ${o}_PRIMITIVE \"${p}\""
-	    echo "#define ${o}_IMPLEMENTATION ${op}_IMPLEMENTATION"
-	    echo "#define ${o}_VERSION ${op}_VERSION"
-	    echo ""
-	    echo "#endif"
-	  ) > "$o.h"
-	  (
-	    echo "#ifndef ${op}_H"
-	    echo "#define ${op}_H"
-	    echo ""
-	    sed 's/[ 	]CRYPTO_/ '"${opi}"'_/g' < api.h
-	    echo ' '
-	    echo '#ifdef __cplusplus'
-	    echo 'extern "C" {'
-	    echo '#endif'
-            egrep "${o}"'$|'"${o}"'\(|'"${o}"'_' < PROTOTYPES.c \
-            | sed "s/$o/$opi/"
-	    echo '#ifdef __cplusplus'
-	    echo '}'
-	    echo '#endif'
-	    echo ""
-            egrep "${o}"'$|'"${o}"'\(|'"${o}"'_' < MACROS \
-            | sed "s/$o/$opi/" | while read mopi
-            do
-              echo "#define ${mopi} ${mopi}" | sed "s/$opi/$op/"
-            done
-	    echo "#define ${op}_IMPLEMENTATION \"${implementationdir}\""
-	    echo "#ifndef ${opi}_VERSION"
-	    echo "#define ${opi}_VERSION \"-\""
-	    echo "#endif"
-	    echo "#define ${op}_VERSION ${opi}_VERSION"
-	    echo ""
-	    echo "#endif"
-	  ) > "$op.h"
-
-	  ok${language}-$abi \
-	  | while read compiler
-	  do
-	    echo "=== `date` === $abi $implementationdir $compiler"
-	    compilerword=`echo "$compiler" | tr ' ' '_'`
-	    ok=1
-	    for f in $cfiles $sfiles $ccfiles $cppfiles
-	    do
-	      if [ "$ok" = 1 ]
-	      then
-		$compiler -DSUPERCOP \
-		  -I. -I"$include" -I"$include/$abi" \
-		  -c "$f" >../errors 2>&1 || ok=0
-		( if [ `wc -l < ../errors` -lt 25 ]
-		  then
-		    cat ../errors
-		  else
-		    head ../errors
-		    echo ...
-		    tail ../errors
-		  fi
-		) \
-		| while read err
-		do
-		  echo "$version $shorthostname $abi $startdate $o $p fromcompiler $implementationdir $compilerword $f $err" >&5
-		done
-	      fi
-	    done
-
-	    [ "$ok" = 1 ] || continue
-	    okar-$abi cr "$op.a" *.o || continue
-	    ranlib "$op.a"
-
-	    killafter 300 \
-	    $compiler -DSUPERCOP -DSMALL \
-	      -I. -I"$include" -I"$include/$abi" \
-	      -o try try.$language try-anything.$language \
-	      "$op.a" $trylibs >../errors 2>&1 || ok=0
-	    cat ../errors \
-	    | while read err
-	    do
-	      echo "$version $shorthostname $abi $startdate $o $p fromcompiler $implementationdir $compilerword try.$language $err" >&5
-	    done
-	    [ "$ok" = 1 ] || continue
-
-	    if sh -c 'killafter 3600 ./try || exit $?' >../outputs 2>../errors
-	    then
-	      checksumsmall=`awk '{print $1}' < ../outputs`
-	      cycles=`awk '{print $2}' < ../outputs`
-	      checksumcycles=`awk '{print $3}' < ../outputs`
-	      cyclespersecond=`awk '{print $4}' < ../outputs`
-	      impl=`awk '{print $5}' < ../outputs`
-	    else
-	      echo "$version $shorthostname $abi $startdate $o $p tryfails $implementationdir $compilerword error $?" >&5
-	      cat ../outputs ../errors \
-	      | while read err
-	      do
-	        echo "$version $shorthostname $abi $startdate $o $p tryfails $implementationdir $compilerword $err" >&5
-	      done
-	      continue
-	    fi
-
-	    [ x"$expectedchecksumsmall" != x ] \
-	    && [ x"$expectedchecksumsmall" != "x$checksumsmall" ] \
-	    && echo "$version $shorthostname $abi $startdate $o $p try $checksumsmall fails $cycles $checksumcycles $cyclespersecond $impl $compilerword" >&5 \
-	    && continue
-
-	    killafter 300 \
-	    $compiler -DSUPERCOP \
-	      -I. -I"$include" -I"$include/$abi" \
-	      -o try try.$language try-anything.$language \
-	      "$op.a" $trylibs >../errors 2>&1 || ok=0
-	    cat ../errors \
-	    | while read err
-	    do
-	      echo "$version $shorthostname $abi $startdate $o $p fromcompiler $implementationdir $compilerword try.$language $err" >&5
-	    done
-	    [ "$ok" = 1 ] || continue
-
-	    if sh -c 'killafter 3600 ./try || exit $?' >../outputs 2>../errors
-	    then
-	      checksumbig=`awk '{print $1}' < ../outputs`
-	      cycles=`awk '{print $2}' < ../outputs`
-	      checksumcycles=`awk '{print $3}' < ../outputs`
-	      cyclespersecond=`awk '{print $4}' < ../outputs`
-	      impl=`awk '{print $5}' < ../outputs`
-	    else
-	      echo "$version $shorthostname $abi $startdate $o $p tryfails $implementationdir $compilerword error $?" >&5
-	      cat ../outputs ../errors \
-	      | while read err
-	      do
-	        echo "$version $shorthostname $abi $startdate $o $p tryfails $implementationdir $compilerword $err" >&5
-	      done
-	      continue
-	    fi
-
-	    [ x"$expectedchecksumbig" != x ] \
-	    && [ x"$expectedchecksumbig" != "x$checksumbig" ] \
-	    && echo "$version $shorthostname $abi $startdate $o $p try $checksumbig fails $cycles $checksumcycles $cyclespersecond $impl $compilerword" >&5 \
-	    && continue
-
-	    checksumok=ok
-	    [ "x$expectedchecksumsmall" = "x" ] && checksumok=unknown
-	    [ "x$expectedchecksumbig" = "x" ] && checksumok=unknown
-	    echo "$version $shorthostname $abi $startdate $o $p try $checksumsmall/$checksumbig $checksumok $cycles $checksumcycles $cyclespersecond $impl $compilerword" >&5
-
-            compiledinfo "$version" "$shorthostname" "$abi" "$startdate" "$o" "$p" "$implementationdir" "$compilerword" "$opi" "$language"
-
-	    [ -s ../bestc/median ] && [ `cat ../bestc/median` -le $cycles ] && continue
-
-	    killafter 3600 \
-	    $compiler -D'COMPILER="'"$compiler"'"' \
-	      -DSUPERCOP -DLOOPS=3 \
-	      -I. -I"$include" -I"$include/$abi" \
-	      -o measure measure.$language measure-anything.$language \
-	      "$op.a" $measurelibs >../errors 2>&1 || ok=0
-	    cat ../errors \
-	    | while read err
-	    do
-	      echo "$version $shorthostname $abi $startdate $o $p fromcompiler $implementationdir $compilerword measure.$language $err" >&5
-	    done
-	    [ "$ok" = 1 ] || continue
-  
-	    for b in best bestc
-	    do
-	      [ $language = cpp ] && [ $b = bestc ] && continue
-	      [ -s ../$b/median ] && [ `cat ../$b/median` -le $cycles ] && continue
-	      echo "$cycles" > ../$b/median
-	      rm -f ../$b/*.o ../$b/measure || continue
-	      for f in *.o
-	      do
-	        cp -p "$f" "../$b/${opi}-$f"
-	      done
-	      cp -p "$op.h" "../$b/$op.h"
-	      cp -p "$o.h" "../$b/$o.h"
-	      cp -p measure ../$b/measure
-	    done
-	  done
-	)
-      done
-
-      echo "=== `date` === $abi $o/$p measuring"
-
-      killafter 86400 \
-      "$work/best/measure" \
-      | while read measurement
-      do
-	echo "$version $shorthostname $abi $startdate $o $p $measurement" >&5
-      done
-
-      [ -f "$o/$p/used" ] \
-      && okar-$abi cr "$lib/$abi/lib${project}.a" "$work/bestc"/*.o \
-      && ( ranlib "$lib/$abi/lib${project}.a" || exit 0 ) \
-      && cp -p "$work/bestc/$op.h" "$include/$abi/$op.h" \
-      && [ -f "$o/$p/selected" ] \
-      && cp -p "$work/bestc/$o.h" "$include/$abi/$o.h" \
-      || :
+      fi
     done
   done
 
@@ -586,7 +738,7 @@ do
     okabi \
     | while read abi
     do
-      include="-I. -I$include -I$include/$abi"
+      includes="-I. -I$include -I$include/$abi -I$include/$abi/constbranchindex"
 
       libs=`"oklibs-$abi"`
       libs="$lib/$abi/cpucycles.o $libs"
@@ -602,23 +754,22 @@ do
 
       rm -rf "$work"
       mkdir -p "$work"
-      cp -pr knownrandombytes/* "$work"
-
+      cp -pR knownrandombytes/* "$work"
 
       ( cd "$work" \
-        && env abi="$abi" libs="$libs" include="$include" sh do \
-	&& cp -p "lib/$abi/knownrandombytes.o" "$lib/$abi/knownrandombytes.o"
+        && env abi="$abi" libs="$libs" include="$includes" sh do \
+        && cp -p "lib/$abi/knownrandombytes.o" "$lib/$abi/knownrandombytes.o"
       )
 
       echo "=== `date` === $abi fastrandombytes"
 
       rm -rf "$work"
       mkdir -p "$work"
-      cp -pr fastrandombytes/* "$work"
+      cp -pR fastrandombytes/* "$work"
 
       ( cd "$work" \
-        && env abi="$abi" libs="$libs" include="$include" sh do \
-	&& cp -p "lib/$abi/fastrandombytes.o" "$lib/$abi/fastrandombytes.o"
+        && env abi="$abi" libs="$libs" include="$includes" sh do \
+        && cp -p "lib/$abi/fastrandombytes.o" "$lib/$abi/fastrandombytes.o"
       )
     done
   fi

@@ -3,8 +3,8 @@
 
 #include <stdint.h>
 
-#define ntt512_7681 crypto_core_mult3sntrup761_avx_ntt512_7681
-#define invntt512_7681 crypto_core_mult3sntrup761_avx_invntt512_7681
+#define ntt512_7681 CRYPTO_NAMESPACE(ntt512_7681)
+#define invntt512_7681 CRYPTO_NAMESPACE(invntt512_7681)
 
 extern void ntt512_7681(int16_t *,int);
 extern void invntt512_7681(int16_t *,int);

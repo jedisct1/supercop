@@ -1,5 +1,5 @@
-#define vec_reduce_asm crypto_kem_mceliece460896_sse_vec_reduce_asm
-#define _vec_reduce_asm _crypto_kem_mceliece460896_sse_vec_reduce_asm
+#define vec_reduce_asm CRYPTO_NAMESPACE(vec_reduce_asm)
+#define _vec_reduce_asm _CRYPTO_NAMESPACE(vec_reduce_asm)
 
 # qhasm: int64 input_0
 

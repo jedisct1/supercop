@@ -156,16 +156,16 @@ void BS2POLq4x(unsigned char * bs0, unsigned char * bs1, unsigned char * bs2, un
 	//num/32   (32 8-bit) 
 	for(i = 0;i<13;i++){
 		//Load 128 bit from bs0, bs1, bs2, bs3
-		l0 = _mm_load_ps(cfbs0+p*4); //0
-		l1 = _mm_load_ps(cfbs1+p*4); //160
-		l2 = _mm_load_ps(cfbs2+p*4); //64
-		l3 = _mm_load_ps(cfbs3+p*4); //224
+		l0 = _mm_loadu_ps(cfbs0+p*4); //0
+		l1 = _mm_loadu_ps(cfbs1+p*4); //160
+		l2 = _mm_loadu_ps(cfbs2+p*4); //64
+		l3 = _mm_loadu_ps(cfbs3+p*4); //224
 		
 		//Load 128 bit from middle of bs0, bs1, bs2, bs3
-		l4 = _mm_load_ps(cfbs4+p*4); //208
-		l5 = _mm_load_ps(cfbs5+p*4); //112
-		l6 = _mm_load_ps(cfbs6+p*4); //16
-		l7 = _mm_load_ps(cfbs7+p*4); //176
+		l4 = _mm_loadu_ps(cfbs4+p*4); //208
+		l5 = _mm_loadu_ps(cfbs5+p*4); //112
+		l6 = _mm_loadu_ps(cfbs6+p*4); //16
+		l7 = _mm_loadu_ps(cfbs7+p*4); //176
 
 		//Transpose 4x4 matrix
 		_MM_TRANSPOSE4_PS(l0,l1,l2,l3);

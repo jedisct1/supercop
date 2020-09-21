@@ -1,5 +1,5 @@
-#define syndrome_asm crypto_kem_mceliece8192128_sse_syndrome_asm
-#define _syndrome_asm _crypto_kem_mceliece8192128_sse_syndrome_asm
+#define syndrome_asm CRYPTO_NAMESPACE(syndrome_asm)
+#define _syndrome_asm _CRYPTO_NAMESPACE(syndrome_asm)
 
 # qhasm: int64 input_0
 

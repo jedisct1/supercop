@@ -3,6 +3,7 @@
 #include <openssl/sha.h>
 #include <string.h>
 #include "sizes.h"
+#include "short.h"
 
 int verification(
     const unsigned char m[SHORTHASH_BYTES],const unsigned long long mlen,

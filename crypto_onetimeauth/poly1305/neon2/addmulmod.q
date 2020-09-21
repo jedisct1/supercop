@@ -28,7 +28,7 @@ reg128 t4
 
 reg128 mask
 
-enter crypto_onetimeauth_poly1305_neon2_addmulmod
+enter CRYPTO_NAMESPACE(addmulmod)
 
 				2x mask = 0xffffffff
   y01 aligned= mem128[input_2];input_2+=16

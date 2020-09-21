@@ -105,7 +105,7 @@ stack512 tmp
 stack64 ctarget
 
 
-enter crypto_stream_salsa208_e_amd64_3_ECRYPT_keystream_bytes
+enter ECRYPT_keystream_bytes
 
 x = arg1
 m = arg2
@@ -123,7 +123,7 @@ out -= bytes
 goto start
 
 
-enter crypto_stream_salsa208_e_amd64_3_ECRYPT_decrypt_bytes
+enter ECRYPT_decrypt_bytes
 
 x = arg1
 m = arg2
@@ -136,7 +136,7 @@ goto done if !unsigned>
 goto start
 
 
-enter crypto_stream_salsa208_e_amd64_3_ECRYPT_encrypt_bytes
+enter ECRYPT_encrypt_bytes
 
 x = arg1
 m = arg2
@@ -608,11 +608,11 @@ goto mainloop if unsigned>
 goto bytesatleast1
 
 
-enter crypto_stream_salsa208_e_amd64_3_ECRYPT_init
+enter ECRYPT_init
 leave
 
 
-enter crypto_stream_salsa208_e_amd64_3_ECRYPT_keysetup
+enter ECRYPT_keysetup
 
   k = arg2
   kbits = arg3
@@ -665,7 +665,7 @@ enter crypto_stream_salsa208_e_amd64_3_ECRYPT_keysetup
 leave
 
 
-enter crypto_stream_salsa208_e_amd64_3_ECRYPT_ivsetup
+enter ECRYPT_ivsetup
 
   iv = arg2
   x = arg1

@@ -1,7 +1,1 @@
-#define crypto_dh_kumjacfp127g_v01_w8s02_SECRETKEYBYTES 32
-#define crypto_dh_kumjacfp127g_v01_w8s02_PUBLICKEYBYTES 48
-#define crypto_dh_kumjacfp127g_v01_w8s02_BYTES 48
-
-#define SECRETKEY_BYTES crypto_dh_kumjacfp127g_v01_w8s02_SECRETKEYBYTES
-#define PUBLICKEY_BYTES crypto_dh_kumjacfp127g_v01_w8s02_PUBLICKEYBYTES
-#define SHAREDSECRET_BYTES crypto_dh_kumjacfp127g_v01_w8s02_BYTES
+../../../kumfp127g/v02/var/api.h

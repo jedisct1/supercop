@@ -14,23 +14,23 @@ typedef __m256i int16x16;
 
 
 
-#define mult1_over65536_x16 crypto_core_invsntrup761_jumpdivsteps_mult1_over65536_x16
-#define mult2_over65536_x16  crypto_core_invsntrup761_jumpdivsteps_mult2_over65536_x16
-#define mult4_over65536_x16  crypto_core_invsntrup761_jumpdivsteps_mult4_over65536_x16
-#define mult8_nega_over65536_x16  crypto_core_invsntrup761_jumpdivsteps_mult8_nega_over65536_x16
-#define mult64_nega_over4096_x16  crypto_core_invsntrup761_jumpdivsteps_mult64_nega_over4096_x16
-#define mult768_over64  crypto_core_invsntrup761_jumpdivsteps_mult768_over64
-#define mult768_over64_2 crypto_core_invsntrup761_jumpdivsteps_mult768_over64_2
+#define mult1_over65536_x16 CRYPTO_NAMESPACE(mult1_over65536_x16)
+#define mult2_over65536_x16  CRYPTO_NAMESPACE(mult2_over65536_x16)
+#define mult4_over65536_x16  CRYPTO_NAMESPACE(mult4_over65536_x16)
+#define mult8_nega_over65536_x16  CRYPTO_NAMESPACE(mult8_nega_over65536_x16)
+#define mult64_nega_over4096_x16  CRYPTO_NAMESPACE(mult64_nega_over4096_x16)
+#define mult768_over64  CRYPTO_NAMESPACE(mult768_over64)
+#define mult768_over64_2 CRYPTO_NAMESPACE(mult768_over64_2)
 
-#define transpose    crypto_core_invsntrup761_jumpdivsteps_transpose
-#define untranspose  crypto_core_invsntrup761_jumpdivsteps_untranspose
+#define transpose    CRYPTO_NAMESPACE(transpose)
+#define untranspose  CRYPTO_NAMESPACE(untranspose)
 
-#define fft64              crypto_core_invsntrup761_jumpdivsteps_fft64
-#define unfft64_scale16    crypto_core_invsntrup761_jumpdivsteps_unfft64_scale16
-#define fft8_64            crypto_core_invsntrup761_jumpdivsteps_fft8_64
-#define unfft8_64_scale8   crypto_core_invsntrup761_jumpdivsteps_unfft8_64_scale8
-#define fft48_64           crypto_core_invsntrup761_jumpdivsteps_fft48_64
-#define unfft48_64_scale64 crypto_core_invsntrup761_jumpdivsteps_unfft48_64_scale64
+#define fft64              CRYPTO_NAMESPACE(fft64)
+#define unfft64_scale16    CRYPTO_NAMESPACE(unfft64_scale16)
+#define fft8_64            CRYPTO_NAMESPACE(fft8_64)
+#define unfft8_64_scale8   CRYPTO_NAMESPACE(unfft8_64_scale8)
+#define fft48_64           CRYPTO_NAMESPACE(fft48_64)
+#define unfft48_64_scale64 CRYPTO_NAMESPACE(unfft48_64_scale64)
 
 
 

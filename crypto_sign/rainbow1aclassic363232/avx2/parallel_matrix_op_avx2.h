@@ -5,7 +5,7 @@
 #ifndef _P_MATRIX_OP_AVX2_H_
 #define _P_MATRIX_OP_AVX2_H_
 
-
+//IF_CRYPTO_CORE:define CRYPTO_NAMESPACE
 
 #ifdef  __cplusplus
 extern  "C" {
@@ -214,32 +214,6 @@ void batch_mat_madd_multab_gf256_avx2( unsigned char * bC , const unsigned char*
 
 
 ////////////////////  "quadratric" matrix evaluation  ///////////////////////////////
-
-
-///
-/// @brief  y =  x^Tr * trimat * x  , in GF(16)
-///
-/// @param[out]  y          - the returned batched element y.
-/// @param[in]   trimat     - a batched matrix.
-/// @param[in]   x          - an input vector x,
-/// @param[in]   dim        - the dimension of matrix trimat (and x).
-/// @param[in]   size_batch - number of the batched elements in the corresponding position of the matrix.
-///
-void batch_quad_trimat_eval_gf16_avx2( unsigned char * y, const unsigned char * trimat, const unsigned char * x, unsigned dim , unsigned size_batch );
-
-
-///
-/// @brief  y =  x^Tr * trimat * x  , in GF(256)
-///
-/// @param[out]  y          - the returned batched element y.
-/// @param[in]   trimat     - a batched matrix.
-/// @param[in]   x          - an input vector x,
-/// @param[in]   dim        - the dimension of matrix trimat (and x).
-/// @param[in]   size_batch - number of the batched elements in the corresponding position of the matrix.
-///
-void batch_quad_trimat_eval_gf256_avx2( unsigned char * y, const unsigned char * trimat, const unsigned char * x, unsigned dim , unsigned size_batch );
-
-
 
 
 ///

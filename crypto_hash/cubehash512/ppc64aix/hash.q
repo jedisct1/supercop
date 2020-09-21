@@ -132,7 +132,7 @@ stack64 i27_stack
 stack64 i28_stack
 stack64 i29_stack
 
-enter crypto_hash_cubehash512_ppc64aix aix
+enter CRYPTO_NAMESPACETOP aix
 
 i12_stack = i12
 i13_stack = i13

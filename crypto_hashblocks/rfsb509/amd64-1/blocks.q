@@ -1,4 +1,4 @@
-enter crypto_hashblocks_rfsb509_amd64_1
+enter CRYPTO_NAMESPACETOP
 int64 rp
 int64 bp
 int64 blen
@@ -39,7 +39,7 @@ stack128 state2
 stack128 state3
 int6464 v
 int64 matrix
-matrix = crypto_hashblocks_rfsb509_amd64_1_matrix
+matrix = CRYPTO_NAMESPACE(matrix)
 assign 4 to matrix
 stack64 rp_stack
 rp_stack = rp
@@ -1908,7 +1908,7 @@ v = f111
 uint6464 v >>= 61
 v >>= 64
 f114 ^= v
-f111 &= crypto_hashblocks_rfsb509_amd64_1_MASK125
+f111 &= CRYPTO_NAMESPACE(MASK125)
 state3 = f111
 state2 = f112
 state1 = f113

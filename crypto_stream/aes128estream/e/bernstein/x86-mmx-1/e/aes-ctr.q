@@ -142,11 +142,11 @@ int32 b2
 int32 b3
 
 
-enter crypto_stream_aes128estream_e_bernstein_x86_mmx_1_ECRYPT_init
+enter ECRYPT_init
 leave
 
 
-enter crypto_stream_aes128estream_e_bernstein_x86_mmx_1_ECRYPT_ivsetup
+enter ECRYPT_ivsetup
 
 eax_stack = eax
 ebx_stack = ebx
@@ -175,7 +175,7 @@ ebp = ebp_stack
 leave
 
 
-enter crypto_stream_aes128estream_e_bernstein_x86_mmx_1_ECRYPT_keysetup
+enter ECRYPT_keysetup
 
 eax_stack = eax
 ebx_stack = ebx
@@ -421,7 +421,7 @@ ebp = ebp_stack
 leave
 
 
-enter crypto_stream_aes128estream_e_bernstein_x86_mmx_1_ECRYPT_process_bytes stackaligned4096 aes_constants
+enter ECRYPT_process_bytes stackaligned4096 aes_constants
 
 eax_stack = eax
 ebx_stack = ebx

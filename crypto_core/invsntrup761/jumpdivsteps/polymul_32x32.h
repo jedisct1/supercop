@@ -7,10 +7,10 @@
 #include <stdint.h>
 #include "polymul_8x8.h"
 
-#define gf_polymul_32x32_avx2_divR crypto_core_invsntrup761_jumpdivsteps_gf_polymul_32x32_avx2_divR
-#define gf_polymul_32x32_avx2  crypto_core_invsntrup761_jumpdivsteps_gf_polymul_32x32_avx2
-#define gf_polymul_32x32_avx2_uvqr_fg  crypto_core_invsntrup761_jumpdivsteps_gf_polymul_32x32_avx2_uvqr_fg
-#define gf_polymul_32x32_avx2_uvqr_vr  crypto_core_invsntrup761_jumpdivsteps_gf_polymul_32x32_avx2_uvqr_vr
+#define gf_polymul_32x32_avx2_divR CRYPTO_NAMESPACE(gf_polymul_32x32_avx2_divR)
+#define gf_polymul_32x32_avx2  CRYPTO_NAMESPACE(gf_polymul_32x32_avx2)
+#define gf_polymul_32x32_avx2_uvqr_fg  CRYPTO_NAMESPACE(gf_polymul_32x32_avx2_uvqr_fg)
+#define gf_polymul_32x32_avx2_uvqr_vr  CRYPTO_NAMESPACE(gf_polymul_32x32_avx2_uvqr_vr)
 
 #if 1
 

@@ -5,7 +5,7 @@
 
 #ifndef FFT_H
 #define FFT_H
-#define fft crypto_kem_mceliece6960119_vec_fft
+#define fft CRYPTO_NAMESPACE(fft)
 
 #include <stdint.h>
 #include "params.h"

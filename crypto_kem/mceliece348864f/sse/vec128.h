@@ -5,10 +5,10 @@
 
 #ifndef VEC128_H
 #define VEC128_H
-#define vec128_inv crypto_kem_mceliece348864f_sse_vec128_inv
-#define vec128_mul_asm crypto_kem_mceliece348864f_sse_vec128_mul_asm
-#define vec128_mul_GF crypto_kem_mceliece348864f_sse_vec128_mul_GF
-#define vec128_sq crypto_kem_mceliece348864f_sse_vec128_sq
+#define vec128_inv CRYPTO_NAMESPACE(vec128_inv)
+#define vec128_mul_asm CRYPTO_NAMESPACE(vec128_mul_asm)
+#define vec128_mul_GF CRYPTO_NAMESPACE(vec128_mul_GF)
+#define vec128_sq CRYPTO_NAMESPACE(vec128_sq)
 
 #include "params.h"
 

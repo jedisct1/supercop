@@ -2,9 +2,7 @@
 
 #include <immintrin.h>
 
-#include "crypto_int8.h"
-#define int8 crypto_int8
-typedef int8 small;
+typedef signed char small;
 
 #define p 820
 #define ppad 1024
@@ -395,7 +393,7 @@ static inline void vec256_timesx_4(vec256 *f)
 }
 
 
-int __poly_S3_inv(unsigned char *outbytes,const unsigned char *inbytes)
+static int __poly_S3_inv(unsigned char *outbytes,const unsigned char *inbytes)
 { 
   small *out = (void *) outbytes;
   small *in = (void *) inbytes;
@@ -649,7 +647,7 @@ int __poly_S3_inv(unsigned char *outbytes,const unsigned char *inbytes)
 
 // This code is based on crypto_core/invhrss701/faster from SUPERCOP. The code was written as a case study
 // for the paper "Fast constant-time gcd computation and modular inversion" by Daniel J. Bernstein and Bo-Yin Yang.
-void poly_S3_inv(poly *r_out, const poly *a) {
+void crypto_kem_ntruhps4096821_avx2_constbranchindex_poly_S3_inv(poly *r_out, const poly *a) {
   const unsigned char *in = (void*) a;
   unsigned char *out = (void*) r_out;
 

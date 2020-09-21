@@ -1,5 +1,5 @@
-#define vec128_mul_asm crypto_kem_mceliece6688128f_sse_vec128_mul_asm
-#define _vec128_mul_asm _crypto_kem_mceliece6688128f_sse_vec128_mul_asm
+#define vec128_mul_asm CRYPTO_NAMESPACE(vec128_mul_asm)
+#define _vec128_mul_asm _CRYPTO_NAMESPACE(vec128_mul_asm)
 
 # qhasm: int64 input_0
 

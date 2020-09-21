@@ -104,7 +104,7 @@ stack32 ctarget
 
 
 
-enter crypto_stream_salsa2012_e_x86_3_ECRYPT_keystream_bytes
+enter ECRYPT_keystream_bytes
 
 eax_stack = eax
 ebx_stack = ebx
@@ -145,7 +145,7 @@ x15 = a
 goto start
 
 
-enter crypto_stream_salsa2012_e_x86_3_ECRYPT_decrypt_bytes
+enter ECRYPT_decrypt_bytes
 
 eax_stack = eax
 ebx_stack = ebx
@@ -164,7 +164,7 @@ goto done if !unsigned>
 goto start
 
 
-enter crypto_stream_salsa2012_e_x86_3_ECRYPT_encrypt_bytes
+enter ECRYPT_encrypt_bytes
 
 eax_stack = eax
 ebx_stack = ebx
@@ -671,11 +671,11 @@ x15 = w
 goto bytesatleast1
 
 
-enter crypto_stream_salsa2012_e_x86_3_ECRYPT_init
+enter ECRYPT_init
 leave
 
 
-enter crypto_stream_salsa2012_e_x86_3_ECRYPT_keysetup
+enter ECRYPT_keysetup
 
   eax_stack = eax
   ebx_stack = ebx
@@ -752,7 +752,7 @@ enter crypto_stream_salsa2012_e_x86_3_ECRYPT_keysetup
 leave
 
 
-enter crypto_stream_salsa2012_e_x86_3_ECRYPT_ivsetup
+enter ECRYPT_ivsetup
 
   eax_stack = eax
   ebx_stack = ebx

@@ -161,11 +161,11 @@ int64 b3
 
 stack128 tmpin
 
-enter crypto_stream_aes128estream_e_schwabe_athlon64_1_ECRYPT_init
+enter ECRYPT_init
 leave
 
 
-enter crypto_stream_aes128estream_e_schwabe_athlon64_1_ECRYPT_ivsetup
+enter ECRYPT_ivsetup
 
 c = arg1
 iv = arg2
@@ -182,7 +182,7 @@ x3 = *(uint32 *) (iv + 12)
 leave
 
 
-enter crypto_stream_aes128estream_e_schwabe_athlon64_1_ECRYPT_keysetup
+enter ECRYPT_keysetup
 
 r11_stack = r11_caller
 r12_stack = r12_caller
@@ -434,7 +434,7 @@ rbp_caller = rbp_stack
 leave
 
 
-enter crypto_stream_aes128estream_e_schwabe_athlon64_1_ECRYPT_process_bytes stackaligned4096 aes_constants
+enter ECRYPT_process_bytes stackaligned4096 aes_constants
 
 r11_stack = r11_caller
 r12_stack = r12_caller

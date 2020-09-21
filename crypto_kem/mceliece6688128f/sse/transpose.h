@@ -4,8 +4,8 @@
 
 #ifndef TRANSPOSE_H
 #define TRANSPOSE_H
-#define transpose_64x128_sp_asm crypto_kem_mceliece6688128f_sse_transpose_64x128_sp_asm
-#define transpose_64x64_asm crypto_kem_mceliece6688128f_sse_transpose_64x64_asm
+#define transpose_64x128_sp_asm CRYPTO_NAMESPACE(transpose_64x128_sp_asm)
+#define transpose_64x64_asm CRYPTO_NAMESPACE(transpose_64x64_asm)
 
 #include "vec128.h"
 

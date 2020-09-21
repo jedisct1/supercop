@@ -22,12 +22,12 @@
 inline __attribute__((always_inline)) int Encrypt(unsigned char *out, u32 nonce[], u128 rk[], u32 key[], int numbytes);
 inline __attribute__((always_inline)) int Encrypt_Xor(unsigned char *out, const unsigned char *in, u32 nonce[], u128 rk[], u32 key[], int numbytes);
 int ExpandKey(u32 K[], u128 rk[], u32 key[]);
-int crypto_stream_speck6496ctr_neon(unsigned char *out, unsigned long long outlen, const unsigned char *n, const unsigned char *k);
-int crypto_stream_speck6496ctr_neon_xor(unsigned char *out, const unsigned char *in, unsigned long long inlen, const unsigned char *n, const unsigned char *k);
+int CRYPTO_NAMESPACETOP(unsigned char *out, unsigned long long outlen, const unsigned char *n, const unsigned char *k);
+int CRYPTO_NAMESPACE(xor)(unsigned char *out, const unsigned char *in, unsigned long long inlen, const unsigned char *n, const unsigned char *k);
 
 
 
-int crypto_stream_speck6496ctr_neon(
+int CRYPTO_NAMESPACETOP(
   unsigned char *out,
   unsigned long long outlen,
   const unsigned char *n,
@@ -151,7 +151,7 @@ inline __attribute__((always_inline)) int Encrypt(unsigned char *out, u32 nonce[
 
 
 
-int crypto_stream_speck6496ctr_neon_xor(
+int CRYPTO_NAMESPACE(xor)(
   unsigned char *out,
   const unsigned char *in,
   unsigned long long inlen,

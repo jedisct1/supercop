@@ -1,16 +1,6 @@
 #include "poly.h"
 
-#ifdef NTRU_HPS
-void poly_lift(poly *r, const poly *a)
-{
-  int i;
-  for(i=0; i<NTRU_N; i++)
-    r->coeffs[i] = a->coeffs[i];
-  poly_Z3_to_Zq(r);
-}
-#endif
 
-#ifdef NTRU_HRSS
 void poly_lift(poly *r, const poly *a)
 {
   /* NOTE: Assumes input is in {0,1,2}^N */
@@ -47,9 +37,9 @@ void poly_lift(poly *r, const poly *a)
   b.coeffs[0] = b.coeffs[0];
   b.coeffs[1] = b.coeffs[1];
   b.coeffs[2] = b.coeffs[2];
-  for(i=3; i<NTRU_N; i++)
-    b.coeffs[i] =
-      b.coeffs[i-3] + 2*(a->coeffs[i] + a->coeffs[i-1] + a->coeffs[i-2]);
+  for(i=3; i<NTRU_N; i++) {
+    b.coeffs[i] = b.coeffs[i-3] + 2*(a->coeffs[i] + a->coeffs[i-1] + a->coeffs[i-2]);
+  }
 
   /* Finish reduction mod Phi by subtracting Phi * b[N-1] */
   poly_mod_3_Phi_n(&b);
@@ -59,8 +49,8 @@ void poly_lift(poly *r, const poly *a)
 
   /* Multiply by (x-1) */
   r->coeffs[0] = -(b.coeffs[0]);
-  for(i=0; i<NTRU_N-1; i++)
+  for(i=0; i<NTRU_N-1; i++) {
     r->coeffs[i+1] = b.coeffs[i] - b.coeffs[i+1];
+  }
 }
-#endif
 

@@ -74,7 +74,7 @@
  * Define the different 64-bit operators used in the algorithm
  */
 
-#if defined(crypto_stream_trivium_e_submissions_trivium_ECRYPT_NATIVE64) || (!defined(__MMX__) && !defined(_M_IX86))
+#if defined(ECRYPT_NATIVE64) || (!defined(__MMX__) && !defined(_M_IX86))
 
 /*
  * Native 64-bit platform or no MMX available
@@ -183,18 +183,18 @@ typedef __m64 m64;
 /* ------------------------------------------------------------------------- */
 
 /*
- * crypto_stream_trivium_e_submissions_trivium_ECRYPT API functions
+ * ECRYPT API functions
  */
 
 /* ------------------------------------------------------------------------- */
 
-void crypto_stream_trivium_e_submissions_trivium_ECRYPT_init(void)
+void ECRYPT_init(void)
 { }
 
 /* ------------------------------------------------------------------------- */
 
-void crypto_stream_trivium_e_submissions_trivium_ECRYPT_keysetup(
-  crypto_stream_trivium_e_submissions_trivium_ECRYPT_ctx* ctx, 
+void ECRYPT_keysetup(
+  ECRYPT_ctx* ctx, 
   const u8* key, 
   u32 keysize,
   u32 ivsize)
@@ -217,8 +217,8 @@ void crypto_stream_trivium_e_submissions_trivium_ECRYPT_keysetup(
 
 /* ------------------------------------------------------------------------- */
 
-void crypto_stream_trivium_e_submissions_trivium_ECRYPT_ivsetup(
-  crypto_stream_trivium_e_submissions_trivium_ECRYPT_ctx* ctx, 
+void ECRYPT_ivsetup(
+  ECRYPT_ctx* ctx, 
   const u8* iv)
 {
   const u32 ivlen = LOAD_IVLEN(ctx->init[0]);
@@ -261,9 +261,9 @@ void crypto_stream_trivium_e_submissions_trivium_ECRYPT_ivsetup(
 
 /* ------------------------------------------------------------------------- */
 
-void crypto_stream_trivium_e_submissions_trivium_ECRYPT_process_bytes(
+void ECRYPT_process_bytes(
   int action,
-  crypto_stream_trivium_e_submissions_trivium_ECRYPT_ctx* ctx, 
+  ECRYPT_ctx* ctx, 
   const u8* input, 
   u8* output, 
   u32 msglen)

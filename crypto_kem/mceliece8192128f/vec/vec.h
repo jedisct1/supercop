@@ -1,8 +1,8 @@
 #ifndef VEC_H
 #define VEC_H
-#define vec_inv crypto_kem_mceliece8192128f_vec_vec_inv
-#define vec_mul crypto_kem_mceliece8192128f_vec_vec_mul
-#define vec_sq crypto_kem_mceliece8192128f_vec_vec_sq
+#define vec_inv CRYPTO_NAMESPACE(vec_inv)
+#define vec_mul CRYPTO_NAMESPACE(vec_mul)
+#define vec_sq CRYPTO_NAMESPACE(vec_sq)
 
 #include "params.h"
 

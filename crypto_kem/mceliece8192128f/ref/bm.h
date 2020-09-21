@@ -5,7 +5,7 @@
 
 #ifndef BM_H
 #define BM_H
-#define bm crypto_kem_mceliece8192128f_ref_bm
+#define bm CRYPTO_NAMESPACE(bm)
 
 void bm(gf *, gf *);
 

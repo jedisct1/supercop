@@ -1,6 +1,6 @@
 #include "owcpa.h"
-#include "sample.h"
 #include "poly.h"
+#include "sample.h"
 
 static int owcpa_check_r(const poly *r)
 {
@@ -16,31 +16,11 @@ static int owcpa_check_r(const poly *r)
     t |= (c + 1) & 0x4;   /* 0 if c is in {0,1,2} */
   }
   t |= MODQ(r->coeffs[NTRU_N-1]); /* Coefficient n-1 must be zero */
-  t = (-t) >> 63;
-  return t;
+  t = (~t + 1); // two's complement
+  t >>= 63;
+  return (int) t;
 }
 
-#ifdef NTRU_HPS
-static int owcpa_check_m(const poly *m)
-{
-  /* Check that m is in message space. */
-  /* Note: Assumes that m has coefficients in {0,1,2}. */
-  int i;
-  uint64_t t = 0;
-  uint16_t p1 = 0;
-  uint16_t m1 = 0;
-  for(i=0; i<NTRU_N; i++)
-  {
-    p1 += m->coeffs[i] & 0x01;
-    m1 += (m->coeffs[i] & 0x02) >> 1;
-  }
-  /* Need p1 = m1 and p1 + m1 = NTRU_WEIGHT */
-  t |= p1 ^ m1;
-  t |= (p1 + m1) ^ NTRU_WEIGHT;
-  t = (-t) >> 63;
-  return t;
-}
-#endif
 
 void owcpa_keypair(unsigned char *pk,
                    unsigned char *sk,
@@ -51,7 +31,7 @@ void owcpa_keypair(unsigned char *pk,
   poly x1, x2, x3, x4, x5;
 
   poly *f=&x1, *g=&x2, *invf_mod3=&x3;
-  poly *Gf=&x3, *invGf=&x4, *tmp=&x5;
+  poly *gf=&x3, *invgf=&x4, *tmp=&x5;
   poly *invh=&x3, *h=&x3;
 
   sample_fg(f,g,seed);
@@ -64,28 +44,21 @@ void owcpa_keypair(unsigned char *pk,
   poly_Z3_to_Zq(f);
   poly_Z3_to_Zq(g);
 
-#ifdef NTRU_HRSS
   /* g = 3*(x-1)*g */
   for(i=NTRU_N-1; i>0; i--)
     g->coeffs[i] = 3*(g->coeffs[i-1] - g->coeffs[i]);
   g->coeffs[0] = -(3*g->coeffs[0]);
-#endif
 
-#ifdef NTRU_HPS
-  /* g = 3*g */
-  for(i=0; i<NTRU_N; i++)
-    g->coeffs[i] = 3 * g->coeffs[i];
-#endif
 
-  poly_Rq_mul(Gf, g, f);
+  poly_Rq_mul(gf, g, f);
 
-  poly_Rq_inv(invGf, Gf);
+  poly_Rq_inv(invgf, gf);
 
-  poly_Rq_mul(tmp, invGf, f);
+  poly_Rq_mul(tmp, invgf, f);
   poly_Sq_mul(invh, tmp, f);
   poly_Sq_tobytes(sk+2*NTRU_PACK_TRINARY_BYTES, invh);
 
-  poly_Rq_mul(tmp, invGf, g);
+  poly_Rq_mul(tmp, invgf, g);
   poly_Rq_mul(h, tmp, g);
   poly_Rq_sum_zero_tobytes(pk, h);
 }
@@ -141,9 +114,6 @@ int owcpa_dec(unsigned char *rm,
   /* r (defined as b/h mod (q, Phi_n)) and m are in the message space.       */
   /* (m can take any value in S3 in NTRU_HRSS) */
   fail = 0;
-#ifdef NTRU_HPS
-  fail |= owcpa_check_m(m);
-#endif
 
   /* b = c - Lift(m) mod (q, x^n - 1) */
   poly_lift(liftm, m);

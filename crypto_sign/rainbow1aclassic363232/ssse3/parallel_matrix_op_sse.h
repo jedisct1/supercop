@@ -6,8 +6,7 @@
 #ifndef _P_MATRIX_OP_SSE_H_
 #define _P_MATRIX_OP_SSE_H_
 
-
-
+//IF_CRYPTO_CORE:define CRYPTO_NAMESPACE
 
 #ifdef  __cplusplus
 extern  "C" {

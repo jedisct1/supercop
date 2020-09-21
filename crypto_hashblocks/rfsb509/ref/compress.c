@@ -2,7 +2,7 @@
 #include "crypto_uint64.h"
 #define uint64 crypto_uint64
 
-#define matrix crypto_hashblocks_rfsb509_ref_matrix
+#define matrix CRYPTO_NAMESPACE(matrix)
 extern const unsigned char matrix[16384];
 
 static uint64 load_littleendian(const unsigned char *x)

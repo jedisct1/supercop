@@ -4,7 +4,7 @@
 
 #ifndef ENCRYPT_H
 #define ENCRYPT_H
-#define encrypt crypto_kem_mceliece6688128f_ref_encrypt
+#define encrypt CRYPTO_NAMESPACE(encrypt)
 
 void encrypt(unsigned char *, const unsigned char *, unsigned char *);
 

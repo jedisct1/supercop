@@ -106,7 +106,7 @@ gfex2_mul:
 vpush {q4,q5,q6,q7}
 mov r12,sp
 sub sp,sp,#0
-and sp,sp,#0xffffffe0
+bic sp,sp,#15
 
 # qhasm: adr0 = input_0
 # asm 1: mov >adr0=int32#1,<input_0=int32#1

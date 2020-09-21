@@ -7,6 +7,8 @@
 
 #include <stdint.h>
 
+//IF_CRYPTO_CORE:define CRYPTO_NAMESPACE
+
 #ifdef  __cplusplus
 extern  "C" {
 #endif

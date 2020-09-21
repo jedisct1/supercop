@@ -4,7 +4,7 @@
 
 #ifndef FFT_TR_H
 #define FFT_TR_H
-#define fft_tr crypto_kem_mceliece6960119_avx_fft_tr
+#define fft_tr CRYPTO_NAMESPACE(fft_tr)
 
 #include "params.h"
 #include "vec256.h"

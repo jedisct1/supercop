@@ -4,7 +4,7 @@
 
 #ifndef SYND_H
 #define SYND_H
-#define synd crypto_kem_mceliece460896_ref_synd
+#define synd CRYPTO_NAMESPACE(synd)
 
 #include "gf.h"
 

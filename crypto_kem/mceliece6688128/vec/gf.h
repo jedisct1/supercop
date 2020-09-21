@@ -4,13 +4,13 @@
 
 #ifndef GF_H
 #define GF_H
-#define gf_add crypto_kem_mceliece6688128_vec_gf_add
-#define gf_frac crypto_kem_mceliece6688128_vec_gf_frac
-#define gf_inv crypto_kem_mceliece6688128_vec_gf_inv
-#define gf_iszero crypto_kem_mceliece6688128_vec_gf_iszero
-#define gf_mul2 crypto_kem_mceliece6688128_vec_gf_mul2
-#define gf_mul crypto_kem_mceliece6688128_vec_gf_mul
-#define GF_mul crypto_kem_mceliece6688128_vec_GF_mul
+#define gf_add CRYPTO_NAMESPACE(gf_add)
+#define gf_frac CRYPTO_NAMESPACE(gf_frac)
+#define gf_inv CRYPTO_NAMESPACE(gf_inv)
+#define gf_iszero CRYPTO_NAMESPACE(gf_iszero)
+#define gf_mul2 CRYPTO_NAMESPACE(gf_mul2)
+#define gf_mul CRYPTO_NAMESPACE(gf_mul)
+#define GF_mul CRYPTO_NAMESPACE(GF_mul)
 
 #include <stdint.h>
 

@@ -7,7 +7,7 @@ Public domain.
 #include <altivec.h>
 #include "ecrypt-sync.h"
 
-void crypto_stream_salsa20_e_ppc_altivec_ECRYPT_init(void)
+void ECRYPT_init(void)
 {
   return;
 }
@@ -15,7 +15,7 @@ void crypto_stream_salsa20_e_ppc_altivec_ECRYPT_init(void)
 static const char sigma[16] = "expand 32-byte k";
 static const char tau[16] = "expand 16-byte k";
 
-void crypto_stream_salsa20_e_ppc_altivec_ECRYPT_keysetup(crypto_stream_salsa20_e_ppc_altivec_ECRYPT_ctx *x,const u8 *k,u32 kbits,u32 ivbits)
+void ECRYPT_keysetup(ECRYPT_ctx *x,const u8 *k,u32 kbits,u32 ivbits)
 {
   const char *constants;
 
@@ -33,7 +33,7 @@ void crypto_stream_salsa20_e_ppc_altivec_ECRYPT_keysetup(crypto_stream_salsa20_e
   memcpy(x->myaligned.input + 60,constants + 12,4);
 }
 
-void crypto_stream_salsa20_e_ppc_altivec_ECRYPT_ivsetup(crypto_stream_salsa20_e_ppc_altivec_ECRYPT_ctx *x,const u8 *iv)
+void ECRYPT_ivsetup(ECRYPT_ctx *x,const u8 *iv)
 {
   memcpy(x->myaligned.input + 24,iv,8);
   memset(x->myaligned.input + 32,0,8);
@@ -48,7 +48,7 @@ static const u32 salsa20_vconst[] __attribute__((aligned (16))) = {
   0x04050607, 0x08090A0B, 0x0C0D0E0F, 0x00010203
 } ;
 
-void crypto_stream_salsa20_e_ppc_altivec_ECRYPT_encrypt_bytes(crypto_stream_salsa20_e_ppc_altivec_ECRYPT_ctx *x,const u8 *m,u8 *c,u32 bytes)
+void ECRYPT_encrypt_bytes(ECRYPT_ctx *x,const u8 *m,u8 *c,u32 bytes)
 {
   const vu8  viop = (vu8) vec_ld( 0, salsa20_vconst);
   const vu32 vios =       vec_ld(16, salsa20_vconst);
@@ -141,14 +141,14 @@ void crypto_stream_salsa20_e_ppc_altivec_ECRYPT_encrypt_bytes(crypto_stream_sals
   }
 }
 
-void crypto_stream_salsa20_e_ppc_altivec_ECRYPT_decrypt_bytes(crypto_stream_salsa20_e_ppc_altivec_ECRYPT_ctx *x,const u8 *c,u8 *m,u32 bytes)
+void ECRYPT_decrypt_bytes(ECRYPT_ctx *x,const u8 *c,u8 *m,u32 bytes)
 {
-  crypto_stream_salsa20_e_ppc_altivec_ECRYPT_encrypt_bytes(x,c,m,bytes);
+  ECRYPT_encrypt_bytes(x,c,m,bytes);
 }
 
-void crypto_stream_salsa20_e_ppc_altivec_ECRYPT_keystream_bytes(crypto_stream_salsa20_e_ppc_altivec_ECRYPT_ctx *x,u8 *stream,u32 bytes)
+void ECRYPT_keystream_bytes(ECRYPT_ctx *x,u8 *stream,u32 bytes)
 {
   u32 i;
   for (i = 0;i < bytes;++i) stream[i] = 0;
-  crypto_stream_salsa20_e_ppc_altivec_ECRYPT_encrypt_bytes(x,stream,stream,bytes);
+  ECRYPT_encrypt_bytes(x,stream,stream,bytes);
 }

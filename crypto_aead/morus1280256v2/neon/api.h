@@ -1,6 +1,1 @@
-#define CRYPTO_KEYBYTES 32
-#define CRYPTO_NSECBYTES 0
-#define CRYPTO_NPUBBYTES 16
-#define CRYPTO_ABYTES 16
-#define CRYPTO_NOOVERLAP 1
-#define CRYPTO_VERSION "1.0"
+../../morus1280128v2/neon/api.h

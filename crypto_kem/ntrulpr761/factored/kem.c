@@ -3,6 +3,7 @@
 #include "randombytes.h"
 #include "crypto_hash_sha512.h"
 #include "crypto_stream_aes256ctr.h"
+#include "crypto_stream_aes256ctr_publicinputs.h"
 #include "crypto_sort_uint32.h"
 
 #include "crypto_int8.h"
@@ -118,25 +119,20 @@ static void Short_random(small *out)
   Short_fromlist(out,L);
 }
 
-/* ----- Inputs, Expand, Generator */
+/* ----- Inputs, Generator */
 
 typedef int8 Inputs[I]; /* passed by reference */
 
 static const unsigned char aes_nonce[16] = {0};
 
-static void Expand(uint32 *L,const unsigned char *k)
-{
-  crypto_stream_aes256ctr((unsigned char *) L,4*p,aes_nonce,k);
-  crypto_decode_pxint32(L,(unsigned char *) L);
-}
-
-/* G = Generator(k) */
-static void Generator(Fq *G,const unsigned char *k)
+/* G = Generator(pk) */
+static void Generator(Fq *G,const unsigned char *pk)
 {
   uint32 L[p];
   int i;
 
-  Expand(L,k);
+  crypto_stream_aes256ctr_publicinputs((unsigned char *) L,4*p,aes_nonce,pk);
+  crypto_decode_pxint32(L,(unsigned char *) L);
   for (i = 0;i < p;++i) G[i] = Fq_bigfreeze(L[i])-q12;
 }
 
@@ -164,7 +160,8 @@ static void Hide(unsigned char *c,unsigned char *r_enc,const Inputs r,const unsi
       s[0] = 5;
       Hash(h,s,sizeof s);
     }
-    Expand(L,h);
+    crypto_stream_aes256ctr((unsigned char *) L,4*p,aes_nonce,h);
+    crypto_decode_pxint32(L,(unsigned char *) L);
     Short_fromlist(b,L);
   }
   {

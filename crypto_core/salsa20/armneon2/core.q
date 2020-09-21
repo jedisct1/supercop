@@ -1,4 +1,4 @@
-enter crypto_core_salsa20_armneon2
+enter CRYPTO_NAMESPACETOP
 
 int32 i
 

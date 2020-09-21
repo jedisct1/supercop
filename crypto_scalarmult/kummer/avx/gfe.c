@@ -1,4 +1,5 @@
 #include "gfe.h"
+#include "consts.h"
 
 typedef unsigned long long u64;
 
@@ -64,6 +65,12 @@ void gfe_pack(unsigned char *r, const gfe *x)
     r[8+i] = (x->v[1] >> 8*i) & 0xff;
 }
 
+static unsigned long long fromdouble(double d)
+{
+  d += 6755399441055744.0;
+  return *(unsigned long long *) &d - 0x4338000000000000;
+}
+
 void gfe4x3limb_split(gfe *r, const gfe4x *x)
 {
   gfe4x t;
@@ -71,10 +78,10 @@ void gfe4x3limb_split(gfe *r, const gfe4x *x)
   gfe4x3limb_freeze(&t, x);
   for(i=0;i<4;i++)
   {
-    r[i].v[0]  =  (unsigned long long) t.v[i];
-    r[i].v[0] |= ((unsigned long long) t.v[i+8]) << 43;
-    r[i].v[1]  = ((unsigned long long) t.v[i+8]) >> 21;
-    r[i].v[1] |= ((unsigned long long) t.v[i+16]) << 21;
+    r[i].v[0]  = fromdouble(t.v[i]);
+    r[i].v[0] |= fromdouble(t.v[i+8]) << 43;
+    r[i].v[1]  = fromdouble(t.v[i+8]) >> 21;
+    r[i].v[1] |= fromdouble(t.v[i+16]) << 21;
   }
 }
 

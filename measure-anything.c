@@ -1,5 +1,5 @@
 /*
- * measure-anything.c version 20200122
+ * measure-anything.c version 20200809
  * D. J. Bernstein
  * Public domain.
  */
@@ -15,6 +15,7 @@
 #include "cpucycles.h"
 #include "supercopcpuid.h"
 #include "measure.h"
+#include "crypto_declassify.h"
 
 static void printword(const char *s)
 {
@@ -162,6 +163,10 @@ void limits()
   setrlimit(RLIMIT_CORE,&r);
 #endif
 #endif
+}
+
+void crypto_declassify(void *x,unsigned long long xlen)
+{
 }
 
 static unsigned char randombyte[1];

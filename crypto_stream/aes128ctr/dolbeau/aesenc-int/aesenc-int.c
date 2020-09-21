@@ -25,7 +25,7 @@
 #endif
 
 static inline void aesni_key128_expand(const unsigned char* key, __m128i rkeys[11]) {
-  __m128i key0 = _mm_loadu_si128((const unsigned int *)(key+0));
+  __m128i key0 = _mm_loadu_si128((const __m128i *)(key+0));
   __m128i temp0, temp1, temp2, temp4;
   int idx = 0;
 

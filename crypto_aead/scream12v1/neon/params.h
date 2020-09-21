@@ -1,2 +1,1 @@
-#define NSTEPS 12
-#define TWEAKEY_SIZE 5
+../sse/params.h

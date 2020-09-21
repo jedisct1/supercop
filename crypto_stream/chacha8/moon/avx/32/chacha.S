@@ -2,8 +2,8 @@
 
 SECTION_TEXT
 
-GLOBAL_HIDDEN_FN crypto_stream_chacha8_moon_avx_32_blocks_avx
-crypto_stream_chacha8_moon_avx_32_blocks_avx_local:
+GLOBAL_HIDDEN_FN CRYPTO_NAMESPACE(blocks_avx)
+CRYPTO_NAMESPACE(blocks_avx_local):
 pushl %ebp
 movl %esp, %ebp
 andl $-64, %esp
@@ -11,7 +11,7 @@ pushl %esi
 pushl %edi
 pushl %ebx
 subl $1268, %esp
-LOAD_VAR_PIC crypto_stream_chacha8_moon_avx_32_constants, %eax
+LOAD_VAR_PIC CRYPTO_NAMESPACE(constants), %eax
 vmovdqa 0(%eax), %xmm5
 vmovdqa 16(%eax), %xmm2
 vmovdqa 32(%eax), %xmm1
@@ -22,14 +22,14 @@ movl %esi, %ecx
 movl 12(%ebp), %eax
 vmovd %edx, %xmm0
 testl %ebx, %ebx
-je crypto_stream_chacha8_moon_avx_32_blocks_avx_30
+je CRYPTO_NAMESPACE(blocks_avx_30)
 movl 8(%ebp), %edi
 vmovdqu (%edi), %xmm7
 vmovdqu 16(%edi), %xmm6
 vmovdqu 32(%edi), %xmm4
 movl 48(%edi), %edx
 cmpl $256, %ebx
-jb crypto_stream_chacha8_moon_avx_32_blocks_avx_10
+jb CRYPTO_NAMESPACE(blocks_avx_10)
 movl 8(%ebp), %edi
 movl %ebx, 44(%esp)
 vpshufd $0, %xmm5, %xmm3
@@ -78,10 +78,10 @@ vmovdqu %xmm3, 384(%esp)
 vmovdqu %xmm0, 80(%esp)
 vmovdqu %xmm1, 448(%esp)
 vmovdqu %xmm2, 464(%esp)
-jmp crypto_stream_chacha8_moon_avx_32_blocks_avx_4
+jmp CRYPTO_NAMESPACE(blocks_avx_4)
 .p2align 6,,63
 nop;nop;nop;nop;nop;nop;nop;nop;
-crypto_stream_chacha8_moon_avx_32_blocks_avx_4:
+CRYPTO_NAMESPACE(blocks_avx_4):
 movl %edx, %ebx
 movl %ecx, %edi
 addl $1, %ebx
@@ -134,7 +134,7 @@ movl 432(%esp), %ebx
 vmovdqu %xmm7, 480(%esp)
 vmovdqu %xmm3, 512(%esp)
 vmovdqu %xmm4, 528(%esp)
-crypto_stream_chacha8_moon_avx_32_blocks_avx_5:
+CRYPTO_NAMESPACE(blocks_avx_5):
 vpaddd 528(%esp), %xmm5, %xmm4
 vmovdqu 640(%esp), %xmm7
 vpxor 608(%esp), %xmm4, %xmm3
@@ -318,10 +318,10 @@ vpslld $7, %xmm7, %xmm5
 vpxor %xmm3, %xmm2, %xmm2
 vpxor %xmm5, %xmm4, %xmm5
 addl $-2, %ebx
-jne crypto_stream_chacha8_moon_avx_32_blocks_avx_5
+jne CRYPTO_NAMESPACE(blocks_avx_5)
 vmovdqu 528(%esp), %xmm4
 testl %eax, %eax
-je crypto_stream_chacha8_moon_avx_32_blocks_avx_37
+je CRYPTO_NAMESPACE(blocks_avx_37)
 vmovdqu %xmm6, 64(%esp)
 vmovdqu 544(%esp), %xmm6
 vpaddd 368(%esp), %xmm4, %xmm3
@@ -417,8 +417,8 @@ vmovdqu %xmm1, 48(%esi)
 vmovdqu %xmm4, 112(%esi)
 vmovdqu %xmm6, 176(%esi)
 vmovdqu %xmm7, 240(%esi)
-jmp crypto_stream_chacha8_moon_avx_32_blocks_avx_8
-crypto_stream_chacha8_moon_avx_32_blocks_avx_37:
+jmp CRYPTO_NAMESPACE(blocks_avx_8)
+CRYPTO_NAMESPACE(blocks_avx_37):
 vmovdqu %xmm2, 656(%esp)
 vmovdqu %xmm1, (%esp)
 vmovdqu %xmm0, 48(%esp)
@@ -501,13 +501,13 @@ vmovdqu %xmm1, 48(%esi)
 vmovdqu %xmm5, 112(%esi)
 vmovdqu %xmm0, 176(%esi)
 vmovdqu %xmm2, 240(%esi)
-crypto_stream_chacha8_moon_avx_32_blocks_avx_8:
+CRYPTO_NAMESPACE(blocks_avx_8):
 movl 44(%esp), %ebx
 addl $256, %esi
 addl $-256, %ebx
 movl %ebx, 44(%esp)
 cmpl $256, %ebx
-jae crypto_stream_chacha8_moon_avx_32_blocks_avx_4
+jae CRYPTO_NAMESPACE(blocks_avx_4)
 movl %edx, 32(%esp)
 movl %edx, %edi
 movl %ecx, 36(%esp)
@@ -523,11 +523,11 @@ vmovdqu 464(%esp), %xmm2
 movl 432(%esp), %edx
 movl 40(%esp), %ecx
 vmovdqu 16(%esp), %xmm4
-crypto_stream_chacha8_moon_avx_32_blocks_avx_10:
+CRYPTO_NAMESPACE(blocks_avx_10):
 movl %ebx, %edi
 testl %ebx, %ebx
-jne crypto_stream_chacha8_moon_avx_32_blocks_avx_12
-crypto_stream_chacha8_moon_avx_32_blocks_avx_11:
+jne CRYPTO_NAMESPACE(blocks_avx_12)
+CRYPTO_NAMESPACE(blocks_avx_11):
 movl 8(%ebp), %eax
 vmovdqu %xmm4, 32(%eax)
 addl $1268, %esp
@@ -537,7 +537,7 @@ popl %esi
 movl %ebp, %esp
 popl %ebp
 ret
-crypto_stream_chacha8_moon_avx_32_blocks_avx_12:
+CRYPTO_NAMESPACE(blocks_avx_12):
 movl $0, 20(%esp)
 movl %ecx, 40(%esp)
 vmovdqu %xmm0, 80(%esp)
@@ -547,11 +547,11 @@ movl %edi, 36(%esp)
 movl %ebx, 44(%esp)
 movl %edx, 432(%esp)
 movl 20(%esp), %ecx
-jmp crypto_stream_chacha8_moon_avx_32_blocks_avx_13
-crypto_stream_chacha8_moon_avx_32_blocks_avx_29:
+jmp CRYPTO_NAMESPACE(blocks_avx_13)
+CRYPTO_NAMESPACE(blocks_avx_29):
 movl %edx, 44(%esp)
 addl $64, %esi
-crypto_stream_chacha8_moon_avx_32_blocks_avx_13:
+CRYPTO_NAMESPACE(blocks_avx_13):
 incl %ecx
 movl %ecx, %edx
 shll $6, %edx
@@ -559,47 +559,47 @@ negl %edx
 addl 36(%esp), %edx
 lea 64(%edx), %ebx
 cmpl $64, %ebx
-jae crypto_stream_chacha8_moon_avx_32_blocks_avx_24
+jae CRYPTO_NAMESPACE(blocks_avx_24)
 testl %eax, %eax
-je crypto_stream_chacha8_moon_avx_32_blocks_avx_23
+je CRYPTO_NAMESPACE(blocks_avx_23)
 testl %ebx, %ebx
-je crypto_stream_chacha8_moon_avx_32_blocks_avx_22
+je CRYPTO_NAMESPACE(blocks_avx_22)
 movl %ebx, %edi
 shrl $1, %edi
 movl %edi, 24(%esp)
 testl %edi, %edi
-jbe crypto_stream_chacha8_moon_avx_32_blocks_avx_31
+jbe CRYPTO_NAMESPACE(blocks_avx_31)
 movl %esi, 32(%esp)
 xorl %edi, %edi
 movl %edx, 16(%esp)
 movl %ecx, 20(%esp)
 movl 24(%esp), %esi
-crypto_stream_chacha8_moon_avx_32_blocks_avx_18:
+CRYPTO_NAMESPACE(blocks_avx_18):
 movzbl (%eax,%edi,2), %edx
 movb %dl, 192(%esp,%edi,2)
 movzbl 1(%eax,%edi,2), %ecx
 movb %cl, 193(%esp,%edi,2)
 incl %edi
 cmpl %esi, %edi
-jb crypto_stream_chacha8_moon_avx_32_blocks_avx_18
+jb CRYPTO_NAMESPACE(blocks_avx_18)
 movl 16(%esp), %edx
 lea 1(%edi,%edi), %edi
 movl 20(%esp), %ecx
 movl 32(%esp), %esi
 movl %edi, 28(%esp)
-crypto_stream_chacha8_moon_avx_32_blocks_avx_20:
+CRYPTO_NAMESPACE(blocks_avx_20):
 lea -1(%edi), %edi
 cmpl %ebx, %edi
-jae crypto_stream_chacha8_moon_avx_32_blocks_avx_22
+jae CRYPTO_NAMESPACE(blocks_avx_22)
 movzbl (%edi,%eax), %eax
 movl 28(%esp), %edi
 movb %al, 191(%esp,%edi)
-crypto_stream_chacha8_moon_avx_32_blocks_avx_22:
+CRYPTO_NAMESPACE(blocks_avx_22):
 lea 192(%esp), %eax
-crypto_stream_chacha8_moon_avx_32_blocks_avx_23:
+CRYPTO_NAMESPACE(blocks_avx_23):
 movl %esi, 40(%esp)
 lea 192(%esp), %esi
-crypto_stream_chacha8_moon_avx_32_blocks_avx_24:
+CRYPTO_NAMESPACE(blocks_avx_24):
 vmovdqu %xmm5, 96(%esp)
 vmovdqa %xmm5, %xmm0
 vmovdqu %xmm4, (%esp)
@@ -614,7 +614,7 @@ movl %eax, 48(%esp)
 vmovdqu 448(%esp), %xmm4
 vmovdqu 464(%esp), %xmm5
 movl 432(%esp), %esi
-crypto_stream_chacha8_moon_avx_32_blocks_avx_25:
+CRYPTO_NAMESPACE(blocks_avx_25):
 vpaddd %xmm3, %xmm0, %xmm6
 incl %edi
 vpxor %xmm6, %xmm1, %xmm0
@@ -656,7 +656,7 @@ vpshufd $147, %xmm3, %xmm2
 vpsrld $25, %xmm6, %xmm3
 vpxor %xmm7, %xmm3, %xmm3
 cmpl %esi, %eax
-jne crypto_stream_chacha8_moon_avx_32_blocks_avx_25
+jne CRYPTO_NAMESPACE(blocks_avx_25)
 vmovdqu 128(%esp), %xmm6
 vmovdqu 112(%esp), %xmm7
 vpaddd %xmm6, %xmm2, %xmm2
@@ -668,22 +668,22 @@ movl 48(%esp), %eax
 vpaddd %xmm4, %xmm1, %xmm1
 movl 32(%esp), %esi
 testl %eax, %eax
-je crypto_stream_chacha8_moon_avx_32_blocks_avx_28
+je CRYPTO_NAMESPACE(blocks_avx_28)
 vpxor (%eax), %xmm0, %xmm0
 vpxor 16(%eax), %xmm3, %xmm3
 vpxor 32(%eax), %xmm2, %xmm2
 vpxor 48(%eax), %xmm1, %xmm1
 addl $64, %eax
-crypto_stream_chacha8_moon_avx_32_blocks_avx_28:
+CRYPTO_NAMESPACE(blocks_avx_28):
 vmovdqu %xmm0, (%esi)
 vmovdqu %xmm3, 16(%esi)
 vmovdqu %xmm2, 32(%esi)
 vmovdqu %xmm1, 48(%esi)
 vpaddq 80(%esp), %xmm4, %xmm4
 cmpl $64, %ebx
-jbe crypto_stream_chacha8_moon_avx_32_blocks_avx_32
-jmp crypto_stream_chacha8_moon_avx_32_blocks_avx_29
-crypto_stream_chacha8_moon_avx_32_blocks_avx_30:
+jbe CRYPTO_NAMESPACE(blocks_avx_32)
+jmp CRYPTO_NAMESPACE(blocks_avx_29)
+CRYPTO_NAMESPACE(blocks_avx_30):
 addl $1268, %esp
 popl %ebx
 popl %edi
@@ -691,31 +691,31 @@ popl %esi
 movl %ebp, %esp
 popl %ebp
 ret
-crypto_stream_chacha8_moon_avx_32_blocks_avx_31:
+CRYPTO_NAMESPACE(blocks_avx_31):
 movl $1, %edi
 movl %edi, 28(%esp)
-jmp crypto_stream_chacha8_moon_avx_32_blocks_avx_20
-crypto_stream_chacha8_moon_avx_32_blocks_avx_32:
+jmp CRYPTO_NAMESPACE(blocks_avx_20)
+CRYPTO_NAMESPACE(blocks_avx_32):
 movl 44(%esp), %ebx
 movl 40(%esp), %ecx
 cmpl $64, %ebx
-jae crypto_stream_chacha8_moon_avx_32_blocks_avx_11
+jae CRYPTO_NAMESPACE(blocks_avx_11)
 testl %ebx, %ebx
-jbe crypto_stream_chacha8_moon_avx_32_blocks_avx_11
+jbe CRYPTO_NAMESPACE(blocks_avx_11)
 xorl %edx, %edx
-crypto_stream_chacha8_moon_avx_32_blocks_avx_35:
+CRYPTO_NAMESPACE(blocks_avx_35):
 movzbl (%edx,%esi), %eax
 movb %al, (%edx,%ecx)
 incl %edx
 cmpl %ebx, %edx
-jb crypto_stream_chacha8_moon_avx_32_blocks_avx_35
-jmp crypto_stream_chacha8_moon_avx_32_blocks_avx_11
-FN_END crypto_stream_chacha8_moon_avx_32_blocks_avx
+jb CRYPTO_NAMESPACE(blocks_avx_35)
+jmp CRYPTO_NAMESPACE(blocks_avx_11)
+FN_END CRYPTO_NAMESPACE(blocks_avx)
 
 
-GLOBAL_HIDDEN_FN hcrypto_stream_chacha8_moon_avx_32
-hcrypto_stream_chacha8_moon_avx_32_local:
-LOAD_VAR_PIC crypto_stream_chacha8_moon_avx_32_constants, %eax
+GLOBAL_HIDDEN_FN CRYPTO_NAMESPACE(hchacha)
+hcrypto_local:
+LOAD_VAR_PIC CRYPTO_NAMESPACE(constants), %eax
 vmovdqa 0(%eax), %xmm0
 vmovdqa 16(%eax), %xmm6
 vmovdqa 32(%eax), %xmm5
@@ -770,9 +770,9 @@ jne hhacha_mainloop_avx
 vmovdqu %xmm0, (%edx)
 vmovdqu %xmm3, 16(%edx)
 ret
-FN_END hcrypto_stream_chacha8_moon_avx_32
+FN_END CRYPTO_NAMESPACE(hchacha)
 
-GLOBAL_HIDDEN_FN crypto_stream_chacha8_moon_avx_32
+GLOBAL_HIDDEN_FN CRYPTO_NAMESPACE(chacha)
 pushl %ebp
 pushl %ebx
 movl %esp, %ebp
@@ -798,7 +798,7 @@ pushl 28(%ebp)
 pushl 24(%ebp)
 pushl 20(%ebp)
 pushl %ebx
-call crypto_stream_chacha8_moon_avx_32_blocks_avx_local
+call CRYPTO_NAMESPACE(blocks_avx_local)
 vpxor %xmm0, %xmm0, %xmm0
 vmovdqa %xmm0, 0(%ebx)
 vmovdqa %xmm0, 16(%ebx)
@@ -807,9 +807,9 @@ movl %ebp, %esp
 popl %ebx
 popl %ebp
 ret
-FN_END crypto_stream_chacha8_moon_avx_32
+FN_END CRYPTO_NAMESPACE(chacha)
 
-GLOBAL_HIDDEN_FN xcrypto_stream_chacha8_moon_avx_32
+GLOBAL_HIDDEN_FN CRYPTO_NAMESPACE(xchacha)
 pushl %ebp
 pushl %ebx
 movl %esp, %ebp
@@ -820,7 +820,7 @@ pushl 32(%ebp)
 pushl %ebx
 pushl 16(%ebp)
 pushl 12(%ebp)
-call hcrypto_stream_chacha8_moon_avx_32_local
+call hcrypto_local
 xorl %edx, %edx
 movl 16(%ebp), %ecx
 movl 32(%ebx), %edx
@@ -835,7 +835,7 @@ pushl 28(%ebp)
 pushl 24(%ebp)
 pushl 20(%ebp)
 pushl %ebx
-call crypto_stream_chacha8_moon_avx_32_blocks_avx_local
+call CRYPTO_NAMESPACE(blocks_avx_local)
 vpxor %xmm0, %xmm0, %xmm0
 vmovdqa %xmm0, 0(%ebx)
 vmovdqa %xmm0, 16(%ebx)
@@ -844,12 +844,12 @@ movl %ebp, %esp
 popl %ebx
 popl %ebp
 ret
-FN_END xcrypto_stream_chacha8_moon_avx_32
+FN_END CRYPTO_NAMESPACE(xchacha)
 
 SECTION_RODATA
 
 .p2align 4,,15
-crypto_stream_chacha8_moon_avx_32_constants:
+CRYPTO_NAMESPACE(constants):
 .long 0x61707865,0x3320646e,0x79622d32,0x6b206574 /* "expand 32-byte k" */
 .byte 2,3,0,1,6,7,4,5,10,11,8,9,14,15,12,13       /* pshufb rotate by 16 */
 .byte 3,0,1,2,7,4,5,6,11,8,9,10,15,12,13,14       /* pshufb rotate by 8 */

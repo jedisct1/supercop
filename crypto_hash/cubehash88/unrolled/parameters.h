@@ -1,2 +1,1 @@
-#define CUBEHASH_ROUNDS 8
-#define CUBEHASH_BLOCKBYTES 8
+../simple/parameters.h

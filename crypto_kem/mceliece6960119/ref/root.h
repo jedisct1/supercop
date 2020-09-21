@@ -4,8 +4,8 @@
 
 #ifndef ROOT_H
 #define ROOT_H
-#define eval crypto_kem_mceliece6960119_ref_eval
-#define root crypto_kem_mceliece6960119_ref_root
+#define eval CRYPTO_NAMESPACE(eval)
+#define root CRYPTO_NAMESPACE(root)
 
 #include "gf.h"
 

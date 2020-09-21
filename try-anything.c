@@ -1,5 +1,5 @@
 /*
- * try-anything.c version 20190729
+ * try-anything.c version 20200815
  * D. J. Bernstein
  * Some portions adapted from TweetNaCl by Bernstein, Janssen, Lange, Schwabe.
  * Public domain.
@@ -18,7 +18,12 @@
 #include "crypto_uint8.h"
 #include "crypto_uint32.h"
 #include "crypto_uint64.h"
+#include "crypto_declassify.h"
 #include "try.h"
+
+#ifdef TIMECOP
+#include <valgrind/memcheck.h>
+#endif
 
 typedef crypto_uint8 u8;
 typedef crypto_uint32 u32;
@@ -242,7 +247,11 @@ unsigned char *alignedcalloc(unsigned long long len)
   return x;
 }
 
+#ifdef TIMECOP
+#define TIMINGS 1
+#else
 #define TIMINGS 63
+#endif
 static long long cycles[TIMINGS + 1];
 
 void limits()
@@ -262,6 +271,42 @@ void limits()
 #endif
 #endif
 }
+
+void poison(void *x,unsigned long long xlen)
+{
+#ifdef TIMECOP
+  VALGRIND_MAKE_MEM_UNDEFINED(x,xlen);
+#endif
+}
+
+void unpoison(void *x,unsigned long long xlen)
+{
+#ifdef TIMECOP
+  VALGRIND_MAKE_MEM_DEFINED(x,xlen);
+#endif
+}
+
+void crypto_declassify(void *x,unsigned long long xlen)
+{
+#ifdef TIMECOP
+  unpoison(x,xlen);
+#endif
+}
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+void randombytes_callback(unsigned char *x,unsigned long long xlen)
+{
+#ifdef TIMECOP
+  poison(x,xlen);
+#endif
+}
+
+#ifdef __cplusplus
+}
+#endif
 
 static unsigned char randombyte[1];
 
@@ -285,10 +330,14 @@ int main()
   allocate();
   srandom(getpid());
 
+  unalign();
+
   cycles[0] = cpucycles();
   test();
   cycles[1] = cpucycles();
   checksumcycles = cycles[1] - cycles[0];
+
+  realign();
 
   predoit();
   for (i = 0;i <= TIMINGS;++i) {

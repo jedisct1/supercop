@@ -4,9 +4,9 @@
 
 #ifndef BENES_H
 #define BENES_H
-#define benes crypto_kem_mceliece8192128_sse_benes
-#define load_bits crypto_kem_mceliece8192128_sse_load_bits
-#define support_gen crypto_kem_mceliece8192128_sse_support_gen
+#define benes CRYPTO_NAMESPACE(benes)
+#define load_bits CRYPTO_NAMESPACE(load_bits)
+#define support_gen CRYPTO_NAMESPACE(support_gen)
 
 #include "vec128.h"
 

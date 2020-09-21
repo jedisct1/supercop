@@ -1,12 +1,13 @@
 #include <string.h>
 #include "crypto_rng.h"
 #include "randombytes.h"
+#include "try.h"
 
 static unsigned char g[crypto_rng_KEYBYTES];
 static unsigned char r[crypto_rng_OUTPUTBYTES];
 static unsigned long long pos = crypto_rng_OUTPUTBYTES;
 
-void randombytes(unsigned char *x,unsigned long long xlen)
+static void randombytes_internal(unsigned char *x,unsigned long long xlen)
 {
 
 #ifdef SIMPLE
@@ -48,4 +49,10 @@ void randombytes(unsigned char *x,unsigned long long xlen)
 
 #endif
 
+}
+
+void randombytes(unsigned char *x,unsigned long long xlen)
+{
+  randombytes_internal(x,xlen);
+  randombytes_callback(x,xlen);
 }

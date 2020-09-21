@@ -1,6 +1,5 @@
 .data
-.section .rodata
-.align 32
+.p2align 5
 mask_mod8192:
 .word 8191
 .word 8191
@@ -86,10 +85,10 @@ shuf_5_to_0_zerorest:
 .byte 255
 .byte 255
 .text
-.hidden poly_Rq_mul_x_minus_1
-.global poly_Rq_mul_x_minus_1
-.att_syntax prefix
-poly_Rq_mul_x_minus_1:
+.global crypto_kem_ntruhrss701_avx2_constbranchindex_poly_Rq_mul_x_minus_1
+.global _crypto_kem_ntruhrss701_avx2_constbranchindex_poly_Rq_mul_x_minus_1
+crypto_kem_ntruhrss701_avx2_constbranchindex_poly_Rq_mul_x_minus_1:
+_crypto_kem_ntruhrss701_avx2_constbranchindex_poly_Rq_mul_x_minus_1:
 vmovdqu 1374(%rsi), %ymm0
 vpsubw 1376(%rsi), %ymm0, %ymm1
 vpand mask_mod8192(%rip), %ymm1, %ymm1

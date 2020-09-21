@@ -4,8 +4,8 @@
 
 #ifndef SK_GEN_H
 #define SK_GEN_H
-#define genpoly_gen crypto_kem_mceliece348864_ref_genpoly_gen
-#define perm_check crypto_kem_mceliece348864_ref_perm_check
+#define genpoly_gen CRYPTO_NAMESPACE(genpoly_gen)
+#define perm_check CRYPTO_NAMESPACE(perm_check)
 
 #include "gf.h"
 

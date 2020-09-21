@@ -38,7 +38,7 @@ int64 in
 int64 inlen
 
 
-enter crypto_hashblocks_md5_amd64_1
+enter CRYPTO_NAMESPACETOP
 input state
 input in
 input inlen

@@ -1,5 +1,5 @@
-#define vec_mul_asm crypto_kem_mceliece348864f_sse_vec_mul_asm
-#define _vec_mul_asm _crypto_kem_mceliece348864f_sse_vec_mul_asm
+#define vec_mul_asm CRYPTO_NAMESPACE(vec_mul_asm)
+#define _vec_mul_asm _CRYPTO_NAMESPACE(vec_mul_asm)
 
 # qhasm: int64 input_0
 

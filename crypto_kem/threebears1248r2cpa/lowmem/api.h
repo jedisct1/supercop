@@ -1,5 +1,1 @@
-#define CRYPTO_SECRETKEYBYTES 40
-#define CRYPTO_PUBLICKEYBYTES 1584
-#define CRYPTO_BYTES 32
-#define CRYPTO_CIPHERTEXTBYTES 1697
-
+../../threebears1248r2cca/opt/api.h

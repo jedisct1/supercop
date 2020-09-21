@@ -2,6 +2,7 @@
 /** Optimized ring arithmetic */
 #include "ring.h"
 #include "brg_endian.h" /* from Keccak Code Package */
+#include "crypto_declassify.h"
 
 
 /** Karatsuba inner loop */
@@ -266,5 +267,8 @@ void canon(gf_t c) {
         c[i] = carry & LMASK;
         carry >>= LBITS;
     }
-    assert(carry+scarry==0);
+    
+    dslimb_t result = carry+scarry;
+    crypto_declassify(&result,sizeof result);
+    assert(result==0);
 }

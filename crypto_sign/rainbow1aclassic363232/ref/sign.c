@@ -36,15 +36,18 @@ crypto_sign_keypair(unsigned char *pk, unsigned char *sk)
     randombytes( pk_seed , LEN_PKSEED );
     int r = generate_keypair_cyclic( (cpk_t*) pk , (sk_t*) sk , pk_seed , sk_seed );
 
+    for(int i=0;i<LEN_PKSEED;i++) pk_seed[i]=0;
 #elif defined _RAINBOW_CYCLIC_COMPRESSED
 
     unsigned char pk_seed[LEN_PKSEED] = {0};
     randombytes( pk_seed , LEN_PKSEED );
     int r = generate_compact_keypair_cyclic( (cpk_t*) pk , (csk_t*) sk , pk_seed , sk_seed );
 
+    for(int i=0;i<LEN_PKSEED;i++) pk_seed[i]=0;
 #else
 error here
 #endif
+    for(int i=0;i<LEN_SKSEED;i++) sk_seed[i]=0;
     return r;
 }
 

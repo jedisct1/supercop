@@ -98,7 +98,7 @@ stack64 r15_stack
 stack64 rbx_stack
 stack64 rbp_stack
 
-enter crypto_hash_cubehash1632_amd64_32
+enter CRYPTO_NAMESPACETOP
 
   out_stack = out
   inlen_stack = inlen

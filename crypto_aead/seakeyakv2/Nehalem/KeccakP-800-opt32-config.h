@@ -1,3 +1,1 @@
-#define KeccakP800_implementation_config "lane complementing, all rounds unrolled"
-#define KeccakP800_fullUnrolling
-#define KeccakP800_useLaneComplementing
+../Haswell/KeccakP-800-opt32-config.h

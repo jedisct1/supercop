@@ -8,9 +8,9 @@
 #ifndef _RAINBOW_KEYPAIR_COMP_H_
 #define _RAINBOW_KEYPAIR_COMP_H_
 
-
 #include "rainbow_keypair.h"
 
+//IF_CRYPTO_CORE:define CRYPTO_NAMESPACE
 
 #ifdef  __cplusplus
 extern  "C" {
@@ -51,13 +51,6 @@ struct rainbow_extend_publickey {
 ///
 void extcpk_to_pk( pk_t * pk , const ext_cpk_t * cpk );
 
-///
-/// @brief converting formats of public keys : from ext_cpk_t version to pk_t
-///
-/// @param[in,out] pk    - the public key.
-///
-void extcpk_to_pk_inplace( pk_t * pk );
-
 
 /////////////////////////////////////////////////
 
@@ -70,6 +63,9 @@ void extcpk_to_pk_inplace( pk_t * pk );
 ///
 void calculate_Q_from_F( ext_cpk_t * Qs, const sk_t * Fs , const sk_t * Ts );
 
+#include <rng.h> // the macro _SUPERCOP_ might be defined in rng.h
+
+#if !defined(_SUPERCOP_)
 ///
 /// @brief Computing parts of the sk from parts of pk and sk
 ///
@@ -77,7 +73,8 @@ void calculate_Q_from_F( ext_cpk_t * Qs, const sk_t * Fs , const sk_t * Ts );
 /// @param[in]  Qs       - parts of the pk: l1_Q1, l1_Q2, l2_Q1, l2_Q2, l2_Q3, l2_Q5, l2_Q6
 /// @param[in]  Ts       - parts of the sk: T1, T4, T3
 ///
-void calculate_F_from_Q( sk_t * Fs , const sk_t * Qs , sk_t * Ts );
+void calculate_F_from_Q( sk_t * Fs , const sk_t * Qs , const sk_t * Ts );
+#endif
 
 ///
 /// @brief Computing parts of the pk from the secret key

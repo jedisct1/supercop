@@ -4,10 +4,10 @@
 
 SECTION_TEXT
 
-GLOBAL_HIDDEN_FN crypto_stream_chacha20_moon_armv6_32_blocks_armv6
-crypto_stream_chacha20_moon_armv6_32_blocks_armv6_local:
+GLOBAL_HIDDEN_FN CRYPTO_NAMESPACE(blocks_armv6)
+CRYPTO_NAMESPACE(blocks_armv6_local):
 tst r3, r3
-beq .Lcrypto_stream_chacha20_moon_armv6_32_blocks_armv6_nobytes
+beq .Lcrypto_blocks_armv6_nobytes
 stmfd sp!, {r4-r12, r14}
 sub sp, sp, #192
 str r0, [sp, #60]
@@ -25,26 +25,26 @@ ldmia r0!, {r4-r11}
 stmia r1!, {r4-r11}
 ldr r4, [r0]
 str r4, [sp, #44]
-.Lcrypto_stream_chacha20_moon_armv6_32_blocks_armv6_mainloop:
+.Lcrypto_blocks_armv6_mainloop:
 ldr r3, [sp, #52]
 ldr r1, [sp, #48]
 cmp r3, #64
-bhs .Lcrypto_stream_chacha20_moon_armv6_32_blocks_armv6_noswap1
+bhs .Lcrypto_blocks_armv6_noswap1
 add r4, sp, #128
 mov r5, r4
 tst r1, r1
-beq .Lcrypto_stream_chacha20_moon_armv6_32_blocks_armv6_nocopy1
-.Lcrypto_stream_chacha20_moon_armv6_32_blocks_armv6_copyinput1:
+beq .Lcrypto_blocks_armv6_nocopy1
+.Lcrypto_blocks_armv6_copyinput1:
 subs r3, r3, #1
 ldrb r0, [r1], #1
 strb r0, [r4], #1
-bne .Lcrypto_stream_chacha20_moon_armv6_32_blocks_armv6_copyinput1
+bne .Lcrypto_blocks_armv6_copyinput1
 str r5, [sp, #48]
-.Lcrypto_stream_chacha20_moon_armv6_32_blocks_armv6_nocopy1:
+.Lcrypto_blocks_armv6_nocopy1:
 ldr r4, [sp, #40]
 str r5, [sp, #40]
 str r4, [sp, #56]
-.Lcrypto_stream_chacha20_moon_armv6_32_blocks_armv6_noswap1:
+.Lcrypto_blocks_armv6_noswap1:
 ldr r0, [sp, #44]
 str r0, [sp, #0]
 add r0, sp, #64
@@ -55,7 +55,7 @@ str r11, [sp, #12]
 str r14, [sp, #28]
 ldr r11, [sp, #(64 +52)]
 ldr r14, [sp, #(64 +56)]
-.Lcrypto_stream_chacha20_moon_armv6_32_blocks_armv6_rounds:
+.Lcrypto_blocks_armv6_rounds:
 ldr r6, [sp, #0]
 add r0, r0, r4
 add r1, r1, r5
@@ -165,7 +165,7 @@ eor r7, r7, r8
 eor r4, r4, r9
 ror r7, r7, #25
 ror r4, r4, #25
-bne .Lcrypto_stream_chacha20_moon_armv6_32_blocks_armv6_rounds
+bne .Lcrypto_blocks_armv6_rounds
 str r8, [sp, #0]
 str r9, [sp, #4]
 str r10, [sp, #8]
@@ -191,7 +191,7 @@ ldr r11, [sp, #(64 +28)]
 add r6, r6, r10
 tst r12, r12
 add r7, r7, r11
-beq .Lcrypto_stream_chacha20_moon_armv6_32_blocks_armv6_nomessage1
+beq .Lcrypto_blocks_armv6_nomessage1
 ldmia r12!, {r8-r11}
 eor r0, r0, r8
 eor r1, r1, r9
@@ -206,7 +206,7 @@ ldr r11, [r12, #12]
 eor r6, r6, r10
 add r12, r12, #16
 eor r7, r7, r11
-.Lcrypto_stream_chacha20_moon_armv6_32_blocks_armv6_nomessage1:
+.Lcrypto_blocks_armv6_nomessage1:
 stmia r14!, {r0-r7}
 ldm sp, {r0-r7}
 ldr r8, [sp, #(64 +32)]
@@ -230,7 +230,7 @@ adc r9, r9, #0
 tst r12, r12
 str r8, [sp, #(64 +48)]
 str r9, [sp, #(64 +52)]
-beq .Lcrypto_stream_chacha20_moon_armv6_32_blocks_armv6_nomessage2
+beq .Lcrypto_blocks_armv6_nomessage2
 ldmia r12!, {r8-r11}
 eor r0, r0, r8
 eor r1, r1, r9
@@ -245,7 +245,7 @@ ldr r11, [r12, #12]
 eor r6, r6, r10
 add r12, r12, #16
 eor r7, r7, r11
-.Lcrypto_stream_chacha20_moon_armv6_32_blocks_armv6_nomessage2:
+.Lcrypto_blocks_armv6_nomessage2:
 stmia r14!, {r0-r7}
 str r12, [sp, #48]
 str r14, [sp, #40]
@@ -253,17 +253,17 @@ ldr r3, [sp, #52]
 cmp r3, #64
 sub r4, r3, #64
 str r4, [sp, #52]
-bhi .Lcrypto_stream_chacha20_moon_armv6_32_blocks_armv6_mainloop
+bhi .Lcrypto_blocks_armv6_mainloop
 cmp r3, #64
-beq .Lcrypto_stream_chacha20_moon_armv6_32_blocks_armv6_nocopy2
+beq .Lcrypto_blocks_armv6_nocopy2
 ldr r1, [sp, #56]
 sub r14, r14, #64
-.Lcrypto_stream_chacha20_moon_armv6_32_blocks_armv6_copyinput2:
+.Lcrypto_blocks_armv6_copyinput2:
 subs r3, r3, #1
 ldrb r0, [r14], #1
 strb r0, [r1], #1
-bne .Lcrypto_stream_chacha20_moon_armv6_32_blocks_armv6_copyinput2
-.Lcrypto_stream_chacha20_moon_armv6_32_blocks_armv6_nocopy2:
+bne .Lcrypto_blocks_armv6_copyinput2
+.Lcrypto_blocks_armv6_nocopy2:
 ldr r7, [sp, #60]
 ldr r8, [sp, #(64 +48)]
 ldr r9, [sp, #(64 +52)]
@@ -275,14 +275,14 @@ add r12, r12, #48
 stmia r12!, {r0-r7}
 add sp, sp, #192
 ldmfd sp!, {r4-r12, r14}
-.Lcrypto_stream_chacha20_moon_armv6_32_blocks_armv6_nobytes:
+.Lcrypto_blocks_armv6_nobytes:
 bx lr
-FN_END crypto_stream_chacha20_moon_armv6_32_blocks_armv6
+FN_END CRYPTO_NAMESPACE(blocks_armv6)
 
 .ltorg
 
-GLOBAL_HIDDEN_FN hcrypto_stream_chacha20_moon_armv6_32
-hcrypto_stream_chacha20_moon_armv6_32_local:
+GLOBAL_HIDDEN_FN CRYPTO_NAMESPACE(hchacha)
+hcrypto_local:
 stmfd sp!, {r4-r12, r14}
 sub sp, sp, #32
 str r2, [sp, #20]
@@ -302,7 +302,7 @@ ldr r0, =0x61707865
 ldr r1, =0x3320646e
 ldr r2, =0x79622d32
 ldr r3, =0x6b206574
-.Lhcrypto_stream_chacha20_moon_armv6_32_mainloop:
+.Lhcrypto_mainloop:
 ldr r6, [sp, #24]
 subs r6, r6, #2
 str r6, [sp, #24]
@@ -412,7 +412,7 @@ eor r4, r4, r9
 ror r7, r7, #25
 ror r4, r4, #25
 str r6, [sp, #0]
-bne .Lhcrypto_stream_chacha20_moon_armv6_32_mainloop
+bne .Lhcrypto_mainloop
 stm sp, {r0-r3}
 ldr r8, [sp, #20]
 mov r4, r12
@@ -423,15 +423,15 @@ stmia r8, {r0-r7}
 add sp, sp, #32
 ldmfd sp!, {r4-r12, r14}
 bx lr
-FN_END hcrypto_stream_chacha20_moon_armv6_32
+FN_END CRYPTO_NAMESPACE(hchacha)
 
 .ltorg
 
-GLOBAL_HIDDEN_FN crypto_stream_chacha20_moon_armv6_32
+GLOBAL_HIDDEN_FN CRYPTO_NAMESPACE(chacha)
 stmfd sp!, {r4-r7, lr}
 mov r12, sp
 sub sp, sp, #64
-and sp, sp, #0xffffff80
+bic sp, sp, #127
 ldmia r0!, {r4-r7}
 stmia sp!, {r4-r7}
 ldmia r0!, {r4-r7}
@@ -449,7 +449,7 @@ mov r0, sp
 mov r1, r2
 mov r2, r3
 ldr r3, [r7, #20]
-bl crypto_stream_chacha20_moon_armv6_32_blocks_armv6_local
+bl CRYPTO_NAMESPACE(blocks_armv6_local)
 eor r0, r0, r0
 eor r1, r1, r1
 eor r2, r2, r2
@@ -460,20 +460,20 @@ stmia sp!, {r0-r3}
 mov sp, r7
 ldmfd sp!, {r4-r7, lr}
 bx lr
-FN_END crypto_stream_chacha20_moon_armv6_32
+FN_END CRYPTO_NAMESPACE(chacha)
 
 
-GLOBAL_HIDDEN_FN xcrypto_stream_chacha20_moon_armv6_32
+GLOBAL_HIDDEN_FN CRYPTO_NAMESPACE(xchacha)
 stmfd sp!, {r4-r6, lr}
 mov r7, sp
 sub sp, sp, #64
-and sp, sp, #0xffffff80
+bic sp, sp, #127
 mov r4, r2
 mov r5, r3
 add r6, r1, #16
 mov r2, sp
 ldr r3, [r7, #20]
-bl hcrypto_stream_chacha20_moon_armv6_32_local
+bl hcrypto_local
 eor r0, r0, r0
 eor r1, r1, r1
 add sp, sp, #32
@@ -487,7 +487,7 @@ mov r0, sp
 mov r1, r4
 mov r2, r5
 ldr r3, [r7, #16]
-bl crypto_stream_chacha20_moon_armv6_32_blocks_armv6_local
+bl CRYPTO_NAMESPACE(blocks_armv6_local)
 eor r0, r0, r0
 eor r1, r1, r1
 eor r2, r2, r2
@@ -498,5 +498,5 @@ stmia sp!, {r0-r3}
 mov sp, r7
 ldmfd sp!, {r4-r6, lr}
 bx lr
-FN_END xcrypto_stream_chacha20_moon_armv6_32
+FN_END CRYPTO_NAMESPACE(xchacha)
 

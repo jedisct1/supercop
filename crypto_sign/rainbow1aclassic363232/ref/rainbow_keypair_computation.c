@@ -91,89 +91,24 @@ void extcpk_to_pk( pk_t * pk , const ext_cpk_t * cpk )
 }
 
 
-#if (16 == _O1_BYTE)&&(16 == _O2_BYTE)&&(96 == _PUB_N)
-#define _CONVERT_PK_INPLACE_
-#endif
 
-#if defined(_CONVERT_PK_INPLACE_)
+////////////////////////////////////////////////////////////////////////////
 
-static inline
-void _swap_16(unsigned char* data, uint16_t *idx_to_loc, uint16_t *loc_to_idx, unsigned dst_loc, unsigned src_idx )
-{
-    unsigned src_loc = idx_to_loc[src_idx];
-    if(src_loc == dst_loc ) return;
 
-    gf256v_add( data + dst_loc*16 , data + src_loc*16 , 16 );
-    gf256v_add( data + src_loc*16 , data + dst_loc*16 , 16 );
-    gf256v_add( data + dst_loc*16 , data + src_loc*16 , 16 );
 
-    unsigned dst_idx = loc_to_idx[dst_loc];
-    idx_to_loc[dst_idx] = src_loc;
-    loc_to_idx[src_loc] = dst_idx;
-}
+// Choosing implementations depends on the macros: _BLAS_SSE_ and _BLAS_AVX2_
+#if defined(_BLAS_SSE_) || defined(_BLAS_AVX2_)
+#include "rainbow_keypair_computation_simd.h"
+#define calculate_Q_from_F_impl        calculate_Q_from_F_simd
+#define calculate_F_from_Q_impl        calculate_F_from_Q_simd
+#define calculate_Q_from_F_cyclic_impl calculate_Q_from_F_cyclic_simd
 
-void extcpk_to_pk_inplace( pk_t * pk )
-{
-#if (16 != _O1_BYTE)||(16 != _O2_BYTE)||(96 != _PUB_N)
-error: un-supported.
-#endif
-    uint16_t idx_to_loc[8192+1024+128]; // 8192+1024+129 > N_TRIANGLE_TERMS(96)*2
-    uint16_t loc_to_idx[8192+1024+128];
-    for(unsigned i=0;i<8192+1024+128;i++) idx_to_loc[i] = i;
-    for(unsigned i=0;i<8192+1024+128;i++) loc_to_idx[i] = i;
-    unsigned char *data = pk->pk;
-    unsigned idx_l1 = 0;
-    unsigned idx_l2 = N_TRIANGLE_TERMS(_PUB_N);
-    // Q1
-    for(unsigned i=0;i<_V1;i++) {
-        for(unsigned j=i;j<_V1;j++) {
-            unsigned pub_idx = idx_of_trimat(i,j,_PUB_N);
-            _swap_16( data, idx_to_loc, loc_to_idx, pub_idx*2    , idx_l1++ );
-            _swap_16( data, idx_to_loc, loc_to_idx, pub_idx*2 + 1, idx_l2++ );
-        }
-    }
-    // Q2
-    for(unsigned i=0;i<_V1;i++) {
-        for(unsigned j=_V1;j<_V1+_O1;j++) {
-            unsigned pub_idx = idx_of_trimat(i,j,_PUB_N);
-            _swap_16( data, idx_to_loc, loc_to_idx, pub_idx*2    , idx_l1++ );
-            _swap_16( data, idx_to_loc, loc_to_idx, pub_idx*2 + 1, idx_l2++ );
-        }
-    }
-    // Q3
-    for(unsigned i=0;i<_V1;i++) {
-        for(unsigned j=_V1+_O1;j<_PUB_N;j++) {
-            unsigned pub_idx = idx_of_trimat(i,j,_PUB_N);
-            _swap_16( data, idx_to_loc, loc_to_idx, pub_idx*2    , idx_l1++ );
-            _swap_16( data, idx_to_loc, loc_to_idx, pub_idx*2 + 1, idx_l2++ );
-        }
-    }
-    // Q5
-    for(unsigned i=_V1;i<_V1+_O1;i++) {
-        for(unsigned j=i;j<_V1+_O1;j++) {
-            unsigned pub_idx = idx_of_trimat(i,j,_PUB_N);
-            _swap_16( data, idx_to_loc, loc_to_idx, pub_idx*2    , idx_l1++ );
-            _swap_16( data, idx_to_loc, loc_to_idx, pub_idx*2 + 1, idx_l2++ );
-        }
-    }
-    // Q6
-    for(unsigned i=_V1;i<_V1+_O1;i++) {
-        for(unsigned j=_V1+_O1;j<_PUB_N;j++) {
-            unsigned pub_idx = idx_of_trimat(i,j,_PUB_N);
-            _swap_16( data, idx_to_loc, loc_to_idx, pub_idx*2    , idx_l1++ );
-            _swap_16( data, idx_to_loc, loc_to_idx, pub_idx*2 + 1, idx_l2++ );
-        }
-    }
-    // Q9
-    for(unsigned i=_V1+_O1;i<_PUB_N;i++) {
-        for(unsigned j=i;j<_PUB_N;j++) {
-            unsigned pub_idx = idx_of_trimat(i,j,_PUB_N);
-            _swap_16( data, idx_to_loc, loc_to_idx, pub_idx*2    , idx_l1++ );
-            _swap_16( data, idx_to_loc, loc_to_idx, pub_idx*2 + 1, idx_l2++ );
-        }
-    }
-}
-#endif  //defined(_CONVERT_PK_INPLACE_)
+#else
+
+#define calculate_Q_from_F_ref        calculate_Q_from_F_impl
+#define calculate_F_from_Q_ref        calculate_F_from_Q_impl
+#define calculate_Q_from_F_cyclic_ref calculate_Q_from_F_cyclic_impl
+
 
 
 /////////////////////////////////////////////////////////
@@ -297,7 +232,7 @@ error: incorrect buffer size.
 /////////////////////////////////////////////////////
 
 static
-void calculate_F_from_Q_ref( sk_t * Fs , const sk_t * Qs , sk_t * Ts )
+void calculate_F_from_Q_ref( sk_t * Fs , const sk_t * Qs , const sk_t * Ts )
 {
     // Layer 1
     // F_sk.l1_F1s[i] = Q_pk.l1_F1s[i]
@@ -443,20 +378,13 @@ error: incorrect buffer size.
 }
 
 
+
+#endif   //  #if defined(_BLAS_SSE_) || defined(_BLAS_AVX2_)
+
+
 ///////////////////////////////////////////////////////////////////////
 
 
-// Choosing implementations depends on the macros: _BLAS_SSE_ and _BLAS_AVX2_
-#if defined(_BLAS_SSE_) || defined(_BLAS_AVX2_)
-#include "rainbow_keypair_computation_simd.h"
-#define calculate_Q_from_F_impl        calculate_Q_from_F_simd
-#define calculate_F_from_Q_impl        calculate_F_from_Q_simd
-#define calculate_Q_from_F_cyclic_impl calculate_Q_from_F_cyclic_simd
-#else
-#define calculate_Q_from_F_impl        calculate_Q_from_F_ref
-#define calculate_F_from_Q_impl        calculate_F_from_Q_ref
-#define calculate_Q_from_F_cyclic_impl calculate_Q_from_F_cyclic_ref
-#endif
 
 
 
@@ -465,10 +393,39 @@ void calculate_Q_from_F( ext_cpk_t * Qs, const sk_t * Fs , const sk_t * Ts )
     calculate_Q_from_F_impl( Qs , Fs , Ts );
 }
 
-void calculate_F_from_Q( sk_t * Fs , const sk_t * Qs , sk_t * Ts )
+
+#if defined(_SUPERCOP_)
+
+
+static inline
+void _calculate_F_from_Q( sk_t * Fs , const sk_t * Qs , const sk_t * Ts )
+{
+    sk_t _Qs;
+    memcpy( &_Qs , Qs , sizeof(sk_t) );
+    if( Fs != Ts ) memcpy( Fs , Ts , sizeof(Ts->sk_seed)+sizeof(Ts->s1)+sizeof(Ts->t1)+sizeof(Ts->t4)+sizeof(Ts->t3));
+    calculate_F_from_Q_impl( Fs , &_Qs , Ts );
+    memset( &_Qs , 0 , sizeof(sk_t) );
+}
+
+//IF_CRYPTO_CORE:#include "crypto_core.h"
+
+// exported calculate_F_from_Q_impl()
+int crypto_core(unsigned char *outbytes,const unsigned char *inbytes,const unsigned char *kbytes,const unsigned char *cbytes)
+{
+    (void) cbytes;
+    _calculate_F_from_Q( (sk_t*)outbytes , (const sk_t*)inbytes , (const sk_t*) kbytes );
+    return 0;
+}
+
+#else
+
+void calculate_F_from_Q( sk_t * Fs , const sk_t * Qs , const sk_t * Ts )
 {
     calculate_F_from_Q_impl( Fs , Qs , Ts );
 }
+
+#endif
+
 
 void calculate_Q_from_F_cyclic( cpk_t * Qs, const sk_t * Fs , const sk_t * Ts )
 {

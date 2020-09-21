@@ -1,6 +1,5 @@
 .data
-.section .rodata
-.align 32
+.p2align 5
 cast8_to_16:
 .byte 255
 .byte 0
@@ -86,10 +85,10 @@ mask_3:
 .word 0x03
 .word 0x03
 .text
-.hidden vec32_sample_iid
-.global vec32_sample_iid
-.att_syntax prefix
-vec32_sample_iid:
+.global crypto_kem_ntruhps2048677_avx2_constbranchindex_vec32_sample_iid
+.global _crypto_kem_ntruhps2048677_avx2_constbranchindex_vec32_sample_iid
+crypto_kem_ntruhps2048677_avx2_constbranchindex_vec32_sample_iid:
+_crypto_kem_ntruhps2048677_avx2_constbranchindex_vec32_sample_iid:
 vmovdqa 0(%rsi), %ymm3
 vextracti128 $0, %ymm3, %xmm1
 vpermq $216, %ymm1, %ymm1

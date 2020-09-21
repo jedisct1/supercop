@@ -1,3 +1,5 @@
+#include "consts.h"
+
 const double alpha22[4] __attribute__ ((aligned (32)))
                         = {28334198897217871282176.0,
 			   28334198897217871282176.0,

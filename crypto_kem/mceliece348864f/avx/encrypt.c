@@ -1,5 +1,5 @@
-#define syndrome_asm crypto_kem_mceliece348864f_avx_syndrome_asm
-#define _syndrome_asm _crypto_kem_mceliece348864f_avx_syndrome_asm
+#define syndrome_asm CRYPTO_NAMESPACE(syndrome_asm)
+#define _syndrome_asm _CRYPTO_NAMESPACE(syndrome_asm)
 /*
   This file is for Niederreiter encryption
 */

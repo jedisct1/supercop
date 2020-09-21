@@ -5,8 +5,8 @@
 
 #ifndef VEC128_H
 #define VEC128_H
-#define vec128_mul_asm crypto_kem_mceliece6688128f_avx_vec128_mul_asm
-#define vec128_mul_GF crypto_kem_mceliece6688128f_avx_vec128_mul_GF
+#define vec128_mul_asm CRYPTO_NAMESPACE(vec128_mul_asm)
+#define vec128_mul_GF CRYPTO_NAMESPACE(vec128_mul_GF)
 
 #include "params.h"
 #include "gf.h"

@@ -66,7 +66,7 @@ stackptr constants_stack
 stack32 inlen_stack
 stack32 i_stack
 
-pushenter crypto_hashblocks_sha512_m4mult_inner
+pushenter CRYPTO_NAMESPACE(inner)
 
 statebytes_stack = input_0
 in_stack = input_1

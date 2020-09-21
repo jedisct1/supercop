@@ -1,7 +1,7 @@
 #ifndef inner_h
 #define inner_h
 
-#define inner crypto_hashblocks_sha512_m4mult_inner
+#define inner CRYPTO_NAMESPACE(inner)
 
 #include "crypto_uint64.h"
 

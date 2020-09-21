@@ -1,1 +1,1 @@
-../ref/poly.h
+../../ntruhrss701/avx2/poly.h

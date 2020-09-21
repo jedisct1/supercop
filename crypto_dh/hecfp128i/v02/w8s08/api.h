@@ -1,7 +1,1 @@
-#define crypto_dh_hecfp128i_v02_w8s08_SECRETKEYBYTES 32
-#define crypto_dh_hecfp128i_v02_w8s08_PUBLICKEYBYTES 64
-#define crypto_dh_hecfp128i_v02_w8s08_BYTES 64
-
-#define SECRETKEY_BYTES crypto_dh_hecfp128i_v02_w8s08_SECRETKEYBYTES
-#define PUBLICKEY_BYTES crypto_dh_hecfp128i_v02_w8s08_PUBLICKEYBYTES
-#define SHAREDSECRET_BYTES crypto_dh_hecfp128i_v02_w8s08_BYTES
+../../../hecfp127i/v02/var/api.h

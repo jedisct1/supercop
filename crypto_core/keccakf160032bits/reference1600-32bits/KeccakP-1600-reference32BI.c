@@ -40,10 +40,7 @@ static unsigned int KeccakRhoOffsets[nrLanes];
 
 /* ---------------------------------------------------------------- */
 
-void toBitInterleaving(UINT32 low, UINT32 high, UINT32 *even, UINT32 *odd);
-void fromBitInterleaving(UINT32 even, UINT32 odd, UINT32 *low, UINT32 *high);
-
-void toBitInterleaving(UINT32 low, UINT32 high, UINT32 *even, UINT32 *odd)
+static void toBitInterleaving(UINT32 low, UINT32 high, UINT32 *even, UINT32 *odd)
 {
     unsigned int i;
 
@@ -62,7 +59,7 @@ void toBitInterleaving(UINT32 low, UINT32 high, UINT32 *even, UINT32 *odd)
     }
 }
 
-void fromBitInterleaving(UINT32 even, UINT32 odd, UINT32 *low, UINT32 *high)
+static void fromBitInterleaving(UINT32 even, UINT32 odd, UINT32 *low, UINT32 *high)
 {
     unsigned int i;
 
@@ -432,7 +429,7 @@ void KeccakP1600_PermutationOnWords(UINT32 *state, unsigned int nrRounds)
 #define index(x, y,z) ((((x)%5)+5*((y)%5))*2 + z)
 #define ROL32(a, offset) ((offset != 0) ? ((((UINT32)a) << offset) ^ (((UINT32)a) >> (32-offset))) : a)
 
-void ROL64(UINT32 inEven, UINT32 inOdd, UINT32 *outEven, UINT32 *outOdd, unsigned int offset)
+static void ROL64(UINT32 inEven, UINT32 inOdd, UINT32 *outEven, UINT32 *outOdd, unsigned int offset)
 {
     if ((offset % 2) == 0) {
         *outEven = ROL32(inEven, offset/2);

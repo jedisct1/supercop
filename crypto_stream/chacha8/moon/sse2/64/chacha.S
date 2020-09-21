@@ -2,8 +2,8 @@
 
 SECTION_TEXT
 
-GLOBAL_HIDDEN_FN crypto_stream_chacha8_moon_sse2_64_blocks_sse2
-crypto_stream_chacha8_moon_sse2_64_blocks_sse2_local:
+GLOBAL_HIDDEN_FN CRYPTO_NAMESPACE(blocks_sse2)
+CRYPTO_NAMESPACE(blocks_sse2_local):
 pushq %rbx
 pushq %rbp
 movq %rsp, %rbp
@@ -25,7 +25,7 @@ movdqa %xmm10, 32(%rsp)
 movdqa %xmm11, 48(%rsp)
 movq %rax, 64(%rsp)
 cmpq $256, %rcx
-jb crypto_stream_chacha8_moon_sse2_64_blocks_sse2_below256
+jb CRYPTO_NAMESPACE(blocks_sse2_below256)
 pshufd $0x00, %xmm8, %xmm0
 pshufd $0x55, %xmm8, %xmm1
 pshufd $0xaa, %xmm8, %xmm2
@@ -54,9 +54,9 @@ pshufd $0xaa, %xmm11, %xmm0
 pshufd $0xff, %xmm11, %xmm1
 movdqa %xmm0, 352(%rsp)
 movdqa %xmm1, 368(%rsp)
-jmp crypto_stream_chacha8_moon_sse2_64_blocks_sse2_atleast256
+jmp CRYPTO_NAMESPACE(blocks_sse2_atleast256)
 .p2align 6,,63
-crypto_stream_chacha8_moon_sse2_64_blocks_sse2_atleast256:
+CRYPTO_NAMESPACE(blocks_sse2_atleast256):
 movq 48(%rsp), %rax
 leaq 1(%rax), %r8
 leaq 2(%rax), %r9
@@ -92,7 +92,7 @@ movdqa 320(%rsp), %xmm12
 movdqa 336(%rsp), %xmm13
 movdqa 352(%rsp), %xmm14
 movdqa 368(%rsp), %xmm15
-crypto_stream_chacha8_moon_sse2_64_blocks_sse2_mainloop1:
+CRYPTO_NAMESPACE(blocks_sse2_mainloop1):
 paddd %xmm4, %xmm0
 paddd %xmm5, %xmm1
 pxor %xmm0, %xmm12
@@ -286,7 +286,7 @@ psrld $25, %xmm15
 pxor %xmm15, %xmm4
 movdqa 112(%rsp), %xmm15
 subq $2, %rax
-jnz crypto_stream_chacha8_moon_sse2_64_blocks_sse2_mainloop1
+jnz CRYPTO_NAMESPACE(blocks_sse2_mainloop1)
 paddd 128(%rsp), %xmm0
 paddd 144(%rsp), %xmm1
 paddd 160(%rsp), %xmm2
@@ -336,7 +336,7 @@ punpcklqdq %xmm6, %xmm3
 punpcklqdq %xmm9, %xmm5
 punpcklqdq %xmm11, %xmm7
 andq %rsi, %rsi
-jz crypto_stream_chacha8_moon_sse2_64_blocks_sse2_noinput1
+jz CRYPTO_NAMESPACE(blocks_sse2_noinput1)
 movdqu 0(%rsi), %xmm2
 movdqu 16(%rsi), %xmm6
 movdqu 64(%rsi), %xmm9
@@ -418,8 +418,8 @@ movdqu %xmm7, 176(%rdx)
 movdqu %xmm0, 224(%rdx)
 movdqu %xmm4, 240(%rdx)
 addq $256, %rsi
-jmp crypto_stream_chacha8_moon_sse2_64_blocks_sse2_mainloop_cont
-crypto_stream_chacha8_moon_sse2_64_blocks_sse2_noinput1:
+jmp CRYPTO_NAMESPACE(blocks_sse2_mainloop_cont)
+CRYPTO_NAMESPACE(blocks_sse2_noinput1):
 movdqu %xmm5, 0(%rdx)
 movdqu %xmm7, 16(%rdx)
 movdqu %xmm8, 64(%rdx)
@@ -468,45 +468,45 @@ movdqu %xmm3, 160(%rdx)
 movdqu %xmm7, 176(%rdx)
 movdqu %xmm0, 224(%rdx)
 movdqu %xmm4, 240(%rdx)
-crypto_stream_chacha8_moon_sse2_64_blocks_sse2_mainloop_cont:
+CRYPTO_NAMESPACE(blocks_sse2_mainloop_cont):
 addq $256, %rdx
 subq $256, %rcx
 cmp $256, %rcx
-jae crypto_stream_chacha8_moon_sse2_64_blocks_sse2_atleast256
+jae CRYPTO_NAMESPACE(blocks_sse2_atleast256)
 movdqa 0(%rsp), %xmm8
 movdqa 16(%rsp), %xmm9
 movdqa 32(%rsp), %xmm10
 movdqa 48(%rsp), %xmm11
 movq $1, %r9
-crypto_stream_chacha8_moon_sse2_64_blocks_sse2_below256:
+CRYPTO_NAMESPACE(blocks_sse2_below256):
 movq %r9, %xmm5
 andq %rcx, %rcx
-jz crypto_stream_chacha8_moon_sse2_64_blocks_sse2_done
+jz CRYPTO_NAMESPACE(blocks_sse2_done)
 cmpq $64, %rcx
-jae crypto_stream_chacha8_moon_sse2_64_blocks_sse2_above63
+jae CRYPTO_NAMESPACE(blocks_sse2_above63)
 movq %rdx, %r9
 andq %rsi, %rsi
-jz crypto_stream_chacha8_moon_sse2_64_blocks_sse2_noinput2
+jz CRYPTO_NAMESPACE(blocks_sse2_noinput2)
 movq %rcx, %r10
 movq %rsp, %rdx
 addq %r10, %rsi
 addq %r10, %rdx
 negq %r10
-crypto_stream_chacha8_moon_sse2_64_blocks_sse2_copyinput:
+CRYPTO_NAMESPACE(blocks_sse2_copyinput):
 movb (%rsi, %r10), %al
 movb %al, (%rdx, %r10)
 incq %r10
-jnz crypto_stream_chacha8_moon_sse2_64_blocks_sse2_copyinput
+jnz CRYPTO_NAMESPACE(blocks_sse2_copyinput)
 movq %rsp, %rsi
-crypto_stream_chacha8_moon_sse2_64_blocks_sse2_noinput2:
+CRYPTO_NAMESPACE(blocks_sse2_noinput2):
 movq %rsp, %rdx
-crypto_stream_chacha8_moon_sse2_64_blocks_sse2_above63:
+CRYPTO_NAMESPACE(blocks_sse2_above63):
 movdqa %xmm8, %xmm0
 movdqa %xmm9, %xmm1
 movdqa %xmm10, %xmm2
 movdqa %xmm11, %xmm3
 movq 64(%rsp), %rax
-crypto_stream_chacha8_moon_sse2_64_blocks_sse2_mainloop2:
+CRYPTO_NAMESPACE(blocks_sse2_mainloop2):
 paddd %xmm1, %xmm0
 pxor %xmm0, %xmm3
 pshuflw $0xb1,%xmm3,%xmm3
@@ -558,13 +558,13 @@ movdqa %xmm1,%xmm4
 pslld $7, %xmm1
 psrld $25, %xmm4
 pxor %xmm4, %xmm1
-jnz crypto_stream_chacha8_moon_sse2_64_blocks_sse2_mainloop2
+jnz CRYPTO_NAMESPACE(blocks_sse2_mainloop2)
 paddd %xmm8, %xmm0
 paddd %xmm9, %xmm1
 paddd %xmm10, %xmm2
 paddd %xmm11, %xmm3
 andq %rsi, %rsi
-jz crypto_stream_chacha8_moon_sse2_64_blocks_sse2_noinput3
+jz CRYPTO_NAMESPACE(blocks_sse2_noinput3)
 movdqu 0(%rsi), %xmm12
 movdqu 16(%rsi), %xmm13
 movdqu 32(%rsi), %xmm14
@@ -574,38 +574,38 @@ pxor %xmm13, %xmm1
 pxor %xmm14, %xmm2
 pxor %xmm15, %xmm3
 addq $64, %rsi
-crypto_stream_chacha8_moon_sse2_64_blocks_sse2_noinput3:
+CRYPTO_NAMESPACE(blocks_sse2_noinput3):
 movdqu %xmm0, 0(%rdx)
 movdqu %xmm1, 16(%rdx)
 movdqu %xmm2, 32(%rdx)
 movdqu %xmm3, 48(%rdx)
 paddq %xmm5, %xmm11
 cmpq $64, %rcx
-jbe crypto_stream_chacha8_moon_sse2_64_blocks_sse2_mainloop2_finishup
+jbe CRYPTO_NAMESPACE(blocks_sse2_mainloop2_finishup)
 addq $64, %rdx
 subq $64, %rcx
-jmp crypto_stream_chacha8_moon_sse2_64_blocks_sse2_below256
-crypto_stream_chacha8_moon_sse2_64_blocks_sse2_mainloop2_finishup:
+jmp CRYPTO_NAMESPACE(blocks_sse2_below256)
+CRYPTO_NAMESPACE(blocks_sse2_mainloop2_finishup):
 cmpq $64, %rcx
-je crypto_stream_chacha8_moon_sse2_64_blocks_sse2_done
+je CRYPTO_NAMESPACE(blocks_sse2_done)
 addq %rcx, %r9
 addq %rcx, %rdx
 negq %rcx
-crypto_stream_chacha8_moon_sse2_64_blocks_sse2_copyoutput:
+CRYPTO_NAMESPACE(blocks_sse2_copyoutput):
 movb (%rdx, %rcx), %al
 movb %al, (%r9, %rcx)
 incq %rcx
-jnz crypto_stream_chacha8_moon_sse2_64_blocks_sse2_copyoutput
-crypto_stream_chacha8_moon_sse2_64_blocks_sse2_done:
+jnz CRYPTO_NAMESPACE(blocks_sse2_copyoutput)
+CRYPTO_NAMESPACE(blocks_sse2_done):
 movdqu %xmm11, 32(%rdi)
 movq %rbp, %rsp
 popq %rbp
 popq %rbx
 ret
-FN_END crypto_stream_chacha8_moon_sse2_64_blocks_sse2
+FN_END CRYPTO_NAMESPACE(blocks_sse2)
 
-GLOBAL_HIDDEN_FN hcrypto_stream_chacha8_moon_sse2_64
-hcrypto_stream_chacha8_moon_sse2_64_local:
+GLOBAL_HIDDEN_FN CRYPTO_NAMESPACE(hchacha)
+hcrypto_local:
 movq $0x3320646e61707865, %rax
 movq $0x6b20657479622d32, %r8
 movd %rax, %xmm0
@@ -614,7 +614,7 @@ punpcklqdq %xmm4, %xmm0
 movdqu 0(%rdi), %xmm1
 movdqu 16(%rdi), %xmm2
 movdqu 0(%rsi), %xmm3
-hcrypto_stream_chacha8_moon_sse2_64_mainloop:
+hcrypto_mainloop:
 paddd %xmm1, %xmm0
 pxor %xmm0, %xmm3
 pshuflw $0xb1,%xmm3,%xmm3
@@ -666,13 +666,13 @@ movdqa %xmm1,%xmm4
 pslld $7, %xmm1
 psrld $25, %xmm4
 pxor %xmm4, %xmm1
-ja hcrypto_stream_chacha8_moon_sse2_64_mainloop
+ja hcrypto_mainloop
 movdqu %xmm0, 0(%rdx)
 movdqu %xmm3, 16(%rdx)
 ret
-FN_END hcrypto_stream_chacha8_moon_sse2_64
+FN_END CRYPTO_NAMESPACE(hchacha)
 
-GLOBAL_HIDDEN_FN_EXT crypto_stream_chacha8_moon_sse2_64, 6, 16
+GLOBAL_HIDDEN_FN_EXT CRYPTO_NAMESPACE(chacha), 6, 16
 pushq %rbp
 movq %rsp, %rbp
 subq $64, %rsp
@@ -690,7 +690,7 @@ movq %rsp, %rdi
 movq %rdx, %rsi
 movq %rcx, %rdx
 movq %r8, %rcx
-call crypto_stream_chacha8_moon_sse2_64_blocks_sse2_local
+call CRYPTO_NAMESPACE(blocks_sse2_local)
 pxor %xmm0, %xmm0
 movdqa %xmm0, 0(%rsp)
 movdqa %xmm0, 16(%rsp)
@@ -698,9 +698,9 @@ movdqa %xmm0, 32(%rsp)
 movq %rbp, %rsp
 popq %rbp
 ret
-FN_END crypto_stream_chacha8_moon_sse2_64
+FN_END CRYPTO_NAMESPACE(chacha)
 
-GLOBAL_HIDDEN_FN_EXT xcrypto_stream_chacha8_moon_sse2_64, 6, 16
+GLOBAL_HIDDEN_FN_EXT CRYPTO_NAMESPACE(xchacha), 6, 16
 pushq %rbp
 pushq %rbx
 movq %rsp, %rbp
@@ -717,12 +717,12 @@ pushq %rcx
 pushq %r8
 movq %rbx, %rdx
 movq %r9, %rcx
-call hcrypto_stream_chacha8_moon_sse2_64_local
+call hcrypto_local
 movq %rbx, %rdi
 popq %rcx
 popq %rdx
 popq %rsi
-call crypto_stream_chacha8_moon_sse2_64_blocks_sse2_local
+call CRYPTO_NAMESPACE(blocks_sse2_local)
 pxor %xmm0, %xmm0
 movdqa %xmm0, 0(%rbx)
 movdqa %xmm0, 16(%rbx)
@@ -731,5 +731,5 @@ movq %rbp, %rsp
 popq %rbx
 popq %rbp
 ret
-FN_END xcrypto_stream_chacha8_moon_sse2_64
+FN_END CRYPTO_NAMESPACE(xchacha)
 

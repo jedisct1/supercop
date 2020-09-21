@@ -1,6 +1,5 @@
 .data
-.section .rodata
-.align 32
+.p2align 5
 mask_ff:
 .word 0xff
 .word 0xff
@@ -290,10 +289,10 @@ mask_n:
 .word 0
 .word 0
 .text
-.hidden poly_lift
-.global poly_lift
-.att_syntax prefix
-poly_lift:
+.global crypto_kem_ntruhrss701_avx2_constbranchindex_poly_lift
+.global _crypto_kem_ntruhrss701_avx2_constbranchindex_poly_lift
+crypto_kem_ntruhrss701_avx2_constbranchindex_poly_lift:
+_crypto_kem_ntruhrss701_avx2_constbranchindex_poly_lift:
 mov %rsp, %r8
 andq $-32, %rsp
 subq $1408, %rsp
@@ -3114,6 +3113,6 @@ vpand const_1s(%rip), %ymm3, %ymm3
 vpor %ymm3, %ymm2, %ymm3
 vmovdqa %ymm3, 1376(%rsp)
 mov %rsp, %rsi
-call poly_Rq_mul_x_minus_1
+call crypto_kem_ntruhrss701_avx2_constbranchindex_poly_Rq_mul_x_minus_1
 mov %r8, %rsp
 ret

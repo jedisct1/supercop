@@ -113,7 +113,7 @@ int32 tmp
 int32 c
 int32 np
 
-qpushenter crypto_stream_aes128ctr_neon_xor_afternm_constants
+qpushenter CRYPTO_NAMESPACE(xor_afternm_constants)
 
 stack64 stack_r45
 stack64 stack_r67

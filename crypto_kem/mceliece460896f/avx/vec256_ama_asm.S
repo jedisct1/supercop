@@ -1,5 +1,5 @@
-#define vec256_ama_asm crypto_kem_mceliece460896f_avx_vec256_ama_asm
-#define _vec256_ama_asm _crypto_kem_mceliece460896f_avx_vec256_ama_asm
+#define vec256_ama_asm CRYPTO_NAMESPACE(vec256_ama_asm)
+#define _vec256_ama_asm _CRYPTO_NAMESPACE(vec256_ama_asm)
 
 # qhasm: int64 input_0
 

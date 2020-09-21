@@ -10,7 +10,7 @@ vstmdb sp!, {q4-q7}
 stmfd sp!, {r4-r12, r14}
 mov r12, sp
 sub sp, sp, #320
-and sp, sp, #0xffffffe0
+bic sp, sp, #63
 str r12, [sp, #288]
 sub r3, r3, #128
 mov r14, #128

@@ -146,10 +146,10 @@ int64 b2
 int64 b3
 
 
-enter crypto_stream_lexv2_e_v2_schwabe_amd64_1_ECRYPT_init
+enter ECRYPT_init
 leave
 
-enter crypto_stream_lexv2_e_v2_schwabe_amd64_1_ECRYPT_keysetup
+enter ECRYPT_keysetup
 
 r11_stack = r11_caller
 r12_stack = r12_caller
@@ -401,7 +401,7 @@ rbp_caller = rbp_stack
 leave
 
 
-enter crypto_stream_lexv2_e_v2_schwabe_amd64_1_ECRYPT_process_bytes stackaligned4096 aes_constants
+enter ECRYPT_process_bytes stackaligned4096 aes_constants
 
 r11_stack = r11_caller
 r12_stack = r12_caller

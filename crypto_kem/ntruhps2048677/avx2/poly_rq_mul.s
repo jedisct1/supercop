@@ -1,6 +1,5 @@
 .data
-.section .rodata
-.align 32
+.p2align 5
 mask_low9words:
 .word 0xffff
 .word 0xffff
@@ -256,10 +255,10 @@ mask_mod2048:
 .word 2047
 .word 2047
 .text
-.hidden poly_Rq_mul
-.global poly_Rq_mul
-.att_syntax prefix
-poly_Rq_mul:
+.global crypto_kem_ntruhps2048677_avx2_constbranchindex_poly_Rq_mul
+.global _crypto_kem_ntruhps2048677_avx2_constbranchindex_poly_Rq_mul
+crypto_kem_ntruhps2048677_avx2_constbranchindex_poly_Rq_mul:
+_crypto_kem_ntruhps2048677_avx2_constbranchindex_poly_Rq_mul:
 push %r12
 mov %rsp, %r8
 andq $-32, %rsp
@@ -1510,7 +1509,7 @@ vpaddw %ymm0, %ymm1, %ymm0
 vmovdqa %ymm0, 5152(%r11)
 subq $9408, %rsp
 mov $4, %ecx
-karatsuba_loop_d3b3beba23481da34f901434d1482d72:
+karatsuba_loop_1:
 mov %rsp, %r9
 mov %rsp, %r10
 subq $32, %rsp
@@ -2087,7 +2086,7 @@ vmovdqa 0(%rsp), %ymm11
 vinserti128 $1, %xmm1, %ymm11, %ymm14
 vmovdqa %ymm14, 2656(%r9)
 addq $32, %rsp
-innerloop_d3b3beba23481da34f901434d1482d72:
+innerloop_1:
 vmovdqa 0(%r9), %ymm0
 vmovdqa 1408(%r9), %ymm6
 vmovdqa 32(%r9), %ymm1
@@ -2974,11 +2973,11 @@ vpaddw 6176(%rsp), %ymm0, %ymm0
 vmovdqa %ymm0, 3456(%r10)
 vmovdqa %ymm1, 3808(%r10)
 neg %ecx
-jns done_d3b3beba23481da34f901434d1482d72
+jns done_1
 add $704, %r9
 add $1408, %r10
-jmp innerloop_d3b3beba23481da34f901434d1482d72
-done_d3b3beba23481da34f901434d1482d72:
+jmp innerloop_1
+done_1:
 sub $704, %r9
 sub $1408, %r10
 vmovdqa 0(%r9), %ymm0
@@ -4765,7 +4764,7 @@ add $1536, %rax
 add $1536, %r11
 add $3072, %r12
 dec %ecx
-jnz karatsuba_loop_d3b3beba23481da34f901434d1482d72
+jnz karatsuba_loop_1
 sub $12288, %r12
 add $9408, %rsp
 subq $1280, %rsp

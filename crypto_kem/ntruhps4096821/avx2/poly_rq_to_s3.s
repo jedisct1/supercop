@@ -1,6 +1,5 @@
 .data
-.section .rodata
-.align 32
+.p2align 5
 const_3_repeating:
 .word 0x3
 .word 0x3
@@ -120,10 +119,10 @@ mask_3:
 .word 0x03
 .word 0x03
 .text
-.hidden poly_Rq_to_S3
-.global poly_Rq_to_S3
-.att_syntax prefix
-poly_Rq_to_S3:
+.global crypto_kem_ntruhps4096821_avx2_constbranchindex_poly_Rq_to_S3
+.global _crypto_kem_ntruhps4096821_avx2_constbranchindex_poly_Rq_to_S3
+crypto_kem_ntruhps4096821_avx2_constbranchindex_poly_Rq_to_S3:
+_crypto_kem_ntruhps4096821_avx2_constbranchindex_poly_Rq_to_S3:
 vmovdqa const_3_repeating(%rip), %ymm3
 vmovdqa mask_modq(%rip), %ymm6
 vmovdqa 1632(%rsi), %ymm4

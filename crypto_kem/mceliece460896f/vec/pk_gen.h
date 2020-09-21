@@ -4,7 +4,7 @@
 
 #ifndef PK_GEN_H
 #define PK_GEN_H
-#define pk_gen crypto_kem_mceliece460896f_vec_pk_gen
+#define pk_gen CRYPTO_NAMESPACE(pk_gen)
 
 #include <stdint.h>
 

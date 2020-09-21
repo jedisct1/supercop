@@ -23,13 +23,13 @@
 #if defined(__WIN32__) || defined(__APPLE__)
 #define decorate(s) _##s
 #define _cdecl(s) decorate(s)
-#define cdecl(s) _cdecl(DILITHIUM_NAMESPACE(_##s))
+#define cdecl(s) _cdecl(DILITHIUM_NAMESPACE(##s))
 #else
-#define cdecl(s) DILITHIUM_NAMESPACE(_##s)
+#define cdecl(s) DILITHIUM_NAMESPACE(##s)
 #endif
 
 #ifndef __ASSEMBLER__
-#define qdata DILITHIUM_NAMESPACE(_qdata)
+#define qdata DILITHIUM_NAMESPACE(qdata)
 extern const uint32_t qdata[];
 #endif
 

@@ -38,7 +38,7 @@ reg128 u5
 reg128 u6
 reg128 u7
 
-qpushenter crypto_stream_aes128ctr_neon_beforenm
+qpushenter CRYPTO_NAMESPACE(beforenm)
 
 bitslicekey0(k, c)
 

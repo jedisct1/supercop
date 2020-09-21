@@ -52,3 +52,11 @@ echo "=== `date` === sysctl machdep.tsc_freq"
 sysctl machdep.tsc_freq || :
 echo "=== `date` === /usr/sbin/psrinfo -v"
 /usr/sbin/psrinfo -v || :
+
+# MacOS
+echo "=== `date` === sw_vers"
+sw_vers || :
+echo "=== `date` === system_profiler -detailLevel mini"
+system_profiler -detailLevel mini || :
+echo "=== `date` === sysctl -n machdep.cpu.brand_string"
+sysctl -n machdep.cpu.brand_string || :

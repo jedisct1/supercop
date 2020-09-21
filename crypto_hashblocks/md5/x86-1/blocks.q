@@ -40,7 +40,7 @@ stack32 in_stack
 stack32 inlen_stack
 
 
-enter crypto_hashblocks_md5_x86_1
+enter CRYPTO_NAMESPACETOP
 input state_input
 input in_input
 input inlen_input

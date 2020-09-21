@@ -1,1 +1,1 @@
-#define CRYPTO_BYTES 64
+../mmx/api.h

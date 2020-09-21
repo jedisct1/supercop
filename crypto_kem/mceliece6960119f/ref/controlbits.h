@@ -5,8 +5,8 @@
 
 #ifndef CONTROLBITS_H
 #define CONTROLBITS_H
-#define controlbits crypto_kem_mceliece6960119f_ref_controlbits
-#define sort_63b crypto_kem_mceliece6960119f_ref_sort_63b
+#define controlbits CRYPTO_NAMESPACE(controlbits)
+#define sort_63b CRYPTO_NAMESPACE(sort_63b)
 
 #include <stdint.h>
 

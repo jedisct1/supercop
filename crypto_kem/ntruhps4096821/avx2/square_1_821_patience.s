@@ -1,11 +1,10 @@
 .data
-.section .rodata
-.align 32
+.p2align 5
 .text
-.att_syntax prefix
-.hidden square_1_821
-.global square_1_821
-square_1_821:
+.global crypto_kem_ntruhps4096821_avx2_constbranchindex_square_1_821
+.global _crypto_kem_ntruhps4096821_avx2_constbranchindex_square_1_821
+crypto_kem_ntruhps4096821_avx2_constbranchindex_square_1_821:
+_crypto_kem_ntruhps4096821_avx2_constbranchindex_square_1_821:
 push %r15
 push %r14
 push %r13

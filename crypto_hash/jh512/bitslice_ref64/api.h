@@ -1,2 +1,1 @@
-#define CRYPTO_BYTES 64
-
+../bitslice_opt32/api.h

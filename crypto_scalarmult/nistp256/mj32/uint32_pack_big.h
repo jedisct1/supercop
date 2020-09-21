@@ -3,7 +3,7 @@
 
 #include "crypto_uint32.h"
 
-#define uint32_pack_big crypto_scalarmult_nistp256_mj32_uint32_pack_big
+#define uint32_pack_big CRYPTO_NAMESPACE(uint32_pack_big)
 
 extern void uint32_pack_big(unsigned char *y, crypto_uint32 x);
 

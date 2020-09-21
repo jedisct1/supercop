@@ -59,7 +59,7 @@ reg128 v4
 
 int32 len
 
-qpushenter crypto_onetimeauth_poly1305_neon2_blocks
+qpushenter CRYPTO_NAMESPACE(blocks)
 
 len = input_3
 

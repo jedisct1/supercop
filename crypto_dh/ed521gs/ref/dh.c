@@ -863,7 +863,7 @@ int main()
 		for (i=0;i<144;i++) printf("%02x",pkb[i]);
 		printf("\n");
 
-		if (crypto_dh_ed521gs_ref(ssa,pka,skb)<0)
+		if (CRYPTO_NAMESPACETOP(ssa,pka,skb)<0)
 		{
 			printf("problem\n");
 			break;
@@ -873,7 +873,7 @@ int main()
 		for (i=0;i<72;i++) printf("%02x",ssa[i]);
 		printf("\n");
 
-		crypto_dh_ed521gs_ref(ssb,pkb,ska);
+		CRYPTO_NAMESPACETOP(ssb,pkb,ska);
 
 		printf("Bob's secret=   ");
 		for (i=0;i<72;i++) printf("%02x",ssb[i]);

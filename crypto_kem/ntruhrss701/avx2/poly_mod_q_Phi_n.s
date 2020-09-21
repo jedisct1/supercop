@@ -1,11 +1,10 @@
 .data
-.section .rodata
-.align 32
+.p2align 5
 .text
-.hidden poly_mod_q_Phi_n
-.global poly_mod_q_Phi_n
-.att_syntax prefix
-poly_mod_q_Phi_n:
+.global crypto_kem_ntruhrss701_avx2_constbranchindex_poly_mod_q_Phi_n
+.global _crypto_kem_ntruhrss701_avx2_constbranchindex_poly_mod_q_Phi_n
+crypto_kem_ntruhrss701_avx2_constbranchindex_poly_mod_q_Phi_n:
+_crypto_kem_ntruhrss701_avx2_constbranchindex_poly_mod_q_Phi_n:
 vmovdqa 1376(%rdi), %ymm0
 vpermq $3, %ymm0, %ymm0
 vpslld $16, %ymm0, %ymm0

@@ -5,9 +5,9 @@
 
 #ifndef CONTROLBITS_H
 #define CONTROLBITS_H
-#define composeinv crypto_kem_mceliece6688128f_sse_composeinv
-#define controlbits crypto_kem_mceliece6688128f_sse_controlbits
-#define sort_63b crypto_kem_mceliece6688128f_sse_sort_63b
+#define composeinv CRYPTO_NAMESPACE(composeinv)
+#define controlbits CRYPTO_NAMESPACE(controlbits)
+#define sort_63b CRYPTO_NAMESPACE(sort_63b)
 
 #include <stdint.h>
 

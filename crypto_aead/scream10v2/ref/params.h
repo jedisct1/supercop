@@ -1,1 +1,1 @@
-#define nSteps 10
+../../scream10v1/ref/params.h

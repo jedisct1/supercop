@@ -123,11 +123,11 @@ int64 m13
 int64 m14
 int64 m15
 
-enter crypto_stream_salsa208_e_sparc_ECRYPT_init
+enter ECRYPT_init
 leave
 
 
-enter crypto_stream_salsa208_e_sparc_ECRYPT_ivsetup
+enter ECRYPT_ivsetup
   x6 = *(uint32 *) (arg2 + 0)
   x8 = 0
   x7 = *(uint32 *) (arg2 + 4)
@@ -143,7 +143,7 @@ enter crypto_stream_salsa208_e_sparc_ECRYPT_ivsetup
 leave
 
 
-enter crypto_stream_salsa208_e_sparc_ECRYPT_keysetup
+enter ECRYPT_keysetup
 
                  unsigned>? arg3 - 128
 goto kbits256 if unsigned>
@@ -217,7 +217,7 @@ storekey:
 leave
 
 
-enter crypto_stream_salsa208_e_sparc_ECRYPT_keystream_bytes
+enter ECRYPT_keystream_bytes
 
 bytes = arg3
 m = arg2
@@ -237,7 +237,7 @@ goto done if !unsigned>
 
 goto bytesatleast1
 
-enter crypto_stream_salsa208_e_sparc_ECRYPT_decrypt_bytes
+enter ECRYPT_decrypt_bytes
 
 bytes = arg4
 m = arg2
@@ -247,7 +247,7 @@ out = arg3
 goto done if !unsigned>
 goto bytesatleast1
 
-enter crypto_stream_salsa208_e_sparc_ECRYPT_encrypt_bytes
+enter ECRYPT_encrypt_bytes
 
 bytes = arg4
 m = arg2

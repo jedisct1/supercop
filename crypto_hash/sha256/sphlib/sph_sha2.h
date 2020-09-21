@@ -40,15 +40,15 @@
 #ifndef SPH_SHA2_H__
 #define SPH_SHA2_H__
 
-#define sph_sha224_init crypto_hash_sha256_sphlib_sha224_init
-#define sph_sha224 crypto_hash_sha256_sphlib_sha224
-#define sph_sha224_close crypto_hash_sha256_sphlib_sha224_close
-#define sph_sha224_addbits_and_close crypto_hash_sha256_sphlib_sha224_addbits_and_close
-#define sph_sha224_comp crypto_hash_sha256_sphlib_sha224_comp
+#define sph_sha224_init CRYPTO_NAMESPACE(sha224_init)
+#define sph_sha224 CRYPTO_NAMESPACE(sha224)
+#define sph_sha224_close CRYPTO_NAMESPACE(sha224_close)
+#define sph_sha224_addbits_and_close CRYPTO_NAMESPACE(sha224_addbits_and_close)
+#define sph_sha224_comp CRYPTO_NAMESPACE(sha224_comp)
 
-#define sph_sha256_init crypto_hash_sha256_sphlib_sha256_init
-#define sph_sha256_close crypto_hash_sha256_sphlib_sha256_close
-#define sph_sha256_addbits_and_close crypto_hash_sha256_sphlib_sha256_addbits_and_close
+#define sph_sha256_init CRYPTO_NAMESPACE(sha256_init)
+#define sph_sha256_close CRYPTO_NAMESPACE(sha256_close)
+#define sph_sha256_addbits_and_close CRYPTO_NAMESPACE(sha256_addbits_and_close)
 
 #define sph_sha384_init crypto_hash_sha512_sphlib_sha384_init
 #define sph_sha384 crypto_hash_sha512_sphlib_sha384

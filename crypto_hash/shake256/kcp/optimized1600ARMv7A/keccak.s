@@ -18,6 +18,9 @@
 @ INFO: Tested on Cortex-A8 (BeagleBone Black), using gcc.
 
 
+.syntax unified
+.fpu neon
+.arm
 .text
 
 @ conditional assembly settings

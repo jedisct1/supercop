@@ -7,14 +7,14 @@
 typedef crypto_uint32 fe[8];
 typedef crypto_uint64 fel[16];
 
-#define fe_0 crypto_scalarmult_nistp256_mj32_fe_0
-#define fe_1 crypto_scalarmult_nistp256_mj32_fe_1
-#define fe_copy crypto_scalarmult_nistp256_mj32_fe_copy
-#define fe_cswap crypto_scalarmult_nistp256_mj32_fe_cswap
-#define fe_cmov crypto_scalarmult_nistp256_mj32_fe_cmov
-#define fe_mul_ crypto_scalarmult_nistp256_mj32_fe_mul_
-#define fe_sq_ crypto_scalarmult_nistp256_mj32_fe_sq_
-#define fe_reducesmall crypto_scalarmult_nistp256_mj32_fe_reducesmall
+#define fe_0 CRYPTO_NAMESPACE(fe_0)
+#define fe_1 CRYPTO_NAMESPACE(fe_1)
+#define fe_copy CRYPTO_NAMESPACE(fe_copy)
+#define fe_cswap CRYPTO_NAMESPACE(fe_cswap)
+#define fe_cmov CRYPTO_NAMESPACE(fe_cmov)
+#define fe_mul_ CRYPTO_NAMESPACE(fe_mul_)
+#define fe_sq_ CRYPTO_NAMESPACE(fe_sq_)
+#define fe_reducesmall CRYPTO_NAMESPACE(fe_reducesmall)
 
 extern void fe_0(fe);
 extern void fe_1(fe);

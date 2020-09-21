@@ -1,7 +1,1 @@
-#define CRYPTO_KEYBYTES 16
-#define CRYPTO_NSECBYTES 0
-#define CRYPTO_NPUBBYTES 10
-#define CRYPTO_ABYTES 32
-#define CRYPTO_NOOVERLAP 1
-
-
+../../shellaes128v2d4n80/ref/api.h

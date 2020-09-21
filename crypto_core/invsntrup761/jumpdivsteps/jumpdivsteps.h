@@ -5,15 +5,15 @@
 #include <immintrin.h>
 
 
-#define jump32divsteps crypto_core_invsntrup761_jumpdivsteps_jump32divsteps
-#define jump64divsteps crypto_core_invsntrup761_jumpdivsteps_jump64divsteps
-#define jump128divsteps crypto_core_invsntrup761_jumpdivsteps_jump128divsteps
-#define jump256divsteps crypto_core_invsntrup761_jumpdivsteps_jump256divsteps
-#define jump16xdivsteps crypto_core_invsntrup761_jumpdivsteps_jump16xdivsteps
-#define jump32xdivsteps crypto_core_invsntrup761_jumpdivsteps_jump32xdivsteps
-#define jump64xdivsteps crypto_core_invsntrup761_jumpdivsteps_jump64xdivsteps
-#define jump128xdivsteps crypto_core_invsntrup761_jumpdivsteps_jump128xdivsteps
-#define jump256xdivsteps crypto_core_invsntrup761_jumpdivsteps_jump256xdivsteps
+#define jump32divsteps CRYPTO_NAMESPACE(jump32divsteps)
+#define jump64divsteps CRYPTO_NAMESPACE(jump64divsteps)
+#define jump128divsteps CRYPTO_NAMESPACE(jump128divsteps)
+#define jump256divsteps CRYPTO_NAMESPACE(jump256divsteps)
+#define jump16xdivsteps CRYPTO_NAMESPACE(jump16xdivsteps)
+#define jump32xdivsteps CRYPTO_NAMESPACE(jump32xdivsteps)
+#define jump64xdivsteps CRYPTO_NAMESPACE(jump64xdivsteps)
+#define jump128xdivsteps CRYPTO_NAMESPACE(jump128xdivsteps)
+#define jump256xdivsteps CRYPTO_NAMESPACE(jump256xdivsteps)
 
 
 

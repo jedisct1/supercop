@@ -1,7 +1,7 @@
-#define update_asm crypto_kem_mceliece6960119_sse_update_asm
-#define _update_asm _crypto_kem_mceliece6960119_sse_update_asm
-#define vec_reduce_asm crypto_kem_mceliece6960119_sse_vec_reduce_asm
-#define _vec_reduce_asm _crypto_kem_mceliece6960119_sse_vec_reduce_asm
+#define update_asm CRYPTO_NAMESPACE(update_asm)
+#define _update_asm _CRYPTO_NAMESPACE(update_asm)
+#define vec_reduce_asm CRYPTO_NAMESPACE(vec_reduce_asm)
+#define _vec_reduce_asm _CRYPTO_NAMESPACE(vec_reduce_asm)
 /*
   This file is for the inversion-free Berlekamp-Massey algorithm
   see https://ieeexplore.ieee.org/document/87857

@@ -21,16 +21,16 @@ void avx_load_16bit_8bit(const float * cfbs0, const float * cfbs1,
 	// i = size/32
 	for(i = 0;i<SABER_K*SABER_N*16/(128*2);i++){
 		//Load 128 bit from bs0, bs1, bs2, bs3
-		l0 = _mm_load_ps(cfbs0+p*4); 
-		l1 = _mm_load_ps(cfbs1+p*4); 
-		l2 = _mm_load_ps(cfbs2+p*4); 
-		l3 = _mm_load_ps(cfbs3+p*4); 
+		l0 = _mm_loadu_ps(cfbs0+p*4); 
+		l1 = _mm_loadu_ps(cfbs1+p*4); 
+		l2 = _mm_loadu_ps(cfbs2+p*4); 
+		l3 = _mm_loadu_ps(cfbs3+p*4); 
 		
 		//Load 128 bit from middle of bs0, bs1, bs2, bs3
-		l4 = _mm_load_ps(cfbs4+p*4); 
-		l5 = _mm_load_ps(cfbs5+p*4); 
-		l6 = _mm_load_ps(cfbs6+p*4); 
-		l7 = _mm_load_ps(cfbs7+p*4); 
+		l4 = _mm_loadu_ps(cfbs4+p*4); 
+		l5 = _mm_loadu_ps(cfbs5+p*4); 
+		l6 = _mm_loadu_ps(cfbs6+p*4); 
+		l7 = _mm_loadu_ps(cfbs7+p*4); 
 		
 		//Transpose 4x4 matrix
 		_MM_TRANSPOSE4_PS(l0,l1,l2,l3);
@@ -119,10 +119,10 @@ void avx_store_8bit_bs(__m256i * avx_bytes, uint16_t size,
 		
 		
 		//do the same thing to back half(4 number) from 256-bit avx to 128bit
-		_mm_store_si128(bs0+k,ph0);
-		_mm_store_si128(bs1+k,ph1);
-		_mm_store_si128(bs2+k,ph2);
-		_mm_store_si128(bs3+k,ph3);
+		_mm_storeu_si128(bs0+k,ph0);
+		_mm_storeu_si128(bs1+k,ph1);
+		_mm_storeu_si128(bs2+k,ph2);
+		_mm_storeu_si128(bs3+k,ph3);
 		
 		//pack second half
 		l0 = _mm256_extractf128_ps((__m256)avx_bytes[offset0+0],1);
@@ -173,10 +173,10 @@ void avx_store_8bit_bs(__m256i * avx_bytes, uint16_t size,
 		//(128 every store bit)/(8 bit/number)=32number
 		//pointer space 128bit 
 		
-		_mm_store_si128(bs4+k,ph0);
-		_mm_store_si128(bs5+k,ph1);
-		_mm_store_si128(bs6+k,ph2);
-		_mm_store_si128(bs7+k,ph3);
+		_mm_storeu_si128(bs4+k,ph0);
+		_mm_storeu_si128(bs5+k,ph1);
+		_mm_storeu_si128(bs6+k,ph2);
+		_mm_storeu_si128(bs7+k,ph3);
 		
 		//depend on how many lines in this part
 		offset0 += 16;
@@ -206,16 +206,16 @@ void avx_load_8bit_16bit(const float * cfbs0, const float * cfbs1,
 	// i = size/32
 	for(i = 0;i<(size)/32;i++){
 		//Load 128 bit from bs0, bs1, bs2, bs3
-		l0 = _mm_load_ps(cfbs0+p*4); //0
-		l1 = _mm_load_ps(cfbs1+p*4); //160
-		l2 = _mm_load_ps(cfbs2+p*4); //64
-		l3 = _mm_load_ps(cfbs3+p*4); //224
+		l0 = _mm_loadu_ps(cfbs0+p*4); //0
+		l1 = _mm_loadu_ps(cfbs1+p*4); //160
+		l2 = _mm_loadu_ps(cfbs2+p*4); //64
+		l3 = _mm_loadu_ps(cfbs3+p*4); //224
 		
 		//Load 128 bit from middle of bs0, bs1, bs2, bs3
-		l4 = _mm_load_ps(cfbs4+p*4); //208
-		l5 = _mm_load_ps(cfbs5+p*4); //112
-		l6 = _mm_load_ps(cfbs6+p*4); //16
-		l7 = _mm_load_ps(cfbs7+p*4); //176
+		l4 = _mm_loadu_ps(cfbs4+p*4); //208
+		l5 = _mm_loadu_ps(cfbs5+p*4); //112
+		l6 = _mm_loadu_ps(cfbs6+p*4); //16
+		l7 = _mm_loadu_ps(cfbs7+p*4); //176
 
 		//Transpose 4x4 matrix
 		_MM_TRANSPOSE4_PS(l0,l1,l2,l3);

@@ -19,16 +19,16 @@
 #include <stdlib.h>
 #include "Simon64128NEON.h"
 
-int crypto_stream_simon64128ctr_neon(unsigned char *out, unsigned long long outlen, const unsigned char *n, const unsigned char *k);
+int CRYPTO_NAMESPACETOP(unsigned char *out, unsigned long long outlen, const unsigned char *n, const unsigned char *k);
 inline __attribute__((always_inline)) int Encrypt(unsigned char *out, u32 nonce[], u128 rk[][8], u32 key[], int numbytes);
-int crypto_stream_simon64128ctr_neon_xor(unsigned char *out, const unsigned char *in, unsigned long long inlen, const unsigned char *n, const unsigned char *k);
+int CRYPTO_NAMESPACE(xor)(unsigned char *out, const unsigned char *in, unsigned long long inlen, const unsigned char *n, const unsigned char *k);
 inline __attribute__((always_inline)) int Encrypt_Xor(unsigned char *out, const unsigned char *in, u32 nonce[], u128 rk[][8], u32 key[], int numbytes);
 inline __attribute__((always_inline)) int ExpandKeyBS(u32 K[], u128 rk[][8]);
 int ExpandKeyNBS(u32 K[], u128 rk[][8], u32 key[]);
 
 
 
-int crypto_stream_simon64128ctr_neon(
+int CRYPTO_NAMESPACETOP(
   unsigned char *out,
   unsigned long long outlen,
   const unsigned char *n,
@@ -165,7 +165,7 @@ inline __attribute__((always_inline)) int Encrypt(unsigned char *out, u32 nonce[
 
 
 
-int crypto_stream_simon64128ctr_neon_xor(
+int CRYPTO_NAMESPACE(xor)(
   unsigned char *out,
   const unsigned char *in,
   unsigned long long inlen,

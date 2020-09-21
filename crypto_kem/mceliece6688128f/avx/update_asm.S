@@ -1,5 +1,5 @@
-#define update_asm crypto_kem_mceliece6688128f_avx_update_asm
-#define _update_asm _crypto_kem_mceliece6688128f_avx_update_asm
+#define update_asm CRYPTO_NAMESPACE(update_asm)
+#define _update_asm _CRYPTO_NAMESPACE(update_asm)
 
 # qhasm: int64 input_0
 

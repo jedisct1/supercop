@@ -3,7 +3,7 @@
 
 #include <gmp.h>
 
-#define gmp_import crypto_encrypt_pqrsa15_ref_gmp_import
+#define gmp_import CRYPTO_NAMESPACE(gmp_import)
 
 extern void gmp_import(mpz_t,const unsigned char *,unsigned long long);
 

@@ -1,1 +1,1 @@
-#define CRYPTO_BYTES 64
+../../cubehash512/arm/api.h

@@ -27,16 +27,14 @@ int crypto_encrypt_open(
   int result;
 
   if (clen < crypto_kem_CIPHERTEXTBYTES) goto formaterror;
-  result = crypto_kem_dec(k,c,sk);
-  if (result < 0) goto error;
-
-  c += crypto_kem_CIPHERTEXTBYTES;
   clen -= crypto_kem_CIPHERTEXTBYTES;
 
+  result = crypto_kem_dec(k,c + clen,sk);
+  if (result < 0) goto error;
+
   if (clen < sizeof nonce) goto formaterror;
-  memcpy(nonce,c,sizeof nonce);
-  c += sizeof nonce;
   clen -= sizeof nonce;
+  memcpy(nonce,c + clen,sizeof nonce);
 
   result = crypto_aead_decrypt(m,mlen,nsec,c,clen,ad,0,nonce,k);
   if (result < 0) goto error;

@@ -1,1 +1,1 @@
-../ref/sample_iid.c
+../../ntruhrss701/avx2/sample_iid.c

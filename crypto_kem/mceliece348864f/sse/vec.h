@@ -1,7 +1,7 @@
 #ifndef VEC_H
 #define VEC_H
-#define vec_GF_mul crypto_kem_mceliece348864f_sse_vec_GF_mul
-#define vec_mul_asm crypto_kem_mceliece348864f_sse_vec_mul_asm
+#define vec_GF_mul CRYPTO_NAMESPACE(vec_GF_mul)
+#define vec_mul_asm CRYPTO_NAMESPACE(vec_mul_asm)
 
 #include "params.h"
 #include "gf.h"

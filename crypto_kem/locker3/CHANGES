@@ -1,3 +1,1 @@
-All files in top directory.
-Remove main*.
-Include crypto_kem.h in kem.cpp.
+../locker1/CHANGES

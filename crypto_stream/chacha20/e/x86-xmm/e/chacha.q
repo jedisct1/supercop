@@ -87,7 +87,7 @@ stack512 tmp
 stack32 ctarget
 
 
-enter crypto_stream_chacha20_e_x86_xmm_ECRYPT_keystream_bytes
+enter ECRYPT_keystream_bytes
 
 eax_stack = eax
 ebx_stack = ebx
@@ -111,7 +111,7 @@ out -= bytes
 goto start
 
 
-enter crypto_stream_chacha20_e_x86_xmm_ECRYPT_decrypt_bytes
+enter ECRYPT_decrypt_bytes
 
 eax_stack = eax
 ebx_stack = ebx
@@ -130,7 +130,7 @@ goto done if !unsigned>
 goto start
 
 
-enter crypto_stream_chacha20_e_x86_xmm_ECRYPT_encrypt_bytes
+enter ECRYPT_encrypt_bytes
 
 eax_stack = eax
 ebx_stack = ebx
@@ -306,11 +306,11 @@ uint32323232 diag3 ^= *(int128 *) (m + 48)
 goto bytesatleast1
 
 
-enter crypto_stream_chacha20_e_x86_xmm_ECRYPT_init
+enter ECRYPT_init
 leave
 
 
-enter crypto_stream_chacha20_e_x86_xmm_ECRYPT_keysetup
+enter ECRYPT_keysetup
 
   eax_stack = eax
   ebx_stack = ebx
@@ -387,7 +387,7 @@ enter crypto_stream_chacha20_e_x86_xmm_ECRYPT_keysetup
 leave
 
 
-enter crypto_stream_chacha20_e_x86_xmm_ECRYPT_ivsetup
+enter ECRYPT_ivsetup
 
   eax_stack = eax
   ebx_stack = ebx

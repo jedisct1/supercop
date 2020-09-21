@@ -1,1 +1,1 @@
-../ref/kem.h
+../../ntruhrss701/ref/kem.h

@@ -18,6 +18,8 @@
 @ INFO: Tested on a Cortex-A8 (BeagleBone Black)
 
 
+.syntax unified
+.thumb
 .text
 
     @ Credit: Henry S. Warren, Hacker's Delight, Addison-Wesley, 2002

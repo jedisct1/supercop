@@ -1,11 +1,10 @@
 .data
-.section .rodata
-.align 32
+.p2align 5
 .text
-.att_syntax prefix
-.hidden square_3_509
-.global square_3_509
-square_3_509:
+.global crypto_kem_ntruhps2048509_avx2_constbranchindex_square_3_509
+.global _crypto_kem_ntruhps2048509_avx2_constbranchindex_square_3_509
+crypto_kem_ntruhps2048509_avx2_constbranchindex_square_3_509:
+_crypto_kem_ntruhps2048509_avx2_constbranchindex_square_3_509:
 push %r15
 push %r14
 push %r13

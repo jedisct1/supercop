@@ -1,7 +1,7 @@
 #ifndef Encode_H
 #define Encode_H
 
-#define Encode crypto_kem_sntrup761_ref_Encode
+#define Encode CRYPTO_NAMESPACE(Encode)
 
 /* Encode(s,R,M,len) */
 /* assumes 0 <= R[i] < M[i] < 16384 */

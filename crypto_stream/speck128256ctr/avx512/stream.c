@@ -22,13 +22,13 @@
 
 int crypto_stream_speck128256ctr_avx2(unsigned char *out, unsigned long long outlen, const unsigned char *n, const unsigned char *k);
 inline __attribute__((always_inline)) int Encrypt(unsigned char *out, u64 nonce[], u512 rk[], u64 key[], int numbytes);
-int crypto_stream_speck128256ctr_avx512_xor(unsigned char *out, const unsigned char *in, unsigned long long inlen, const unsigned char *n, const unsigned char *k);
+int CRYPTO_NAMESPACE(xor)(unsigned char *out, const unsigned char *in, unsigned long long inlen, const unsigned char *n, const unsigned char *k);
 inline __attribute__((always_inline)) int Encrypt_Xor(unsigned char *out, const unsigned char *in, u64 nonce[], u512 rk[], u64 key[], int numbytes);
 int ExpandKey(u64 K[], u512 rk[], u64 key[]);
 
 
 
-int crypto_stream_speck128256ctr_avx512(
+int CRYPTO_NAMESPACETOP(
   unsigned char *out, 
   unsigned long long outlen, 
   const unsigned char *n, 
@@ -177,7 +177,7 @@ inline __attribute__((always_inline)) int Encrypt(unsigned char *out, u64 nonce[
 
 
 
-int crypto_stream_speck128256ctr_avx512_xor(
+int CRYPTO_NAMESPACE(xor)(
   unsigned char *out, 
   const unsigned char *in, 
   unsigned long long inlen, 

@@ -4,6 +4,7 @@
 #include <openssl/sha.h>
 #include <string.h>
 #include "sizes.h"
+#include "short.h"
 
 int signatureofshorthash(
     unsigned char sm[SIGNATURE_BYTES],unsigned long long *smlen,

@@ -1,7 +1,7 @@
 #include <stdint.h>
 #include "crypto_sort.h"
 
-#define qsort_AVX2 crypto_sort_int32_krasnov_qsort_AVX2
+#define qsort_AVX2 CRYPTO_NAMESPACE(qsort_AVX2)
 
 extern int qsort_AVX2(int32_t *, int32_t *, unsigned long n);
 

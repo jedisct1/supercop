@@ -1,6 +1,5 @@
 .data
-.section .rodata
-.align 32
+.p2align 5
 mask_ff:
 .word 0xff
 .word 0xff
@@ -53,10 +52,10 @@ mask_3:
 .word 0x03
 .word 0x03
 .text
-.hidden poly_mod_3_Phi_n
-.global poly_mod_3_Phi_n
-.att_syntax prefix
-poly_mod_3_Phi_n:
+.global crypto_kem_ntruhps4096821_avx2_constbranchindex_poly_mod_3_Phi_n
+.global _crypto_kem_ntruhps4096821_avx2_constbranchindex_poly_mod_3_Phi_n
+crypto_kem_ntruhps4096821_avx2_constbranchindex_poly_mod_3_Phi_n:
+_crypto_kem_ntruhps4096821_avx2_constbranchindex_poly_mod_3_Phi_n:
 vmovdqa 1632(%rdi), %ymm0
 vpermq $1, %ymm0, %ymm0
 vpslld $17, %ymm0, %ymm0
