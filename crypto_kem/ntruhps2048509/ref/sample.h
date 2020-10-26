@@ -4,6 +4,8 @@
 #include "params.h"
 #include "poly.h"
 
+#include "crypto_sort_int32.h"
+
 #define sample_fg CRYPTO_NAMESPACE(sample_fg)
 #define sample_rm CRYPTO_NAMESPACE(sample_rm)
 void sample_fg(poly *f, poly *g, const unsigned char uniformbytes[NTRU_SAMPLE_FG_BYTES]);

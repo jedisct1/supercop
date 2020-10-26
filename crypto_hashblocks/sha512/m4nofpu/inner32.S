@@ -38,7 +38,6 @@
 # qhasm: startcode
 .text
 .arch armv7
-.fpu fpv4-sp-d16
 .syntax unified
 
 # qhasm: int32 two13

@@ -60,10 +60,10 @@ while True:
       happy = False
       for j in reversed(range(i)):
         if program[j][0] == 2 and addresses[j]%4 == 0:
-	  x = program[j][1].split()
-	  x[0] += ".w"
-	  program[j] = [4," ".join(x)]
-	  break
+          x = program[j][1].split()
+          x[0] += ".w"
+          program[j] = [4," ".join(x)]
+          break
       break
     addr += size
   if happy: break

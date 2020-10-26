@@ -158,8 +158,8 @@ stack32 o4
 # qhasm: stackptr constants_stack
 # qhasm: stack32 inlen_stack
 # qhasm: stack32 i_stack
-# qhasm: pushenter CRYPTO_NAMESPACE(inner)
-rpushenter CRYPTO_NAMESPACE(inner)
+# qhasm: pushenter inner
+rpushenter inner
 # qhasm: statebytes_stack = input_0
 # asm 1: >statebytes_stack=stack32#1 = <input_0=int32#1
 # asm 2: >statebytes_stack=o0 = <input_0=input_0
