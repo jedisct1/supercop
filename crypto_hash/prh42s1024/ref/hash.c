@@ -7,7 +7,7 @@ int crypto_hash(
 	const unsigned char *in,
 	unsigned long long inlen )
 {
-        unsigned char h[crypto_hash_BYTES];
+	unsigned char h[crypto_hash_BYTES];
 	prvhash42s_oneshot( in, inlen, h, 128 );
 	memcpy(out,h,sizeof h);
 

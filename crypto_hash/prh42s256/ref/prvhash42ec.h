@@ -32,15 +32,14 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  *
- * @version 2.19
+ * @version 2.30
  */
-
-//$ nocpp
 
 #ifndef PRVHASH42EC_INCLUDED
 #define PRVHASH42EC_INCLUDED
 
 #include <stdint.h>
+#include <string.h>
 
 #if defined( _WIN32 ) || defined( __LITTLE_ENDIAN__ ) || ( defined( __BYTE_ORDER__ ) && __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__ )
 	#define PRVHASH42_LITTLE_ENDIAN 1
@@ -129,7 +128,8 @@ inline uint32_t prvhash42_u32ec( const uint8_t* const p )
 #if PRVHASH42_LITTLE_ENDIAN
 
 /**
- * This function corrects (inverses) endianness of the specified hash value.
+ * This function corrects (inverses) endianness of the specified hash value,
+ * based on 32-bit word.
  *
  * @param[in,out] Hash The hash to correct endianness of. On systems where
  * this is relevant, this address should be aligned to 32 bits.
@@ -137,13 +137,13 @@ inline uint32_t prvhash42_u32ec( const uint8_t* const p )
  * increments of 4. 
  */
 
-inline void prvhash42_ec( uint8_t* const Hash, const int HashLen )
+inline void prvhash42_ec32( uint8_t* const Hash, const int HashLen )
 {
 }
 
 #else // PRVHASH42_LITTLE_ENDIAN
 
-inline void prvhash42_ec( uint8_t* const Hash, const int HashLen )
+inline void prvhash42_ec32( uint8_t* const Hash, const int HashLen )
 {
 	int k;
 
@@ -154,5 +154,58 @@ inline void prvhash42_ec( uint8_t* const Hash, const int HashLen )
 }
 
 #endif // PRVHASH42_LITTLE_ENDIAN
+
+/**
+ * Function loads 32-bit message word and pads it with "final byte" if read
+ * occurs beyond message end.
+ *
+ * @param Msg Message pointer, alignment is unimportant.
+ * @param MsgEnd Message's end pointer.
+ * @param fb Final byte used for padding.
+ */
+
+inline uint32_t prvhash42_lp32( const uint8_t* Msg,
+	const uint8_t* const MsgEnd, const uint8_t fb )
+{
+	if( Msg < MsgEnd - 3 )
+	{
+		return( prvhash42_u32ec( Msg ));
+	}
+
+	uint32_t r = ( Msg < MsgEnd ? *Msg : fb ) | (uint32_t) fb << 24;
+	Msg++;
+	r |= (uint32_t) ( Msg < MsgEnd ? *Msg : fb ) << 8;
+	Msg++;
+	r |= (uint32_t) ( Msg < MsgEnd ? *Msg : fb ) << 16;
+
+	return( r );
+}
+
+/**
+ * Function loads 32-bit message word and pads it with "final byte" if read
+ * occurs beyond message end. This variant of the function assumes that
+ * Msg < MsgEnd.
+ *
+ * @param Msg Message pointer, alignment is unimportant.
+ * @param MsgEnd Message's end pointer.
+ * @param fb Final byte used for padding.
+ */
+
+inline uint32_t prvhash42_lp32_1( const uint8_t* Msg,
+	const uint8_t* const MsgEnd, const uint8_t fb )
+{
+	if( Msg < MsgEnd - 3 )
+	{
+		return( prvhash42_u32ec( Msg ));
+	}
+
+	uint32_t r = *Msg | (uint32_t) fb << 24;
+	Msg++;
+	r |= (uint32_t) ( Msg < MsgEnd ? *Msg : fb ) << 8;
+	Msg++;
+	r |= (uint32_t) ( Msg < MsgEnd ? *Msg : fb ) << 16;
+
+	return( r );
+}
 
 #endif // PRVHASH42EC_INCLUDED
