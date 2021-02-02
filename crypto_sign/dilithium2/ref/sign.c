@@ -9,118 +9,57 @@
 #include "fips202.h"
 
 /*************************************************
-* Name:        challenge
-*
-* Description: Implementation of H. Samples polynomial with 60 nonzero
-*              coefficients in {-1,1} using the output stream of
-*              SHAKE256(mu|w1).
-*
-* Arguments:   - poly *c: pointer to output polynomial
-*              - const uint8_t mu[]: byte array containing mu
-*              - const polyveck *w1: pointer to vector w1
-**************************************************/
-void challenge(poly *c,
-               const uint8_t mu[CRHBYTES],
-               const polyveck *w1)
-{
-  unsigned int i, b, pos;
-  uint64_t signs;
-  uint8_t buf[CRHBYTES + K*POLYW1_PACKEDBYTES];
-  keccak_state state;
-
-  for(i = 0; i < CRHBYTES; ++i)
-    buf[i] = mu[i];
-  for(i = 0; i < K; ++i)
-    polyw1_pack(buf + CRHBYTES + i*POLYW1_PACKEDBYTES, &w1->vec[i]);
-
-  shake256_init(&state);
-  shake256_absorb(&state, buf, sizeof(buf));
-  shake256_finalize(&state);
-  shake256_squeezeblocks(buf, 1, &state);
-
-  signs = 0;
-  for(i = 0; i < 8; ++i)
-    signs |= (uint64_t)buf[i] << 8*i;
-
-  pos = 8;
-
-  for(i = 0; i < N; ++i)
-    c->coeffs[i] = 0;
-
-  for(i = 196; i < 256; ++i) {
-    do {
-      if(pos >= SHAKE256_RATE) {
-        shake256_squeezeblocks(buf, 1, &state);
-        pos = 0;
-      }
-
-      b = buf[pos++];
-    } while(b > i);
-
-    c->coeffs[i] = c->coeffs[b];
-    c->coeffs[b] = 1;
-    c->coeffs[b] ^= -((uint32_t)signs & 1) & (1 ^ (Q-1));
-    signs >>= 1;
-  }
-}
-
-/*************************************************
 * Name:        crypto_sign_keypair
 *
 * Description: Generates public and private key.
 *
-* Arguments:   - unsigned char *pk: pointer to output public key (allocated
-*                                   array of CRYPTO_PUBLICKEYBYTES bytes)
-*              - unsigned char *sk: pointer to output private key (allocated
-*                                   array of CRYPTO_SECRETKEYBYTES bytes)
+* Arguments:   - uint8_t *pk: pointer to output public key (allocated
+*                             array of CRYPTO_PUBLICKEYBYTES bytes)
+*              - uint8_t *sk: pointer to output private key (allocated
+*                             array of CRYPTO_SECRETKEYBYTES bytes)
 *
 * Returns 0 (success)
 **************************************************/
-int crypto_sign_keypair(unsigned char *pk, unsigned char *sk) {
-  unsigned int i;
+int crypto_sign_keypair(uint8_t *pk, uint8_t *sk) {
   uint8_t seedbuf[3*SEEDBYTES];
   uint8_t tr[CRHBYTES];
   const uint8_t *rho, *rhoprime, *key;
-  uint16_t nonce = 0;
   polyvecl mat[K];
   polyvecl s1, s1hat;
-  polyveck s2, t, t1, t0;
+  polyveck s2, t1, t0;
 
   /* Get randomness for rho, rhoprime and key */
-  randombytes(seedbuf, 3*SEEDBYTES);
+  randombytes(seedbuf, SEEDBYTES);
+  shake256(seedbuf, 3*SEEDBYTES, seedbuf, SEEDBYTES);
   rho = seedbuf;
   rhoprime = seedbuf + SEEDBYTES;
   key = seedbuf + 2*SEEDBYTES;
 
   /* Expand matrix */
-  expand_mat(mat, rho);
+  polyvec_matrix_expand(mat, rho);
 
   /* Sample short vectors s1 and s2 */
-  for(i = 0; i < L; ++i)
-    poly_uniform_eta(&s1.vec[i], rhoprime, nonce++);
-  for(i = 0; i < K; ++i)
-    poly_uniform_eta(&s2.vec[i], rhoprime, nonce++);
+  polyvecl_uniform_eta(&s1, rhoprime, 0);
+  polyveck_uniform_eta(&s2, rhoprime, L);
 
   /* Matrix-vector multiplication */
   s1hat = s1;
   polyvecl_ntt(&s1hat);
-  for(i = 0; i < K; ++i) {
-    polyvecl_pointwise_acc_montgomery(&t.vec[i], &mat[i], &s1hat);
-    poly_reduce(&t.vec[i]);
-    poly_invntt_tomont(&t.vec[i]);
-  }
+  polyvec_matrix_pointwise_montgomery(&t1, mat, &s1hat);
+  polyveck_reduce(&t1);
+  polyveck_invntt_tomont(&t1);
 
   /* Add error vector s2 */
-  polyveck_add(&t, &t, &s2);
+  polyveck_add(&t1, &t1, &s2);
 
   /* Extract t1 and write public key */
-  polyveck_freeze(&t);
-  polyveck_power2round(&t1, &t0, &t);
+  polyveck_caddq(&t1);
+  polyveck_power2round(&t1, &t0, &t1);
   pack_pk(pk, rho, &t1);
 
   /* Compute CRH(rho, t1) and write secret key */
   crh(tr, pk, CRYPTO_PUBLICKEYBYTES);
-  pack_sk(sk, rho, key, tr, &s1, &s2, &t0);
+  pack_sk(sk, rho, tr, key, &t0, &s1, &s2);
 
   return 0;
 }
@@ -130,29 +69,27 @@ int crypto_sign_keypair(unsigned char *pk, unsigned char *sk) {
 *
 * Description: Computes signature.
 *
-* Arguments:   - unsigned char *sig:         pointer to output signature (of length CRYPTO_BYTES)
-*              - unsigned long long *siglen: pointer to output length of signed message
-*              - unsigned char *m:           pointer to message to be signed
-*              - unsigned long long mlen:    length of message
-*              - unsigned char *sk:          pointer to bit-packed secret key
+* Arguments:   - uint8_t *sig:   pointer to output signature (of length CRYPTO_BYTES)
+*              - size_t *siglen: pointer to output length of signature
+*              - uint8_t *m:     pointer to message to be signed
+*              - size_t mlen:    length of message
+*              - uint8_t *sk:    pointer to bit-packed secret key
 *
 * Returns 0 (success)
 **************************************************/
-int crypto_sign_signature(unsigned char *sig,
-                          unsigned long long *siglen,
-                          const unsigned char *m,
-                          unsigned long long mlen,
-                          const unsigned char *sk)
+int crypto_sign_signature(uint8_t *sig,
+                          size_t *siglen,
+                          const uint8_t *m,
+                          size_t mlen,
+                          const uint8_t *sk)
 {
-  unsigned long long i;
   unsigned int n;
   uint8_t seedbuf[2*SEEDBYTES + 3*CRHBYTES];
   uint8_t *rho, *tr, *key, *mu, *rhoprime;
   uint16_t nonce = 0;
-  poly c, chat;
-  polyvecl mat[K], s1, y, yhat, z;
-  polyveck t0, s2, w, w1, w0;
-  polyveck h, cs2, ct0;
+  polyvecl mat[K], s1, y, z;
+  polyveck t0, s2, w1, w0, h;
+  poly cp;
   keccak_state state;
 
   rho = seedbuf;
@@ -160,7 +97,7 @@ int crypto_sign_signature(unsigned char *sig,
   key = tr + CRHBYTES;
   mu = key + SEEDBYTES;
   rhoprime = mu + CRHBYTES;
-  unpack_sk(rho, key, tr, &s1, &s2, &t0, sk);
+  unpack_sk(rho, tr, key, &t0, &s1, &s2, sk);
 
   /* Compute CRH(tr, msg) */
   shake256_init(&state);
@@ -176,71 +113,66 @@ int crypto_sign_signature(unsigned char *sig,
 #endif
 
   /* Expand matrix and transform vectors */
-  expand_mat(mat, rho);
+  polyvec_matrix_expand(mat, rho);
   polyvecl_ntt(&s1);
   polyveck_ntt(&s2);
   polyveck_ntt(&t0);
 
 rej:
   /* Sample intermediate vector y */
-  for(i = 0; i < L; ++i)
-    poly_uniform_gamma1m1(&y.vec[i], rhoprime, nonce++);
+  polyvecl_uniform_gamma1(&y, rhoprime, nonce++);
 
   /* Matrix-vector multiplication */
-  yhat = y;
-  polyvecl_ntt(&yhat);
-  for(i = 0; i < K; ++i) {
-    polyvecl_pointwise_acc_montgomery(&w.vec[i], &mat[i], &yhat);
-    poly_reduce(&w.vec[i]);
-    poly_invntt_tomont(&w.vec[i]);
-  }
+  z = y;
+  polyvecl_ntt(&z);
+  polyvec_matrix_pointwise_montgomery(&w1, mat, &z);
+  polyveck_reduce(&w1);
+  polyveck_invntt_tomont(&w1);
 
   /* Decompose w and call the random oracle */
-  polyveck_csubq(&w);
-  polyveck_decompose(&w1, &w0, &w);
-  challenge(&c, mu, &w1);
-  chat = c;
-  poly_ntt(&chat);
+  polyveck_caddq(&w1);
+  polyveck_decompose(&w1, &w0, &w1);
+  polyveck_pack_w1(sig, &w1);
 
-  /* Check that subtracting cs2 does not change high bits of w and low bits
-   * do not reveal secret information */
-  for(i = 0; i < K; ++i) {
-    poly_pointwise_montgomery(&cs2.vec[i], &chat, &s2.vec[i]);
-    poly_invntt_tomont(&cs2.vec[i]);
-  }
-  polyveck_sub(&w0, &w0, &cs2);
-  polyveck_freeze(&w0);
-  if(polyveck_chknorm(&w0, GAMMA2 - BETA))
-    goto rej;
+  shake256_init(&state);
+  shake256_absorb(&state, mu, CRHBYTES);
+  shake256_absorb(&state, sig, K*POLYW1_PACKEDBYTES);
+  shake256_finalize(&state);
+  shake256_squeeze(sig, SEEDBYTES, &state);
+  poly_challenge(&cp, sig);
+  poly_ntt(&cp);
 
   /* Compute z, reject if it reveals secret */
-  for(i = 0; i < L; ++i) {
-    poly_pointwise_montgomery(&z.vec[i], &chat, &s1.vec[i]);
-    poly_invntt_tomont(&z.vec[i]);
-  }
+  polyvecl_pointwise_poly_montgomery(&z, &cp, &s1);
+  polyvecl_invntt_tomont(&z);
   polyvecl_add(&z, &z, &y);
-  polyvecl_freeze(&z);
+  polyvecl_reduce(&z);
   if(polyvecl_chknorm(&z, GAMMA1 - BETA))
     goto rej;
 
-  /* Compute hints for w1 */
-  for(i = 0; i < K; ++i) {
-    poly_pointwise_montgomery(&ct0.vec[i], &chat, &t0.vec[i]);
-    poly_invntt_tomont(&ct0.vec[i]);
-  }
-
-  polyveck_csubq(&ct0);
-  if(polyveck_chknorm(&ct0, GAMMA2))
+  /* Check that subtracting cs2 does not change high bits of w and low bits
+   * do not reveal secret information */
+  polyveck_pointwise_poly_montgomery(&h, &cp, &s2);
+  polyveck_invntt_tomont(&h);
+  polyveck_sub(&w0, &w0, &h);
+  polyveck_reduce(&w0);
+  if(polyveck_chknorm(&w0, GAMMA2 - BETA))
     goto rej;
 
-  polyveck_add(&w0, &w0, &ct0);
-  polyveck_csubq(&w0);
+  /* Compute hints for w1 */
+  polyveck_pointwise_poly_montgomery(&h, &cp, &t0);
+  polyveck_invntt_tomont(&h);
+  polyveck_reduce(&h);
+  if(polyveck_chknorm(&h, GAMMA2))
+    goto rej;
+
+  polyveck_add(&w0, &w0, &h);
   n = polyveck_make_hint(&h, &w0, &w1);
   if(n > OMEGA)
     goto rej;
 
   /* Write signature */
-  pack_sig(sig, &z, &h, &c);
+  pack_sig(sig, sig, &z, &h);
   *siglen = CRYPTO_BYTES;
   return 0;
 }
@@ -250,24 +182,24 @@ rej:
 *
 * Description: Compute signed message.
 *
-* Arguments:   - unsigned char *sm: pointer to output signed message (allocated
-*                                   array with CRYPTO_BYTES + mlen bytes),
-*                                   can be equal to m
-*              - unsigned long long *smlen: pointer to output length of signed
-*                                           message
-*              - const unsigned char *m: pointer to message to be signed
-*              - unsigned long long mlen: length of message
-*              - const unsigned char *sk: pointer to bit-packed secret key
+* Arguments:   - uint8_t *sm: pointer to output signed message (allocated
+*                             array with CRYPTO_BYTES + mlen bytes),
+*                             can be equal to m
+*              - size_t *smlen: pointer to output length of signed
+*                               message
+*              - const uint8_t *m: pointer to message to be signed
+*              - size_t mlen: length of message
+*              - const uint8_t *sk: pointer to bit-packed secret key
 *
 * Returns 0 (success)
 **************************************************/
-int crypto_sign(unsigned char *sm,
-                unsigned long long *smlen,
-                const unsigned char *m,
-                unsigned long long mlen,
-                const unsigned char *sk)
+int crypto_sign(uint8_t *sm,
+                size_t *smlen,
+                const uint8_t *m,
+                size_t mlen,
+                const uint8_t *sk)
 {
-  unsigned long long i;
+  size_t i;
 
   for(i = 0; i < mlen; ++i)
     sm[CRYPTO_BYTES + mlen - 1 - i] = m[mlen - 1 - i];
@@ -281,33 +213,36 @@ int crypto_sign(unsigned char *sm,
 *
 * Description: Verifies signature.
 *
-* Arguments:   - unsigned char *m: pointer to input signature
-*              - unsigned long long siglen: length of signature
-*              - const unsigned char *m: pointer to message
-*              - unsigned long long mlen: length of message
-*              - const unsigned char *pk: pointer to bit-packed public key
+* Arguments:   - uint8_t *m: pointer to input signature
+*              - size_t siglen: length of signature
+*              - const uint8_t *m: pointer to message
+*              - size_t mlen: length of message
+*              - const uint8_t *pk: pointer to bit-packed public key
 *
 * Returns 0 if signature could be verified correctly and -1 otherwise
 **************************************************/
-int crypto_sign_verify(const unsigned char *sig,
-                       unsigned long long siglen,
-                       const unsigned char *m,
-                       unsigned long long mlen,
-                       const unsigned char *pk)
+int crypto_sign_verify(const uint8_t *sig,
+                       size_t siglen,
+                       const uint8_t *m,
+                       size_t mlen,
+                       const uint8_t *pk)
 {
-  unsigned long long i;
+  unsigned int i;
+  uint8_t buf[K*POLYW1_PACKEDBYTES];
   uint8_t rho[SEEDBYTES];
   uint8_t mu[CRHBYTES];
-  poly c, chat, cp;
+  uint8_t c[SEEDBYTES];
+  uint8_t c2[SEEDBYTES];
+  poly cp;
   polyvecl mat[K], z;
-  polyveck t1, w1, h, tmp;
+  polyveck t1, w1, h;
   keccak_state state;
 
   if(siglen != CRYPTO_BYTES)
     return -1;
 
   unpack_pk(rho, &t1, pk);
-  if(unpack_sig(&z, &h, &c, sig))
+  if(unpack_sig(c, &z, &h, sig))
     return -1;
   if(polyvecl_chknorm(&z, GAMMA1 - BETA))
     return -1;
@@ -321,31 +256,34 @@ int crypto_sign_verify(const unsigned char *sig,
   shake256_squeeze(mu, CRHBYTES, &state);
 
   /* Matrix-vector multiplication; compute Az - c2^dt1 */
-  expand_mat(mat, rho);
+  poly_challenge(&cp, c);
+  polyvec_matrix_expand(mat, rho);
 
   polyvecl_ntt(&z);
-  for(i = 0; i < K ; ++i)
-    polyvecl_pointwise_acc_montgomery(&w1.vec[i], &mat[i], &z);
+  polyvec_matrix_pointwise_montgomery(&w1, mat, &z);
 
-  chat = c;
-  poly_ntt(&chat);
+  poly_ntt(&cp);
   polyveck_shiftl(&t1);
   polyveck_ntt(&t1);
-  for(i = 0; i < K; ++i)
-    poly_pointwise_montgomery(&tmp.vec[i], &chat, &t1.vec[i]);
+  polyveck_pointwise_poly_montgomery(&t1, &cp, &t1);
 
-  polyveck_sub(&w1, &w1, &tmp);
+  polyveck_sub(&w1, &w1, &t1);
   polyveck_reduce(&w1);
   polyveck_invntt_tomont(&w1);
 
   /* Reconstruct w1 */
-  polyveck_csubq(&w1);
+  polyveck_caddq(&w1);
   polyveck_use_hint(&w1, &w1, &h);
+  polyveck_pack_w1(buf, &w1);
 
   /* Call random oracle and verify challenge */
-  challenge(&cp, mu, &w1);
-  for(i = 0; i < N; ++i)
-    if(c.coeffs[i] != cp.coeffs[i])
+  shake256_init(&state);
+  shake256_absorb(&state, mu, CRHBYTES);
+  shake256_absorb(&state, buf, K*POLYW1_PACKEDBYTES);
+  shake256_finalize(&state);
+  shake256_squeeze(c2, SEEDBYTES, &state);
+  for(i = 0; i < SEEDBYTES; ++i)
+    if(c[i] != c2[i])
       return -1;
 
   return 0;
@@ -356,22 +294,22 @@ int crypto_sign_verify(const unsigned char *sig,
 *
 * Description: Verify signed message.
 *
-* Arguments:   - unsigned char *m: pointer to output message (allocated
-*                                  array with smlen bytes), can be equal to sm
-*              - unsigned long long *mlen: pointer to output length of message
-*              - const unsigned char *sm: pointer to signed message
-*              - unsigned long long smlen: length of signed message
-*              - const unsigned char *pk: pointer to bit-packed public key
+* Arguments:   - uint8_t *m: pointer to output message (allocated
+*                            array with smlen bytes), can be equal to sm
+*              - size_t *mlen: pointer to output length of message
+*              - const uint8_t *sm: pointer to signed message
+*              - size_t smlen: length of signed message
+*              - const uint8_t *pk: pointer to bit-packed public key
 *
 * Returns 0 if signed message could be verified correctly and -1 otherwise
 **************************************************/
-int crypto_sign_open(unsigned char *m,
-                     unsigned long long *mlen,
-                     const unsigned char *sm,
-                     unsigned long long smlen,
-                     const unsigned char *pk)
+int crypto_sign_open(uint8_t *m,
+                     size_t *mlen,
+                     const uint8_t *sm,
+                     size_t smlen,
+                     const uint8_t *pk)
 {
-  unsigned long long i;
+  size_t i;
 
   if(smlen < CRYPTO_BYTES)
     goto badsig;
@@ -388,7 +326,7 @@ int crypto_sign_open(unsigned char *m,
 
 badsig:
   /* Signature verification failed */
-  *mlen = (unsigned long long) -1;
+  *mlen = -1;
   for(i = 0; i < smlen; ++i)
     m[i] = 0;
 

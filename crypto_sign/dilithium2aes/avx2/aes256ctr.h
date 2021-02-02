@@ -6,7 +6,7 @@
 #include <immintrin.h>
 #include "params.h"
 
-#define _AES256CTR_NAMESPACE(s) DILITHIUM_NAMESPACE(aes256ctr##s)
+#define _AES256CTR_NAMESPACE(s) DILITHIUM_NAMESPACE(aes256ctr_##s)
 #define AES256CTR_NAMESPACE(s) _AES256CTR_NAMESPACE(s)
 
 #define AES256CTR_BLOCKBYTES 64

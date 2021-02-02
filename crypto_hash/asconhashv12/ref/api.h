@@ -1,1 +1,1 @@
-#define CRYPTO_BYTES 32
+../../asconxofv12/ref/api.h

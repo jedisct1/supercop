@@ -1,0 +1,1 @@
+../../asconxofv12/bi32_arm/config.h

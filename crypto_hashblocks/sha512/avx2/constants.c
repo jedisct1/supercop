@@ -90,7 +90,7 @@ static const crypto_uint64 constants[84] = {
 , 0x08090a0b0c0d0e0fULL
 };
 
-#define CUTOFF 32768 /* must be multiple of 128 */
+#define CUTOFF 65536 /* must be multiple of 128 */
 
 int crypto_hashblocks(unsigned char *statebytes,const unsigned char *in,unsigned long long inlen)
 {

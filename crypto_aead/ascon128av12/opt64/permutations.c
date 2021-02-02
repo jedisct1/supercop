@@ -1,0 +1,1 @@
+../../ascon128v12/opt8/permutations.c

@@ -5,13 +5,13 @@
 #include "params.h"
 
 typedef struct {
-  uint32_t coeffs[N];
-} poly __attribute__((aligned(32)));
+  int32_t coeffs[N];
+} poly;
 
 #define poly_reduce DILITHIUM_NAMESPACE(poly_reduce)
 void poly_reduce(poly *a);
-#define poly_csubq DILITHIUM_NAMESPACE(poly_csubq)
-void poly_csubq(poly *a);
+#define poly_caddq DILITHIUM_NAMESPACE(poly_caddq)
+void poly_caddq(poly *a);
 #define poly_freeze DILITHIUM_NAMESPACE(poly_freeze)
 void poly_freeze(poly *a);
 
@@ -39,7 +39,7 @@ unsigned int poly_make_hint(poly *h, const poly *a0, const poly *a1);
 void poly_use_hint(poly *b, const poly *a, const poly *h);
 
 #define poly_chknorm DILITHIUM_NAMESPACE(poly_chknorm)
-int  poly_chknorm(const poly *a, uint32_t B);
+int poly_chknorm(const poly *a, int32_t B);
 #define poly_uniform DILITHIUM_NAMESPACE(poly_uniform)
 void poly_uniform(poly *a,
                   const uint8_t seed[SEEDBYTES],
@@ -48,10 +48,12 @@ void poly_uniform(poly *a,
 void poly_uniform_eta(poly *a,
                       const uint8_t seed[SEEDBYTES],
                       uint16_t nonce);
-#define poly_uniform_gamma1m1 DILITHIUM_NAMESPACE(poly_uniform_gamma1m1)
-void poly_uniform_gamma1m1(poly *a,
-                           const uint8_t seed[CRHBYTES],
-                           uint16_t nonce);
+#define poly_uniform_gamma1 DILITHIUM_NAMESPACE(poly_uniform_gamma1)
+void poly_uniform_gamma1(poly *a,
+                         const uint8_t seed[CRHBYTES],
+                         uint16_t nonce);
+#define poly_challenge DILITHIUM_NAMESPACE(poly_challenge)
+void poly_challenge(poly *c, const uint8_t seed[SEEDBYTES]);
 
 #define polyeta_pack DILITHIUM_NAMESPACE(polyeta_pack)
 void polyeta_pack(uint8_t *r, const poly *a);

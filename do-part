@@ -42,8 +42,10 @@ then
   rm -rf "$top"
   mkdir -p "$top"
   mkdir -p "$bin"
-  mkdir -p "$lib"
-  mkdir -p "$include"
+  mkdir -p "$lib/nontimecop"
+  mkdir -p "$lib/timecop"
+  mkdir -p "$include/nontimecop"
+  mkdir -p "$include/timecop"
   cp include/* "$include"
 fi
 
@@ -111,14 +113,22 @@ then
   ( cd "$work" && sh do )
   cp -p "$work"/bin/* "$bin"
   
-  echo "=== `date` === building cpucycles"
+  echo "=== `date` === building cpucycles for non-TIMECOP"
   rm -rf "$work"
   mkdir -p "$work"
   cp -pR cpucycles/* "$work"
-  ( cd "$work" && sh do )
-  cp -pR "$work"/lib/* "$lib"
-  cp -pR "$work"/include/* "$include"
+  ( cd "$work" && env CPUCYCLESWRAPPER="killafter 300" sh do )
+  cp -pR "$work"/lib/* "$lib/nontimecop"
+  cp -pR "$work"/include/* "$include/nontimecop"
   
+  echo "=== `date` === building cpucycles for TIMECOP"
+  rm -rf "$work"
+  mkdir -p "$work"
+  cp -pR cpucycles/* "$work"
+  ( cd "$work" && env CPUCYCLESWRAPPER="killafter 300 valgrind" sh do )
+  cp -pR "$work"/lib/* "$lib/timecop"
+  cp -pR "$work"/include/* "$include/timecop"
+
   echo "=== `date` === building kernelrandombytes"
   rm -rf "$work"
   mkdir -p "$work"
@@ -318,7 +328,7 @@ do
     do
       echo "=== `date` === $abi $o/$p"
       libs=`"oklibs-$abi"`
-      libs="$lib/$abi/cpucycles.o $libs"
+      libs="$lib/nontimecop/$abi/cpucycles.o $libs"
       libs="$lib/$abi/kernelrandombytes.o $libs"
       [ -f "$lib/$abi/libgmp.a" ] && libs="$lib/$abi/libgmp.a $libs"
       [ -f "$lib/$abi/libgmpxx.a" ] && libs="$lib/$abi/libgmpxx.a $libs"
@@ -327,7 +337,18 @@ do
       [ -f "$lib/$abi/libcryptopp.a" ] && libs="$lib/$abi/libcryptopp.a $libs"
       [ -f "$lib/$abi/lib${project}.a" ] && libs="$lib/$abi/lib${project}.a $libs"
 
+      timecoplibs=`"oklibs-$abi"`
+      timecoplibs="$lib/timecop/$abi/cpucycles.o $timecoplibs"
+      timecoplibs="$lib/$abi/kernelrandombytes.o $timecoplibs"
+      [ -f "$lib/$abi/libgmp.a" ] && timecoplibs="$lib/$abi/libgmp.a $timecoplibs"
+      [ -f "$lib/$abi/libgmpxx.a" ] && timecoplibs="$lib/$abi/libgmpxx.a $timecoplibs"
+      [ -f "$lib/$abi/libntl.a" ] && timecoplibs="$lib/$abi/libntl.a $timecoplibs"
+      [ -f "$lib/$abi/libkeccak.a" ] && timecoplibs="$lib/$abi/libkeccak.a $timecoplibs"
+      [ -f "$lib/$abi/libcryptopp.a" ] && timecoplibs="$lib/$abi/libcryptopp.a $timecoplibs"
+      [ -f "$lib/$abi/lib${project}.a" ] && timecoplibs="$lib/$abi/lib${project}.a $timecoplibs"
+
       trylibs="$libs"
+      timecoptrylibs="$timecoplibs"
       measurelibs="$libs"
       userandombytes=0
       [ $o = crypto_scalarmult ] && userandombytes=1
@@ -338,8 +359,9 @@ do
       [ $o = crypto_sign ] && userandombytes=1
       if [ $userandombytes = 1 ]
       then
-        trylibs="$lib/$abi/knownrandombytes.o $measurelibs"
-        measurelibs="$lib/$abi/fastrandombytes.o $measurelibs"
+        trylibs="$lib/$abi/knownrandombytes.o $libs"
+        timecoptrylibs="$lib/$abi/knownrandombytes.o $timecoplibs"
+        measurelibs="$lib/$abi/fastrandombytes.o $libs"
       fi
 
       rm -rf "$work"
@@ -355,6 +377,8 @@ do
 
       for security in constbranchindex timingleaks
       do
+        includes="-I. -I$include -I$include/nontimecop/$abi -I$include/$abi -I$include/$abi/$security"
+        timecopincludes="-I. -I$include -I$include/timecop/$abi -I$include/$abi -I$include/$abi/$security"
 
         find "$o/$p" -follow -name "api.h" \
         | sort \
@@ -526,7 +550,7 @@ do
                     -D'_CRYPTO_NAMESPACETOP=_'"$opi" \
                     -D'CRYPTO_NAMESPACE(name)='"$opi"'_##name' \
                     -D'_CRYPTO_NAMESPACE(name)=_'"$opi"'_##name' \
-                    -I. -I"$include" -I"$include/$abi" -I"$include/$abi/$security" \
+                    $includes \
                     -c "$f" >../errors 2>&1 || ok=0
                   ( if [ `wc -l < ../errors` -lt 25 ]
                     then
@@ -550,7 +574,7 @@ do
   
               killafter 300 \
               $compiler -DSUPERCOP -DSMALL \
-                -I. -I"$include" -I"$include/$abi" -I"$include/$abi/$security" \
+                $includes \
                 -o try try.$language try-anything.$language \
                 "$op.a" $trylibs >../errors 2>&1 || ok=0
               cat ../errors \
@@ -584,7 +608,7 @@ do
   
               killafter 300 \
               $compiler -DSUPERCOP \
-                -I. -I"$include" -I"$include/$abi" -I"$include/$abi/$security" \
+                $includes \
                 -o try try.$language try-anything.$language \
                 "$op.a" $trylibs >../errors 2>&1 || ok=0
               cat ../errors \
@@ -628,9 +652,9 @@ do
                 ok=1
                 killafter 300 \
                 $compiler -DSUPERCOP -DTIMECOP -DTIMECOP_LOOPS="$TIMECOP" \
-                  -I. -I"$include" -I"$include/$abi" -I"$include/$abi/$security" \
+                  $timecopincludes \
                   -o try try.$language try-anything.$language \
-                  "$op.a" $trylibs >../errors 2>&1 || ok=0
+                  "$op.a" $timecoptrylibs >../errors 2>&1 || ok=0
                 cat ../errors \
                 | while read err
                 do
@@ -667,7 +691,7 @@ do
               killafter 3600 \
               $compiler -D'COMPILER="'"$compiler"'"' \
                 -DSUPERCOP -DLOOPS=3 \
-                -I. -I"$include" -I"$include/$abi" -I"$include/$abi/$security" \
+                $includes \
                 -o measure measure.$language measure-anything.$language \
                 "$op.a" $measurelibs >../errors 2>&1 || ok=0
               cat ../errors \
@@ -738,10 +762,10 @@ do
     okabi \
     | while read abi
     do
-      includes="-I. -I$include -I$include/$abi -I$include/$abi/constbranchindex"
+      includes="-I. -I$include -I$include/nontimecop/$abi -I$include/$abi -I$include/$abi/constbranchindex"
 
       libs=`"oklibs-$abi"`
-      libs="$lib/$abi/cpucycles.o $libs"
+      libs="$lib/nontimecop/$abi/cpucycles.o $libs"
       libs="$lib/$abi/kernelrandombytes.o $libs"
       [ -f "$lib/$abi/libgmp.a" ] && libs="$lib/$abi/libgmp.a $libs"
       [ -f "$lib/$abi/libgmpxx.a" ] && libs="$lib/$abi/libgmpxx.a $libs"

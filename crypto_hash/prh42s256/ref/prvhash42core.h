@@ -1,5 +1,5 @@
 /**
- * prvhash42core.h version 2.30
+ * prvhash42core.h version 2.31
  *
  * The inclusion file for the "prvhash42_core64", "prvhash42_core32",
  * "prvhash42_core16", "prvhash42_core8", "prvhash42_core4",
@@ -63,7 +63,7 @@ inline uint32_t prvhash42_core64( uint64_t* const Seed0, uint64_t* const lcg0,
 	Seed += lcg;
 	Seed *= lcg - xr;
 	lcg += ~Seed;
-	const uint64_t hs = Seed >> 32ULL;
+	const uint64_t hs = Seed >> 32;
 	const uint32_t out = (uint32_t) ( Seed ^ hs );
 	const uint64_t ph = Hash ^ hs;
 	Seed ^= ph;

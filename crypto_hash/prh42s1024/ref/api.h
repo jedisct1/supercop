@@ -1,2 +1,2 @@
 #define CRYPTO_BYTES 128
-#define CRYPTO_VERSION "2.30"
+#define CRYPTO_VERSION "2.31"

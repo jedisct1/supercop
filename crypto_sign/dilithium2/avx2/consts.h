@@ -3,15 +3,12 @@
 
 #include "params.h"
 
-#define _8XQINV      0
-#define _8XQ         8
-#define _8X2Q       16
-#define _8X256Q     24
-#define _MASK       32
-#define _8X23ONES   40
-#define _8XDIV      48
-#define _ZETAS      56
-#define _ZETAS_INV 312
+#define _8XQ          0
+#define _8XQINV       8
+#define _8XDIV_QINV  16
+#define _8XDIV       24
+#define _ZETAS_QINV  32
+#define _ZETAS      328
 
 /* The C ABI on MacOS exports all symbols with a leading
  * underscore. This means that any symbols we refer to from
@@ -29,8 +26,13 @@
 #endif
 
 #ifndef __ASSEMBLER__
-#define qdata DILITHIUM_NAMESPACE(qdata)
-extern const uint32_t qdata[];
-#endif
 
+#include "align.h"
+
+typedef ALIGNED_INT32(624) qdata_t;
+
+#define qdata DILITHIUM_NAMESPACE(qdata)
+extern const qdata_t qdata;
+
+#endif
 #endif

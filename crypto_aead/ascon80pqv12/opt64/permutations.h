@@ -1,1 +1,1 @@
-../../ascon128v12/opt64/permutations.h
+../../ascon128v12/opt8/permutations.h

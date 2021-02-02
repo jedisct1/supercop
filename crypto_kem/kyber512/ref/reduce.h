@@ -13,7 +13,4 @@ int16_t montgomery_reduce(int32_t a);
 #define barrett_reduce KYBER_NAMESPACE(barrett_reduce)
 int16_t barrett_reduce(int16_t a);
 
-#define csubq KYBER_NAMESPACE(csubq)
-int16_t csubq(int16_t x);
-
 #endif

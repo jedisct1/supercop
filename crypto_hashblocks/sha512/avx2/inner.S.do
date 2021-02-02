@@ -9,7 +9,7 @@ cpp \
   found = 0
   if (!found && $0 == "and $31,%r11") {
     found = 1
-    $0 = "and $127,%r11"
+    $0 = "and $511,%r11"
   }
   print
 }'
