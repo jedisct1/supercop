@@ -55,6 +55,19 @@ sysctl machdep.tsc_freq || :
 echo "=== `date` === /usr/sbin/psrinfo -v"
 /usr/sbin/psrinfo -v || :
 
+echo "=== `date` === gcc --version"
+gcc --version || :
+echo "=== `date` === g++ --version"
+g++ --version || :
+echo "=== `date` === clang --version"
+clang --version || :
+echo "=== `date` === clang++ --version"
+clang++ --version || :
+echo "=== `date` === rustc --version"
+rustc --version || :
+echo "=== `date` === cargo --version"
+cargo --version || :
+
 # MacOS
 echo "=== `date` === sw_vers"
 sw_vers || :

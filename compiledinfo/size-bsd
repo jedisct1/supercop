@@ -1,5 +1,9 @@
 
-size try *.o \
+for obj in try *.o
+do
+  [ -f "$obj" ] || continue
+  size "$obj"
+done \
 | while read text data bss dec hex fn
 do
   [ "$text" = "text" ] && continue

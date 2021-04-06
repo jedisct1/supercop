@@ -353,6 +353,7 @@ do
         | while read doth
         do
           implementationdir=`dirname $doth`
+          [ -f "$implementationdir/Cargo.toml" ] && continue
           for language in c
           do
             ok${language}-$abi \

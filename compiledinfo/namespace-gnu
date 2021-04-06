@@ -4,6 +4,7 @@ if [ "$language" = c ]
 then
   for obj in *.o
   do
+    [ -f "$obj" ] || continue
     nm -pP --defined-only "$obj" \
     | while read symbol type etc
     do

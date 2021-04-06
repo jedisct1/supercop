@@ -143,12 +143,12 @@ do
 
       if [ "$t1" = gmp ]
       then
-        echo "gmp 6.2.0" >&8
+        echo "gmp 6.2.1" >&8
       fi
   
       if [ "$t1" = ntl ]
       then
-        echo "ntl 11.4.3" >&8
+        echo "ntl 11.4.4" >&8
       fi
   
       if [ "$t1" = keccak ]
@@ -158,7 +158,7 @@ do
   
       if [ "$t1" = cryptopp ]
       then
-        echo "cryptopp 820" >&8
+        echo "cryptopp 8.5.0" >&8
       fi
   
       if [ "$t1" = openssl ]
@@ -287,7 +287,7 @@ do
             echo "=== `date` === trying CC=$c CXX=$cpp CFLAGS=$copts CXXFLAGS=$cppopts ABI=$gmpabi"
             rm -rf "$top/$target/work"
             mkdir -p "$top/$target/work"
-            cp -pR gmp-6.2.0/* "$top/$target/work"
+            cp -pR gmp/* "$top/$target/work"
             ( cd "$top/$target/work" \
               && ./configure --enable-cxx \
                  ABI="$gmpabi" \
@@ -320,7 +320,7 @@ do
         echo "=== `date` === trying CXX=$cpp CXXFLAGS=$cppopts"
         rm -rf "$top/$target/work"
         mkdir -p "$top/$target/work"
-        cp -pR ntl-11.4.3/* "$top/$target/work"
+        cp -pR ntl/* "$top/$target/work"
         ( cd "$top/$target/work/src" \
           && ./configure \
              CXX="$cpp" CXXFLAGS="$cppopts" \
@@ -381,7 +381,7 @@ do
         echo "=== `date` === trying CXX=$cpp CXXFLAGS=$cppopts"
         rm -rf "$top/$target/work"
         mkdir -p "$top/$target/work"
-        cp -pR cryptopp-820/* "$top/$target/work"
+        cp -pR cryptopp/* "$top/$target/work"
         ( cd "$top/$target/work" \
           && make CXX="$cpp" CXXFLAGS="-DNDEBUG $cppopts" LDFLAGS="$cppopts" \
           && cp libcryptopp.a "$top/$abi/lib/libcryptopp.a" \
@@ -419,6 +419,8 @@ do
         language=$t2
         compilerword=$t3
         compiler=`echo "$compilerword" | tr '_' ' '`
+        compilerbin=`echo "$compiler" | sed 's/ .*//'`
+        compileropts=`echo "$compiler" | sed 's/^[^ ]* //'`
         p=$t6
         op="${o}_${p}"
         security="${t4}"
@@ -495,29 +497,37 @@ do
         [ -f "$o/$p/checksumsmall" ] && expectedchecksumsmall=`cat "$o/$p/checksumsmall"`
   
         libs=`"oklibs-$abi"`
+        rslibs=`"oklibs-$abi" | tr ' ' '\012' | sed 's/-l//' | tr '\012' ' '`
+
         libs="$top/$abi/lib/cpucycles.o $libs"
+        rslibs="cpucycles $rslibs"
+
         libs="$top/$abi/lib/kernelrandombytes.o $libs"
+        rslibs="kernelrandombytes $rslibs"
+
         if grep '^gmp ' "$top/$abi/implementation/$implementationdir/sources" >/dev/null
         then
-          [ -f "$top/$abi/lib/libgmp.a" ] && libs="$top/$abi/lib/libgmp.a $libs"
-          [ -f "$top/$abi/lib/libgmpxx.a" ] && libs="$top/$abi/lib/libgmpxx.a $libs"
+          [ -f "$top/$abi/lib/libgmp.a" ] && libs="$top/$abi/lib/libgmp.a $libs" && rslibs="gmp $rslibs"
+          [ -f "$top/$abi/lib/libgmpxx.a" ] && libs="$top/$abi/lib/libgmpxx.a $libs" && rslibs="gmpxx $rslibs"
         fi
         if grep '^ntl ' "$top/$abi/implementation/$implementationdir/sources" >/dev/null
         then
-          [ -f "$top/$abi/lib/libntl.a" ] && libs="$top/$abi/lib/libntl.a $libs"
+          [ -f "$top/$abi/lib/libntl.a" ] && libs="$top/$abi/lib/libntl.a $libs" && rslibs="ntl $rslibs"
         fi
         if grep '^keccak ' "$top/$abi/implementation/$implementationdir/sources" >/dev/null
         then
-          [ -f "$top/$abi/lib/libkeccak.a" ] && libs="$top/$abi/lib/libkeccak.a $libs"
+          [ -f "$top/$abi/lib/libkeccak.a" ] && libs="$top/$abi/lib/libkeccak.a $libs" && rslibs="keccak $rslibs"
         fi
         if grep '^cryptopp ' "$top/$abi/implementation/$implementationdir/sources" >/dev/null
         then
-          [ -f "$top/$abi/lib/libcryptopp.a" ] && libs="$top/$abi/lib/libcryptopp.a $libs"
+          [ -f "$top/$abi/lib/libcryptopp.a" ] && libs="$top/$abi/lib/libcryptopp.a $libs" && rslibs="cryptopp $rslibs"
         fi
-        [ -f "$top/$abi/lib/lib${project}.a" ] && libs="$top/$abi/lib/lib${project}.a $libs"
+        [ -f "$top/$abi/lib/lib${project}.a" ] && libs="$top/$abi/lib/lib${project}.a $libs" && rslibs="${project} $rslibs"
 
         trylibs="$libs"
+        rstrylibs="$rslibs"
         measurelibs="$libs"
+        rsmeasurelibs="$rslibs"
         userandombytes=0
         [ $o = crypto_scalarmult ] && userandombytes=1
         [ $o = crypto_box ] && userandombytes=1
@@ -528,7 +538,9 @@ do
         if [ $userandombytes = 1 ]
         then
           trylibs="$top/$abi/lib/knownrandombytes.o $trylibs"
+          rstrylibs="knownrandombytes $rslibs"
           measurelibs="$top/$abi/lib/fastrandombytes.o $measurelibs"
+          rsmeasurelibs="fastrandombytes $rslibs"
         fi
   
         mkdir -p "$top/$target/work"
@@ -544,6 +556,10 @@ do
         cp -p "try-anything.c" "$top/$target/work/try-anything.$language"
         cp -p "measure-anything.c" "$top/$target/work/measure-anything.$language"
 
+        ( echo '#define SMALL'
+          echo '#include "try.'"$language"'"'
+        ) > "$top/$target/work/try-small.$language"
+
         touch "$top/$target/work/test-more.inc"
         [ -f "$o/$p/supercop/test-more.inc" ] && cp -p "$o/$p/supercop/test-more.inc" "$top/$target/work/test-more.inc"
         touch "$top/$target/work/test-loops.inc"
@@ -551,6 +567,17 @@ do
 
         cp -p MACROS "$top/$target/work/MACROS"
         cp -p PROTOTYPES.c "$top/$target/work/PROTOTYPES.c"
+
+        rust=''
+        if [ -f "$top/$target/work/Cargo.toml" ]
+        then
+          rust=yes
+          sed -i 's/int main/int c_main/' \
+            "$top/$target/work/try-anything.$language" \
+            "$top/$target/work/measure-anything.$language"
+          cp -pr rusthooks "$top/$target/work/rusthooks"
+        fi
+        # XXX: also support standalone *.rs via okrs-${abi}
 
         (
           cd "$top/$target/work"
@@ -604,8 +631,10 @@ do
           done
   
           touch OK
+          touch NOOBJ
           for f in $cfiles $sfiles $ccfiles $cppfiles
           do
+            rm -f NOOBJ
             if [ -f OK ]
             then
               (
@@ -629,26 +658,69 @@ do
           done
   
           [ -f OK ] || exit 0
-          okar-$abi cr "$op.a" *.o || exit 0
-          ( ranlib "$op.a" || : )
+          if [ -f NOOBJ ]
+          then
+            okar-$abi cr "lib$op.a" || exit 0
+          else
+            okar-$abi cr "lib$op.a" *.o || exit 0
+          fi
+          ( ranlib "lib$op.a" || : )
+
+          includes="-I. -I$top/$abi/include -I$top/$abi/include/$security"
+
+          if [ "$rust" ]
+          then
+            supercop-build-rs "$op" "$top/$abi/lib" > build.rs
+            mkdir -p src/bin
+            supercop-bin-rs "$o" "$op" "$opi" try-anything try-small $rstrylibs > src/bin/try-small.rs
+            supercop-bin-rs "$o" "$op" "$opi" try-anything try $rstrylibs > src/bin/try.rs
+            supercop-bin-rs "$o" "$op" "$opi" measure-anything measure $rsmeasurelibs > src/bin/measure.rs
+            supercop-cargo-extra >> Cargo.toml
+            (
+              # XXX: next few lines are temporary transition
+              # to avoid having to redo {known,fast}randombytes
+              okar-$abi cr "libknownrandombytes.a" "$top/$abi/lib/knownrandombytes.o" || rm -f OK
+              ranlib "libknownrandombytes.a" || :
+              okar-$abi cr "libfastrandombytes.a" "$top/$abi/lib/fastrandombytes.o" || rm -f OK
+              ranlib "libfastrandombytes.a" || :
+
+              killafter 300 \
+              env \
+                CC="$compilerbin" \
+                CFLAGS="$compileropts $includes -DSUPERCOP -DCOMPILER=\"$compilerword\"" \
+                RUSTFLAGS='-C target_cpu=native' \
+                cargo build -q --release 2>&1 || rm -f OK
+              cp target/release/try-small try-small || rm -f OK
+              cp target/release/try try || rm -f OK
+              cp target/release/measure measure || rm -f OK
+              strip try-small try measure || :
+            ) | awk -v PREFIX="$version $shorthostname $abi $startdate $o $p/$security fromcompiler $implementationdir $compilerword try.$language" '
+              {
+                if (NR > 25) { print PREFIX,"..."; exit }
+                print PREFIX,$0
+              }
+            ' >&5
+            [ -f OK ] || exit 0
+          fi
   
-          (
-            killafter 300 \
-            $compiler -DSUPERCOP -DSMALL \
-              -I. \
-              -I"$top/$abi/include" \
-              -I"$top/$abi/include/$security" \
-              -o try try.$language try-anything.$language \
-              "$op.a" $trylibs 2>&1 || rm -f OK
-          ) | awk -v PREFIX="$version $shorthostname $abi $startdate $o $p/$security fromcompiler $implementationdir $compilerword try.$language" '
-            {
-              if (NR > 25) { print PREFIX,"..."; exit }
-              print PREFIX,$0
-            }
-          ' >&5
-          [ -f OK ] || exit 0
+          if [ ! "$rust" ]
+          then
+            (
+              killafter 300 \
+              $compiler -DSUPERCOP \
+                $includes \
+                -o try-small try-small.$language try-anything.$language \
+                "lib$op.a" $trylibs 2>&1 || rm -f OK
+            ) | awk -v PREFIX="$version $shorthostname $abi $startdate $o $p/$security fromcompiler $implementationdir $compilerword try.$language" '
+              {
+                if (NR > 25) { print PREFIX,"..."; exit }
+                print PREFIX,$0
+              }
+            ' >&5
+            [ -f OK ] || exit 0
+          fi
   
-          if sh -c 'killafter 3600 ./try || exit $?' >../outputs 2>../errors
+          if sh -c 'killafter 3600 ./try-small || exit $?' >../outputs 2>../errors
           then
             checksumsmall=`awk '{print $1}' < ../outputs`
             cycles=`awk '{print $2}' < ../outputs`
@@ -672,21 +744,22 @@ do
           && echo "$version $shorthostname $abi $startdate $o $p/$security try $checksumsmall fails $cycles $checksumcycles $cyclespersecond $impl $compilerword" >&5 \
           && exit 0
 
-          (
-            killafter 300 \
-            $compiler -DSUPERCOP \
-              -I. \
-              -I"$top/$abi/include" \
-              -I"$top/$abi/include/$security" \
-              -o try try.$language try-anything.$language \
-              "$op.a" $trylibs 2>&1 || rm -f OK
-          ) | awk -v PREFIX="$version $shorthostname $abi $startdate $o $p/$security fromcompiler $implementationdir $compilerword try.$language" '
-            {
-              if (NR > 25) { print PREFIX,"..."; exit }
-              print PREFIX,$0
-            }
-          ' >&5
-          [ -f OK ] || exit 0
+          if [ ! "$rust" ]
+          then
+            (
+              killafter 300 \
+              $compiler -DSUPERCOP \
+                $includes \
+                -o try try.$language try-anything.$language \
+                "lib$op.a" $trylibs 2>&1 || rm -f OK
+            ) | awk -v PREFIX="$version $shorthostname $abi $startdate $o $p/$security fromcompiler $implementationdir $compilerword try.$language" '
+              {
+                if (NR > 25) { print PREFIX,"..."; exit }
+                print PREFIX,$0
+              }
+            ' >&5
+            [ -f OK ] || exit 0
+          fi
   
           if sh -c 'killafter 3600 ./try || exit $?' >../outputs 2>../errors
           then
@@ -718,22 +791,23 @@ do
           [ "x$expectedchecksumbig" = x ] && checksumok=unknown
           echo "$version $shorthostname $abi $startdate $o $p/$security try $checksumsmall/$checksumbig $checksumok $cycles $checksumcycles $cyclespersecond $impl $compilerword" >&5
   
-          (
-            killafter 3600 \
-            $compiler -D'COMPILER="'"$compiler"'"' \
-              -DSUPERCOP -DLOOPS=1 \
-              -I. \
-              -I"$top/$abi/include" \
-              -I"$top/$abi/include/$security" \
-              -o measure measure.$language measure-anything.$language \
-              "$op.a" $measurelibs 2>&1 || rm -f OK
-          ) | awk -v PREFIX="$version $shorthostname $abi $startdate $o $p/$security fromcompiler $implementationdir $compilerword measure.$language" '
-            {
-              if (NR > 25) { print PREFIX,"..."; exit }
-              print PREFIX,$0
-            }
-          ' >&5
-          [ -f OK ] || exit 0
+          if [ ! "$rust" ]
+          then
+            (
+              killafter 3600 \
+              $compiler -D'COMPILER="'"$compiler"'"' \
+                -DSUPERCOP -DLOOPS=1 \
+                $includes \
+                -o measure measure.$language measure-anything.$language \
+                "lib$op.a" $measurelibs 2>&1 || rm -f OK
+            ) | awk -v PREFIX="$version $shorthostname $abi $startdate $o $p/$security fromcompiler $implementationdir $compilerword measure.$language" '
+              {
+                if (NR > 25) { print PREFIX,"..."; exit }
+                print PREFIX,$0
+              }
+            ' >&5
+            [ -f OK ] || exit 0
+          fi
 
           compiledinfo "$version" "$shorthostname" "$abi" "$startdate" "$o" "$p/$security" "$implementationdir" "$compilerword" "$opi" "$language"
 
@@ -768,7 +842,9 @@ do
 
       ( cd "$top/$target/work" \
         && env abi="$abi" libs="$libs" include="$include" sh do \
-        && cp lib/$abi/knownrandombytes.o "$top/$abi/lib/knownrandombytes.o"
+        && cp lib/$abi/knownrandombytes.o "$top/$abi/lib/knownrandombytes.o" \
+        && okar-$abi cr "$top/$abi/lib/libknownrandombytes.a" "$top/$abi/lib/knownrandombytes.o" \
+        && ( ranlib "$top/$abi/lib/libknownrandombytes.a" || exit 0 )
       )
       exit 0
     fi
@@ -790,7 +866,9 @@ do
 
       ( cd "$top/$target/work" \
         && env abi="$abi" libs="$libs" include="$include" sh do \
-        && cp lib/$abi/fastrandombytes.o "$top/$abi/lib/fastrandombytes.o"
+        && cp lib/$abi/fastrandombytes.o "$top/$abi/lib/fastrandombytes.o" \
+        && okar-$abi cr "$top/$abi/lib/libfastrandombytes.a" "$top/$abi/lib/fastrandombytes.o" \
+        && ( ranlib "$top/$abi/lib/libfastrandombytes.a" || exit 0 )
       )
       exit 0
     fi
