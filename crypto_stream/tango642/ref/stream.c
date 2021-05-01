@@ -8,9 +8,9 @@ int crypto_stream(
 	const unsigned char *k
 )
 {
-
 	TANGO642_CTX ctx;
 	tango642_init( &ctx, k, 32, n, 8 );
+
 	memset( c, 0, clen );
 	tango642_xor( &ctx, c, clen );
 	tango642_final( &ctx );

@@ -10,6 +10,12 @@ okabi | (
       # try to keep better precision on top
 
       case "$abi" in
+        ppc64*)
+          # time base tends to be much too slow
+          echo perfevent
+          echo powerpccpuinfo
+          echo powerpcmacos
+          ;;
         ppc*)
           echo powerpccpuinfo
           echo powerpcmacos

@@ -1,5 +1,5 @@
 /*
-cpucycles/riscv.c version 20190803
+cpucycles/riscv.c version 20210422
 D. J. Bernstein
 Romain Dolbeau
 Public domain.
@@ -17,12 +17,12 @@ long long cpucycles_riscv(void)
   asm volatile("rdcycle %0" : "=r" (result));
 #elif __riscv_xlen == 32
   unsigned int l, h, h2;
-  asm volatile(	"start:\n"
-		"rdcycleh %0\n"
-		"rdcycle %1\n"  
-		"rdcycleh %2\n"
-		"bne %0, %2, start\n"
-		: "=r" (h), "=r" (l), "=r" (h2));
+  asm volatile( "start%=:\n"
+                "rdcycleh %0\n"
+                "rdcycle %1\n"
+                "rdcycleh %2\n"
+                "bne %0, %2, start%=\n"
+                : "=r" (h), "=r" (l), "=r" (h2));
 
   result = (((unsigned long long)h)<<32) | ((unsigned long long)l);
 #else

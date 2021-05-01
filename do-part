@@ -515,15 +515,18 @@ do
               echo "#define TIMECOP_LOOPS $TIMECOP"
               echo '#include "try.'"$language"'"'
             ) > "$work/compile/try-timecop.$language"
+            ( echo '#define TIMECOP'
+              echo "#define TIMECOP_LOOPS $TIMECOP"
+              echo '#include "try-anything.'"$language"'"'
+            ) > "$work/compile/try-anything-timecop.$language"
           fi
 
           rust=''
           if [ -f "$work/compile/Cargo.toml" ]
           then
             rust=yes
-            sed -i 's/int main/int c_main/' \
-              "$work/compile/try-anything.$language" \
-              "$work/compile/measure-anything.$language"
+            sed 's/int main/int c_main/' < "try-anything.c" > "$work/compile/try-anything.$language"
+            sed 's/int main/int c_main/' < "measure-anything.c" > "$work/compile/measure-anything.$language"
             cp -pr rusthooks "$work/compile/rusthooks"
           fi
           # XXX: also support standalone *.rs via okrs-${abi}
@@ -634,10 +637,8 @@ do
               if [ "$madeo" = 1 ]
               then
                 okar-$abi cr "lib$op.a" *.o || continue
-              else
-                okar-$abi cr "lib$op.a" || continue
+                ranlib "lib$op.a" || :
               fi
-              ranlib "lib$op.a" || :
 
               if [ "$rust" ]
               then
@@ -661,7 +662,7 @@ do
                 do
                   echo "$version $shorthostname $abi $startdate $o $p/$security fromcompiler $implementationdir $compilerword try.$language $err" >&5
                 done
-                cargo clean -q
+                cargo clean -q || :
               fi
               [ "$ok" = 1 ] || continue
 
@@ -680,7 +681,7 @@ do
               fi
               [ "$ok" = 1 ] || continue
   
-              if sh -c 'killafter 3600 ./try-small || exit $?' >../outputs 2>../errors
+              if sh -c "killafter 3600 ./try-small $version $abi $implementationdir $compilerword"' || exit $?' >../outputs 2>../errors
               then
                 checksumsmall=`awk '{print $1}' < ../outputs`
                 cycles=`awk '{print $2}' < ../outputs`
@@ -717,7 +718,7 @@ do
               fi
               [ "$ok" = 1 ] || continue
   
-              if sh -c 'killafter 3600 ./try || exit $?' >../outputs 2>../errors
+              if sh -c "killafter 3600 ./try $version $abi $implementationdir $compilerword"' || exit $?' >../outputs 2>../errors
               then
                 checksumbig=`awk '{print $1}' < ../outputs`
                 cycles=`awk '{print $2}' < ../outputs`
@@ -770,7 +771,7 @@ do
                   do
                     echo "$version $shorthostname $abi $startdate $o $p/$security fromcompiler $implementationdir $compilerword try.$language $err" >&5
                   done
-                  cargo clean -q
+                  cargo clean -q || :
                 fi
                 [ "$ok" = 1 ] || continue
 
@@ -779,7 +780,7 @@ do
                   killafter 300 \
                   $compiler -DSUPERCOP \
                     $timecopincludes \
-                    -o try-timecop try-timecop.$language try-anything.$language \
+                    -o try-timecop try-timecop.$language try-anything-timecop.$language \
                     "lib$op.a" $timecoptrylibs >../errors 2>&1 || ok=0
                   cat ../errors \
                   | while read err
@@ -789,7 +790,7 @@ do
                 fi
                 [ "$ok" = 1 ] || continue
 
-                if sh -c 'killafter 600 valgrind -q --error-exitcode=99 --track-origins=yes ./try-timecop || exit $?' >../outputs 2>../errors
+                if sh -c "killafter 600 valgrind -q --error-exitcode=99 --track-origins=yes ./try-timecop $version $abi $implementationdir $compilerword"' || exit $?' >../outputs 2>../errors
                 then
                   echo "$version $shorthostname $abi $startdate $o $p/$security timecop_pass $implementationdir $compilerword $TIMECOP $?" >&5
                   word=timecop_output
@@ -859,7 +860,7 @@ do
         echo "=== `date` === $abi $o/$p $security measuring"
   
         killafter 86400 \
-        "$work/$security/best/measure" \
+        "$work/$security/best/measure" "$version" "$abi" "$o/$p" \
         | while read measurement
         do
           echo "$version $shorthostname $abi $startdate $o $p/$security $measurement" >&5

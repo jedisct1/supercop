@@ -572,9 +572,8 @@ do
         if [ -f "$top/$target/work/Cargo.toml" ]
         then
           rust=yes
-          sed -i 's/int main/int c_main/' \
-            "$top/$target/work/try-anything.$language" \
-            "$top/$target/work/measure-anything.$language"
+          sed 's/int main/int c_main/' < "try-anything.c" > "$top/$target/work/try-anything.$language"
+          sed 's/int main/int c_main/' < "measure-anything.c" > "$top/$target/work/measure-anything.$language"
           cp -pr rusthooks "$top/$target/work/rusthooks"
         fi
         # XXX: also support standalone *.rs via okrs-${abi}
@@ -631,10 +630,10 @@ do
           done
   
           touch OK
-          touch NOOBJ
+          rm -f MADEOBJ
           for f in $cfiles $sfiles $ccfiles $cppfiles
           do
-            rm -f NOOBJ
+            touch MADEOBJ
             if [ -f OK ]
             then
               (
@@ -658,13 +657,11 @@ do
           done
   
           [ -f OK ] || exit 0
-          if [ -f NOOBJ ]
+          if [ -f MADEOBJ ]
           then
-            okar-$abi cr "lib$op.a" || exit 0
-          else
             okar-$abi cr "lib$op.a" *.o || exit 0
+            ( ranlib "lib$op.a" || : )
           fi
-          ( ranlib "lib$op.a" || : )
 
           includes="-I. -I$top/$abi/include -I$top/$abi/include/$security"
 
@@ -720,7 +717,7 @@ do
             [ -f OK ] || exit 0
           fi
   
-          if sh -c 'killafter 3600 ./try-small || exit $?' >../outputs 2>../errors
+          if sh -c "killafter 3600 ./try-small $version $abi $implementationdir $compilerword"' || exit $?' >../outputs 2>../errors
           then
             checksumsmall=`awk '{print $1}' < ../outputs`
             cycles=`awk '{print $2}' < ../outputs`
@@ -761,7 +758,7 @@ do
             [ -f OK ] || exit 0
           fi
   
-          if sh -c 'killafter 3600 ./try || exit $?' >../outputs 2>../errors
+          if sh -c "killafter 3600 ./try $version $abi $implementationdir $compilerword"' || exit $?' >../outputs 2>../errors
           then
             checksumbig=`awk '{print $1}' < ../outputs`
             cycles=`awk '{print $2}' < ../outputs`
@@ -967,7 +964,7 @@ do
           | while read source
           do
             killafter 86400 \
-            "$top/$abi/$source/compiled/measure" \
+            "$top/$abi/$source/compiled/measure" "$version" "$abi" "$o/$p" \
             | while read measurement
             do
               echo "$version $shorthostname $abi $startdate $o $p/$security $measurement" >&5

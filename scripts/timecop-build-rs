@@ -6,12 +6,15 @@ shift
 echo 'use std::env;'
 echo ''
 echo 'fn main() {'
-echo '  println!("cargo:rustc-link-lib=static='"$op"'");'
+if [ -f "lib$op.a" ]
+then
+  echo '  println!("cargo:rustc-link-lib=static='"$op"'");'
+  echo '  println!("cargo:rustc-link-search=native=.");'
+fi
 for d in "$@"
 do
   echo '  println!("cargo:rustc-link-search=native='"$d"'");'
 done
-echo '  println!("cargo:rustc-link-search=native=.");'
 echo '  let out_dir = env::var("OUT_DIR").unwrap();'
 echo '  println!("cargo:rustc-link-search=native={}",out_dir);'
 echo '  cc::Build::new()'
