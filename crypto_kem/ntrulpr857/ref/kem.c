@@ -1,1 +1,1 @@
-../../ntrulpr761/ref/kem.c
+../../sntrup761/ref/kem.c

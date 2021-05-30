@@ -3,6 +3,7 @@
 #include "randombytes.h"
 #include "crypto_hash_sha512.h"
 #include "crypto_sort_uint32.h"
+#include "crypto_declassify.h"
 
 #include "crypto_int8.h"
 #include "crypto_int16.h"
@@ -141,8 +142,11 @@ int crypto_kem_keypair(unsigned char *pk,unsigned char *sk)
     Small_random(g);
     {
       small v[p+1];
+      small vp;
       crypto_core_inv3((unsigned char *) v,(const unsigned char *) g,0,0);
-      if (v[p] == 0) {
+      vp = v[p];
+      crypto_declassify(&vp,sizeof vp);
+      if (vp == 0) {
         Small_encode(sk+Small_bytes,v);
         break;
       }

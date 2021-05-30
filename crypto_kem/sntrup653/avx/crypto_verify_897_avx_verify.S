@@ -3,7 +3,7 @@
 	.globl	CRYPTO_NAMESPACE(crypto_verify_897)
 	.type	CRYPTO_NAMESPACE(crypto_verify_897), @function
 CRYPTO_NAMESPACE(crypto_verify_897):
-.LFB5274:
+.LFB5342:
 	.cfi_startproc
 	movl	$865, %eax
 	vpxor	%xmm0, %xmm0, %xmm0
@@ -27,10 +27,10 @@ CRYPTO_NAMESPACE(crypto_verify_897):
 	vpsrld	$16, %ymm0, %ymm1
 	vpor	%ymm1, %ymm0, %ymm0
 	vpsrlq	$32, %ymm0, %ymm1
-	vpor	%ymm1, %ymm0, %ymm1
-	vextracti128	$0x1, %ymm1, %xmm0
-	vpextrb	$0, %xmm1, %esi
-	vpextrb	$8, %xmm1, %eax
+	vpor	%ymm1, %ymm0, %ymm0
+	vpextrb	$0, %xmm0, %esi
+	vpextrb	$8, %xmm0, %eax
+	vextracti128	$0x1, %ymm0, %xmm0
 	vpextrb	$0, %xmm0, %ecx
 	orl	%esi, %eax
 	vpextrb	$8, %xmm0, %edx
@@ -42,7 +42,7 @@ CRYPTO_NAMESPACE(crypto_verify_897):
 	decl	%eax
 	ret
 	.cfi_endproc
-.LFE5274:
+.LFE5342:
 	.size	CRYPTO_NAMESPACE(crypto_verify_897), .-CRYPTO_NAMESPACE(crypto_verify_897)
-	.ident	"GCC: (GNU) 9.2.1 20190827 (Red Hat 9.2.1-1)"
+	.ident	"GCC: (GNU) 10.3.1 20210422 (Red Hat 10.3.1-1)"
 	.section	.note.GNU-stack,"",@progbits

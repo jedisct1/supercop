@@ -1,3 +1,1 @@
-#define CRYPTO_STRBYTES 994
-#define CRYPTO_ITEMS 653
-#define CRYPTO_ITEMBYTES 2
+../avx/api.h

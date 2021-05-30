@@ -1,6 +1,13 @@
-Reverse-chronological changelog for sntrup{653,761,857}/factored:
+Reverse-chronological changelog for sntrup*/factored:
+
+Added crypto_declassify() for the rejection sampling in key generation
+to work with TIMECOP.
+
+Used CRYPTO_NAMESPACE.
 
 Used crypto_verify_clen.
+
+Rearranged variables for better stack usage.
 
 Factored out crypto_core_wforcesntrup761. (Same for other sizes.)
 Factored out crypto_core_scale3sntrup761. (Same for other sizes.)

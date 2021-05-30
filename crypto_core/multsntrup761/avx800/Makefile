@@ -1,12 +1,13 @@
-default: mult768.c ntt.s ntt.h
+default: ntt.S
 
-mult768.c: ../avx/mult768.c
-	cp ../avx/mult768.c .
-
-ntt.h: ../avx/ntt.h
-	sed 's/_avx_/_avx800_/g' ../avx/ntt.h > ntt.h
-
-ntt.s: ../avx/ntt.c ntt.h
+ntt.S: ../avx/ntt.c
 	cp ../avx/ntt.c .
-	clang -fno-addrsig -fPIC -fPIE -fwrapv -O3 -march=haswell -mtune=haswell -S -I. ntt.c
-	rm ntt.c
+	touch crypto_core.h
+	gcc-7 -fPIC -fPIE -fwrapv -O3 -march=haswell -mtune=skylake -D'CRYPTO_NAMESPACE(x)=x' -S -I. ntt.c
+	mv ntt.s ntt.S
+	sed -i 's/\<invntt512_7681\>/CRYPTO_NAMESPACE(invntt512_7681)/g' ntt.S
+	sed -i 's/\<invntt512_10753\>/CRYPTO_NAMESPACE(invntt512_10753)/g' ntt.S
+	sed -i 's/\<ntt512_7681\>/CRYPTO_NAMESPACE(ntt512_7681)/g' ntt.S
+	sed -i 's/\<ntt512_10753\>/CRYPTO_NAMESPACE(ntt512_10753)/g' ntt.S
+	rm ntt.c crypto_core.h
+	touch -r ../avx/ntt.c ntt.S

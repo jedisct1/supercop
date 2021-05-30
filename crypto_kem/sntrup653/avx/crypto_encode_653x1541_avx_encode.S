@@ -3,7 +3,7 @@
 	.globl	CRYPTO_NAMESPACE(crypto_encode_653x1541)
 	.type	CRYPTO_NAMESPACE(crypto_encode_653x1541), @function
 CRYPTO_NAMESPACE(crypto_encode_653x1541):
-.LFB5274:
+.LFB5342:
 	.cfi_startproc
 	pushq	%rbp
 	.cfi_def_cfa_offset 16
@@ -43,7 +43,7 @@ CRYPTO_NAMESPACE(crypto_encode_653x1541):
 	vpaddd	%ymm3, %ymm0, %ymm0
 	vpshufb	%ymm2, %ymm0, %ymm0
 	vpermq	$216, %ymm0, %ymm0
-	vmovups	%xmm0, -16(%rdx)
+	vmovdqu	%xmm0, -16(%rdx)
 	vextracti128	$0x1, %ymm0, %xmm0
 	vmovd	%xmm0, -8(%rdi)
 	vpextrd	$2, %xmm0, -4(%rdi)
@@ -113,7 +113,7 @@ CRYPTO_NAMESPACE(crypto_encode_653x1541):
 	vpaddd	%ymm4, %ymm0, %ymm0
 	vpshufb	%ymm2, %ymm0, %ymm0
 	vpermq	$216, %ymm0, %ymm0
-	vmovups	%xmm0, -16(%rdx)
+	vmovdqu	%xmm0, -16(%rdx)
 	vextracti128	$0x1, %ymm0, %xmm0
 	vmovd	%xmm0, -8(%rdi)
 	vpextrd	$2, %xmm0, -4(%rdi)
@@ -175,13 +175,13 @@ CRYPTO_NAMESPACE(crypto_encode_653x1541):
 	vpaddd	%ymm3, %ymm0, %ymm0
 	vpshufb	%ymm2, %ymm0, %ymm0
 	vpermq	$216, %ymm0, %ymm0
-	vmovups	%xmm0, -16(%rdx)
+	vmovdqu	%xmm0, -16(%rdx)
 	vextracti128	$0x1, %ymm0, %xmm0
 	vmovd	%xmm0, (%rsi)
 	vpextrd	$2, %xmm0, 4(%rsi)
 	testq	%rcx, %rcx
 	jne	.L11
-	movzwl	-22(%rsp), %r8d
+	movw	-22(%rsp), %r8w
 	xorl	%r9d, %r9d
 .L12:
 	movzwl	2(%rax,%r9,4), %edx
@@ -208,30 +208,29 @@ CRYPTO_NAMESPACE(crypto_encode_653x1541):
 	jne	.L13
 	movzwl	-100(%rsp), %eax
 	movzwl	-102(%rsp), %edx
+	movzwl	%r8w, %r8d
 	imull	$2953, %r8d, %r8d
-	movzwl	-96(%rsp), %ecx
 	imull	$2953, %eax, %eax
-	imull	$2953, %ecx, %ecx
 	addl	%edx, %eax
-	movzwl	-94(%rsp), %edx
+	movzwl	-98(%rsp), %edx
 	movw	%ax, 28(%rsi)
 	shrl	$16, %eax
-	movl	%eax, %edi
-	movzwl	-98(%rsp), %eax
-	addl	%r8d, %edx
-	movb	%dl, 32(%rsi)
-	addl	%eax, %ecx
-	movl	%ecx, %eax
-	movw	%cx, 30(%rsi)
+	movl	%eax, %ecx
+	movzwl	-96(%rsp), %eax
+	imull	$2953, %eax, %eax
+	addl	%edx, %eax
+	movzwl	-94(%rsp), %edx
+	movw	%ax, 30(%rsi)
 	shrl	$16, %eax
 	imull	$134, %eax, %eax
-	addl	%edi, %eax
+	addl	%r8d, %edx
+	movb	%dl, 32(%rsi)
+	shrl	$8, %edx
+	addl	%ecx, %eax
 	movb	%al, 33(%rsi)
 	shrl	$8, %eax
 	movl	%eax, %ecx
-	movl	%edx, %eax
-	shrl	$8, %eax
-	movzwl	%ax, %eax
+	movzwl	%dx, %eax
 	imull	$71, %eax, %eax
 	addl	%ecx, %eax
 	movw	%ax, 34(%rsi)
@@ -242,7 +241,7 @@ CRYPTO_NAMESPACE(crypto_encode_653x1541):
 	.cfi_def_cfa 7, 8
 	ret
 	.cfi_endproc
-.LFE5274:
+.LFE5342:
 	.size	CRYPTO_NAMESPACE(crypto_encode_653x1541), .-CRYPTO_NAMESPACE(crypto_encode_653x1541)
 	.section	.rodata.cst32,"aM",@progbits,32
 	.align 32
@@ -411,5 +410,5 @@ CRYPTO_NAMESPACE(crypto_encode_653x1541):
 	.long	695
 	.long	695
 	.long	695
-	.ident	"GCC: (GNU) 9.2.1 20190827 (Red Hat 9.2.1-1)"
+	.ident	"GCC: (GNU) 10.3.1 20210422 (Red Hat 10.3.1-1)"
 	.section	.note.GNU-stack,"",@progbits

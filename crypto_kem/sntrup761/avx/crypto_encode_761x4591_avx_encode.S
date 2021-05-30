@@ -4,11 +4,12 @@
 	.globl	CRYPTO_NAMESPACE(crypto_encode_761x4591)
 	.type	CRYPTO_NAMESPACE(crypto_encode_761x4591), @function
 CRYPTO_NAMESPACE(crypto_encode_761x4591):
-.LFB5279:
+.LFB5347:
 	.cfi_startproc
 	pushq	%rbp
 	.cfi_def_cfa_offset 16
 	.cfi_offset 6, -16
+	movq	%rsi, %r9
 	movq	%rsi, %rdx
 	movl	$23, %ecx
 	movq	%rsp, %rbp
@@ -18,7 +19,7 @@ CRYPTO_NAMESPACE(crypto_encode_761x4591):
 	subq	$648, %rsp
 	.cfi_offset 3, -24
 	leaq	-120(%rsp), %r8
-	movq	%r8, %r9
+	movq	%r8, %rsi
 	vmovdqa	.LC0(%rip), %ymm6
 	vmovdqa	.LC1(%rip), %ymm5
 	vmovdqa	.LC2(%rip), %ymm4
@@ -46,27 +47,27 @@ CRYPTO_NAMESPACE(crypto_encode_761x4591):
 	vpermq	$216, %ymm1, %ymm1
 	vperm2i128	$49, %ymm1, %ymm0, %ymm7
 	vinserti128	$1, %xmm1, %ymm0, %ymm0
-	vmovdqu	%ymm7, (%r9)
+	vmovdqu	%ymm7, (%rsi)
 	vmovdqu	%ymm0, (%rdi)
 	testq	%rcx, %rcx
 	je	.L30
 	decq	%rcx
 	je	.L3
 	addq	$64, %rdx
-	addq	$32, %r9
+	addq	$32, %rsi
 	movq	%rax, %rdi
 	jmp	.L2
 	.p2align 4,,10
 	.p2align 3
 .L3:
 	addq	$48, %rdx
-	addq	$24, %r9
+	addq	$24, %rsi
 	addq	$24, %rdi
 	jmp	.L2
 	.p2align 4,,10
 	.p2align 3
 .L30:
-	movzwl	1520(%rsi), %edx
+	movzwl	1520(%r9), %edx
 	vmovdqa	.LC5(%rip), %ymm1
 	movq	%r8, %rdi
 	movq	%r8, %rsi
@@ -90,7 +91,7 @@ CRYPTO_NAMESPACE(crypto_encode_761x4591):
 	vpaddd	%ymm3, %ymm0, %ymm0
 	vpshufb	%ymm2, %ymm0, %ymm0
 	vpermq	$216, %ymm0, %ymm0
-	vmovups	%xmm0, (%rdi)
+	vmovdqu	%xmm0, (%rdi)
 	vextracti128	$0x1, %ymm0, %xmm0
 	vmovd	%xmm0, (%rax)
 	vpextrd	$2, %xmm0, 4(%rax)
@@ -129,7 +130,7 @@ CRYPTO_NAMESPACE(crypto_encode_761x4591):
 	vpaddd	%ymm3, %ymm0, %ymm0
 	vpshufb	%ymm2, %ymm0, %ymm0
 	vpermq	$216, %ymm0, %ymm0
-	vmovups	%xmm0, (%rsi)
+	vmovdqu	%xmm0, (%rsi)
 	vextracti128	$0x1, %ymm0, %xmm0
 	vmovd	%xmm0, (%rcx)
 	vpextrd	$2, %xmm0, 4(%rcx)
@@ -168,7 +169,7 @@ CRYPTO_NAMESPACE(crypto_encode_761x4591):
 	vpaddd	%ymm3, %ymm0, %ymm0
 	vpshufb	%ymm2, %ymm0, %ymm0
 	vpermq	$216, %ymm0, %ymm0
-	vmovaps	%xmm0, (%r8,%rax,2)
+	vmovdqu	%xmm0, (%r8,%rax,2)
 	vextracti128	$0x1, %ymm0, %xmm0
 	vmovd	%xmm0, (%rdi,%rax)
 	vpextrd	$2, %xmm0, 4(%rdi,%rax)
@@ -188,7 +189,7 @@ CRYPTO_NAMESPACE(crypto_encode_761x4591):
 	vpaddd	%ymm3, %ymm0, %ymm0
 	vpshufb	%ymm2, %ymm0, %ymm0
 	vpermq	$216, %ymm0, %ymm0
-	vmovups	%xmm0, (%rdx)
+	vmovdqu	%xmm0, (%rdx)
 	vextracti128	$0x1, %ymm0, %xmm0
 	vmovd	%xmm0, (%rcx)
 	vpextrd	$2, %xmm0, 4(%rcx)
@@ -243,35 +244,34 @@ CRYPTO_NAMESPACE(crypto_encode_761x4591):
 	cmpq	$5, %rsi
 	jne	.L20
 	imull	$1608, %edi, %eax
-	movzwl	-100(%rsp), %esi
-	movzwl	-120(%rsp), %edx
-	addl	%eax, %esi
+	movzwl	-100(%rsp), %edx
+	movzwl	-120(%rsp), %esi
+	movzwl	-116(%rsp), %edi
+	addl	%eax, %edx
 	movzwl	-118(%rsp), %eax
-	movw	%si, 38(%rcx)
-	shrl	$16, %esi
+	movw	%dx, 38(%rcx)
+	shrl	$16, %edx
 	imull	$10101, %eax, %eax
-	addl	%edx, %eax
-	movzwl	-114(%rsp), %edx
+	addl	%esi, %eax
 	movw	%ax, 40(%rcx)
 	shrl	$16, %eax
-	imull	$10101, %edx, %edx
-	movl	%eax, %edi
-	movzwl	-116(%rsp), %eax
-	addl	%eax, %edx
-	imull	$10101, %esi, %eax
-	movzwl	-112(%rsp), %esi
-	movw	%dx, 42(%rcx)
-	addl	%eax, %esi
-	movl	%edx, %eax
-	shrl	$16, %eax
-	movb	%sil, 44(%rcx)
-	shrl	$8, %esi
-	imull	$1557, %eax, %eax
-	imull	$9470, %esi, %esi
+	movl	%eax, %esi
+	movzwl	-114(%rsp), %eax
+	imull	$10101, %eax, %eax
 	addl	%edi, %eax
+	imull	$10101, %edx, %edi
+	movzwl	-112(%rsp), %edx
+	movw	%ax, 42(%rcx)
+	shrl	$16, %eax
+	imull	$1557, %eax, %eax
+	addl	%edi, %edx
+	movb	%dl, 44(%rcx)
+	shrl	$8, %edx
+	imull	$9470, %edx, %edx
+	addl	%esi, %eax
 	movb	%al, 45(%rcx)
 	shrl	$8, %eax
-	addl	%esi, %eax
+	addl	%edx, %eax
 	movl	%eax, 46(%rcx)
 	vzeroupper
 	movq	-8(%rbp), %rbx
@@ -288,7 +288,7 @@ CRYPTO_NAMESPACE(crypto_encode_761x4591):
 	addq	$8, %rcx
 	jmp	.L21
 	.cfi_endproc
-.LFE5279:
+.LFE5347:
 	.size	CRYPTO_NAMESPACE(crypto_encode_761x4591), .-CRYPTO_NAMESPACE(crypto_encode_761x4591)
 	.section	.rodata.cst32,"aM",@progbits,32
 	.align 32
@@ -425,5 +425,5 @@ CRYPTO_NAMESPACE(crypto_encode_761x4591):
 	.long	1621
 	.long	1621
 	.long	1621
-	.ident	"GCC: (GNU) 9.2.1 20190827 (Red Hat 9.2.1-1)"
+	.ident	"GCC: (GNU) 10.3.1 20210422 (Red Hat 10.3.1-1)"
 	.section	.note.GNU-stack,"",@progbits

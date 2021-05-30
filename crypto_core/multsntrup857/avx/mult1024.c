@@ -129,7 +129,7 @@ static void unstride(int16 f[2048],const int16 fpad[4][512])
   }
 }
 
-#define ALIGNED __attribute((aligned(32)))
+#define ALIGNED __attribute((aligned(512)))
 
 static const ALIGNED int16 y_7681[512] = {
 #include "precomp7681.inc"
@@ -152,18 +152,18 @@ static const ALIGNED int16 y_10753[512] = {
 
 static void mult1024(int16 h[2048],const int16 f[1024],const int16 g[1024])
 {
-  ALIGNED int16 fpad[4][512];
-  ALIGNED int16 gpad[4][512];
+  ALIGNED int16 fgpad[8][512];
+#define fpad fgpad
+#define gpad (fgpad+4)
+#define hpad fpad
   ALIGNED int16 h_7681[2048];
   ALIGNED int16 h_10753[2048];
-#define hpad fpad
   int i;
 
   stride(fpad,f);
-  ntt512_7681(fpad[0],4);
-
   stride(gpad,g);
-  ntt512_7681(gpad[0],4);
+
+  ntt512_7681(fgpad[0],8);
 
   for (i = 0;i < 512;i += 16) {
     int16x16 f0 = squeeze_7681_x16(load_x16(&fpad[0][i]));
@@ -213,10 +213,9 @@ static void mult1024(int16 h[2048],const int16 f[1024],const int16 g[1024])
   unstride(h_7681,hpad);
 
   stride(fpad,f);
-  ntt512_10753(fpad[0],4);
-
   stride(gpad,g);
-  ntt512_10753(gpad[0],4);
+
+  ntt512_10753(fgpad[0],8);
 
   for (i = 0;i < 512;i += 16) {
     int16x16 f0 = squeeze_10753_x16(load_x16(&fpad[0][i]));

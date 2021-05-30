@@ -156,22 +156,22 @@ static void ungood(int16 f[1536],const int16 fpad[3][512])
   }
 }
 
-#define ALIGNED __attribute((aligned(32)))
+#define ALIGNED __attribute((aligned(512)))
 
 static void mult768(int16 h[1536],const int16 f[768],const int16 g[768])
 {
-  ALIGNED int16 fpad[3][512];
-  ALIGNED int16 gpad[3][512];
+  ALIGNED int16 fgpad[6][512];
+#define fpad fgpad
+#define gpad (fgpad+3)
 #define hpad fpad
   ALIGNED int16 h_7681[1536];
   ALIGNED int16 h_10753[1536];
   int i;
 
   good(fpad,f);
-  ntt512_7681(fpad[0],3);
-
   good(gpad,g);
-  ntt512_7681(gpad[0],3);
+
+  ntt512_7681(fgpad[0],6);
 
   for (i = 0;i < 512;i += 16) {
     int16x16 f0 = squeeze_7681_x16(load_x16(&fpad[0][i]));
@@ -196,10 +196,9 @@ static void mult768(int16 h[1536],const int16 f[768],const int16 g[768])
   ungood(h_7681,hpad);
 
   good(fpad,f);
-  ntt512_10753(fpad[0],3);
-
   good(gpad,g);
-  ntt512_10753(gpad[0],3);
+
+  ntt512_10753(fgpad[0],6);
 
   for (i = 0;i < 512;i += 16) {
     int16x16 f0 = squeeze_10753_x16(load_x16(&fpad[0][i]));

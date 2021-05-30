@@ -66,10 +66,18 @@ def writefile(fn,s):
   with open(fn,'w') as f:
     f.write(s)
 
+def crypto_namespace(fn,opi):
+  x = readfile(fn)
+  x = re.sub(r'\b%s_(\w*)\b'%opi,r'CRYPTO_NAMESPACE(\1)',x)
+  writefile(fn,x)
+
 operations = readfile('%s/OPERATIONS'%topdir).splitlines()
 macros = readfile('%s/MACROS'%topdir).splitlines()
 prototypes = readfile('%s/PROTOTYPES.c'%topdir).splitlines()
 macros += moresymbols
+
+writefile('crypto_declassify.h',
+  'extern void crypto_declassify(void *,unsigned long long);\n')
 
 for x,y in (
   ('crypto_int8','int8_t'),
@@ -178,10 +186,13 @@ for o,p,i,compiler in subroutines:
     for fn in files:
       if fn.startswith('batch'): continue
       infile = '%s/%s'%(implementationdir,fn)
-      outfile = '%s_%s_%s_%s.s'%(o,p,i,fn[:-2])
+      outfile = '%s_%s_%s_%s.S'%(o,p,i,fn[:-2])
       c = compiler
       if callable(c): c = c(fn)
       subprocess.run(c.split()+['-S','-I.','-o',outfile,infile])
+      crypto_namespace(outfile,namespace)
+      when = os.stat(infile).st_mtime
+      os.utime(outfile,(when,when))
 
   else:
     x = ''
@@ -214,6 +225,9 @@ for o,p,i,compiler in subroutines:
         x += '}\n'
 
     writefile('%s_hook.c'%op,x)
+    crypto_namespace('%s_hook.c'%op,namespace)
+    when = os.stat('merge').st_mtime
+    os.utime('%s_hook.c'%op,(when,when))
 
 os.remove('randombytes.h')
 for fn in os.listdir():

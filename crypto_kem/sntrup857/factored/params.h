@@ -53,10 +53,10 @@
 #include "crypto_core_inv3sntrup857.h"
 #define crypto_core_inv3 crypto_core_inv3sntrup857
 
-#include "crypto_core_multsntrup857.h"
-#define crypto_core_mult crypto_core_multsntrup857
-
 #include "crypto_core_mult3sntrup857.h"
 #define crypto_core_mult3 crypto_core_mult3sntrup857
+
+#include "crypto_core_multsntrup857.h"
+#define crypto_core_mult crypto_core_multsntrup857
 
 #endif

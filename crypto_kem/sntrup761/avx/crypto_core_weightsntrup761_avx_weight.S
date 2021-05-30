@@ -49,19 +49,20 @@
 CRYPTO_NAMESPACE(crypto_core_weightsntrup761): # @CRYPTO_NAMESPACE(crypto_core_weightsntrup761)
 	.cfi_startproc
 # %bb.0:
+	pushq	%rax
+	.cfi_def_cfa_offset 16
 	vmovdqu	729(%rsi), %ymm0
 	vpand	.LCPI0_0(%rip), %ymm0, %ymm0
-	movl	$729, %eax              # imm = 0x2D9
+	movl	$761, %eax              # imm = 0x2F9
 	vpbroadcastb	.LCPI0_1(%rip), %ymm1 # ymm1 = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
 .LBB0_1:                                # =>This Inner Loop Header: Depth=1
 	vpand	(%rsi), %ymm1, %ymm2
 	vpaddb	%ymm0, %ymm2, %ymm0
 	addq	$32, %rsi
 	addl	$-32, %eax
-	jns	.LBB0_1
+	cmpl	$31, %eax
+	ja	.LBB0_1
 # %bb.2:
-	pushq	%rax
-	.cfi_def_cfa_offset 16
 	vpsrlw	$8, %ymm0, %ymm1
 	vpand	.LCPI0_2(%rip), %ymm0, %ymm0
 	vpaddw	%ymm0, %ymm1, %ymm0
@@ -84,6 +85,5 @@ CRYPTO_NAMESPACE(crypto_core_weightsntrup761): # @CRYPTO_NAMESPACE(crypto_core_w
 	.size	CRYPTO_NAMESPACE(crypto_core_weightsntrup761), .Lfunc_end0-CRYPTO_NAMESPACE(crypto_core_weightsntrup761)
 	.cfi_endproc
                                         # -- End function
-
-	.ident	"clang version 8.0.0 (Fedora 8.0.0-3.fc30)"
+	.ident	"clang version 10.0.1 (Fedora 10.0.1-3.fc32)"
 	.section	".note.GNU-stack","",@progbits

@@ -81,7 +81,7 @@ do
   (
     if [ "$t1" = measure1 -o "$t1" = measure2 -o "$t1" = measure3 -o "$t1" = integrate ]
     then
-      rm -f "$top/$target/best*"
+      rm -f "$top/$target/best"*
 
       grep '^try/' "$top/$target/dep" \
       | while read source

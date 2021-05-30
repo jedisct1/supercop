@@ -1,4400 +1,4928 @@
-	.text
 	.file	"ntt.c"
-	.globl	CRYPTO_NAMESPACE(ntt512_7681) # -- Begin function CRYPTO_NAMESPACE(ntt512_7681)
-	.p2align	4, 0x90
-	.type	CRYPTO_NAMESPACE(ntt512_7681),@function
-CRYPTO_NAMESPACE(ntt512_7681): # @CRYPTO_NAMESPACE(ntt512_7681)
-	.cfi_startproc
-# %bb.0:
-	leaq	qdata_7681(%rip), %rdx
-	jmp	ntt512                  # TAILCALL
-.Lfunc_end0:
-	.size	CRYPTO_NAMESPACE(ntt512_7681), .Lfunc_end0-CRYPTO_NAMESPACE(ntt512_7681)
-	.cfi_endproc
-                                        # -- End function
-	.section	.rodata.cst32,"aM",@progbits,32
-	.p2align	5               # -- Begin function ntt512
-.LCPI1_0:
-	.byte	14                      # 0xe
-	.byte	15                      # 0xf
-	.byte	12                      # 0xc
-	.byte	13                      # 0xd
-	.byte	10                      # 0xa
-	.byte	11                      # 0xb
-	.byte	8                       # 0x8
-	.byte	9                       # 0x9
-	.byte	6                       # 0x6
-	.byte	7                       # 0x7
-	.byte	4                       # 0x4
-	.byte	5                       # 0x5
-	.byte	2                       # 0x2
-	.byte	3                       # 0x3
-	.byte	0                       # 0x0
-	.byte	1                       # 0x1
-	.byte	30                      # 0x1e
-	.byte	31                      # 0x1f
-	.byte	28                      # 0x1c
-	.byte	29                      # 0x1d
-	.byte	26                      # 0x1a
-	.byte	27                      # 0x1b
-	.byte	24                      # 0x18
-	.byte	25                      # 0x19
-	.byte	22                      # 0x16
-	.byte	23                      # 0x17
-	.byte	20                      # 0x14
-	.byte	21                      # 0x15
-	.byte	18                      # 0x12
-	.byte	19                      # 0x13
-	.byte	16                      # 0x10
-	.byte	17                      # 0x11
 	.text
-	.p2align	4, 0x90
-	.type	ntt512,@function
-ntt512:                                 # @ntt512
+	.p2align 4,,15
+	.type	ntt512, @function
+ntt512:
+.LFB4755:
 	.cfi_startproc
-# %bb.0:
-	pushq	%rbp
-	.cfi_def_cfa_offset 16
-	.cfi_offset %rbp, -16
-	movq	%rsp, %rbp
-	.cfi_def_cfa_register %rbp
+	leaq	8(%rsp), %r10
+	.cfi_def_cfa 10, 0
 	andq	$-32, %rsp
-	subq	$576, %rsp              # imm = 0x240
-	vmovdqu	2370(%rdx), %ymm0
-	vmovdqa	.LCPI1_0(%rip), %ymm4   # ymm4 = [14,15,12,13,10,11,8,9,6,7,4,5,2,3,0,1,30,31,28,29,26,27,24,25,22,23,20,21,18,19,16,17]
-	vpshufb	%ymm4, %ymm0, %ymm0
-	vpermq	$78, %ymm0, %ymm0       # ymm0 = ymm0[2,3,0,1]
-	vmovdqa	%ymm0, 288(%rsp)
-	vmovdqu	2338(%rdx), %ymm0
-	vpshufb	%ymm4, %ymm0, %ymm0
-	vpermq	$78, %ymm0, %ymm0       # ymm0 = ymm0[2,3,0,1]
-	vmovdqa	%ymm0, 320(%rsp)
-	vmovdqu	2306(%rdx), %ymm0
-	vpshufb	%ymm4, %ymm0, %ymm0
-	vpermq	$78, %ymm0, %ymm0       # ymm0 = ymm0[2,3,0,1]
-	vmovdqa	%ymm0, 352(%rsp)
-	vmovdqu	2274(%rdx), %ymm0
-	vpshufb	%ymm4, %ymm0, %ymm0
-	vpermq	$78, %ymm0, %ymm0       # ymm0 = ymm0[2,3,0,1]
-	vmovdqa	%ymm0, 384(%rsp)
-	vmovdqu	2242(%rdx), %ymm0
-	vpshufb	%ymm4, %ymm0, %ymm0
-	vpermq	$78, %ymm0, %ymm0       # ymm0 = ymm0[2,3,0,1]
-	vmovdqa	%ymm0, 416(%rsp)
-	vmovdqu	2210(%rdx), %ymm0
-	vpshufb	%ymm4, %ymm0, %ymm0
-	vpermq	$78, %ymm0, %ymm0       # ymm0 = ymm0[2,3,0,1]
-	vmovdqa	%ymm0, 448(%rsp)
-	vmovdqu	2178(%rdx), %ymm0
-	vpshufb	%ymm4, %ymm0, %ymm0
-	vpermq	$78, %ymm0, %ymm0       # ymm0 = ymm0[2,3,0,1]
-	vmovdqa	%ymm0, 480(%rsp)
-	vmovdqu	2146(%rdx), %ymm0
-	vpshufb	%ymm4, %ymm0, %ymm0
-	vpermq	$78, %ymm0, %ymm0       # ymm0 = ymm0[2,3,0,1]
-	vmovdqa	%ymm0, 512(%rsp)
-	vmovdqu	2914(%rdx), %ymm0
-	vpshufb	%ymm4, %ymm0, %ymm0
-	vpermq	$78, %ymm0, %ymm0       # ymm0 = ymm0[2,3,0,1]
-	vmovdqa	%ymm0, 32(%rsp)
-	vmovdqu	2882(%rdx), %ymm0
-	vpshufb	%ymm4, %ymm0, %ymm0
-	vpermq	$78, %ymm0, %ymm0       # ymm0 = ymm0[2,3,0,1]
-	vmovdqa	%ymm0, 64(%rsp)
-	vmovdqu	2850(%rdx), %ymm0
-	vpshufb	%ymm4, %ymm0, %ymm0
-	vpermq	$78, %ymm0, %ymm0       # ymm0 = ymm0[2,3,0,1]
-	vmovdqa	%ymm0, 96(%rsp)
-	vmovdqu	2818(%rdx), %ymm0
-	vpshufb	%ymm4, %ymm0, %ymm0
-	vpermq	$78, %ymm0, %ymm0       # ymm0 = ymm0[2,3,0,1]
-	vmovdqa	%ymm0, 128(%rsp)
-	vmovdqu	2786(%rdx), %ymm0
-	vpshufb	%ymm4, %ymm0, %ymm0
-	vpermq	$78, %ymm0, %ymm0       # ymm0 = ymm0[2,3,0,1]
-	vmovdqa	%ymm0, 160(%rsp)
-	vmovdqu	2754(%rdx), %ymm0
-	vpshufb	%ymm4, %ymm0, %ymm0
-	vpermq	$78, %ymm0, %ymm0       # ymm0 = ymm0[2,3,0,1]
-	vmovdqa	%ymm0, 192(%rsp)
-	vmovdqu	2722(%rdx), %ymm0
-	vpshufb	%ymm4, %ymm0, %ymm0
-	vpermq	$78, %ymm0, %ymm0       # ymm0 = ymm0[2,3,0,1]
-	vmovdqa	%ymm0, 224(%rsp)
-	vmovdqu	2690(%rdx), %ymm0
-	vpshufb	%ymm4, %ymm0, %ymm0
-	vpermq	$78, %ymm0, %ymm0       # ymm0 = ymm0[2,3,0,1]
-	vmovdqa	%ymm0, 256(%rsp)
-	testl	%esi, %esi
-	jle	.LBB1_5
-# %bb.1:
-	xorl	%r8d, %r8d
-	movq	%rdi, %rcx
-	.p2align	4, 0x90
-.LBB1_2:                                # =>This Loop Header: Depth=1
-                                        #     Child Loop BB1_3 Depth 2
-	xorl	%eax, %eax
-	.p2align	4, 0x90
-.LBB1_3:                                #   Parent Loop BB1_2 Depth=1
-                                        # =>  This Inner Loop Header: Depth=2
-	vmovdqu	768(%rcx,%rax), %ymm0
-	vmovdqu	(%rcx,%rax), %ymm1
-	vmovdqu	256(%rcx,%rax), %ymm2
-	vmovdqu	512(%rcx,%rax), %ymm3
-	vpaddw	%ymm2, %ymm0, %ymm5
-	#APP
-	vpsubw	%ymm0, %ymm2, %ymm2
-	#NO_APP
-	vmovdqa	(%rdx), %ymm0
-	vpmulhw	96(%rdx), %ymm2, %ymm6
-	vpmullw	128(%rdx), %ymm2, %ymm2
-	vpmulhw	%ymm0, %ymm2, %ymm2
-	#APP
-	vpsubw	%ymm2, %ymm6, %ymm6
-	#NO_APP
-	vpaddw	%ymm1, %ymm3, %ymm2
-	#APP
-	vpsubw	%ymm3, %ymm1, %ymm1
-	#NO_APP
-	vpaddw	%ymm6, %ymm1, %ymm3
-	#APP
-	vpsubw	%ymm1, %ymm6, %ymm6
-	#NO_APP
-	vpmulhw	288(%rsp,%rax), %ymm6, %ymm1
-	vpmullw	32(%rsp,%rax), %ymm6, %ymm6
-	vpmulhw	%ymm0, %ymm6, %ymm6
-	#APP
-	vpsubw	%ymm6, %ymm1, %ymm1
-	#NO_APP
-	vpmulhw	1888(%rdx,%rax), %ymm3, %ymm6
-	vpmullw	2432(%rdx,%rax), %ymm3, %ymm3
-	vpmulhw	%ymm0, %ymm3, %ymm3
-	#APP
-	vpsubw	%ymm3, %ymm6, %ymm6
-	#NO_APP
-	vpaddw	%ymm5, %ymm2, %ymm3
-	#APP
-	vpsubw	%ymm5, %ymm2, %ymm2
-	#NO_APP
-	vpmulhw	1312(%rdx,%rax), %ymm2, %ymm5
-	vpmullw	1600(%rdx,%rax), %ymm2, %ymm2
-	vpmulhw	%ymm0, %ymm2, %ymm2
-	#APP
-	vpsubw	%ymm2, %ymm5, %ymm5
-	#NO_APP
-	vpmulhw	32(%rdx), %ymm3, %ymm2
-	vpmulhrsw	64(%rdx), %ymm2, %ymm2
-	vpmullw	%ymm0, %ymm2, %ymm0
-	#APP
-	vpsubw	%ymm0, %ymm3, %ymm3
-	#NO_APP
-	vmovdqu	%ymm1, 768(%rcx,%rax)
-	vmovdqu	%ymm6, 512(%rcx,%rax)
-	vmovdqu	%ymm5, 256(%rcx,%rax)
-	vmovdqu	%ymm3, (%rcx,%rax)
-	addq	$32, %rax
-	cmpq	$256, %rax              # imm = 0x100
-	jne	.LBB1_3
-# %bb.4:                                #   in Loop: Header=BB1_2 Depth=1
-	addq	$1024, %rcx             # imm = 0x400
-	addl	$1, %r8d
-	cmpl	%esi, %r8d
-	jne	.LBB1_2
-.LBB1_5:
-	shll	$2, %esi
-	testl	%esi, %esi
-	jle	.LBB1_12
-# %bb.6:
-	vmovdqu	552(%rdx), %ymm2
-	vmovdqu	584(%rdx), %ymm0
-	vmovdqu	712(%rdx), %ymm3
-	vmovdqu	744(%rdx), %ymm1
-	vpshufb	%ymm4, %ymm0, %ymm0
-	vpermq	$78, %ymm0, %ymm0       # ymm0 = ymm0[2,3,0,1]
-	vmovdqa	%ymm0, (%rsp)           # 32-byte Spill
-	vpshufb	%ymm4, %ymm1, %ymm1
-	vpermq	$78, %ymm1, %ymm1       # ymm1 = ymm1[2,3,0,1]
-	vpshufb	%ymm4, %ymm2, %ymm2
-	vpermq	$78, %ymm2, %ymm2       # ymm2 = ymm2[2,3,0,1]
-	vpshufb	%ymm4, %ymm3, %ymm3
-	vpermq	$78, %ymm3, %ymm3       # ymm3 = ymm3[2,3,0,1]
-	vmovdqu	1058(%rdx), %ymm6
-	vmovdqu	1090(%rdx), %ymm8
-	vmovdqu	1218(%rdx), %ymm5
-	vmovdqu	1250(%rdx), %ymm7
-	vpshufb	%ymm4, %ymm5, %ymm5
-	vpermq	$78, %ymm5, %ymm5       # ymm5 = ymm5[2,3,0,1]
-	vpshufb	%ymm4, %ymm6, %ymm6
-	vpermq	$78, %ymm6, %ymm6       # ymm6 = ymm6[2,3,0,1]
-	vpshufb	%ymm4, %ymm7, %ymm7
-	vpermq	$78, %ymm7, %ymm7       # ymm7 = ymm7[2,3,0,1]
-	vpshufb	%ymm4, %ymm8, %ymm4
-	vpermq	$78, %ymm4, %ymm4       # ymm4 = ymm4[2,3,0,1]
-	leaq	224(%rdi), %rax
-	movl	%esi, %ecx
-	.p2align	4, 0x90
-.LBB1_7:                                # =>This Inner Loop Header: Depth=1
-	vmovdqu	-32(%rax), %ymm10
-	vmovdqu	-224(%rax), %ymm11
-	vmovdqu	-192(%rax), %ymm8
-	vmovdqu	-160(%rax), %ymm12
-	vmovdqu	-128(%rax), %ymm9
-	vpaddw	%ymm12, %ymm10, %ymm13
-	#APP
-	vpsubw	%ymm10, %ymm12, %ymm12
-	#NO_APP
-	vmovdqa	(%rdx), %ymm10
-	vpmulhw	96(%rdx), %ymm12, %ymm14
-	vpmullw	128(%rdx), %ymm12, %ymm12
-	vpmulhw	%ymm10, %ymm12, %ymm12
-	#APP
-	vpsubw	%ymm12, %ymm14, %ymm14
-	#NO_APP
-	vmovdqu	-96(%rax), %ymm12
-	vpaddw	%ymm11, %ymm12, %ymm15
-	#APP
-	vpsubw	%ymm12, %ymm11, %ymm11
-	#NO_APP
-	vpaddw	%ymm14, %ymm11, %ymm12
-	#APP
-	vpsubw	%ymm11, %ymm14, %ymm14
-	#NO_APP
-	vpmulhw	%ymm4, %ymm14, %ymm11
-	vpmullw	%ymm7, %ymm14, %ymm14
-	vpmulhw	%ymm10, %ymm14, %ymm14
-	vpmulhw	992(%rdx), %ymm12, %ymm0
-	#APP
-	vpsubw	%ymm14, %ymm11, %ymm11
-	#NO_APP
-	vpmullw	1152(%rdx), %ymm12, %ymm12
-	vpmulhw	%ymm10, %ymm12, %ymm12
-	#APP
-	vpsubw	%ymm12, %ymm0, %ymm0
-	#NO_APP
-	vpunpcklwd	%ymm11, %ymm0, %ymm12 # ymm12 = ymm0[0],ymm11[0],ymm0[1],ymm11[1],ymm0[2],ymm11[2],ymm0[3],ymm11[3],ymm0[8],ymm11[8],ymm0[9],ymm11[9],ymm0[10],ymm11[10],ymm0[11],ymm11[11]
-	vpaddw	%ymm13, %ymm15, %ymm14
-	#APP
-	vpsubw	%ymm13, %ymm15, %ymm15
-	#NO_APP
-	vpmulhw	800(%rdx), %ymm15, %ymm13
-	vpmullw	896(%rdx), %ymm15, %ymm15
-	vpunpckhwd	%ymm11, %ymm0, %ymm0 # ymm0 = ymm0[4],ymm11[4],ymm0[5],ymm11[5],ymm0[6],ymm11[6],ymm0[7],ymm11[7],ymm0[12],ymm11[12],ymm0[13],ymm11[13],ymm0[14],ymm11[14],ymm0[15],ymm11[15]
-	vpmulhw	%ymm10, %ymm15, %ymm11
-	vpmulhw	32(%rdx), %ymm14, %ymm15
-	#APP
-	vpsubw	%ymm11, %ymm13, %ymm13
-	#NO_APP
-	vpmulhrsw	64(%rdx), %ymm15, %ymm11
-	vpmullw	%ymm10, %ymm11, %ymm10
-	#APP
-	vpsubw	%ymm10, %ymm14, %ymm14
-	#NO_APP
-	vpunpcklwd	%ymm13, %ymm14, %ymm10 # ymm10 = ymm14[0],ymm13[0],ymm14[1],ymm13[1],ymm14[2],ymm13[2],ymm14[3],ymm13[3],ymm14[8],ymm13[8],ymm14[9],ymm13[9],ymm14[10],ymm13[10],ymm14[11],ymm13[11]
-	vpunpckldq	%ymm12, %ymm10, %ymm11 # ymm11 = ymm10[0],ymm12[0],ymm10[1],ymm12[1],ymm10[4],ymm12[4],ymm10[5],ymm12[5]
-	vpunpckhdq	%ymm12, %ymm10, %ymm10 # ymm10 = ymm10[2],ymm12[2],ymm10[3],ymm12[3],ymm10[6],ymm12[6],ymm10[7],ymm12[7]
-	vpunpckhwd	%ymm13, %ymm14, %ymm12 # ymm12 = ymm14[4],ymm13[4],ymm14[5],ymm13[5],ymm14[6],ymm13[6],ymm14[7],ymm13[7],ymm14[12],ymm13[12],ymm14[13],ymm13[13],ymm14[14],ymm13[14],ymm14[15],ymm13[15]
-	vpunpckldq	%ymm0, %ymm12, %ymm13 # ymm13 = ymm12[0],ymm0[0],ymm12[1],ymm0[1],ymm12[4],ymm0[4],ymm12[5],ymm0[5]
-	vpunpckhdq	%ymm0, %ymm12, %ymm0 # ymm0 = ymm12[2],ymm0[2],ymm12[3],ymm0[3],ymm12[6],ymm0[6],ymm12[7],ymm0[7]
-	vinserti128	$1, %xmm10, %ymm11, %ymm12
-	vperm2i128	$49, %ymm10, %ymm11, %ymm10 # ymm10 = ymm11[2,3],ymm10[2,3]
-	vinserti128	$1, %xmm0, %ymm13, %ymm11
-	vmovdqu	%ymm12, -224(%rax)
-	vmovdqu	%ymm10, -96(%rax)
-	vmovdqu	%ymm11, -160(%rax)
-	vperm2i128	$49, %ymm0, %ymm13, %ymm0 # ymm0 = ymm13[2,3],ymm0[2,3]
-	vmovdqu	%ymm0, -32(%rax)
-	vmovdqu	(%rax), %ymm0
-	vpaddw	%ymm9, %ymm0, %ymm10
-	vmovdqa	%ymm9, %ymm11
-	#APP
-	vpsubw	%ymm0, %ymm11, %ymm11
-	#NO_APP
-	vpmulhw	96(%rdx), %ymm11, %ymm0
-	vmovdqa	(%rdx), %ymm9
-	vpmullw	128(%rdx), %ymm11, %ymm11
-	vpmulhw	%ymm9, %ymm11, %ymm11
-	#APP
-	vpsubw	%ymm11, %ymm0, %ymm0
-	#NO_APP
-	vmovdqu	-64(%rax), %ymm11
-	vpaddw	%ymm8, %ymm11, %ymm12
-	#APP
-	vpsubw	%ymm11, %ymm8, %ymm8
-	#NO_APP
-	vpaddw	%ymm0, %ymm8, %ymm11
-	#APP
-	vpsubw	%ymm8, %ymm0, %ymm0
-	#NO_APP
-	vpmulhw	%ymm6, %ymm0, %ymm8
-	vpmullw	%ymm5, %ymm0, %ymm0
-	vpmulhw	%ymm9, %ymm0, %ymm0
-	#APP
-	vpsubw	%ymm0, %ymm8, %ymm8
-	#NO_APP
-	vpmulhw	1024(%rdx), %ymm11, %ymm0
-	vpmullw	1184(%rdx), %ymm11, %ymm11
-	vpmulhw	%ymm9, %ymm11, %ymm11
-	#APP
-	vpsubw	%ymm11, %ymm0, %ymm0
-	#NO_APP
-	vpunpcklwd	%ymm8, %ymm0, %ymm11 # ymm11 = ymm0[0],ymm8[0],ymm0[1],ymm8[1],ymm0[2],ymm8[2],ymm0[3],ymm8[3],ymm0[8],ymm8[8],ymm0[9],ymm8[9],ymm0[10],ymm8[10],ymm0[11],ymm8[11]
-	vpunpckhwd	%ymm8, %ymm0, %ymm0 # ymm0 = ymm0[4],ymm8[4],ymm0[5],ymm8[5],ymm0[6],ymm8[6],ymm0[7],ymm8[7],ymm0[12],ymm8[12],ymm0[13],ymm8[13],ymm0[14],ymm8[14],ymm0[15],ymm8[15]
-	vpaddw	%ymm10, %ymm12, %ymm8
-	#APP
-	vpsubw	%ymm10, %ymm12, %ymm12
-	#NO_APP
-	vpmulhw	832(%rdx), %ymm12, %ymm10
-	vpmullw	928(%rdx), %ymm12, %ymm12
-	vpmulhw	%ymm9, %ymm12, %ymm12
-	#APP
-	vpsubw	%ymm12, %ymm10, %ymm10
-	#NO_APP
-	vpmulhw	32(%rdx), %ymm8, %ymm12
-	vpmulhrsw	64(%rdx), %ymm12, %ymm12
-	vpmullw	%ymm9, %ymm12, %ymm9
-	#APP
-	vpsubw	%ymm9, %ymm8, %ymm8
-	#NO_APP
-	vpunpcklwd	%ymm10, %ymm8, %ymm9 # ymm9 = ymm8[0],ymm10[0],ymm8[1],ymm10[1],ymm8[2],ymm10[2],ymm8[3],ymm10[3],ymm8[8],ymm10[8],ymm8[9],ymm10[9],ymm8[10],ymm10[10],ymm8[11],ymm10[11]
-	vpunpckldq	%ymm11, %ymm9, %ymm12 # ymm12 = ymm9[0],ymm11[0],ymm9[1],ymm11[1],ymm9[4],ymm11[4],ymm9[5],ymm11[5]
-	vpunpckhdq	%ymm11, %ymm9, %ymm9 # ymm9 = ymm9[2],ymm11[2],ymm9[3],ymm11[3],ymm9[6],ymm11[6],ymm9[7],ymm11[7]
-	vpunpckhwd	%ymm10, %ymm8, %ymm8 # ymm8 = ymm8[4],ymm10[4],ymm8[5],ymm10[5],ymm8[6],ymm10[6],ymm8[7],ymm10[7],ymm8[12],ymm10[12],ymm8[13],ymm10[13],ymm8[14],ymm10[14],ymm8[15],ymm10[15]
-	vpunpckldq	%ymm0, %ymm8, %ymm10 # ymm10 = ymm8[0],ymm0[0],ymm8[1],ymm0[1],ymm8[4],ymm0[4],ymm8[5],ymm0[5]
-	vpunpckhdq	%ymm0, %ymm8, %ymm0 # ymm0 = ymm8[2],ymm0[2],ymm8[3],ymm0[3],ymm8[6],ymm0[6],ymm8[7],ymm0[7]
-	vinserti128	$1, %xmm9, %ymm12, %ymm8
-	vperm2i128	$49, %ymm9, %ymm12, %ymm9 # ymm9 = ymm12[2,3],ymm9[2,3]
-	vinserti128	$1, %xmm0, %ymm10, %ymm11
-	vperm2i128	$49, %ymm0, %ymm10, %ymm0 # ymm0 = ymm10[2,3],ymm0[2,3]
-	vmovdqu	%ymm8, -192(%rax)
-	vmovdqu	%ymm9, -64(%rax)
-	vmovdqu	%ymm11, -128(%rax)
-	vmovdqu	%ymm0, (%rax)
-	addq	$256, %rax              # imm = 0x100
-	addl	$-1, %ecx
-	jne	.LBB1_7
-# %bb.8:
-	leaq	224(%rdi), %rax
-	movl	%esi, %ecx
-	vmovdqa	(%rsp), %ymm12          # 32-byte Reload
-	.p2align	4, 0x90
-.LBB1_9:                                # =>This Inner Loop Header: Depth=1
-	vmovdqu	-96(%rax), %ymm0
-	vmovdqu	-64(%rax), %ymm4
-	vpaddw	%ymm0, %ymm4, %ymm7
-	#APP
-	vpsubw	%ymm4, %ymm0, %ymm0
-	#NO_APP
-	vpmulhw	96(%rdx), %ymm0, %ymm8
-	vpmullw	128(%rdx), %ymm0, %ymm0
-	vmovdqa	(%rdx), %ymm6
-	vpmulhw	%ymm6, %ymm0, %ymm0
-	#APP
-	vpsubw	%ymm0, %ymm8, %ymm8
-	#NO_APP
-	vmovdqu	-224(%rax), %ymm0
-	vmovdqu	-192(%rax), %ymm9
-	vmovdqu	-160(%rax), %ymm4
-	vmovdqu	-128(%rax), %ymm5
-	vpaddw	%ymm0, %ymm9, %ymm10
-	#APP
-	vpsubw	%ymm9, %ymm0, %ymm0
-	#NO_APP
-	vpaddw	%ymm8, %ymm0, %ymm9
-	#APP
-	vpsubw	%ymm0, %ymm8, %ymm8
-	#NO_APP
-	vpmulhw	%ymm12, %ymm8, %ymm0
-	vpmullw	%ymm1, %ymm8, %ymm8
-	vpmulhw	%ymm6, %ymm8, %ymm8
-	vpmulhw	480(%rdx), %ymm9, %ymm11
-	#APP
-	vpsubw	%ymm8, %ymm0, %ymm0
-	#NO_APP
-	vpmullw	640(%rdx), %ymm9, %ymm8
-	vpmulhw	%ymm6, %ymm8, %ymm8
-	#APP
-	vpsubw	%ymm8, %ymm11, %ymm11
-	#NO_APP
-	vpunpcklqdq	%ymm0, %ymm11, %ymm8 # ymm8 = ymm11[0],ymm0[0],ymm11[2],ymm0[2]
-	vpaddw	%ymm7, %ymm10, %ymm9
-	#APP
-	vpsubw	%ymm7, %ymm10, %ymm10
-	#NO_APP
-	vpmulhw	288(%rdx), %ymm10, %ymm7
-	vpmullw	384(%rdx), %ymm10, %ymm10
-	vpunpckhqdq	%ymm0, %ymm11, %ymm0 # ymm0 = ymm11[1],ymm0[1],ymm11[3],ymm0[3]
-	vpmulhw	%ymm6, %ymm10, %ymm10
-	vpmulhw	32(%rdx), %ymm9, %ymm11
-	#APP
-	vpsubw	%ymm10, %ymm7, %ymm7
-	#NO_APP
-	vpmulhrsw	64(%rdx), %ymm11, %ymm10
-	vpmullw	%ymm6, %ymm10, %ymm6
-	#APP
-	vpsubw	%ymm6, %ymm9, %ymm9
-	#NO_APP
-	vpunpckhqdq	%ymm7, %ymm9, %ymm6 # ymm6 = ymm9[1],ymm7[1],ymm9[3],ymm7[3]
-	vpunpcklqdq	%ymm7, %ymm9, %ymm7 # ymm7 = ymm9[0],ymm7[0],ymm9[2],ymm7[2]
-	vinserti128	$1, %xmm0, %ymm6, %ymm9
-	vperm2i128	$49, %ymm0, %ymm6, %ymm0 # ymm0 = ymm6[2,3],ymm0[2,3]
-	vinserti128	$1, %xmm8, %ymm7, %ymm6
-	vmovdqu	%ymm9, -96(%rax)
-	vmovdqu	%ymm0, -64(%rax)
-	vmovdqu	%ymm6, -224(%rax)
-	vperm2i128	$49, %ymm8, %ymm7, %ymm0 # ymm0 = ymm7[2,3],ymm8[2,3]
-	vmovdqu	%ymm0, -192(%rax)
-	vmovdqu	-32(%rax), %ymm0
-	vmovdqu	(%rax), %ymm6
-	vpaddw	%ymm0, %ymm6, %ymm7
-	#APP
-	vpsubw	%ymm6, %ymm0, %ymm0
-	#NO_APP
-	vmovdqa	(%rdx), %ymm6
-	vpmulhw	96(%rdx), %ymm0, %ymm8
-	vpmullw	128(%rdx), %ymm0, %ymm0
-	vpmulhw	%ymm6, %ymm0, %ymm0
-	#APP
-	vpsubw	%ymm0, %ymm8, %ymm8
-	#NO_APP
-	vpaddw	%ymm4, %ymm5, %ymm0
-	#APP
-	vpsubw	%ymm5, %ymm4, %ymm4
-	#NO_APP
-	vpaddw	%ymm8, %ymm4, %ymm5
-	#APP
-	vpsubw	%ymm4, %ymm8, %ymm8
-	#NO_APP
-	vpmulhw	%ymm2, %ymm8, %ymm4
-	vpmullw	%ymm3, %ymm8, %ymm8
-	vpmulhw	%ymm6, %ymm8, %ymm8
-	#APP
-	vpsubw	%ymm8, %ymm4, %ymm4
-	#NO_APP
-	vpmulhw	512(%rdx), %ymm5, %ymm8
-	vpmullw	672(%rdx), %ymm5, %ymm5
-	vpmulhw	%ymm6, %ymm5, %ymm5
-	#APP
-	vpsubw	%ymm5, %ymm8, %ymm8
-	#NO_APP
-	vpunpcklqdq	%ymm4, %ymm8, %ymm5 # ymm5 = ymm8[0],ymm4[0],ymm8[2],ymm4[2]
-	vpunpckhqdq	%ymm4, %ymm8, %ymm4 # ymm4 = ymm8[1],ymm4[1],ymm8[3],ymm4[3]
-	vpaddw	%ymm7, %ymm0, %ymm8
-	#APP
-	vpsubw	%ymm7, %ymm0, %ymm0
-	#NO_APP
-	vpmulhw	320(%rdx), %ymm0, %ymm7
-	vpmullw	416(%rdx), %ymm0, %ymm0
-	vpmulhw	%ymm6, %ymm0, %ymm0
-	#APP
-	vpsubw	%ymm0, %ymm7, %ymm7
-	#NO_APP
-	vpmulhw	32(%rdx), %ymm8, %ymm0
-	vpmulhrsw	64(%rdx), %ymm0, %ymm0
-	vpmullw	%ymm6, %ymm0, %ymm0
-	#APP
-	vpsubw	%ymm0, %ymm8, %ymm8
-	#NO_APP
-	vpunpckhqdq	%ymm7, %ymm8, %ymm0 # ymm0 = ymm8[1],ymm7[1],ymm8[3],ymm7[3]
-	vpunpcklqdq	%ymm7, %ymm8, %ymm6 # ymm6 = ymm8[0],ymm7[0],ymm8[2],ymm7[2]
-	vinserti128	$1, %xmm4, %ymm0, %ymm7
-	vperm2i128	$49, %ymm4, %ymm0, %ymm0 # ymm0 = ymm0[2,3],ymm4[2,3]
-	vinserti128	$1, %xmm5, %ymm6, %ymm4
-	vperm2i128	$49, %ymm5, %ymm6, %ymm5 # ymm5 = ymm6[2,3],ymm5[2,3]
-	vmovdqu	%ymm7, -32(%rax)
-	vmovdqu	%ymm0, (%rax)
-	vmovdqu	%ymm4, -160(%rax)
-	vmovdqu	%ymm5, -128(%rax)
-	addq	$256, %rax              # imm = 0x100
-	addl	$-1, %ecx
-	jne	.LBB1_9
-# %bb.10:
-	addq	$224, %rdi
-	.p2align	4, 0x90
-.LBB1_11:                               # =>This Inner Loop Header: Depth=1
-	vmovdqu	-224(%rdi), %ymm0
-	vmovdqu	-192(%rdi), %ymm1
-	vmovdqu	-160(%rdi), %ymm2
-	vmovdqu	-128(%rdi), %ymm3
-	vpaddw	%ymm1, %ymm3, %ymm9
-	#APP
-	vpsubw	%ymm3, %ymm1, %ymm1
-	#NO_APP
-	vmovdqa	(%rdx), %ymm4
-	vmovdqa	32(%rdx), %ymm6
-	vmovdqa	64(%rdx), %ymm5
-	vmovdqa	96(%rdx), %ymm7
-	vmovdqa	128(%rdx), %ymm8
-	vpmulhw	%ymm7, %ymm1, %ymm3
-	vpmullw	%ymm1, %ymm8, %ymm1
-	vpmulhw	%ymm4, %ymm1, %ymm1
-	#APP
-	vpsubw	%ymm1, %ymm3, %ymm3
-	#NO_APP
-	vpaddw	%ymm0, %ymm2, %ymm10
-	#APP
-	vpsubw	%ymm2, %ymm0, %ymm0
-	#NO_APP
-	vpaddw	%ymm3, %ymm0, %ymm1
-	#APP
-	vpsubw	%ymm3, %ymm0, %ymm0
-	#NO_APP
-	vpmulhw	%ymm6, %ymm1, %ymm2
-	vpmulhrsw	%ymm5, %ymm2, %ymm2
-	vpmullw	%ymm4, %ymm2, %ymm2
-	#APP
-	vpsubw	%ymm2, %ymm1, %ymm1
-	#NO_APP
-	vpmulhw	%ymm6, %ymm0, %ymm2
-	vpmulhrsw	%ymm5, %ymm2, %ymm2
-	vpmullw	%ymm4, %ymm2, %ymm2
-	#APP
-	vpsubw	%ymm2, %ymm0, %ymm0
-	#NO_APP
-	vpaddw	%ymm9, %ymm10, %ymm2
-	vmovdqa	%ymm10, %ymm3
-	#APP
-	vpsubw	%ymm9, %ymm3, %ymm3
-	#NO_APP
-	vpmulhw	%ymm6, %ymm2, %ymm9
-	vpmulhrsw	%ymm5, %ymm9, %ymm9
-	vpmullw	%ymm4, %ymm9, %ymm9
-	#APP
-	vpsubw	%ymm9, %ymm2, %ymm2
-	#NO_APP
-	vmovdqu	-64(%rdi), %ymm9
-	vmovdqu	(%rdi), %ymm10
-	vpaddw	%ymm9, %ymm10, %ymm11
-	#APP
-	vpsubw	%ymm10, %ymm9, %ymm9
-	#NO_APP
-	vpmulhw	%ymm7, %ymm9, %ymm10
-	vpmullw	%ymm9, %ymm8, %ymm9
-	vpmulhw	%ymm4, %ymm9, %ymm9
-	#APP
-	vpsubw	%ymm9, %ymm10, %ymm10
-	#NO_APP
-	vmovdqu	-96(%rdi), %ymm9
-	vmovdqu	-32(%rdi), %ymm12
-	vpaddw	%ymm9, %ymm12, %ymm13
-	#APP
-	vpsubw	%ymm12, %ymm9, %ymm9
-	#NO_APP
-	vpaddw	%ymm10, %ymm9, %ymm12
-	#APP
-	vpsubw	%ymm9, %ymm10, %ymm10
-	#NO_APP
-	vpmulhw	224(%rdx), %ymm10, %ymm9
-	vpmullw	256(%rdx), %ymm10, %ymm10
-	vpmulhw	%ymm4, %ymm10, %ymm10
-	#APP
-	vpsubw	%ymm10, %ymm9, %ymm9
-	#NO_APP
-	vpmulhw	160(%rdx), %ymm12, %ymm10
-	vpmullw	192(%rdx), %ymm12, %ymm12
-	vpmulhw	%ymm4, %ymm12, %ymm12
-	#APP
-	vpsubw	%ymm12, %ymm10, %ymm10
-	#NO_APP
-	vpaddw	%ymm11, %ymm13, %ymm12
-	#APP
-	vpsubw	%ymm11, %ymm13, %ymm13
-	#NO_APP
-	vpmulhw	%ymm7, %ymm13, %ymm7
-	vpmullw	%ymm13, %ymm8, %ymm8
-	vpmulhw	%ymm4, %ymm8, %ymm8
-	#APP
-	vpsubw	%ymm8, %ymm7, %ymm7
-	#NO_APP
-	vpmulhw	%ymm6, %ymm12, %ymm6
-	vpmulhrsw	%ymm5, %ymm6, %ymm5
-	vpmullw	%ymm4, %ymm5, %ymm4
-	#APP
-	vpsubw	%ymm4, %ymm12, %ymm12
-	#NO_APP
-	vpaddw	%ymm2, %ymm12, %ymm4
-	vpaddw	%ymm3, %ymm7, %ymm5
-	vpaddw	%ymm1, %ymm10, %ymm6
-	vpaddw	%ymm0, %ymm9, %ymm8
-	vmovdqu	%ymm4, -224(%rdi)
-	vmovdqu	%ymm5, -192(%rdi)
-	vmovdqu	%ymm6, -160(%rdi)
-	vmovdqu	%ymm8, -128(%rdi)
-	#APP
-	vpsubw	%ymm12, %ymm2, %ymm2
-	#NO_APP
-	#APP
-	vpsubw	%ymm7, %ymm3, %ymm3
-	#NO_APP
-	#APP
-	vpsubw	%ymm10, %ymm1, %ymm1
-	#NO_APP
-	#APP
-	vpsubw	%ymm9, %ymm0, %ymm0
-	#NO_APP
-	vmovdqu	%ymm2, -96(%rdi)
-	vmovdqu	%ymm3, -64(%rdi)
-	vmovdqu	%ymm1, -32(%rdi)
-	vmovdqu	%ymm0, (%rdi)
-	addq	$256, %rdi              # imm = 0x100
-	addl	$-1, %esi
-	jne	.LBB1_11
-.LBB1_12:
-	movq	%rbp, %rsp
-	popq	%rbp
-	.cfi_def_cfa %rsp, 8
-	vzeroupper
-	retq
-.Lfunc_end1:
-	.size	ntt512, .Lfunc_end1-ntt512
-	.cfi_endproc
-                                        # -- End function
-	.globl	CRYPTO_NAMESPACE(ntt512_10753) # -- Begin function CRYPTO_NAMESPACE(ntt512_10753)
-	.p2align	4, 0x90
-	.type	CRYPTO_NAMESPACE(ntt512_10753),@function
-CRYPTO_NAMESPACE(ntt512_10753): # @CRYPTO_NAMESPACE(ntt512_10753)
-	.cfi_startproc
-# %bb.0:
-	leaq	qdata_10753(%rip), %rdx
-	jmp	ntt512                  # TAILCALL
-.Lfunc_end2:
-	.size	CRYPTO_NAMESPACE(ntt512_10753), .Lfunc_end2-CRYPTO_NAMESPACE(ntt512_10753)
-	.cfi_endproc
-                                        # -- End function
-	.globl	CRYPTO_NAMESPACE(invntt512_7681) # -- Begin function CRYPTO_NAMESPACE(invntt512_7681)
-	.p2align	4, 0x90
-	.type	CRYPTO_NAMESPACE(invntt512_7681),@function
-CRYPTO_NAMESPACE(invntt512_7681): # @CRYPTO_NAMESPACE(invntt512_7681)
-	.cfi_startproc
-# %bb.0:
-	leaq	qdata_7681(%rip), %rdx
-	jmp	invntt512               # TAILCALL
-.Lfunc_end3:
-	.size	CRYPTO_NAMESPACE(invntt512_7681), .Lfunc_end3-CRYPTO_NAMESPACE(invntt512_7681)
-	.cfi_endproc
-                                        # -- End function
-	.section	.rodata.cst32,"aM",@progbits,32
-	.p2align	5               # -- Begin function invntt512
-.LCPI4_0:
-	.byte	14                      # 0xe
-	.byte	15                      # 0xf
-	.byte	12                      # 0xc
-	.byte	13                      # 0xd
-	.byte	10                      # 0xa
-	.byte	11                      # 0xb
-	.byte	8                       # 0x8
-	.byte	9                       # 0x9
-	.byte	6                       # 0x6
-	.byte	7                       # 0x7
-	.byte	4                       # 0x4
-	.byte	5                       # 0x5
-	.byte	2                       # 0x2
-	.byte	3                       # 0x3
-	.byte	0                       # 0x0
-	.byte	1                       # 0x1
-	.byte	30                      # 0x1e
-	.byte	31                      # 0x1f
-	.byte	28                      # 0x1c
-	.byte	29                      # 0x1d
-	.byte	26                      # 0x1a
-	.byte	27                      # 0x1b
-	.byte	24                      # 0x18
-	.byte	25                      # 0x19
-	.byte	22                      # 0x16
-	.byte	23                      # 0x17
-	.byte	20                      # 0x14
-	.byte	21                      # 0x15
-	.byte	18                      # 0x12
-	.byte	19                      # 0x13
-	.byte	16                      # 0x10
-	.byte	17                      # 0x11
-	.text
-	.p2align	4, 0x90
-	.type	invntt512,@function
-invntt512:                              # @invntt512
-	.cfi_startproc
-# %bb.0:
+	movl	%esi, %r9d
+	movslq	%esi, %r8
+	pushq	-8(%r10)
+	sall	$9, %r9d
 	pushq	%rbp
-	.cfi_def_cfa_offset 16
-	.cfi_offset %rbp, -16
+	movslq	%r9d, %r9
+	addq	%r9, %r9
+	.cfi_escape 0x10,0x6,0x2,0x76,0
 	movq	%rsp, %rbp
-	.cfi_def_cfa_register %rbp
-	andq	$-32, %rsp
-	subq	$1536, %rsp             # imm = 0x600
-	vmovdqu	2370(%rdx), %ymm1
-	vmovdqa	.LCPI4_0(%rip), %ymm0   # ymm0 = [14,15,12,13,10,11,8,9,6,7,4,5,2,3,0,1,30,31,28,29,26,27,24,25,22,23,20,21,18,19,16,17]
-	vpshufb	%ymm0, %ymm1, %ymm1
-	vpermq	$78, %ymm1, %ymm1       # ymm1 = ymm1[2,3,0,1]
-	vmovdqa	%ymm1, 1248(%rsp)
-	vmovdqu	2338(%rdx), %ymm1
-	vpshufb	%ymm0, %ymm1, %ymm1
-	vpermq	$78, %ymm1, %ymm1       # ymm1 = ymm1[2,3,0,1]
-	vmovdqa	%ymm1, 1280(%rsp)
-	vmovdqu	2306(%rdx), %ymm1
-	vpshufb	%ymm0, %ymm1, %ymm1
-	vpermq	$78, %ymm1, %ymm1       # ymm1 = ymm1[2,3,0,1]
-	vmovdqa	%ymm1, 1312(%rsp)
-	vmovdqu	2274(%rdx), %ymm1
-	vpshufb	%ymm0, %ymm1, %ymm1
-	vpermq	$78, %ymm1, %ymm1       # ymm1 = ymm1[2,3,0,1]
-	vmovdqa	%ymm1, 1344(%rsp)
-	vmovdqu	2242(%rdx), %ymm1
-	vpshufb	%ymm0, %ymm1, %ymm1
-	vpermq	$78, %ymm1, %ymm1       # ymm1 = ymm1[2,3,0,1]
-	vmovdqa	%ymm1, 1376(%rsp)
-	vmovdqu	2210(%rdx), %ymm1
-	vpshufb	%ymm0, %ymm1, %ymm1
-	vpermq	$78, %ymm1, %ymm1       # ymm1 = ymm1[2,3,0,1]
-	vmovdqa	%ymm1, 1408(%rsp)
-	vmovdqu	2178(%rdx), %ymm1
-	vpshufb	%ymm0, %ymm1, %ymm1
-	vpermq	$78, %ymm1, %ymm1       # ymm1 = ymm1[2,3,0,1]
-	vmovdqa	%ymm1, 1440(%rsp)
-	vmovdqu	2146(%rdx), %ymm1
-	vpshufb	%ymm0, %ymm1, %ymm1
-	vpermq	$78, %ymm1, %ymm1       # ymm1 = ymm1[2,3,0,1]
-	vmovdqa	%ymm1, 1472(%rsp)
-	vmovdqu	2914(%rdx), %ymm1
-	vpshufb	%ymm0, %ymm1, %ymm1
-	vpermq	$78, %ymm1, %ymm1       # ymm1 = ymm1[2,3,0,1]
-	vmovdqa	%ymm1, 992(%rsp)
-	vmovdqu	2882(%rdx), %ymm1
-	vpshufb	%ymm0, %ymm1, %ymm1
-	vpermq	$78, %ymm1, %ymm1       # ymm1 = ymm1[2,3,0,1]
-	vmovdqa	%ymm1, 1024(%rsp)
-	vmovdqu	2850(%rdx), %ymm1
-	vpshufb	%ymm0, %ymm1, %ymm1
-	vpermq	$78, %ymm1, %ymm1       # ymm1 = ymm1[2,3,0,1]
-	vmovdqa	%ymm1, 1056(%rsp)
-	vmovdqu	2818(%rdx), %ymm1
-	vpshufb	%ymm0, %ymm1, %ymm1
-	vpermq	$78, %ymm1, %ymm1       # ymm1 = ymm1[2,3,0,1]
-	vmovdqa	%ymm1, 1088(%rsp)
-	vmovdqu	2786(%rdx), %ymm1
-	vpshufb	%ymm0, %ymm1, %ymm1
-	vpermq	$78, %ymm1, %ymm1       # ymm1 = ymm1[2,3,0,1]
-	vmovdqa	%ymm1, 1120(%rsp)
-	vmovdqu	2754(%rdx), %ymm1
-	vpshufb	%ymm0, %ymm1, %ymm1
-	vpermq	$78, %ymm1, %ymm1       # ymm1 = ymm1[2,3,0,1]
-	vmovdqa	%ymm1, 1152(%rsp)
-	vmovdqu	2722(%rdx), %ymm1
-	vpshufb	%ymm0, %ymm1, %ymm1
-	vpermq	$78, %ymm1, %ymm1       # ymm1 = ymm1[2,3,0,1]
-	vmovdqa	%ymm1, 1184(%rsp)
-	vmovdqu	2690(%rdx), %ymm1
-	vpshufb	%ymm0, %ymm1, %ymm1
-	vpermq	$78, %ymm1, %ymm1       # ymm1 = ymm1[2,3,0,1]
-	vmovdqa	%ymm1, 1216(%rsp)
-	vmovdqu	1538(%rdx), %ymm1
-	vpshufb	%ymm0, %ymm1, %ymm1
-	vpermq	$78, %ymm1, %ymm1       # ymm1 = ymm1[2,3,0,1]
-	vmovdqa	%ymm1, 736(%rsp)
-	vmovdqu	1506(%rdx), %ymm1
-	vpshufb	%ymm0, %ymm1, %ymm1
-	vpermq	$78, %ymm1, %ymm1       # ymm1 = ymm1[2,3,0,1]
-	vmovdqa	%ymm1, 768(%rsp)
-	vmovdqu	1474(%rdx), %ymm1
-	vpshufb	%ymm0, %ymm1, %ymm1
-	vpermq	$78, %ymm1, %ymm1       # ymm1 = ymm1[2,3,0,1]
-	vmovdqa	%ymm1, 800(%rsp)
-	vmovdqu	1442(%rdx), %ymm1
-	vpshufb	%ymm0, %ymm1, %ymm1
-	vpermq	$78, %ymm1, %ymm1       # ymm1 = ymm1[2,3,0,1]
-	vmovdqa	%ymm1, 832(%rsp)
-	vmovdqu	1410(%rdx), %ymm1
-	vpshufb	%ymm0, %ymm1, %ymm1
-	vpermq	$78, %ymm1, %ymm1       # ymm1 = ymm1[2,3,0,1]
-	vmovdqa	%ymm1, 864(%rsp)
-	vmovdqu	1378(%rdx), %ymm1
-	vpshufb	%ymm0, %ymm1, %ymm1
-	vpermq	$78, %ymm1, %ymm1       # ymm1 = ymm1[2,3,0,1]
-	vmovdqa	%ymm1, 896(%rsp)
-	vmovdqu	1346(%rdx), %ymm1
-	vpshufb	%ymm0, %ymm1, %ymm1
-	vpermq	$78, %ymm1, %ymm1       # ymm1 = ymm1[2,3,0,1]
-	vmovdqa	%ymm1, 928(%rsp)
-	vmovdqu	1314(%rdx), %ymm1
-	vpshufb	%ymm0, %ymm1, %ymm1
-	vpermq	$78, %ymm1, %ymm1       # ymm1 = ymm1[2,3,0,1]
-	vmovdqa	%ymm1, 960(%rsp)
-	vmovdqu	1826(%rdx), %ymm1
-	vpshufb	%ymm0, %ymm1, %ymm1
-	vpermq	$78, %ymm1, %ymm1       # ymm1 = ymm1[2,3,0,1]
-	vmovdqa	%ymm1, 480(%rsp)
-	vmovdqu	1794(%rdx), %ymm1
-	vpshufb	%ymm0, %ymm1, %ymm1
-	vpermq	$78, %ymm1, %ymm1       # ymm1 = ymm1[2,3,0,1]
-	vmovdqa	%ymm1, 512(%rsp)
-	vmovdqu	1762(%rdx), %ymm1
-	vpshufb	%ymm0, %ymm1, %ymm1
-	vpermq	$78, %ymm1, %ymm1       # ymm1 = ymm1[2,3,0,1]
-	vmovdqa	%ymm1, 544(%rsp)
-	vmovdqu	1730(%rdx), %ymm1
-	vpshufb	%ymm0, %ymm1, %ymm1
-	vpermq	$78, %ymm1, %ymm1       # ymm1 = ymm1[2,3,0,1]
-	vmovdqa	%ymm1, 576(%rsp)
-	vmovdqu	1698(%rdx), %ymm1
-	vpshufb	%ymm0, %ymm1, %ymm1
-	vpermq	$78, %ymm1, %ymm1       # ymm1 = ymm1[2,3,0,1]
-	vmovdqa	%ymm1, 608(%rsp)
-	vmovdqu	1666(%rdx), %ymm1
-	vpshufb	%ymm0, %ymm1, %ymm1
-	vpermq	$78, %ymm1, %ymm1       # ymm1 = ymm1[2,3,0,1]
-	vmovdqa	%ymm1, 640(%rsp)
-	vmovdqu	1634(%rdx), %ymm1
-	vpshufb	%ymm0, %ymm1, %ymm1
-	vpermq	$78, %ymm1, %ymm1       # ymm1 = ymm1[2,3,0,1]
-	vmovdqa	%ymm1, 672(%rsp)
-                                        # kill: def $esi killed $esi def $rsi
-	vmovdqu	1602(%rdx), %ymm1
-	vpshufb	%ymm0, %ymm1, %ymm1
-	vpermq	$78, %ymm1, %ymm1       # ymm1 = ymm1[2,3,0,1]
-	vmovdqa	%ymm1, 704(%rsp)
-	leal	(,%rsi,4), %r8d
-	testl	%r8d, %r8d
-	jle	.LBB4_7
-# %bb.1:
-	vmovdqu	296(%rdx), %ymm6
-	vmovdqu	328(%rdx), %ymm1
-	vmovdqu	392(%rdx), %ymm7
-	vmovdqu	424(%rdx), %ymm2
-	vpshufb	%ymm0, %ymm1, %ymm1
-	vmovdqa	%ymm1, (%rsp)           # 32-byte Spill
-	vpshufb	%ymm0, %ymm2, %ymm15
-	vmovdqu	584(%rdx), %ymm3
-	vpshufb	%ymm0, %ymm3, %ymm3
-	vmovdqu	744(%rdx), %ymm4
-	vpshufb	%ymm0, %ymm4, %ymm4
-	vmovdqu	834(%rdx), %ymm5
-	vpshufb	%ymm0, %ymm5, %ymm5
-	vmovdqu	930(%rdx), %ymm8
-	vpshufb	%ymm0, %ymm8, %ymm8
-	vmovdqu	1090(%rdx), %ymm9
-	vpshufb	%ymm0, %ymm9, %ymm9
-	vmovdqu	1250(%rdx), %ymm10
-	vpshufb	%ymm0, %ymm10, %ymm10
-	vpshufb	%ymm0, %ymm6, %ymm6
-	vpshufb	%ymm0, %ymm7, %ymm7
-	vmovdqu	552(%rdx), %ymm11
-	vpshufb	%ymm0, %ymm11, %ymm11
-	vmovdqu	712(%rdx), %ymm12
-	vpshufb	%ymm0, %ymm12, %ymm12
-	vmovdqu	802(%rdx), %ymm13
-	vpshufb	%ymm0, %ymm13, %ymm13
-	vmovdqu	898(%rdx), %ymm14
-	vpshufb	%ymm0, %ymm14, %ymm2
-	vmovdqu	1058(%rdx), %ymm14
-	vpshufb	%ymm0, %ymm14, %ymm1
-	vmovdqu	1218(%rdx), %ymm14
-	vpshufb	%ymm0, %ymm14, %ymm0
-	vpermpd	$78, (%rsp), %ymm14     # 32-byte Folded Reload
-                                        # ymm14 = mem[2,3,0,1]
-	vmovaps	%ymm14, 192(%rsp)       # 32-byte Spill
-	vpermq	$78, %ymm15, %ymm14     # ymm14 = ymm15[2,3,0,1]
-	vmovdqa	%ymm14, 160(%rsp)       # 32-byte Spill
-	vpermq	$78, %ymm3, %ymm3       # ymm3 = ymm3[2,3,0,1]
-	vmovdqa	%ymm3, 128(%rsp)        # 32-byte Spill
-	vpermq	$78, %ymm4, %ymm3       # ymm3 = ymm4[2,3,0,1]
-	vmovdqa	%ymm3, 96(%rsp)         # 32-byte Spill
-	vpermq	$78, %ymm5, %ymm3       # ymm3 = ymm5[2,3,0,1]
-	vmovdqa	%ymm3, (%rsp)           # 32-byte Spill
-	vpermq	$78, %ymm8, %ymm3       # ymm3 = ymm8[2,3,0,1]
-	vmovdqa	%ymm3, 416(%rsp)        # 32-byte Spill
-	vpermq	$78, %ymm9, %ymm3       # ymm3 = ymm9[2,3,0,1]
-	vmovdqa	%ymm3, 384(%rsp)        # 32-byte Spill
-	vpermq	$78, %ymm10, %ymm3      # ymm3 = ymm10[2,3,0,1]
-	vmovdqa	%ymm3, 352(%rsp)        # 32-byte Spill
-	vpermq	$78, %ymm6, %ymm3       # ymm3 = ymm6[2,3,0,1]
-	vmovdqa	%ymm3, 64(%rsp)         # 32-byte Spill
-	vpermq	$78, %ymm7, %ymm3       # ymm3 = ymm7[2,3,0,1]
-	vmovdqa	%ymm3, 32(%rsp)         # 32-byte Spill
-	vpermq	$78, %ymm11, %ymm15     # ymm15 = ymm11[2,3,0,1]
-	vpermq	$78, %ymm12, %ymm3      # ymm3 = ymm12[2,3,0,1]
-	vmovdqa	%ymm3, 448(%rsp)        # 32-byte Spill
-	vpermq	$78, %ymm13, %ymm3      # ymm3 = ymm13[2,3,0,1]
-	vmovdqa	%ymm3, 320(%rsp)        # 32-byte Spill
-	vpermq	$78, %ymm2, %ymm2       # ymm2 = ymm2[2,3,0,1]
-	vmovdqa	%ymm2, 288(%rsp)        # 32-byte Spill
-	vpermq	$78, %ymm1, %ymm1       # ymm1 = ymm1[2,3,0,1]
-	vmovdqa	%ymm1, 256(%rsp)        # 32-byte Spill
-	vpermq	$78, %ymm0, %ymm0       # ymm0 = ymm0[2,3,0,1]
-	vmovdqa	%ymm0, 224(%rsp)        # 32-byte Spill
-	movl	%r8d, %eax
-	movq	%rdi, %rcx
-	.p2align	4, 0x90
-.LBB4_2:                                # =>This Inner Loop Header: Depth=1
-	vmovdqu	128(%rcx), %ymm1
-	vmovdqu	160(%rcx), %ymm5
-	vmovdqu	192(%rcx), %ymm4
-	vmovdqu	(%rcx), %ymm6
-	vmovdqu	32(%rcx), %ymm8
-	vmovdqu	64(%rcx), %ymm9
-	vmovdqu	96(%rcx), %ymm2
-	vmovdqu	224(%rcx), %ymm7
-	vpaddw	%ymm6, %ymm1, %ymm0
-	#APP
-	vpsubw	%ymm1, %ymm6, %ymm6
-	#NO_APP
-	vmovdqa	(%rdx), %ymm1
-	vmovdqa	32(%rdx), %ymm12
-	vmovdqa	64(%rdx), %ymm11
-	vmovdqa	96(%rdx), %ymm3
-	vpmulhw	%ymm12, %ymm6, %ymm10
-	vpmulhrsw	%ymm11, %ymm10, %ymm10
-	vpmullw	%ymm1, %ymm10, %ymm10
-	#APP
-	vpsubw	%ymm10, %ymm6, %ymm6
-	#NO_APP
-	vpaddw	%ymm8, %ymm5, %ymm14
-	#APP
-	vpsubw	%ymm5, %ymm8, %ymm8
-	#NO_APP
-	vmovdqa	128(%rdx), %ymm5
-	vpmulhw	%ymm3, %ymm8, %ymm10
-	vpmullw	%ymm8, %ymm5, %ymm8
-	vpmulhw	%ymm1, %ymm8, %ymm8
-	#APP
-	vpsubw	%ymm8, %ymm10, %ymm10
-	#NO_APP
-	vpaddw	%ymm9, %ymm4, %ymm8
-	#APP
-	vpsubw	%ymm4, %ymm9, %ymm9
-	#NO_APP
-	vpmulhw	224(%rdx), %ymm9, %ymm4
-	vpmullw	256(%rdx), %ymm9, %ymm9
-	vpmulhw	%ymm1, %ymm9, %ymm9
-	#APP
-	vpsubw	%ymm9, %ymm4, %ymm4
-	#NO_APP
-	vpaddw	%ymm2, %ymm7, %ymm13
-	#APP
-	vpsubw	%ymm7, %ymm2, %ymm2
-	#NO_APP
-	vpmulhw	160(%rdx), %ymm2, %ymm9
-	vpmullw	192(%rdx), %ymm2, %ymm2
-	vpmulhw	%ymm1, %ymm2, %ymm2
-	#APP
-	vpsubw	%ymm2, %ymm9, %ymm9
-	#NO_APP
-	vpaddw	%ymm0, %ymm14, %ymm2
-	vpmulhw	%ymm12, %ymm2, %ymm7
-	vpmulhrsw	%ymm11, %ymm7, %ymm7
-	vpmullw	%ymm1, %ymm7, %ymm7
-	#APP
-	vpsubw	%ymm7, %ymm2, %ymm2
-	#NO_APP
-	#APP
-	vpsubw	%ymm14, %ymm0, %ymm0
-	#NO_APP
-	vpmulhw	%ymm12, %ymm0, %ymm7
-	vpmulhrsw	%ymm11, %ymm7, %ymm7
-	vpmullw	%ymm1, %ymm7, %ymm7
-	#APP
-	vpsubw	%ymm7, %ymm0, %ymm0
-	#NO_APP
-	vpaddw	%ymm6, %ymm10, %ymm7
-	#APP
-	vpsubw	%ymm10, %ymm6, %ymm6
-	#NO_APP
-	vpaddw	%ymm8, %ymm13, %ymm10
-	#APP
-	vpsubw	%ymm13, %ymm8, %ymm8
-	#NO_APP
-	vpmulhw	%ymm3, %ymm8, %ymm11
-	vpmullw	%ymm8, %ymm5, %ymm8
-	vpmulhw	%ymm1, %ymm8, %ymm8
-	#APP
-	vpsubw	%ymm8, %ymm11, %ymm11
-	#NO_APP
-	vpaddw	%ymm4, %ymm9, %ymm8
-	vpmulhw	%ymm3, %ymm8, %ymm3
-	vpmullw	%ymm5, %ymm8, %ymm5
-	vpmulhw	%ymm1, %ymm5, %ymm1
-	#APP
-	vpsubw	%ymm1, %ymm3, %ymm3
-	#NO_APP
-	#APP
-	vpsubw	%ymm9, %ymm4, %ymm4
-	#NO_APP
-	vpaddw	%ymm2, %ymm10, %ymm1
-	#APP
-	vpsubw	%ymm10, %ymm2, %ymm2
-	#NO_APP
-	vpaddw	%ymm6, %ymm4, %ymm5
-	#APP
-	vpsubw	%ymm4, %ymm6, %ymm6
-	#NO_APP
-	vpaddw	%ymm0, %ymm11, %ymm4
-	#APP
-	vpsubw	%ymm11, %ymm0, %ymm0
-	#NO_APP
-	vpaddw	%ymm3, %ymm7, %ymm8
-	#APP
-	vpsubw	%ymm3, %ymm7, %ymm7
-	#NO_APP
-	vmovdqu	%ymm1, (%rcx)
-	vmovdqu	%ymm2, 64(%rcx)
-	vmovdqu	%ymm5, 128(%rcx)
-	vmovdqu	%ymm6, 192(%rcx)
-	vmovdqu	%ymm0, 32(%rcx)
-	vmovdqu	%ymm4, 96(%rcx)
-	vmovdqu	%ymm7, 160(%rcx)
-	vmovdqu	%ymm8, 224(%rcx)
-	addq	$256, %rcx              # imm = 0x100
-	addl	$-1, %eax
-	jne	.LBB4_2
-# %bb.3:
-	movl	%r8d, %ecx
+	pushq	%r10
+	.cfi_escape 0xf,0x3,0x76,0x78,0x6
+	movq	%r9, %r10
+	negq	%r10
+	testq	%r8, %r8
+	jle	.L2
 	movq	%rdi, %rax
-	vmovdqa	192(%rsp), %ymm9        # 32-byte Reload
-	vmovdqa	160(%rsp), %ymm10       # 32-byte Reload
-	vmovdqa	128(%rsp), %ymm11       # 32-byte Reload
-	vmovdqa	96(%rsp), %ymm12        # 32-byte Reload
-	vmovdqa	64(%rsp), %ymm13        # 32-byte Reload
-	vmovdqa	32(%rsp), %ymm14        # 32-byte Reload
-	.p2align	4, 0x90
-.LBB4_4:                                # =>This Inner Loop Header: Depth=1
-	vmovdqu	128(%rax), %ymm1
-	vmovdqu	160(%rax), %ymm2
-	vmovdqu	(%rax), %ymm3
-	vmovdqu	32(%rax), %ymm4
-	vmovdqu	64(%rax), %ymm0
-	vpunpcklqdq	%ymm1, %ymm3, %ymm5 # ymm5 = ymm3[0],ymm1[0],ymm3[2],ymm1[2]
-	vpunpcklqdq	%ymm2, %ymm4, %ymm6 # ymm6 = ymm4[0],ymm2[0],ymm4[2],ymm2[2]
-	vpunpckhqdq	%ymm1, %ymm3, %ymm3 # ymm3 = ymm3[1],ymm1[1],ymm3[3],ymm1[3]
-	vpunpckhqdq	%ymm2, %ymm4, %ymm2 # ymm2 = ymm4[1],ymm2[1],ymm4[3],ymm2[3]
-	vperm2i128	$49, %ymm6, %ymm5, %ymm4 # ymm4 = ymm5[2,3],ymm6[2,3]
-	vperm2i128	$49, %ymm2, %ymm3, %ymm7 # ymm7 = ymm3[2,3],ymm2[2,3]
-	vinserti128	$1, %xmm6, %ymm5, %ymm1
-	vinserti128	$1, %xmm2, %ymm3, %ymm5
-	vmovdqa	(%rdx), %ymm6
-	vpmulhw	%ymm11, %ymm4, %ymm8
-	vpmullw	%ymm12, %ymm4, %ymm2
-	vpmulhw	%ymm6, %ymm2, %ymm3
-	vpmulhw	480(%rdx), %ymm7, %ymm2
-	vpmullw	640(%rdx), %ymm7, %ymm4
-	#APP
-	vpsubw	%ymm3, %ymm8, %ymm8
-	#NO_APP
-	vpmulhw	%ymm6, %ymm4, %ymm3
-	#APP
-	vpsubw	%ymm3, %ymm2, %ymm2
-	#NO_APP
-	vpaddw	%ymm8, %ymm2, %ymm3
-	vpmulhw	96(%rdx), %ymm3, %ymm4
-	vpmullw	128(%rdx), %ymm3, %ymm3
-	vpmulhw	%ymm6, %ymm3, %ymm3
-	#APP
-	vpsubw	%ymm3, %ymm4, %ymm4
-	#NO_APP
-	vmovdqu	96(%rax), %ymm3
-	#APP
-	vpsubw	%ymm8, %ymm2, %ymm2
-	#NO_APP
-	vpmulhw	32(%rdx), %ymm1, %ymm7
-	vpmulhrsw	64(%rdx), %ymm7, %ymm7
-	vpmullw	%ymm6, %ymm7, %ymm7
-	#APP
-	vpsubw	%ymm7, %ymm1, %ymm1
-	#NO_APP
-	vpmulhw	%ymm9, %ymm5, %ymm7
-	vpmullw	%ymm10, %ymm5, %ymm5
-	vpmulhw	%ymm6, %ymm5, %ymm5
-	#APP
-	vpsubw	%ymm5, %ymm7, %ymm7
-	#NO_APP
-	vpaddw	%ymm1, %ymm7, %ymm5
-	#APP
-	vpsubw	%ymm7, %ymm1, %ymm1
-	#NO_APP
-	vpaddw	%ymm4, %ymm5, %ymm6
-	#APP
-	vpsubw	%ymm4, %ymm5, %ymm5
-	#NO_APP
-	vpaddw	%ymm2, %ymm1, %ymm4
-	#APP
-	vpsubw	%ymm2, %ymm1, %ymm1
-	#NO_APP
-	vmovdqu	%ymm6, 128(%rax)
-	vmovups	%ymm5, 160(%rax)
-	vmovdqu	%ymm4, (%rax)
-	vmovups	%ymm1, 32(%rax)
-	vmovdqu	192(%rax), %ymm1
-	vmovdqu	224(%rax), %ymm2
-	vpunpcklqdq	%ymm1, %ymm0, %ymm4 # ymm4 = ymm0[0],ymm1[0],ymm0[2],ymm1[2]
-	vpunpcklqdq	%ymm2, %ymm3, %ymm5 # ymm5 = ymm3[0],ymm2[0],ymm3[2],ymm2[2]
-	vpunpckhqdq	%ymm1, %ymm0, %ymm6 # ymm6 = ymm0[1],ymm1[1],ymm0[3],ymm1[3]
-	vpunpckhqdq	%ymm2, %ymm3, %ymm7 # ymm7 = ymm3[1],ymm2[1],ymm3[3],ymm2[3]
-	vperm2i128	$49, %ymm5, %ymm4, %ymm1 # ymm1 = ymm4[2,3],ymm5[2,3]
-	vperm2i128	$49, %ymm7, %ymm6, %ymm2 # ymm2 = ymm6[2,3],ymm7[2,3]
-	vinserti128	$1, %xmm5, %ymm4, %ymm0
-	vmovdqa	(%rdx), %ymm3
-	vpmulhw	%ymm15, %ymm1, %ymm4
-	vpmullw	448(%rsp), %ymm1, %ymm1 # 32-byte Folded Reload
-	vpmulhw	%ymm3, %ymm1, %ymm5
-	vpmulhw	512(%rdx), %ymm2, %ymm1
-	#APP
-	vpsubw	%ymm5, %ymm4, %ymm4
-	#NO_APP
-	vpmullw	672(%rdx), %ymm2, %ymm2
-	vpmulhw	%ymm3, %ymm2, %ymm2
-	#APP
-	vpsubw	%ymm2, %ymm1, %ymm1
-	#NO_APP
-	vpaddw	%ymm4, %ymm1, %ymm5
-	vpmulhw	96(%rdx), %ymm5, %ymm2
-	vinserti128	$1, %xmm7, %ymm6, %ymm6
-	vpmullw	128(%rdx), %ymm5, %ymm5
-	vpmulhw	%ymm3, %ymm5, %ymm5
-	#APP
-	vpsubw	%ymm5, %ymm2, %ymm2
-	#NO_APP
-	#APP
-	vpsubw	%ymm4, %ymm1, %ymm1
-	#NO_APP
-	vpmulhw	32(%rdx), %ymm0, %ymm4
-	vpmulhrsw	64(%rdx), %ymm4, %ymm4
-	vpmullw	%ymm3, %ymm4, %ymm4
-	#APP
-	vpsubw	%ymm4, %ymm0, %ymm0
-	#NO_APP
-	vpmullw	%ymm14, %ymm6, %ymm4
-	vpmulhw	%ymm3, %ymm4, %ymm3
-	vpmulhw	%ymm13, %ymm6, %ymm4
-	#APP
-	vpsubw	%ymm3, %ymm4, %ymm4
-	#NO_APP
-	vpaddw	%ymm0, %ymm4, %ymm3
-	#APP
-	vpsubw	%ymm4, %ymm0, %ymm0
-	#NO_APP
-	vpaddw	%ymm2, %ymm3, %ymm4
-	#APP
-	vpsubw	%ymm2, %ymm3, %ymm3
-	#NO_APP
-	vpaddw	%ymm1, %ymm0, %ymm2
-	#APP
-	vpsubw	%ymm1, %ymm0, %ymm0
-	#NO_APP
-	vmovdqu	%ymm4, 192(%rax)
-	vmovdqu	%ymm3, 224(%rax)
-	vmovdqu	%ymm2, 64(%rax)
-	vmovdqu	%ymm0, 96(%rax)
-	addq	$256, %rax              # imm = 0x100
-	addl	$-1, %ecx
-	jne	.LBB4_4
-# %bb.5:
-	movq	%rdi, %rcx
-	vmovdqa	416(%rsp), %ymm10       # 32-byte Reload
-	vmovdqa	384(%rsp), %ymm11       # 32-byte Reload
-	vmovdqa	352(%rsp), %ymm12       # 32-byte Reload
-	vmovdqa	320(%rsp), %ymm13       # 32-byte Reload
-	vmovdqa	288(%rsp), %ymm14       # 32-byte Reload
-	vmovdqa	256(%rsp), %ymm15       # 32-byte Reload
-	vmovdqa	224(%rsp), %ymm9        # 32-byte Reload
-	.p2align	4, 0x90
-.LBB4_6:                                # =>This Inner Loop Header: Depth=1
-	vmovdqu	128(%rcx), %ymm1
-	vmovdqu	192(%rcx), %ymm2
-	vmovdqu	(%rcx), %ymm3
-	vmovdqu	32(%rcx), %ymm0
-	vmovdqu	64(%rcx), %ymm4
-	vperm2i128	$32, %ymm1, %ymm3, %ymm5 # ymm5 = ymm3[0,1],ymm1[0,1]
-	vperm2i128	$49, %ymm1, %ymm3, %ymm1 # ymm1 = ymm3[2,3],ymm1[2,3]
-	vpunpcklwd	%ymm1, %ymm5, %ymm3 # ymm3 = ymm5[0],ymm1[0],ymm5[1],ymm1[1],ymm5[2],ymm1[2],ymm5[3],ymm1[3],ymm5[8],ymm1[8],ymm5[9],ymm1[9],ymm5[10],ymm1[10],ymm5[11],ymm1[11]
-	vpunpckhwd	%ymm1, %ymm5, %ymm1 # ymm1 = ymm5[4],ymm1[4],ymm5[5],ymm1[5],ymm5[6],ymm1[6],ymm5[7],ymm1[7],ymm5[12],ymm1[12],ymm5[13],ymm1[13],ymm5[14],ymm1[14],ymm5[15],ymm1[15]
-	vperm2i128	$32, %ymm2, %ymm4, %ymm5 # ymm5 = ymm4[0,1],ymm2[0,1]
-	vperm2i128	$49, %ymm2, %ymm4, %ymm2 # ymm2 = ymm4[2,3],ymm2[2,3]
-	vpunpcklwd	%ymm2, %ymm5, %ymm4 # ymm4 = ymm5[0],ymm2[0],ymm5[1],ymm2[1],ymm5[2],ymm2[2],ymm5[3],ymm2[3],ymm5[8],ymm2[8],ymm5[9],ymm2[9],ymm5[10],ymm2[10],ymm5[11],ymm2[11]
-	vpunpckhwd	%ymm2, %ymm5, %ymm2 # ymm2 = ymm5[4],ymm2[4],ymm5[5],ymm2[5],ymm5[6],ymm2[6],ymm5[7],ymm2[7],ymm5[12],ymm2[12],ymm5[13],ymm2[13],ymm5[14],ymm2[14],ymm5[15],ymm2[15]
-	vpunpckhwd	%ymm1, %ymm3, %ymm5 # ymm5 = ymm3[4],ymm1[4],ymm3[5],ymm1[5],ymm3[6],ymm1[6],ymm3[7],ymm1[7],ymm3[12],ymm1[12],ymm3[13],ymm1[13],ymm3[14],ymm1[14],ymm3[15],ymm1[15]
-	vpunpcklwd	%ymm1, %ymm3, %ymm6 # ymm6 = ymm3[0],ymm1[0],ymm3[1],ymm1[1],ymm3[2],ymm1[2],ymm3[3],ymm1[3],ymm3[8],ymm1[8],ymm3[9],ymm1[9],ymm3[10],ymm1[10],ymm3[11],ymm1[11]
-	vpunpckhwd	%ymm2, %ymm4, %ymm7 # ymm7 = ymm4[4],ymm2[4],ymm4[5],ymm2[5],ymm4[6],ymm2[6],ymm4[7],ymm2[7],ymm4[12],ymm2[12],ymm4[13],ymm2[13],ymm4[14],ymm2[14],ymm4[15],ymm2[15]
-	vpunpcklwd	%ymm2, %ymm4, %ymm4 # ymm4 = ymm4[0],ymm2[0],ymm4[1],ymm2[1],ymm4[2],ymm2[2],ymm4[3],ymm2[3],ymm4[8],ymm2[8],ymm4[9],ymm2[9],ymm4[10],ymm2[10],ymm4[11],ymm2[11]
-	vmovdqa	(%rdx), %ymm8
-	vpunpcklqdq	%ymm7, %ymm5, %ymm1 # ymm1 = ymm5[0],ymm7[0],ymm5[2],ymm7[2]
-	vpmulhw	%ymm11, %ymm1, %ymm3
-	vpmullw	%ymm12, %ymm1, %ymm1
-	vpmulhw	%ymm8, %ymm1, %ymm1
-	#APP
-	vpsubw	%ymm1, %ymm3, %ymm3
-	#NO_APP
-	vpunpcklqdq	%ymm4, %ymm6, %ymm1 # ymm1 = ymm6[0],ymm4[0],ymm6[2],ymm4[2]
-	vpunpckhqdq	%ymm7, %ymm5, %ymm5 # ymm5 = ymm5[1],ymm7[1],ymm5[3],ymm7[3]
-	vpmulhw	992(%rdx), %ymm5, %ymm2
-	vpmullw	1152(%rdx), %ymm5, %ymm5
-	vpmulhw	%ymm8, %ymm5, %ymm5
-	#APP
-	vpsubw	%ymm5, %ymm2, %ymm2
-	#NO_APP
-	vpmulhw	32(%rdx), %ymm1, %ymm5
-	vpmulhrsw	64(%rdx), %ymm5, %ymm5
-	vpmullw	%ymm8, %ymm5, %ymm5
-	#APP
-	vpsubw	%ymm5, %ymm1, %ymm1
-	#NO_APP
-	vpunpckhqdq	%ymm4, %ymm6, %ymm4 # ymm4 = ymm6[1],ymm4[1],ymm6[3],ymm4[3]
-	vpmulhw	(%rsp), %ymm4, %ymm5    # 32-byte Folded Reload
-	vpmullw	%ymm10, %ymm4, %ymm4
-	vpmulhw	%ymm8, %ymm4, %ymm4
-	#APP
-	vpsubw	%ymm4, %ymm5, %ymm5
-	#NO_APP
-	vpaddw	%ymm3, %ymm2, %ymm6
-	vpmullw	128(%rdx), %ymm6, %ymm4
-	vpmulhw	%ymm8, %ymm4, %ymm7
-	vmovdqu	96(%rcx), %ymm4
-	vpmulhw	96(%rdx), %ymm6, %ymm6
-	#APP
-	vpsubw	%ymm7, %ymm6, %ymm6
-	#NO_APP
-	vpaddw	%ymm1, %ymm5, %ymm7
-	#APP
-	vpsubw	%ymm3, %ymm2, %ymm2
-	#NO_APP
-	#APP
-	vpsubw	%ymm5, %ymm1, %ymm1
-	#NO_APP
-	vpaddw	%ymm6, %ymm7, %ymm3
-	#APP
-	vpsubw	%ymm6, %ymm7, %ymm7
-	#NO_APP
-	vpaddw	%ymm2, %ymm1, %ymm5
-	#APP
-	vpsubw	%ymm2, %ymm1, %ymm1
-	#NO_APP
-	vmovdqu	%ymm3, 64(%rcx)
-	vmovups	%ymm7, 192(%rcx)
-	vmovdqu	%ymm5, (%rcx)
-	vmovups	%ymm1, 128(%rcx)
-	vmovdqu	160(%rcx), %ymm1
-	vmovdqu	224(%rcx), %ymm2
-	vperm2i128	$32, %ymm1, %ymm0, %ymm3 # ymm3 = ymm0[0,1],ymm1[0,1]
-	vperm2i128	$49, %ymm1, %ymm0, %ymm0 # ymm0 = ymm0[2,3],ymm1[2,3]
-	vpunpcklwd	%ymm0, %ymm3, %ymm1 # ymm1 = ymm3[0],ymm0[0],ymm3[1],ymm0[1],ymm3[2],ymm0[2],ymm3[3],ymm0[3],ymm3[8],ymm0[8],ymm3[9],ymm0[9],ymm3[10],ymm0[10],ymm3[11],ymm0[11]
-	vpunpckhwd	%ymm0, %ymm3, %ymm0 # ymm0 = ymm3[4],ymm0[4],ymm3[5],ymm0[5],ymm3[6],ymm0[6],ymm3[7],ymm0[7],ymm3[12],ymm0[12],ymm3[13],ymm0[13],ymm3[14],ymm0[14],ymm3[15],ymm0[15]
-	vperm2i128	$32, %ymm2, %ymm4, %ymm3 # ymm3 = ymm4[0,1],ymm2[0,1]
-	vperm2i128	$49, %ymm2, %ymm4, %ymm2 # ymm2 = ymm4[2,3],ymm2[2,3]
-	vpunpcklwd	%ymm2, %ymm3, %ymm4 # ymm4 = ymm3[0],ymm2[0],ymm3[1],ymm2[1],ymm3[2],ymm2[2],ymm3[3],ymm2[3],ymm3[8],ymm2[8],ymm3[9],ymm2[9],ymm3[10],ymm2[10],ymm3[11],ymm2[11]
-	vpunpckhwd	%ymm2, %ymm3, %ymm2 # ymm2 = ymm3[4],ymm2[4],ymm3[5],ymm2[5],ymm3[6],ymm2[6],ymm3[7],ymm2[7],ymm3[12],ymm2[12],ymm3[13],ymm2[13],ymm3[14],ymm2[14],ymm3[15],ymm2[15]
-	vpunpckhwd	%ymm0, %ymm1, %ymm3 # ymm3 = ymm1[4],ymm0[4],ymm1[5],ymm0[5],ymm1[6],ymm0[6],ymm1[7],ymm0[7],ymm1[12],ymm0[12],ymm1[13],ymm0[13],ymm1[14],ymm0[14],ymm1[15],ymm0[15]
-	vpunpcklwd	%ymm0, %ymm1, %ymm5 # ymm5 = ymm1[0],ymm0[0],ymm1[1],ymm0[1],ymm1[2],ymm0[2],ymm1[3],ymm0[3],ymm1[8],ymm0[8],ymm1[9],ymm0[9],ymm1[10],ymm0[10],ymm1[11],ymm0[11]
-	vpunpckhwd	%ymm2, %ymm4, %ymm1 # ymm1 = ymm4[4],ymm2[4],ymm4[5],ymm2[5],ymm4[6],ymm2[6],ymm4[7],ymm2[7],ymm4[12],ymm2[12],ymm4[13],ymm2[13],ymm4[14],ymm2[14],ymm4[15],ymm2[15]
-	vpunpcklwd	%ymm2, %ymm4, %ymm4 # ymm4 = ymm4[0],ymm2[0],ymm4[1],ymm2[1],ymm4[2],ymm2[2],ymm4[3],ymm2[3],ymm4[8],ymm2[8],ymm4[9],ymm2[9],ymm4[10],ymm2[10],ymm4[11],ymm2[11]
-	vpunpcklqdq	%ymm4, %ymm5, %ymm0 # ymm0 = ymm5[0],ymm4[0],ymm5[2],ymm4[2]
-	vmovdqa	(%rdx), %ymm6
-	vpunpcklqdq	%ymm1, %ymm3, %ymm7 # ymm7 = ymm3[0],ymm1[0],ymm3[2],ymm1[2]
-	vpmulhw	%ymm15, %ymm7, %ymm2
-	vpmullw	%ymm9, %ymm7, %ymm7
-	vpmulhw	%ymm6, %ymm7, %ymm7
-	vpunpckhqdq	%ymm1, %ymm3, %ymm3 # ymm3 = ymm3[1],ymm1[1],ymm3[3],ymm1[3]
-	vpmulhw	1024(%rdx), %ymm3, %ymm1
-	#APP
-	vpsubw	%ymm7, %ymm2, %ymm2
-	#NO_APP
-	vpmullw	1184(%rdx), %ymm3, %ymm3
-	vpmulhw	%ymm6, %ymm3, %ymm3
-	vpmulhw	32(%rdx), %ymm0, %ymm7
-	vpmulhrsw	64(%rdx), %ymm7, %ymm7
-	#APP
-	vpsubw	%ymm3, %ymm1, %ymm1
-	#NO_APP
-	vpmullw	%ymm6, %ymm7, %ymm3
-	#APP
-	vpsubw	%ymm3, %ymm0, %ymm0
-	#NO_APP
-	vpunpckhqdq	%ymm4, %ymm5, %ymm3 # ymm3 = ymm5[1],ymm4[1],ymm5[3],ymm4[3]
-	vpmulhw	%ymm13, %ymm3, %ymm4
-	vpmullw	%ymm14, %ymm3, %ymm3
-	vpmulhw	%ymm6, %ymm3, %ymm3
-	#APP
-	vpsubw	%ymm3, %ymm4, %ymm4
-	#NO_APP
-	vpaddw	%ymm2, %ymm1, %ymm3
-	vpmullw	128(%rdx), %ymm3, %ymm5
-	vpmulhw	%ymm6, %ymm5, %ymm5
-	vpmulhw	96(%rdx), %ymm3, %ymm3
-	#APP
-	vpsubw	%ymm5, %ymm3, %ymm3
-	#NO_APP
-	#APP
-	vpsubw	%ymm2, %ymm1, %ymm1
-	#NO_APP
-	vpaddw	%ymm0, %ymm4, %ymm2
-	#APP
-	vpsubw	%ymm4, %ymm0, %ymm0
-	#NO_APP
-	vpaddw	%ymm3, %ymm2, %ymm4
-	#APP
-	vpsubw	%ymm3, %ymm2, %ymm2
-	#NO_APP
-	vpaddw	%ymm1, %ymm0, %ymm3
-	#APP
-	vpsubw	%ymm1, %ymm0, %ymm0
-	#NO_APP
-	vmovdqu	%ymm4, 96(%rcx)
-	vmovdqu	%ymm2, 224(%rcx)
-	vmovdqu	%ymm3, 32(%rcx)
-	vmovdqu	%ymm0, 160(%rcx)
-	addq	$256, %rcx              # imm = 0x100
-	addl	$-1, %r8d
-	jne	.LBB4_6
-.LBB4_7:
-	testl	%esi, %esi
-	jle	.LBB4_12
-# %bb.8:
-	xorl	%eax, %eax
-	.p2align	4, 0x90
-.LBB4_9:                                # =>This Loop Header: Depth=1
-                                        #     Child Loop BB4_10 Depth 2
 	xorl	%ecx, %ecx
-	.p2align	4, 0x90
-.LBB4_10:                               #   Parent Loop BB4_9 Depth=1
-                                        # =>  This Inner Loop Header: Depth=2
-	vmovdqu	(%rdi,%rcx), %ymm0
-	vmovdqu	512(%rdi,%rcx), %ymm1
-	vmovdqu	768(%rdi,%rcx), %ymm2
-	vpmulhw	1248(%rsp,%rcx), %ymm1, %ymm3
-	vmovdqa	(%rdx), %ymm4
-	vpmullw	992(%rsp,%rcx), %ymm1, %ymm1
-	vpmulhw	%ymm4, %ymm1, %ymm5
-	vpmulhw	1888(%rdx,%rcx), %ymm2, %ymm1
-	vpmullw	2432(%rdx,%rcx), %ymm2, %ymm2
-	#APP
-	vpsubw	%ymm5, %ymm3, %ymm3
-	#NO_APP
-	vpmulhw	%ymm4, %ymm2, %ymm2
-	#APP
-	vpsubw	%ymm2, %ymm1, %ymm1
-	#NO_APP
-	vpaddw	%ymm3, %ymm1, %ymm5
-	vpmulhw	96(%rdx), %ymm5, %ymm2
-	vpmullw	128(%rdx), %ymm5, %ymm5
-	vmovdqu	256(%rdi,%rcx), %ymm6
-	vpmulhw	%ymm4, %ymm5, %ymm5
-	#APP
-	vpsubw	%ymm5, %ymm2, %ymm2
-	#NO_APP
-	#APP
-	vpsubw	%ymm3, %ymm1, %ymm1
-	#NO_APP
-	vpmulhw	32(%rdx), %ymm0, %ymm3
-	vpmulhrsw	64(%rdx), %ymm3, %ymm3
-	vpmullw	%ymm4, %ymm3, %ymm3
-	#APP
-	vpsubw	%ymm3, %ymm0, %ymm0
-	#NO_APP
-	vpmulhw	736(%rsp,%rcx), %ymm6, %ymm3
-	vpmullw	480(%rsp,%rcx), %ymm6, %ymm5
-	vpmulhw	%ymm4, %ymm5, %ymm4
-	#APP
+	.p2align 4,,10
+	.p2align 3
+.L3:
+	vmovdqu	(%rax), %ymm1
+	vmovdqu	768(%rax), %ymm2
+	addq	$1, %rcx
+	addq	$1024, %rax
+	vmovdqu	-512(%rax), %ymm0
+	vmovdqu	-768(%rax), %ymm5
+	vmovdqu	-896(%rax), %ymm3
+	vmovdqu	-640(%rax), %ymm4
+	vpaddw	%ymm0, %ymm1, %ymm11
+	vpsubw	%ymm0, %ymm1, %ymm0
+	vmovdqa	3264(%rdx), %ymm12
+	vpaddw	%ymm2, %ymm5, %ymm1
+	vpsubw	%ymm2, %ymm5, %ymm5
+	vmovdqu	-384(%rax), %ymm2
+	vpmulhw	%ymm12, %ymm5, %ymm8
+	vpaddw	%ymm2, %ymm3, %ymm9
+	vpsubw	%ymm2, %ymm3, %ymm2
+	vmovdqu	-128(%rax), %ymm3
+	vpaddw	%ymm4, %ymm3, %ymm6
+	vpsubw	%ymm3, %ymm4, %ymm4
+	vpaddw	%ymm1, %ymm11, %ymm3
+	vpsubw	%ymm1, %ymm11, %ymm11
+	vmovdqa	3104(%rdx), %ymm1
+	vpaddw	%ymm6, %ymm9, %ymm7
+	vpsubw	%ymm6, %ymm9, %ymm9
+	vmovdqa	1536(%rdx), %ymm6
+	vpmullw	%ymm1, %ymm5, %ymm5
+	vpmulhw	%ymm6, %ymm5, %ymm5
+	vpsubw	%ymm5, %ymm8, %ymm5
+	vpmulhw	%ymm12, %ymm4, %ymm8
+	vpaddw	%ymm5, %ymm0, %ymm10
+	vpsubw	%ymm5, %ymm0, %ymm0
+	vpmullw	%ymm4, %ymm1, %ymm5
+	vpmullw	%ymm9, %ymm1, %ymm1
+	vpmulhw	%ymm6, %ymm5, %ymm5
+	vpmulhw	%ymm6, %ymm1, %ymm1
+	vpsubw	%ymm5, %ymm8, %ymm4
+	vmovdqa	3232(%rdx), %ymm8
+	vpaddw	%ymm4, %ymm2, %ymm5
+	vpsubw	%ymm4, %ymm2, %ymm2
+	vpmulhrsw	%ymm8, %ymm7, %ymm4
+	vpmullw	%ymm6, %ymm4, %ymm4
+	vpsubw	%ymm4, %ymm7, %ymm4
+	vpaddw	%ymm3, %ymm4, %ymm7
 	vpsubw	%ymm4, %ymm3, %ymm3
-	#NO_APP
-	vpaddw	%ymm0, %ymm3, %ymm4
-	#APP
-	vpsubw	%ymm3, %ymm0, %ymm0
-	#NO_APP
-	vpaddw	%ymm2, %ymm4, %ymm3
-	#APP
-	vpsubw	%ymm2, %ymm4, %ymm4
-	#NO_APP
-	vpaddw	%ymm1, %ymm0, %ymm2
-	#APP
-	vpsubw	%ymm1, %ymm0, %ymm0
-	#NO_APP
-	vmovdqu	%ymm3, 256(%rdi,%rcx)
-	vmovdqu	%ymm4, 768(%rdi,%rcx)
-	vmovdqu	%ymm2, (%rdi,%rcx)
-	vmovdqu	%ymm0, 512(%rdi,%rcx)
-	addq	$32, %rcx
-	cmpq	$256, %rcx              # imm = 0x100
-	jne	.LBB4_10
-# %bb.11:                               #   in Loop: Header=BB4_9 Depth=1
-	addq	$1024, %rdi             # imm = 0x400
-	addl	$1, %eax
-	cmpl	%esi, %eax
-	jne	.LBB4_9
-.LBB4_12:
-	movq	%rbp, %rsp
-	popq	%rbp
-	.cfi_def_cfa %rsp, 8
+	vpmulhw	%ymm12, %ymm9, %ymm4
+	vpmulhrsw	%ymm8, %ymm7, %ymm8
+	vpsubw	%ymm1, %ymm4, %ymm1
+	vpmulhw	3328(%rdx), %ymm5, %ymm4
+	vpmullw	3168(%rdx), %ymm5, %ymm5
+	vpmulhw	%ymm6, %ymm5, %ymm5
+	vpmullw	%ymm6, %ymm8, %ymm8
+	vpaddw	%ymm11, %ymm1, %ymm9
+	vpsubw	%ymm1, %ymm11, %ymm1
+	vpsubw	%ymm5, %ymm4, %ymm4
+	vpsubw	%ymm8, %ymm7, %ymm7
+	vpmulhw	512(%rdx), %ymm3, %ymm8
+	vpaddw	%ymm10, %ymm4, %ymm5
+	vpmullw	2080(%rdx), %ymm3, %ymm3
+	vpmulhw	%ymm6, %ymm3, %ymm3
+	vpsubw	%ymm4, %ymm10, %ymm4
+	vpmulhw	3360(%rdx), %ymm2, %ymm10
+	vpmullw	3200(%rdx), %ymm2, %ymm2
+	vpmulhw	%ymm6, %ymm2, %ymm2
+	vpsubw	%ymm3, %ymm8, %ymm3
+	vpmulhw	768(%rdx), %ymm9, %ymm8
+	vpmullw	2336(%rdx), %ymm9, %ymm9
+	vpmulhw	%ymm6, %ymm9, %ymm9
+	vpsubw	%ymm2, %ymm10, %ymm10
+	vpaddw	%ymm0, %ymm10, %ymm2
+	vpsubw	%ymm10, %ymm0, %ymm0
+	vperm2i128	$32, %ymm3, %ymm7, %ymm10
+	vperm2i128	$49, %ymm3, %ymm7, %ymm7
+	vpsubw	%ymm9, %ymm8, %ymm8
+	vpmulhw	896(%rdx), %ymm1, %ymm9
+	vpmullw	2464(%rdx), %ymm1, %ymm1
+	vpmulhw	%ymm6, %ymm1, %ymm1
+	vpsubw	%ymm1, %ymm9, %ymm1
+	vpmulhw	1024(%rdx), %ymm5, %ymm9
+	vpmullw	2592(%rdx), %ymm5, %ymm5
+	vpmulhw	%ymm6, %ymm5, %ymm5
+	vpsubw	%ymm5, %ymm9, %ymm5
+	vpmulhw	1152(%rdx), %ymm4, %ymm9
+	vpmullw	2720(%rdx), %ymm4, %ymm4
+	vpmulhw	%ymm6, %ymm4, %ymm4
+	vpsubw	%ymm4, %ymm9, %ymm4
+	vpmulhw	1408(%rdx), %ymm2, %ymm9
+	vpmullw	2976(%rdx), %ymm2, %ymm2
+	vpmulhw	%ymm6, %ymm2, %ymm2
+	vpsubw	%ymm2, %ymm9, %ymm2
+	vpmulhw	1280(%rdx), %ymm0, %ymm9
+	vpmullw	2848(%rdx), %ymm0, %ymm0
+	vpmulhw	%ymm6, %ymm0, %ymm0
+	vperm2i128	$32, %ymm4, %ymm5, %ymm6
+	vperm2i128	$49, %ymm4, %ymm5, %ymm5
+	vmovdqu	%ymm10, -1024(%rax)
+	vmovdqu	%ymm7, -896(%rax)
+	vpsubw	%ymm0, %ymm9, %ymm0
+	vperm2i128	$32, %ymm1, %ymm8, %ymm9
+	vperm2i128	$49, %ymm1, %ymm8, %ymm1
+	vperm2i128	$32, %ymm0, %ymm2, %ymm3
+	vperm2i128	$49, %ymm0, %ymm2, %ymm2
+	vmovdqu	%ymm9, -768(%rax)
+	vmovdqu	%ymm1, -640(%rax)
+	vmovdqu	%ymm6, -512(%rax)
+	vmovdqu	%ymm5, -384(%rax)
+	vmovdqu	%ymm3, -256(%rax)
+	vmovdqu	%ymm2, -128(%rax)
+	cmpq	%r8, %rcx
+	jne	.L3
+	salq	$10, %rcx
+	movq	%rcx, %rax
+	subq	%r9, %rax
+	addq	%rax, %rdi
+	leaq	(%rdi,%rcx), %rax
+	.p2align 4,,10
+	.p2align 3
+.L5:
+	vmovdqu	32(%rdi), %ymm1
+	vmovdqu	800(%rdi), %ymm2
+	addq	$1024, %rdi
+	vmovdqu	-480(%rdi), %ymm0
+	vmovdqu	-736(%rdi), %ymm5
+	vmovdqu	-864(%rdi), %ymm3
+	vmovdqu	-608(%rdi), %ymm4
+	vpaddw	%ymm1, %ymm0, %ymm11
+	vpsubw	%ymm0, %ymm1, %ymm0
+	vmovdqa	3264(%rdx), %ymm12
+	vpaddw	%ymm5, %ymm2, %ymm1
+	vpsubw	%ymm2, %ymm5, %ymm5
+	vmovdqu	-352(%rdi), %ymm2
+	vpmulhw	%ymm12, %ymm5, %ymm8
+	vpaddw	%ymm3, %ymm2, %ymm9
+	vpsubw	%ymm2, %ymm3, %ymm2
+	vmovdqu	-96(%rdi), %ymm3
+	vpaddw	%ymm4, %ymm3, %ymm6
+	vpsubw	%ymm3, %ymm4, %ymm4
+	vpaddw	%ymm1, %ymm11, %ymm3
+	vpsubw	%ymm1, %ymm11, %ymm11
+	vmovdqa	3104(%rdx), %ymm1
+	vpaddw	%ymm6, %ymm9, %ymm7
+	vpsubw	%ymm6, %ymm9, %ymm9
+	vmovdqa	1536(%rdx), %ymm6
+	vpmullw	%ymm1, %ymm5, %ymm5
+	vpmulhw	%ymm6, %ymm5, %ymm5
+	vpsubw	%ymm5, %ymm8, %ymm5
+	vpmulhw	%ymm12, %ymm4, %ymm8
+	vpaddw	%ymm5, %ymm0, %ymm10
+	vpsubw	%ymm5, %ymm0, %ymm0
+	vpmullw	%ymm4, %ymm1, %ymm5
+	vpmullw	%ymm9, %ymm1, %ymm1
+	vpmulhw	%ymm6, %ymm5, %ymm5
+	vpmulhw	%ymm6, %ymm1, %ymm1
+	vpsubw	%ymm5, %ymm8, %ymm4
+	vmovdqa	3232(%rdx), %ymm8
+	vpaddw	%ymm4, %ymm2, %ymm5
+	vpsubw	%ymm4, %ymm2, %ymm2
+	vpmulhrsw	%ymm8, %ymm7, %ymm4
+	vpmullw	%ymm6, %ymm4, %ymm4
+	vpsubw	%ymm4, %ymm7, %ymm4
+	vpaddw	%ymm3, %ymm4, %ymm7
+	vpsubw	%ymm4, %ymm3, %ymm3
+	vpmulhw	%ymm12, %ymm9, %ymm4
+	vpmulhrsw	%ymm8, %ymm7, %ymm8
+	vpsubw	%ymm1, %ymm4, %ymm1
+	vpmulhw	3328(%rdx), %ymm5, %ymm4
+	vpmullw	3168(%rdx), %ymm5, %ymm5
+	vpmulhw	%ymm6, %ymm5, %ymm5
+	vpmullw	%ymm6, %ymm8, %ymm8
+	vpaddw	%ymm11, %ymm1, %ymm9
+	vpsubw	%ymm1, %ymm11, %ymm1
+	vpsubw	%ymm5, %ymm4, %ymm4
+	vpsubw	%ymm8, %ymm7, %ymm7
+	vpmulhw	544(%rdx), %ymm3, %ymm8
+	vpaddw	%ymm10, %ymm4, %ymm5
+	vpmullw	2112(%rdx), %ymm3, %ymm3
+	vpmulhw	%ymm6, %ymm3, %ymm3
+	vpsubw	%ymm4, %ymm10, %ymm4
+	vpmulhw	3360(%rdx), %ymm2, %ymm10
+	vpmullw	3200(%rdx), %ymm2, %ymm2
+	vpmulhw	%ymm6, %ymm2, %ymm2
+	vpsubw	%ymm3, %ymm8, %ymm3
+	vpmulhw	800(%rdx), %ymm9, %ymm8
+	vpmullw	2368(%rdx), %ymm9, %ymm9
+	vpmulhw	%ymm6, %ymm9, %ymm9
+	vpsubw	%ymm2, %ymm10, %ymm10
+	vpaddw	%ymm0, %ymm10, %ymm2
+	vpsubw	%ymm10, %ymm0, %ymm0
+	vperm2i128	$32, %ymm3, %ymm7, %ymm10
+	vperm2i128	$49, %ymm3, %ymm7, %ymm7
+	vpsubw	%ymm9, %ymm8, %ymm8
+	vpmulhw	928(%rdx), %ymm1, %ymm9
+	vpmullw	2496(%rdx), %ymm1, %ymm1
+	vpmulhw	%ymm6, %ymm1, %ymm1
+	vpsubw	%ymm1, %ymm9, %ymm1
+	vpmulhw	1056(%rdx), %ymm5, %ymm9
+	vpmullw	2624(%rdx), %ymm5, %ymm5
+	vpmulhw	%ymm6, %ymm5, %ymm5
+	vpsubw	%ymm5, %ymm9, %ymm5
+	vpmulhw	1184(%rdx), %ymm4, %ymm9
+	vpmullw	2752(%rdx), %ymm4, %ymm4
+	vpmulhw	%ymm6, %ymm4, %ymm4
+	vpsubw	%ymm4, %ymm9, %ymm4
+	vpmulhw	1440(%rdx), %ymm2, %ymm9
+	vpmullw	3008(%rdx), %ymm2, %ymm2
+	vpmulhw	%ymm6, %ymm2, %ymm2
+	vpsubw	%ymm2, %ymm9, %ymm2
+	vpmulhw	1312(%rdx), %ymm0, %ymm9
+	vpmullw	2880(%rdx), %ymm0, %ymm0
+	vpmulhw	%ymm6, %ymm0, %ymm0
+	vperm2i128	$32, %ymm4, %ymm5, %ymm6
+	vperm2i128	$49, %ymm4, %ymm5, %ymm5
+	vmovdqu	%ymm10, -992(%rdi)
+	vmovdqu	%ymm7, -864(%rdi)
+	vpsubw	%ymm0, %ymm9, %ymm0
+	vperm2i128	$32, %ymm1, %ymm8, %ymm9
+	vperm2i128	$49, %ymm1, %ymm8, %ymm1
+	vperm2i128	$32, %ymm0, %ymm2, %ymm3
+	vperm2i128	$49, %ymm0, %ymm2, %ymm2
+	vmovdqu	%ymm9, -736(%rdi)
+	vmovdqu	%ymm1, -608(%rdi)
+	vmovdqu	%ymm6, -480(%rdi)
+	vmovdqu	%ymm5, -352(%rdi)
+	vmovdqu	%ymm3, -224(%rdi)
+	vmovdqu	%ymm2, -96(%rdi)
+	cmpq	%rax, %rdi
+	jne	.L5
+	addq	%r10, %rdi
+	leaq	(%rdi,%rcx), %rax
+	.p2align 4,,10
+	.p2align 3
+.L7:
+	vmovdqu	64(%rdi), %ymm1
+	vmovdqu	832(%rdi), %ymm2
+	addq	$1024, %rdi
+	vmovdqu	-448(%rdi), %ymm0
+	vmovdqu	-704(%rdi), %ymm5
+	vmovdqu	-832(%rdi), %ymm3
+	vmovdqu	-576(%rdi), %ymm4
+	vpaddw	%ymm1, %ymm0, %ymm11
+	vpsubw	%ymm0, %ymm1, %ymm0
+	vmovdqa	3264(%rdx), %ymm12
+	vpaddw	%ymm5, %ymm2, %ymm1
+	vpsubw	%ymm2, %ymm5, %ymm5
+	vmovdqu	-320(%rdi), %ymm2
+	vpmulhw	%ymm12, %ymm5, %ymm8
+	vpaddw	%ymm3, %ymm2, %ymm9
+	vpsubw	%ymm2, %ymm3, %ymm2
+	vmovdqu	-64(%rdi), %ymm3
+	vpaddw	%ymm4, %ymm3, %ymm6
+	vpsubw	%ymm3, %ymm4, %ymm4
+	vpaddw	%ymm1, %ymm11, %ymm3
+	vpsubw	%ymm1, %ymm11, %ymm11
+	vmovdqa	3104(%rdx), %ymm1
+	vpaddw	%ymm6, %ymm9, %ymm7
+	vpsubw	%ymm6, %ymm9, %ymm9
+	vmovdqa	1536(%rdx), %ymm6
+	vpmullw	%ymm1, %ymm5, %ymm5
+	vpmulhw	%ymm6, %ymm5, %ymm5
+	vpsubw	%ymm5, %ymm8, %ymm5
+	vpmulhw	%ymm12, %ymm4, %ymm8
+	vpaddw	%ymm5, %ymm0, %ymm10
+	vpsubw	%ymm5, %ymm0, %ymm0
+	vpmullw	%ymm4, %ymm1, %ymm5
+	vpmullw	%ymm9, %ymm1, %ymm1
+	vpmulhw	%ymm6, %ymm5, %ymm5
+	vpmulhw	%ymm6, %ymm1, %ymm1
+	vpsubw	%ymm5, %ymm8, %ymm4
+	vmovdqa	3232(%rdx), %ymm8
+	vpaddw	%ymm4, %ymm2, %ymm5
+	vpsubw	%ymm4, %ymm2, %ymm2
+	vpmulhrsw	%ymm8, %ymm7, %ymm4
+	vpmullw	%ymm6, %ymm4, %ymm4
+	vpsubw	%ymm4, %ymm7, %ymm4
+	vpaddw	%ymm3, %ymm4, %ymm7
+	vpsubw	%ymm4, %ymm3, %ymm3
+	vpmulhw	%ymm12, %ymm9, %ymm4
+	vpmulhrsw	%ymm8, %ymm7, %ymm8
+	vpsubw	%ymm1, %ymm4, %ymm1
+	vpmulhw	3328(%rdx), %ymm5, %ymm4
+	vpmullw	3168(%rdx), %ymm5, %ymm5
+	vpmulhw	%ymm6, %ymm5, %ymm5
+	vpmullw	%ymm6, %ymm8, %ymm8
+	vpaddw	%ymm11, %ymm1, %ymm9
+	vpsubw	%ymm1, %ymm11, %ymm1
+	vpsubw	%ymm5, %ymm4, %ymm4
+	vpsubw	%ymm8, %ymm7, %ymm7
+	vpmulhw	576(%rdx), %ymm3, %ymm8
+	vpaddw	%ymm10, %ymm4, %ymm5
+	vpmullw	2144(%rdx), %ymm3, %ymm3
+	vpmulhw	%ymm6, %ymm3, %ymm3
+	vpsubw	%ymm4, %ymm10, %ymm4
+	vpmulhw	3360(%rdx), %ymm2, %ymm10
+	vpmullw	3200(%rdx), %ymm2, %ymm2
+	vpmulhw	%ymm6, %ymm2, %ymm2
+	vpsubw	%ymm3, %ymm8, %ymm3
+	vpmulhw	832(%rdx), %ymm9, %ymm8
+	vpmullw	2400(%rdx), %ymm9, %ymm9
+	vpmulhw	%ymm6, %ymm9, %ymm9
+	vpsubw	%ymm2, %ymm10, %ymm10
+	vpaddw	%ymm0, %ymm10, %ymm2
+	vpsubw	%ymm10, %ymm0, %ymm0
+	vperm2i128	$32, %ymm3, %ymm7, %ymm10
+	vperm2i128	$49, %ymm3, %ymm7, %ymm7
+	vpsubw	%ymm9, %ymm8, %ymm8
+	vpmulhw	960(%rdx), %ymm1, %ymm9
+	vpmullw	2528(%rdx), %ymm1, %ymm1
+	vpmulhw	%ymm6, %ymm1, %ymm1
+	vpsubw	%ymm1, %ymm9, %ymm1
+	vpmulhw	1088(%rdx), %ymm5, %ymm9
+	vpmullw	2656(%rdx), %ymm5, %ymm5
+	vpmulhw	%ymm6, %ymm5, %ymm5
+	vpsubw	%ymm5, %ymm9, %ymm5
+	vpmulhw	1216(%rdx), %ymm4, %ymm9
+	vpmullw	2784(%rdx), %ymm4, %ymm4
+	vpmulhw	%ymm6, %ymm4, %ymm4
+	vpsubw	%ymm4, %ymm9, %ymm4
+	vpmulhw	1472(%rdx), %ymm2, %ymm9
+	vpmullw	3040(%rdx), %ymm2, %ymm2
+	vpmulhw	%ymm6, %ymm2, %ymm2
+	vpsubw	%ymm2, %ymm9, %ymm2
+	vpmulhw	1344(%rdx), %ymm0, %ymm9
+	vpmullw	2912(%rdx), %ymm0, %ymm0
+	vpmulhw	%ymm6, %ymm0, %ymm0
+	vperm2i128	$32, %ymm4, %ymm5, %ymm6
+	vperm2i128	$49, %ymm4, %ymm5, %ymm5
+	vmovdqu	%ymm10, -960(%rdi)
+	vmovdqu	%ymm7, -832(%rdi)
+	vpsubw	%ymm0, %ymm9, %ymm0
+	vperm2i128	$32, %ymm1, %ymm8, %ymm9
+	vperm2i128	$49, %ymm1, %ymm8, %ymm1
+	vperm2i128	$32, %ymm0, %ymm2, %ymm3
+	vperm2i128	$49, %ymm0, %ymm2, %ymm2
+	vmovdqu	%ymm9, -704(%rdi)
+	vmovdqu	%ymm1, -576(%rdi)
+	vmovdqu	%ymm6, -448(%rdi)
+	vmovdqu	%ymm5, -320(%rdi)
+	vmovdqu	%ymm3, -192(%rdi)
+	vmovdqu	%ymm2, -64(%rdi)
+	cmpq	%rax, %rdi
+	jne	.L7
+	addq	%r10, %rdi
+	addq	%rdi, %rcx
+	.p2align 4,,10
+	.p2align 3
+.L9:
+	vmovdqu	96(%rdi), %ymm1
+	vmovdqu	864(%rdi), %ymm2
+	addq	$1024, %rdi
+	vmovdqu	-416(%rdi), %ymm0
+	vmovdqu	-672(%rdi), %ymm5
+	vmovdqu	-800(%rdi), %ymm3
+	vmovdqu	-544(%rdi), %ymm4
+	vpaddw	%ymm1, %ymm0, %ymm11
+	vpsubw	%ymm0, %ymm1, %ymm0
+	vmovdqa	3264(%rdx), %ymm12
+	vpaddw	%ymm5, %ymm2, %ymm1
+	vpsubw	%ymm2, %ymm5, %ymm5
+	vmovdqu	-288(%rdi), %ymm2
+	vpmulhw	%ymm12, %ymm5, %ymm8
+	vpaddw	%ymm3, %ymm2, %ymm9
+	vpsubw	%ymm2, %ymm3, %ymm2
+	vmovdqu	-32(%rdi), %ymm3
+	vpaddw	%ymm4, %ymm3, %ymm6
+	vpsubw	%ymm3, %ymm4, %ymm4
+	vpaddw	%ymm1, %ymm11, %ymm3
+	vpsubw	%ymm1, %ymm11, %ymm11
+	vmovdqa	3104(%rdx), %ymm1
+	vpaddw	%ymm6, %ymm9, %ymm7
+	vpsubw	%ymm6, %ymm9, %ymm9
+	vmovdqa	1536(%rdx), %ymm6
+	vpmullw	%ymm1, %ymm5, %ymm5
+	vpmulhw	%ymm6, %ymm5, %ymm5
+	vpsubw	%ymm5, %ymm8, %ymm5
+	vpmulhw	%ymm12, %ymm4, %ymm8
+	vpaddw	%ymm5, %ymm0, %ymm10
+	vpsubw	%ymm5, %ymm0, %ymm0
+	vpmullw	%ymm4, %ymm1, %ymm5
+	vpmullw	%ymm9, %ymm1, %ymm1
+	vpmulhw	%ymm6, %ymm5, %ymm5
+	vpmulhw	%ymm6, %ymm1, %ymm1
+	vpsubw	%ymm5, %ymm8, %ymm4
+	vmovdqa	3232(%rdx), %ymm8
+	vpaddw	%ymm4, %ymm2, %ymm5
+	vpsubw	%ymm4, %ymm2, %ymm2
+	vpmulhrsw	%ymm8, %ymm7, %ymm4
+	vpmullw	%ymm6, %ymm4, %ymm4
+	vpsubw	%ymm4, %ymm7, %ymm4
+	vpaddw	%ymm3, %ymm4, %ymm7
+	vpsubw	%ymm4, %ymm3, %ymm3
+	vpmulhw	%ymm12, %ymm9, %ymm4
+	vpmulhrsw	%ymm8, %ymm7, %ymm8
+	vpsubw	%ymm1, %ymm4, %ymm1
+	vpmulhw	3328(%rdx), %ymm5, %ymm4
+	vpmullw	3168(%rdx), %ymm5, %ymm5
+	vpmulhw	%ymm6, %ymm5, %ymm5
+	vpmullw	%ymm6, %ymm8, %ymm8
+	vpaddw	%ymm11, %ymm1, %ymm9
+	vpsubw	%ymm1, %ymm11, %ymm1
+	vpsubw	%ymm5, %ymm4, %ymm4
+	vpsubw	%ymm8, %ymm7, %ymm7
+	vpmulhw	608(%rdx), %ymm3, %ymm8
+	vpaddw	%ymm10, %ymm4, %ymm5
+	vpmullw	2176(%rdx), %ymm3, %ymm3
+	vpmulhw	%ymm6, %ymm3, %ymm3
+	vpsubw	%ymm4, %ymm10, %ymm4
+	vpmulhw	3360(%rdx), %ymm2, %ymm10
+	vpmullw	3200(%rdx), %ymm2, %ymm2
+	vpmulhw	%ymm6, %ymm2, %ymm2
+	vpsubw	%ymm3, %ymm8, %ymm3
+	vpmulhw	864(%rdx), %ymm9, %ymm8
+	vpmullw	2432(%rdx), %ymm9, %ymm9
+	vpmulhw	%ymm6, %ymm9, %ymm9
+	vpsubw	%ymm2, %ymm10, %ymm10
+	vpaddw	%ymm0, %ymm10, %ymm2
+	vpsubw	%ymm10, %ymm0, %ymm0
+	vperm2i128	$32, %ymm3, %ymm7, %ymm10
+	vperm2i128	$49, %ymm3, %ymm7, %ymm7
+	vpsubw	%ymm9, %ymm8, %ymm8
+	vpmulhw	992(%rdx), %ymm1, %ymm9
+	vpmullw	2560(%rdx), %ymm1, %ymm1
+	vpmulhw	%ymm6, %ymm1, %ymm1
+	vpsubw	%ymm1, %ymm9, %ymm1
+	vpmulhw	1120(%rdx), %ymm5, %ymm9
+	vpmullw	2688(%rdx), %ymm5, %ymm5
+	vpmulhw	%ymm6, %ymm5, %ymm5
+	vpsubw	%ymm5, %ymm9, %ymm5
+	vpmulhw	1248(%rdx), %ymm4, %ymm9
+	vpmullw	2816(%rdx), %ymm4, %ymm4
+	vpmulhw	%ymm6, %ymm4, %ymm4
+	vpsubw	%ymm4, %ymm9, %ymm4
+	vpmulhw	1504(%rdx), %ymm2, %ymm9
+	vpmullw	3072(%rdx), %ymm2, %ymm2
+	vpmulhw	%ymm6, %ymm2, %ymm2
+	vpsubw	%ymm2, %ymm9, %ymm2
+	vpmulhw	1376(%rdx), %ymm0, %ymm9
+	vpmullw	2944(%rdx), %ymm0, %ymm0
+	vpmulhw	%ymm6, %ymm0, %ymm0
+	vperm2i128	$32, %ymm4, %ymm5, %ymm6
+	vperm2i128	$49, %ymm4, %ymm5, %ymm5
+	vmovdqu	%ymm10, -928(%rdi)
+	vmovdqu	%ymm7, -800(%rdi)
+	vpsubw	%ymm0, %ymm9, %ymm0
+	vperm2i128	$32, %ymm1, %ymm8, %ymm9
+	vperm2i128	$49, %ymm1, %ymm8, %ymm1
+	vperm2i128	$32, %ymm0, %ymm2, %ymm3
+	vperm2i128	$49, %ymm0, %ymm2, %ymm2
+	vmovdqu	%ymm9, -672(%rdi)
+	vmovdqu	%ymm1, -544(%rdi)
+	vmovdqu	%ymm6, -416(%rdi)
+	vmovdqu	%ymm5, -288(%rdi)
+	vmovdqu	%ymm3, -160(%rdi)
+	vmovdqu	%ymm2, -32(%rdi)
+	cmpq	%rcx, %rdi
+	jne	.L9
+.L14:
+	addq	%r10, %rdi
+	sall	$2, %esi
+	xorl	%ecx, %ecx
+	movslq	%esi, %r8
+	movq	%rdi, %rax
+	testl	%esi, %esi
+	jle	.L27
+	.p2align 4,,10
+	.p2align 3
+.L10:
+	vmovdqu	64(%rax), %ymm0
+	vmovdqu	(%rax), %ymm2
+	addq	$1, %rcx
+	addq	$256, %rax
+	vmovdqu	-128(%rax), %ymm1
+	vmovdqu	-224(%rax), %ymm6
+	vpaddw	%ymm2, %ymm0, %ymm5
+	vpsubw	%ymm0, %ymm2, %ymm2
+	vmovdqu	-64(%rax), %ymm0
+	vpsubw	%ymm0, %ymm1, %ymm9
+	vpaddw	%ymm1, %ymm0, %ymm11
+	vmovdqu	-160(%rax), %ymm0
+	vmovdqu	-96(%rax), %ymm1
+	vpaddw	%ymm6, %ymm0, %ymm3
+	vpsubw	%ymm0, %ymm6, %ymm6
+	vmovdqu	-32(%rax), %ymm0
+	vpaddw	%ymm1, %ymm0, %ymm4
+	vpsubw	%ymm0, %ymm1, %ymm10
+	vmovdqa	3104(%rdx), %ymm1
+	vpaddw	%ymm3, %ymm5, %ymm0
+	vpsubw	%ymm3, %ymm5, %ymm5
+	vmovdqa	3264(%rdx), %ymm3
+	vpaddw	%ymm4, %ymm11, %ymm7
+	vpsubw	%ymm4, %ymm11, %ymm11
+	vmovdqa	1536(%rdx), %ymm4
+	vpmulhw	%ymm3, %ymm6, %ymm8
+	vpmullw	%ymm1, %ymm6, %ymm6
+	vpmullw	%ymm10, %ymm1, %ymm1
+	vpmulhw	%ymm3, %ymm10, %ymm3
+	vpmulhw	%ymm4, %ymm6, %ymm6
+	vpmulhw	%ymm4, %ymm1, %ymm1
+	vpsubw	%ymm6, %ymm8, %ymm8
+	vpsubw	%ymm1, %ymm3, %ymm1
+	vpaddw	%ymm8, %ymm2, %ymm6
+	vpmulhw	256(%rdx), %ymm5, %ymm3
+	vpmullw	1824(%rdx), %ymm5, %ymm5
+	vpaddw	%ymm1, %ymm9, %ymm10
+	vpsubw	%ymm1, %ymm9, %ymm1
+	vpmulhw	%ymm4, %ymm5, %ymm5
+	vmovdqa	3232(%rdx), %ymm9
+	vpsubw	%ymm8, %ymm2, %ymm2
+	vpmulhw	288(%rdx), %ymm11, %ymm8
+	vpmullw	1856(%rdx), %ymm11, %ymm11
+	vpmulhw	%ymm4, %ymm11, %ymm15
+	vpmulhrsw	%ymm9, %ymm0, %ymm14
+	vpmulhrsw	%ymm9, %ymm7, %ymm9
+	vpmulhw	448(%rdx), %ymm2, %ymm13
+	vpmulhw	480(%rdx), %ymm1, %ymm11
+	vpmulhw	416(%rdx), %ymm10, %ymm12
+	vpmullw	2016(%rdx), %ymm2, %ymm2
+	vpmullw	1984(%rdx), %ymm10, %ymm10
+	vpmullw	2048(%rdx), %ymm1, %ymm1
+	vpmulhw	%ymm4, %ymm10, %ymm10
+	vpmulhw	%ymm4, %ymm2, %ymm2
+	vpmulhw	%ymm4, %ymm1, %ymm1
+	vpsubw	%ymm5, %ymm3, %ymm3
+	vmovdqa	%ymm15, -48(%rbp)
+	vpmulhw	384(%rdx), %ymm6, %ymm15
+	vpsubw	-48(%rbp), %ymm8, %ymm8
+	vpmullw	1952(%rdx), %ymm6, %ymm6
+	vpmullw	%ymm4, %ymm14, %ymm14
+	vpmulhw	%ymm4, %ymm6, %ymm6
+	vpmullw	%ymm4, %ymm9, %ymm4
+	vpsubw	%ymm2, %ymm13, %ymm2
+	vpsubw	%ymm10, %ymm12, %ymm10
+	vpsubw	%ymm1, %ymm11, %ymm1
+	vpunpckhwd	%ymm1, %ymm8, %ymm11
+	vpsubw	%ymm14, %ymm0, %ymm0
+	vpsubw	%ymm6, %ymm15, %ymm6
+	vpunpcklwd	%ymm2, %ymm3, %ymm14
+	vpsubw	%ymm4, %ymm7, %ymm7
+	vpunpcklwd	%ymm6, %ymm0, %ymm15
+	vpunpckhwd	%ymm6, %ymm0, %ymm6
+	vpunpcklwd	%ymm10, %ymm7, %ymm13
+	vpunpcklwd	%ymm1, %ymm8, %ymm0
+	vpunpckhwd	%ymm2, %ymm3, %ymm3
+	vpaddw	%ymm0, %ymm14, %ymm1
+	vpunpckhwd	%ymm10, %ymm7, %ymm10
+	vpaddw	%ymm13, %ymm15, %ymm2
+	vpaddw	%ymm10, %ymm6, %ymm7
+	vpsubw	%ymm0, %ymm14, %ymm0
+	vpunpckldq	%ymm1, %ymm2, %ymm5
+	vpsubw	%ymm13, %ymm15, %ymm14
+	vpunpckhdq	%ymm1, %ymm2, %ymm2
+	vpsubw	%ymm10, %ymm6, %ymm6
+	vmovdqu	%ymm5, -256(%rax)
+	vpaddw	%ymm11, %ymm3, %ymm1
+	vpsubw	%ymm11, %ymm3, %ymm11
+	vmovdqu	%ymm2, -224(%rax)
+	vpunpckldq	%ymm1, %ymm7, %ymm4
+	vpunpckhdq	%ymm1, %ymm7, %ymm1
+	vpunpckldq	%ymm0, %ymm14, %ymm7
+	vpunpckhdq	%ymm0, %ymm14, %ymm14
+	vpunpckldq	%ymm11, %ymm6, %ymm0
+	vpunpckhdq	%ymm11, %ymm6, %ymm6
+	vmovdqu	%ymm4, -192(%rax)
+	vmovdqu	%ymm1, -160(%rax)
+	vmovdqu	%ymm7, -128(%rax)
+	vmovdqu	%ymm14, -96(%rax)
+	vmovdqu	%ymm0, -64(%rax)
+	vmovdqu	%ymm6, -32(%rax)
+	cmpq	%rcx, %r8
+	jne	.L10
+	salq	$8, %r8
+	movq	%r8, %rax
+	subq	%r9, %rax
+	addq	%rax, %rdi
+	addq	%rdi, %r8
+	.p2align 4,,10
+	.p2align 3
+.L12:
+	vmovdqu	64(%rdi), %ymm0
+	vmovdqu	(%rdi), %ymm6
+	addq	$256, %rdi
+	vmovdqu	-224(%rdi), %ymm5
+	vmovdqa	3104(%rdx), %ymm8
+	vpaddw	%ymm6, %ymm0, %ymm1
+	vpsubw	%ymm0, %ymm6, %ymm6
+	vmovdqu	-64(%rdi), %ymm3
+	vmovdqu	-160(%rdi), %ymm0
+	vmovdqa	1536(%rdx), %ymm2
+	vmovdqu	-32(%rdi), %ymm11
+	vpaddw	%ymm5, %ymm0, %ymm9
+	vpsubw	%ymm0, %ymm5, %ymm5
+	vmovdqa	3264(%rdx), %ymm0
+	vpmulhw	%ymm0, %ymm3, %ymm4
+	vpmullw	%ymm3, %ymm8, %ymm3
+	vpmulhw	%ymm2, %ymm3, %ymm3
+	vpsubw	%ymm3, %ymm4, %ymm3
+	vmovdqu	-128(%rdi), %ymm4
+	vpaddw	%ymm4, %ymm3, %ymm7
+	vpsubw	%ymm3, %ymm4, %ymm4
+	vpmulhw	%ymm0, %ymm11, %ymm3
+	vpmulhw	192(%rdx), %ymm4, %ymm13
+	vpmullw	%ymm11, %ymm8, %ymm11
+	vpmullw	1760(%rdx), %ymm4, %ymm4
+	vpmulhw	%ymm2, %ymm4, %ymm4
+	vpmulhw	%ymm2, %ymm11, %ymm11
+	vpsubw	%ymm4, %ymm13, %ymm13
+	vpsubw	%ymm11, %ymm3, %ymm11
+	vmovdqu	-96(%rdi), %ymm3
+	vpaddw	%ymm3, %ymm11, %ymm12
+	vpsubw	%ymm11, %ymm3, %ymm3
+	vmovdqa	3232(%rdx), %ymm11
+	vpmulhw	224(%rdx), %ymm3, %ymm4
+	vpmullw	1792(%rdx), %ymm3, %ymm3
+	vpmulhw	160(%rdx), %ymm12, %ymm14
+	vpmulhrsw	%ymm11, %ymm1, %ymm10
+	vpmulhrsw	%ymm11, %ymm9, %ymm11
+	vpmullw	%ymm2, %ymm10, %ymm10
+	vpmullw	%ymm2, %ymm11, %ymm11
+	vpsubw	%ymm10, %ymm1, %ymm10
+	vpsubw	%ymm11, %ymm9, %ymm9
+	vpmulhw	(%rdx), %ymm6, %ymm1
+	vpmullw	1600(%rdx), %ymm5, %ymm11
+	vpmullw	1568(%rdx), %ymm6, %ymm6
+	vpmulhw	%ymm2, %ymm11, %ymm11
+	vpmulhw	%ymm2, %ymm6, %ymm6
+	vpsubw	%ymm6, %ymm1, %ymm6
+	vpmulhw	32(%rdx), %ymm5, %ymm1
+	vpsubw	%ymm11, %ymm1, %ymm11
+	vpmulhw	128(%rdx), %ymm7, %ymm1
+	vpmullw	1696(%rdx), %ymm7, %ymm7
+	vpmulhw	%ymm2, %ymm7, %ymm7
+	vpmullw	1728(%rdx), %ymm12, %ymm5
+	vpmulhw	%ymm2, %ymm5, %ymm5
+	vpsubw	%ymm7, %ymm1, %ymm1
+	vpmulhw	%ymm2, %ymm3, %ymm7
+	vpsubw	%ymm5, %ymm14, %ymm14
+	vpunpcklqdq	%ymm14, %ymm9, %ymm12
+	vpunpcklqdq	%ymm1, %ymm10, %ymm5
+	vpunpckhqdq	%ymm14, %ymm9, %ymm9
+	vpunpckhqdq	%ymm1, %ymm10, %ymm1
+	vpaddw	%ymm5, %ymm12, %ymm10
+	vpsubw	%ymm12, %ymm5, %ymm5
+	vpsubw	%ymm7, %ymm4, %ymm7
+	vpunpcklqdq	%ymm13, %ymm6, %ymm4
+	vpunpckhqdq	%ymm13, %ymm6, %ymm6
+	vpunpcklqdq	%ymm7, %ymm11, %ymm3
+	vpunpckhqdq	%ymm7, %ymm11, %ymm7
+	vpaddw	%ymm1, %ymm9, %ymm11
+	vpsubw	%ymm9, %ymm1, %ymm1
+	vpaddw	%ymm4, %ymm3, %ymm9
+	vpsubw	%ymm3, %ymm4, %ymm4
+	vpmulhw	%ymm0, %ymm1, %ymm3
+	vpaddw	%ymm6, %ymm7, %ymm12
+	vpmullw	%ymm1, %ymm8, %ymm1
+	vpsubw	%ymm7, %ymm6, %ymm7
+	vpmulhw	%ymm0, %ymm7, %ymm0
+	vpmulhw	%ymm2, %ymm1, %ymm1
+	vpsubw	%ymm1, %ymm3, %ymm1
+	vpmullw	%ymm7, %ymm8, %ymm3
+	vpmulhw	%ymm2, %ymm3, %ymm2
+	vpsubw	%ymm2, %ymm0, %ymm0
+	vpaddw	%ymm10, %ymm11, %ymm2
+	vmovdqu	%ymm2, -256(%rdi)
+	vpaddw	%ymm5, %ymm1, %ymm2
+	vpsubw	%ymm11, %ymm10, %ymm10
+	vmovdqu	%ymm2, -224(%rdi)
+	vpaddw	%ymm9, %ymm12, %ymm2
+	vpsubw	%ymm1, %ymm5, %ymm5
+	vmovdqu	%ymm2, -192(%rdi)
+	vpsubw	%ymm12, %ymm9, %ymm9
+	vpaddw	%ymm4, %ymm0, %ymm2
+	vpsubw	%ymm0, %ymm4, %ymm0
+	vmovdqu	%ymm2, -160(%rdi)
+	vmovdqu	%ymm10, -128(%rdi)
+	vmovdqu	%ymm5, -96(%rdi)
+	vmovdqu	%ymm9, -64(%rdi)
+	vmovdqu	%ymm0, -32(%rdi)
+	cmpq	%r8, %rdi
+	jne	.L12
+.L27:
 	vzeroupper
-	retq
-.Lfunc_end4:
-	.size	invntt512, .Lfunc_end4-invntt512
+	popq	%r10
+	.cfi_remember_state
+	.cfi_def_cfa 10, 0
+	popq	%rbp
+	leaq	-8(%r10), %rsp
+	.cfi_def_cfa 7, 8
+	ret
+	.p2align 4,,10
+	.p2align 3
+.L2:
+	.cfi_restore_state
+	movq	%r10, %rax
+	subq	%r9, %rax
+	subq	%r9, %rax
+	addq	%rax, %rdi
+	jmp	.L14
 	.cfi_endproc
-                                        # -- End function
-	.globl	CRYPTO_NAMESPACE(invntt512_10753) # -- Begin function CRYPTO_NAMESPACE(invntt512_10753)
-	.p2align	4, 0x90
-	.type	CRYPTO_NAMESPACE(invntt512_10753),@function
-CRYPTO_NAMESPACE(invntt512_10753): # @CRYPTO_NAMESPACE(invntt512_10753)
+.LFE4755:
+	.size	ntt512, .-ntt512
+	.p2align 4,,15
+	.type	invntt512, @function
+invntt512:
+.LFB4758:
 	.cfi_startproc
-# %bb.0:
-	leaq	qdata_10753(%rip), %rdx
-	jmp	invntt512               # TAILCALL
-.Lfunc_end5:
-	.size	CRYPTO_NAMESPACE(invntt512_10753), .Lfunc_end5-CRYPTO_NAMESPACE(invntt512_10753)
+	leal	0(,%rsi,4), %r9d
+	sall	$9, %esi
+	movslq	%esi, %r8
+	movslq	%r9d, %r10
+	addq	%r8, %r8
+	movq	%r8, %r11
+	negq	%r11
+	testl	%r9d, %r9d
+	jle	.L31
+	movq	%rdi, %rcx
+	xorl	%esi, %esi
+	.p2align 4,,10
+	.p2align 3
+.L32:
+	vmovdqu	96(%rcx), %ymm1
+	vmovdqu	224(%rcx), %ymm0
+	addq	$1, %rsi
+	addq	$256, %rcx
+	vmovdqa	3296(%rdx), %ymm6
+	vmovdqa	3136(%rdx), %ymm4
+	vpaddw	%ymm0, %ymm1, %ymm8
+	vpsubw	%ymm0, %ymm1, %ymm1
+	vmovdqu	-128(%rcx), %ymm7
+	vmovdqa	1536(%rdx), %ymm0
+	vpmulhw	%ymm6, %ymm1, %ymm5
+	vpmullw	%ymm4, %ymm1, %ymm1
+	vmovdqu	-224(%rcx), %ymm3
+	vpmulhw	%ymm0, %ymm1, %ymm1
+	vpsubw	%ymm1, %ymm5, %ymm10
+	vmovdqu	-96(%rcx), %ymm1
+	vmovdqu	-192(%rcx), %ymm5
+	vpaddw	%ymm1, %ymm3, %ymm9
+	vpsubw	%ymm1, %ymm3, %ymm3
+	vmovdqu	-64(%rcx), %ymm1
+	vpmulhw	%ymm6, %ymm3, %ymm11
+	vpmullw	%ymm4, %ymm3, %ymm3
+	vpaddw	%ymm1, %ymm5, %ymm2
+	vpsubw	%ymm1, %ymm5, %ymm5
+	vpmulhw	%ymm0, %ymm3, %ymm3
+	vpsubw	%ymm3, %ymm11, %ymm11
+	vmovdqu	-256(%rcx), %ymm3
+	vpaddw	%ymm7, %ymm3, %ymm1
+	vpsubw	%ymm7, %ymm3, %ymm3
+	vpaddw	%ymm1, %ymm9, %ymm13
+	vpaddw	%ymm10, %ymm5, %ymm7
+	vpsubw	%ymm9, %ymm1, %ymm1
+	vpsubw	%ymm10, %ymm5, %ymm5
+	vpaddw	%ymm8, %ymm2, %ymm10
+	vpsubw	%ymm8, %ymm2, %ymm2
+	vpaddw	%ymm3, %ymm11, %ymm8
+	vpsubw	%ymm11, %ymm3, %ymm3
+	vpunpcklqdq	%ymm5, %ymm2, %ymm11
+	vpunpckhqdq	%ymm5, %ymm2, %ymm2
+	vpunpcklqdq	%ymm7, %ymm10, %ymm5
+	vpunpckhqdq	%ymm7, %ymm10, %ymm10
+	vpmulhw	128(%rdx), %ymm10, %ymm9
+	vpunpcklqdq	%ymm3, %ymm1, %ymm7
+	vpunpckhqdq	%ymm3, %ymm1, %ymm1
+	vpmulhw	160(%rdx), %ymm2, %ymm3
+	vpunpcklqdq	%ymm8, %ymm13, %ymm12
+	vpmullw	1728(%rdx), %ymm2, %ymm2
+	vpmulhw	%ymm0, %ymm2, %ymm2
+	vpunpckhqdq	%ymm8, %ymm13, %ymm8
+	vpsubw	%ymm2, %ymm3, %ymm2
+	vpmullw	1696(%rdx), %ymm10, %ymm3
+	vpmulhw	%ymm0, %ymm3, %ymm3
+	vpmulhw	96(%rdx), %ymm11, %ymm10
+	vpsubw	%ymm3, %ymm9, %ymm9
+	vpmulhw	224(%rdx), %ymm1, %ymm3
+	vpmullw	1792(%rdx), %ymm1, %ymm1
+	vpmulhw	%ymm0, %ymm1, %ymm1
+	vpsubw	%ymm1, %ymm3, %ymm1
+	vpmulhw	192(%rdx), %ymm8, %ymm3
+	vpmullw	1760(%rdx), %ymm8, %ymm8
+	vpmulhw	%ymm0, %ymm8, %ymm8
+	vpsubw	%ymm8, %ymm3, %ymm8
+	vpmullw	1664(%rdx), %ymm11, %ymm3
+	vpmulhw	%ymm0, %ymm3, %ymm3
+	vpmulhw	64(%rdx), %ymm5, %ymm11
+	vpmullw	1632(%rdx), %ymm5, %ymm5
+	vpmulhw	%ymm0, %ymm5, %ymm5
+	vpsubw	%ymm9, %ymm8, %ymm13
+	vpaddw	%ymm9, %ymm8, %ymm8
+	vpsubw	%ymm3, %ymm10, %ymm10
+	vpsubw	%ymm5, %ymm11, %ymm11
+	vmovdqa	3232(%rdx), %ymm5
+	vmovdqu	%ymm8, -128(%rcx)
+	vpmulhrsw	%ymm5, %ymm7, %ymm3
+	vpmullw	%ymm0, %ymm3, %ymm3
+	vpsubw	%ymm3, %ymm7, %ymm7
+	vpmulhrsw	%ymm5, %ymm12, %ymm3
+	vpsubw	%ymm2, %ymm1, %ymm5
+	vpaddw	%ymm2, %ymm1, %ymm1
+	vmovdqu	%ymm1, -96(%rcx)
+	vpmullw	%ymm0, %ymm3, %ymm3
+	vpsubw	%ymm3, %ymm12, %ymm3
+	vpmulhw	%ymm6, %ymm5, %ymm12
+	vpmullw	%ymm5, %ymm4, %ymm5
+	vpmullw	%ymm13, %ymm4, %ymm4
+	vpmulhw	%ymm6, %ymm13, %ymm6
+	vpmulhw	%ymm0, %ymm5, %ymm5
+	vpmulhw	%ymm0, %ymm4, %ymm0
+	vpaddw	%ymm11, %ymm3, %ymm4
+	vmovdqu	%ymm4, -256(%rcx)
+	vpsubw	%ymm11, %ymm3, %ymm3
+	vpaddw	%ymm10, %ymm7, %ymm4
+	vpsubw	%ymm10, %ymm7, %ymm7
+	vmovdqu	%ymm4, -224(%rcx)
+	vmovdqu	%ymm3, -192(%rcx)
+	vmovdqu	%ymm7, -160(%rcx)
+	vpsubw	%ymm0, %ymm6, %ymm0
+	vpsubw	%ymm5, %ymm12, %ymm5
+	vmovdqu	%ymm0, -64(%rcx)
+	vmovdqu	%ymm5, -32(%rcx)
+	cmpq	%r10, %rsi
+	jne	.L32
+	salq	$8, %rsi
+	movq	%rsi, %rax
+	subq	%r8, %rax
+	addq	%rdi, %rax
+	addq	%rax, %rsi
+	.p2align 4,,10
+	.p2align 3
+.L34:
+	vmovdqu	224(%rax), %ymm5
+	vmovdqu	192(%rax), %ymm0
+	addq	$256, %rax
+	vpunpckldq	%ymm5, %ymm0, %ymm1
+	vpunpckhdq	%ymm5, %ymm0, %ymm0
+	vpunpckldq	%ymm0, %ymm1, %ymm3
+	vpunpckhdq	%ymm0, %ymm1, %ymm5
+	vmovdqu	-128(%rax), %ymm1
+	vmovdqu	-96(%rax), %ymm0
+	vpunpckldq	%ymm0, %ymm1, %ymm4
+	vpunpckhdq	%ymm0, %ymm1, %ymm0
+	vmovdqu	-160(%rax), %ymm1
+	vpunpckldq	%ymm0, %ymm4, %ymm2
+	vpunpckhdq	%ymm0, %ymm4, %ymm0
+	vmovdqu	-192(%rax), %ymm4
+	vpunpckldq	%ymm1, %ymm4, %ymm9
+	vpunpckhdq	%ymm1, %ymm4, %ymm1
+	vmovdqu	-224(%rax), %ymm4
+	vpunpckldq	%ymm1, %ymm9, %ymm13
+	vpunpckhdq	%ymm1, %ymm9, %ymm9
+	vmovdqu	-256(%rax), %ymm1
+	vpunpckldq	%ymm4, %ymm1, %ymm7
+	vpunpckhdq	%ymm4, %ymm1, %ymm1
+	vpunpckldq	%ymm1, %ymm7, %ymm4
+	vpunpckhdq	%ymm1, %ymm7, %ymm7
+	vpsubw	%ymm5, %ymm9, %ymm1
+	vpsubw	%ymm0, %ymm7, %ymm8
+	vpsubw	%ymm2, %ymm4, %ymm12
+	vpunpcklwd	%ymm1, %ymm8, %ymm6
+	vpunpckhwd	%ymm1, %ymm8, %ymm8
+	vpsubw	%ymm3, %ymm13, %ymm1
+	vpunpcklwd	%ymm8, %ymm6, %ymm10
+	vpunpckhwd	%ymm8, %ymm6, %ymm8
+	vpaddw	%ymm7, %ymm0, %ymm0
+	vpunpcklwd	%ymm8, %ymm10, %ymm6
+	vpunpckhwd	%ymm8, %ymm10, %ymm8
+	vpunpcklwd	%ymm1, %ymm12, %ymm10
+	vpunpckhwd	%ymm1, %ymm12, %ymm12
+	vpaddw	%ymm4, %ymm2, %ymm2
+	vmovdqa	1536(%rdx), %ymm4
+	vpunpckhwd	%ymm12, %ymm10, %ymm1
+	vpunpcklwd	%ymm12, %ymm10, %ymm14
+	vpunpcklwd	%ymm1, %ymm14, %ymm11
+	vpunpckhwd	%ymm1, %ymm14, %ymm12
+	vpaddw	%ymm9, %ymm5, %ymm1
+	vpunpcklwd	%ymm1, %ymm0, %ymm7
+	vpunpckhwd	%ymm1, %ymm0, %ymm0
+	vpunpcklwd	%ymm0, %ymm7, %ymm9
+	vpunpckhwd	%ymm0, %ymm7, %ymm7
+	vpaddw	%ymm13, %ymm3, %ymm0
+	vpunpcklwd	%ymm0, %ymm2, %ymm1
+	vpunpckhwd	%ymm0, %ymm2, %ymm2
+	vpunpcklwd	%ymm7, %ymm9, %ymm5
+	vpunpcklwd	%ymm2, %ymm1, %ymm0
+	vpunpckhwd	%ymm2, %ymm1, %ymm2
+	vpmulhw	416(%rdx), %ymm8, %ymm1
+	vpunpckhwd	%ymm7, %ymm9, %ymm7
+	vpmullw	1984(%rdx), %ymm8, %ymm8
+	vpmulhw	%ymm4, %ymm8, %ymm8
+	vpunpcklwd	%ymm2, %ymm0, %ymm3
+	vpunpckhwd	%ymm2, %ymm0, %ymm2
+	vpmulhw	384(%rdx), %ymm7, %ymm0
+	vpmullw	1952(%rdx), %ymm7, %ymm7
+	vpmulhw	%ymm4, %ymm7, %ymm7
+	vpsubw	%ymm8, %ymm1, %ymm10
+	vpmullw	2048(%rdx), %ymm12, %ymm1
+	vpmulhw	%ymm4, %ymm1, %ymm1
+	vpmulhw	352(%rdx), %ymm6, %ymm8
+	vpsubw	%ymm7, %ymm0, %ymm9
+	vpmulhw	480(%rdx), %ymm12, %ymm0
+	vpmulhw	448(%rdx), %ymm2, %ymm7
+	vpmullw	1920(%rdx), %ymm6, %ymm6
+	vpmulhw	%ymm4, %ymm6, %ymm6
+	vpsubw	%ymm1, %ymm0, %ymm1
+	vpmullw	2016(%rdx), %ymm2, %ymm0
+	vpmulhw	%ymm4, %ymm0, %ymm0
+	vpsubw	%ymm6, %ymm8, %ymm8
+	vpaddw	%ymm10, %ymm1, %ymm6
+	vpsubw	%ymm10, %ymm1, %ymm1
+	vpsubw	%ymm0, %ymm7, %ymm0
+	vpmulhw	320(%rdx), %ymm5, %ymm7
+	vpmullw	1888(%rdx), %ymm5, %ymm5
+	vpmulhw	%ymm4, %ymm5, %ymm5
+	vpsubw	%ymm5, %ymm7, %ymm7
+	vmovdqa	3232(%rdx), %ymm5
+	vpmulhrsw	%ymm5, %ymm11, %ymm2
+	vpmulhrsw	%ymm5, %ymm3, %ymm5
+	vpmullw	%ymm4, %ymm2, %ymm2
+	vpmullw	%ymm4, %ymm5, %ymm5
+	vpsubw	%ymm2, %ymm11, %ymm2
+	vpsubw	%ymm5, %ymm3, %ymm3
+	vmovdqa	3136(%rdx), %ymm11
+	vmovdqa	3296(%rdx), %ymm5
+	vpmulhw	%ymm5, %ymm1, %ymm10
+	vpmullw	%ymm1, %ymm11, %ymm1
+	vpmulhw	%ymm4, %ymm1, %ymm1
+	vpsubw	%ymm1, %ymm10, %ymm1
+	vpaddw	%ymm9, %ymm0, %ymm10
+	vpsubw	%ymm9, %ymm0, %ymm0
+	vpmulhw	%ymm5, %ymm0, %ymm5
+	vpmullw	%ymm11, %ymm0, %ymm0
+	vpmulhw	%ymm4, %ymm0, %ymm0
+	vpaddw	%ymm8, %ymm2, %ymm4
+	vpsubw	%ymm8, %ymm2, %ymm2
+	vpsubw	%ymm0, %ymm5, %ymm0
+	vpaddw	%ymm7, %ymm3, %ymm5
+	vpsubw	%ymm7, %ymm3, %ymm3
+	vpaddw	%ymm10, %ymm5, %ymm7
+	vmovdqu	%ymm7, -256(%rax)
+	vpaddw	%ymm0, %ymm3, %ymm7
+	vpsubw	%ymm0, %ymm3, %ymm3
+	vpaddw	%ymm6, %ymm4, %ymm0
+	vpsubw	%ymm10, %ymm5, %ymm10
+	vmovdqu	%ymm7, -224(%rax)
+	vmovdqu	%ymm0, -128(%rax)
+	vpsubw	%ymm6, %ymm4, %ymm6
+	vpaddw	%ymm1, %ymm2, %ymm0
+	vpsubw	%ymm1, %ymm2, %ymm1
+	vmovdqu	%ymm10, -192(%rax)
+	vmovdqu	%ymm3, -160(%rax)
+	vmovdqu	%ymm0, -96(%rax)
+	vmovdqu	%ymm6, -64(%rax)
+	vmovdqu	%ymm1, -32(%rax)
+	cmpq	%rsi, %rax
+	jne	.L34
+.L43:
+	leal	3(%r9), %ecx
+	addq	%r11, %rax
+	testl	%r9d, %r9d
+	cmovns	%r9d, %ecx
+	sarl	$2, %ecx
+	movl	%ecx, %edi
+	movslq	%ecx, %r8
+	sall	$9, %edi
+	movslq	%edi, %rdi
+	addq	%rdi, %rdi
+	movq	%rdi, %r9
+	negq	%r9
+	testl	%ecx, %ecx
+	jle	.L54
+	movq	%rax, %rcx
+	xorl	%esi, %esi
+	.p2align 4,,10
+	.p2align 3
+.L36:
+	vmovdqa	1536(%rdx), %ymm0
+	vmovdqu	992(%rcx), %ymm5
+	addq	$1, %rsi
+	addq	$1024, %rcx
+	vmovdqu	-160(%rcx), %ymm3
+	vmovdqu	-288(%rcx), %ymm6
+	vmovdqu	-544(%rcx), %ymm7
+	vmovdqu	-416(%rcx), %ymm2
+	vperm2i128	$32, %ymm5, %ymm3, %ymm9
+	vperm2i128	$49, %ymm5, %ymm3, %ymm3
+	vpmulhw	1248(%rdx), %ymm3, %ymm5
+	vpmullw	2816(%rdx), %ymm3, %ymm3
+	vpmulhw	%ymm0, %ymm3, %ymm3
+	vmovdqu	-672(%rcx), %ymm11
+	vperm2i128	$32, %ymm6, %ymm2, %ymm15
+	vperm2i128	$49, %ymm6, %ymm2, %ymm2
+	vpmulhw	1376(%rdx), %ymm2, %ymm6
+	vpmullw	2944(%rdx), %ymm2, %ymm2
+	vpmulhw	%ymm0, %ymm2, %ymm2
+	vpmulhw	1120(%rdx), %ymm9, %ymm12
+	vperm2i128	$32, %ymm7, %ymm11, %ymm14
+	vperm2i128	$49, %ymm7, %ymm11, %ymm11
+	vpmulhw	864(%rdx), %ymm11, %ymm4
+	vpmullw	2432(%rdx), %ymm11, %ymm11
+	vpmulhw	%ymm0, %ymm11, %ymm11
+	vmovdqu	-800(%rcx), %ymm10
+	vmovdqu	-928(%rcx), %ymm8
+	vpmulhw	1504(%rdx), %ymm15, %ymm1
+	vpsubw	%ymm3, %ymm5, %ymm3
+	vpmullw	2688(%rdx), %ymm9, %ymm5
+	vpmulhw	%ymm0, %ymm5, %ymm5
+	vperm2i128	$32, %ymm10, %ymm8, %ymm13
+	vpsubw	%ymm2, %ymm6, %ymm9
+	vpmullw	3072(%rdx), %ymm15, %ymm6
+	vpmulhw	%ymm0, %ymm6, %ymm6
+	vperm2i128	$49, %ymm10, %ymm8, %ymm8
+	vpsubw	%ymm11, %ymm4, %ymm7
+	vpmullw	2560(%rdx), %ymm14, %ymm4
+	vpmulhw	%ymm0, %ymm4, %ymm4
+	vmovdqa	3136(%rdx), %ymm11
+	vpsubw	%ymm5, %ymm12, %ymm5
+	vpaddw	%ymm3, %ymm5, %ymm2
+	vpsubw	%ymm3, %ymm5, %ymm5
+	vpmulhw	3328(%rdx), %ymm5, %ymm3
+	vpmullw	3168(%rdx), %ymm5, %ymm5
+	vpmulhw	%ymm0, %ymm5, %ymm5
+	vpsubw	%ymm6, %ymm1, %ymm6
+	vpmulhw	992(%rdx), %ymm14, %ymm1
+	vpsubw	%ymm4, %ymm1, %ymm4
+	vpmulhw	736(%rdx), %ymm8, %ymm1
+	vpmullw	2304(%rdx), %ymm8, %ymm8
+	vpmulhw	%ymm0, %ymm8, %ymm8
+	vpsubw	%ymm5, %ymm3, %ymm12
+	vpaddw	%ymm9, %ymm6, %ymm5
+	vpsubw	%ymm9, %ymm6, %ymm6
+	vpmulhw	3360(%rdx), %ymm6, %ymm3
+	vpmullw	3200(%rdx), %ymm6, %ymm6
+	vpmulhw	%ymm0, %ymm6, %ymm6
+	vpsubw	%ymm8, %ymm1, %ymm10
+	vmovdqa	3232(%rdx), %ymm8
+	vpaddw	%ymm7, %ymm4, %ymm9
+	vpsubw	%ymm7, %ymm4, %ymm4
+	vpmulhrsw	%ymm8, %ymm13, %ymm1
+	vpsubw	%ymm6, %ymm3, %ymm3
+	vmovdqa	3296(%rdx), %ymm6
+	vpmulhw	%ymm6, %ymm4, %ymm7
+	vpmullw	%ymm4, %ymm11, %ymm4
+	vpmullw	%ymm0, %ymm1, %ymm1
+	vpmulhw	%ymm0, %ymm4, %ymm4
+	vpsubw	%ymm1, %ymm13, %ymm1
+	vpsubw	%ymm4, %ymm7, %ymm4
+	vpaddw	%ymm10, %ymm1, %ymm7
+	vpsubw	%ymm10, %ymm1, %ymm1
+	vpaddw	%ymm12, %ymm3, %ymm10
+	vpsubw	%ymm12, %ymm3, %ymm3
+	vpmulhw	%ymm6, %ymm3, %ymm12
+	vpmullw	%ymm11, %ymm3, %ymm3
+	vpmulhw	%ymm0, %ymm3, %ymm3
+	vpsubw	%ymm3, %ymm12, %ymm3
+	vpaddw	%ymm2, %ymm5, %ymm12
+	vpsubw	%ymm2, %ymm5, %ymm2
+	vpaddw	%ymm9, %ymm7, %ymm5
+	vpmulhw	%ymm6, %ymm2, %ymm6
+	vpmullw	%ymm11, %ymm2, %ymm2
+	vpaddw	%ymm4, %ymm1, %ymm11
+	vpsubw	%ymm4, %ymm1, %ymm1
+	vpmulhrsw	%ymm8, %ymm12, %ymm4
+	vpsubw	%ymm9, %ymm7, %ymm7
+	vpmulhrsw	%ymm8, %ymm5, %ymm8
+	vpmulhw	%ymm0, %ymm2, %ymm2
+	vpmullw	%ymm0, %ymm4, %ymm4
+	vpmullw	%ymm0, %ymm8, %ymm0
+	vpsubw	%ymm2, %ymm6, %ymm2
+	vpsubw	%ymm4, %ymm12, %ymm12
+	vpsubw	%ymm0, %ymm5, %ymm0
+	vpaddw	%ymm12, %ymm0, %ymm4
+	vpsubw	%ymm12, %ymm0, %ymm0
+	vmovdqu	%ymm4, -928(%rcx)
+	vpaddw	%ymm10, %ymm11, %ymm4
+	vpsubw	%ymm10, %ymm11, %ymm10
+	vmovdqu	%ymm4, -800(%rcx)
+	vpaddw	%ymm2, %ymm7, %ymm4
+	vpsubw	%ymm2, %ymm7, %ymm2
+	vmovdqu	%ymm4, -672(%rcx)
+	vpaddw	%ymm3, %ymm1, %ymm4
+	vpsubw	%ymm3, %ymm1, %ymm3
+	vmovdqu	%ymm4, -544(%rcx)
+	vmovdqu	%ymm0, -416(%rcx)
+	vmovdqu	%ymm10, -288(%rcx)
+	vmovdqu	%ymm2, -160(%rcx)
+	vmovdqu	%ymm3, -32(%rcx)
+	cmpq	%r8, %rsi
+	jne	.L36
+	salq	$10, %rsi
+	movq	%rsi, %rcx
+	subq	%rdi, %rcx
+	addq	%rcx, %rax
+	leaq	(%rax,%rsi), %rcx
+	.p2align 4,,10
+	.p2align 3
+.L38:
+	vmovdqa	1536(%rdx), %ymm0
+	vmovdqu	960(%rax), %ymm5
+	addq	$1024, %rax
+	vmovdqu	-192(%rax), %ymm3
+	vmovdqu	-320(%rax), %ymm6
+	vmovdqu	-576(%rax), %ymm7
+	vmovdqu	-448(%rax), %ymm2
+	vperm2i128	$32, %ymm5, %ymm3, %ymm9
+	vperm2i128	$49, %ymm5, %ymm3, %ymm3
+	vpmulhw	1216(%rdx), %ymm3, %ymm5
+	vpmullw	2784(%rdx), %ymm3, %ymm3
+	vpmulhw	%ymm0, %ymm3, %ymm3
+	vmovdqu	-704(%rax), %ymm11
+	vperm2i128	$32, %ymm6, %ymm2, %ymm15
+	vperm2i128	$49, %ymm6, %ymm2, %ymm2
+	vpmulhw	1344(%rdx), %ymm2, %ymm6
+	vpmullw	2912(%rdx), %ymm2, %ymm2
+	vpmulhw	%ymm0, %ymm2, %ymm2
+	vpmulhw	1088(%rdx), %ymm9, %ymm12
+	vperm2i128	$32, %ymm7, %ymm11, %ymm14
+	vperm2i128	$49, %ymm7, %ymm11, %ymm11
+	vpmulhw	832(%rdx), %ymm11, %ymm4
+	vpmullw	2400(%rdx), %ymm11, %ymm11
+	vpmulhw	%ymm0, %ymm11, %ymm11
+	vmovdqu	-832(%rax), %ymm10
+	vmovdqu	-960(%rax), %ymm8
+	vpmulhw	1472(%rdx), %ymm15, %ymm1
+	vpsubw	%ymm3, %ymm5, %ymm3
+	vpmullw	2656(%rdx), %ymm9, %ymm5
+	vpmulhw	%ymm0, %ymm5, %ymm5
+	vperm2i128	$32, %ymm10, %ymm8, %ymm13
+	vpsubw	%ymm2, %ymm6, %ymm9
+	vpmullw	3040(%rdx), %ymm15, %ymm6
+	vpmulhw	%ymm0, %ymm6, %ymm6
+	vperm2i128	$49, %ymm10, %ymm8, %ymm8
+	vpsubw	%ymm11, %ymm4, %ymm7
+	vpmullw	2528(%rdx), %ymm14, %ymm4
+	vpmulhw	%ymm0, %ymm4, %ymm4
+	vmovdqa	3136(%rdx), %ymm11
+	vpsubw	%ymm5, %ymm12, %ymm5
+	vpaddw	%ymm3, %ymm5, %ymm2
+	vpsubw	%ymm3, %ymm5, %ymm5
+	vpmulhw	3328(%rdx), %ymm5, %ymm3
+	vpmullw	3168(%rdx), %ymm5, %ymm5
+	vpmulhw	%ymm0, %ymm5, %ymm5
+	vpsubw	%ymm6, %ymm1, %ymm6
+	vpmulhw	960(%rdx), %ymm14, %ymm1
+	vpsubw	%ymm4, %ymm1, %ymm4
+	vpmulhw	704(%rdx), %ymm8, %ymm1
+	vpmullw	2272(%rdx), %ymm8, %ymm8
+	vpmulhw	%ymm0, %ymm8, %ymm8
+	vpsubw	%ymm5, %ymm3, %ymm12
+	vpaddw	%ymm9, %ymm6, %ymm5
+	vpsubw	%ymm9, %ymm6, %ymm6
+	vpmulhw	3360(%rdx), %ymm6, %ymm3
+	vpmullw	3200(%rdx), %ymm6, %ymm6
+	vpmulhw	%ymm0, %ymm6, %ymm6
+	vpsubw	%ymm8, %ymm1, %ymm10
+	vmovdqa	3232(%rdx), %ymm8
+	vpaddw	%ymm7, %ymm4, %ymm9
+	vpsubw	%ymm7, %ymm4, %ymm4
+	vpmulhrsw	%ymm8, %ymm13, %ymm1
+	vpsubw	%ymm6, %ymm3, %ymm3
+	vmovdqa	3296(%rdx), %ymm6
+	vpmulhw	%ymm6, %ymm4, %ymm7
+	vpmullw	%ymm4, %ymm11, %ymm4
+	vpmullw	%ymm0, %ymm1, %ymm1
+	vpmulhw	%ymm0, %ymm4, %ymm4
+	vpsubw	%ymm1, %ymm13, %ymm1
+	vpsubw	%ymm4, %ymm7, %ymm4
+	vpaddw	%ymm10, %ymm1, %ymm7
+	vpsubw	%ymm10, %ymm1, %ymm1
+	vpaddw	%ymm12, %ymm3, %ymm10
+	vpsubw	%ymm12, %ymm3, %ymm3
+	vpmulhw	%ymm6, %ymm3, %ymm12
+	vpmullw	%ymm11, %ymm3, %ymm3
+	vpmulhw	%ymm0, %ymm3, %ymm3
+	vpsubw	%ymm3, %ymm12, %ymm3
+	vpaddw	%ymm2, %ymm5, %ymm12
+	vpsubw	%ymm2, %ymm5, %ymm2
+	vpaddw	%ymm9, %ymm7, %ymm5
+	vpmulhw	%ymm6, %ymm2, %ymm6
+	vpmullw	%ymm11, %ymm2, %ymm2
+	vpaddw	%ymm4, %ymm1, %ymm11
+	vpsubw	%ymm4, %ymm1, %ymm1
+	vpmulhrsw	%ymm8, %ymm12, %ymm4
+	vpsubw	%ymm9, %ymm7, %ymm7
+	vpmulhrsw	%ymm8, %ymm5, %ymm8
+	vpmulhw	%ymm0, %ymm2, %ymm2
+	vpmullw	%ymm0, %ymm4, %ymm4
+	vpmullw	%ymm0, %ymm8, %ymm0
+	vpsubw	%ymm2, %ymm6, %ymm2
+	vpsubw	%ymm4, %ymm12, %ymm12
+	vpsubw	%ymm0, %ymm5, %ymm0
+	vpaddw	%ymm12, %ymm0, %ymm4
+	vpsubw	%ymm12, %ymm0, %ymm0
+	vmovdqu	%ymm4, -960(%rax)
+	vpaddw	%ymm10, %ymm11, %ymm4
+	vpsubw	%ymm10, %ymm11, %ymm10
+	vmovdqu	%ymm4, -832(%rax)
+	vpaddw	%ymm2, %ymm7, %ymm4
+	vpsubw	%ymm2, %ymm7, %ymm2
+	vmovdqu	%ymm4, -704(%rax)
+	vpaddw	%ymm3, %ymm1, %ymm4
+	vpsubw	%ymm3, %ymm1, %ymm3
+	vmovdqu	%ymm4, -576(%rax)
+	vmovdqu	%ymm0, -448(%rax)
+	vmovdqu	%ymm10, -320(%rax)
+	vmovdqu	%ymm2, -192(%rax)
+	vmovdqu	%ymm3, -64(%rax)
+	cmpq	%rcx, %rax
+	jne	.L38
+	addq	%r9, %rax
+	leaq	(%rax,%rsi), %rcx
+	.p2align 4,,10
+	.p2align 3
+.L40:
+	vmovdqa	1536(%rdx), %ymm0
+	vmovdqu	928(%rax), %ymm5
+	addq	$1024, %rax
+	vmovdqu	-224(%rax), %ymm3
+	vmovdqu	-352(%rax), %ymm6
+	vmovdqu	-608(%rax), %ymm7
+	vmovdqu	-480(%rax), %ymm2
+	vperm2i128	$32, %ymm5, %ymm3, %ymm9
+	vperm2i128	$49, %ymm5, %ymm3, %ymm3
+	vpmulhw	1184(%rdx), %ymm3, %ymm5
+	vpmullw	2752(%rdx), %ymm3, %ymm3
+	vpmulhw	%ymm0, %ymm3, %ymm3
+	vmovdqu	-736(%rax), %ymm11
+	vperm2i128	$32, %ymm6, %ymm2, %ymm15
+	vperm2i128	$49, %ymm6, %ymm2, %ymm2
+	vpmulhw	1312(%rdx), %ymm2, %ymm6
+	vpmullw	2880(%rdx), %ymm2, %ymm2
+	vpmulhw	%ymm0, %ymm2, %ymm2
+	vpmulhw	1056(%rdx), %ymm9, %ymm12
+	vperm2i128	$32, %ymm7, %ymm11, %ymm14
+	vperm2i128	$49, %ymm7, %ymm11, %ymm11
+	vpmulhw	800(%rdx), %ymm11, %ymm4
+	vpmullw	2368(%rdx), %ymm11, %ymm11
+	vpmulhw	%ymm0, %ymm11, %ymm11
+	vmovdqu	-864(%rax), %ymm10
+	vmovdqu	-992(%rax), %ymm8
+	vpmulhw	1440(%rdx), %ymm15, %ymm1
+	vpsubw	%ymm3, %ymm5, %ymm3
+	vpmullw	2624(%rdx), %ymm9, %ymm5
+	vpmulhw	%ymm0, %ymm5, %ymm5
+	vperm2i128	$32, %ymm10, %ymm8, %ymm13
+	vpsubw	%ymm2, %ymm6, %ymm9
+	vpmullw	3008(%rdx), %ymm15, %ymm6
+	vpmulhw	%ymm0, %ymm6, %ymm6
+	vperm2i128	$49, %ymm10, %ymm8, %ymm8
+	vpsubw	%ymm11, %ymm4, %ymm7
+	vpmullw	2496(%rdx), %ymm14, %ymm4
+	vpmulhw	%ymm0, %ymm4, %ymm4
+	vmovdqa	3136(%rdx), %ymm11
+	vpsubw	%ymm5, %ymm12, %ymm5
+	vpaddw	%ymm3, %ymm5, %ymm2
+	vpsubw	%ymm3, %ymm5, %ymm5
+	vpmulhw	3328(%rdx), %ymm5, %ymm3
+	vpmullw	3168(%rdx), %ymm5, %ymm5
+	vpmulhw	%ymm0, %ymm5, %ymm5
+	vpsubw	%ymm6, %ymm1, %ymm6
+	vpmulhw	928(%rdx), %ymm14, %ymm1
+	vpsubw	%ymm4, %ymm1, %ymm4
+	vpmulhw	672(%rdx), %ymm8, %ymm1
+	vpmullw	2240(%rdx), %ymm8, %ymm8
+	vpmulhw	%ymm0, %ymm8, %ymm8
+	vpsubw	%ymm5, %ymm3, %ymm12
+	vpaddw	%ymm9, %ymm6, %ymm5
+	vpsubw	%ymm9, %ymm6, %ymm6
+	vpmulhw	3360(%rdx), %ymm6, %ymm3
+	vpmullw	3200(%rdx), %ymm6, %ymm6
+	vpmulhw	%ymm0, %ymm6, %ymm6
+	vpsubw	%ymm8, %ymm1, %ymm10
+	vmovdqa	3232(%rdx), %ymm8
+	vpaddw	%ymm7, %ymm4, %ymm9
+	vpsubw	%ymm7, %ymm4, %ymm4
+	vpmulhrsw	%ymm8, %ymm13, %ymm1
+	vpsubw	%ymm6, %ymm3, %ymm3
+	vmovdqa	3296(%rdx), %ymm6
+	vpmulhw	%ymm6, %ymm4, %ymm7
+	vpmullw	%ymm4, %ymm11, %ymm4
+	vpmullw	%ymm0, %ymm1, %ymm1
+	vpmulhw	%ymm0, %ymm4, %ymm4
+	vpsubw	%ymm1, %ymm13, %ymm1
+	vpsubw	%ymm4, %ymm7, %ymm4
+	vpaddw	%ymm10, %ymm1, %ymm7
+	vpsubw	%ymm10, %ymm1, %ymm1
+	vpaddw	%ymm12, %ymm3, %ymm10
+	vpsubw	%ymm12, %ymm3, %ymm3
+	vpmulhw	%ymm6, %ymm3, %ymm12
+	vpmullw	%ymm11, %ymm3, %ymm3
+	vpmulhw	%ymm0, %ymm3, %ymm3
+	vpsubw	%ymm3, %ymm12, %ymm3
+	vpaddw	%ymm2, %ymm5, %ymm12
+	vpsubw	%ymm2, %ymm5, %ymm2
+	vpaddw	%ymm9, %ymm7, %ymm5
+	vpmulhw	%ymm6, %ymm2, %ymm6
+	vpmullw	%ymm11, %ymm2, %ymm2
+	vpaddw	%ymm4, %ymm1, %ymm11
+	vpsubw	%ymm4, %ymm1, %ymm1
+	vpmulhrsw	%ymm8, %ymm12, %ymm4
+	vpsubw	%ymm9, %ymm7, %ymm7
+	vpmulhrsw	%ymm8, %ymm5, %ymm8
+	vpmulhw	%ymm0, %ymm2, %ymm2
+	vpmullw	%ymm0, %ymm4, %ymm4
+	vpmullw	%ymm0, %ymm8, %ymm0
+	vpsubw	%ymm2, %ymm6, %ymm2
+	vpsubw	%ymm4, %ymm12, %ymm12
+	vpsubw	%ymm0, %ymm5, %ymm0
+	vpaddw	%ymm12, %ymm0, %ymm4
+	vpsubw	%ymm12, %ymm0, %ymm0
+	vmovdqu	%ymm4, -992(%rax)
+	vpaddw	%ymm10, %ymm11, %ymm4
+	vpsubw	%ymm10, %ymm11, %ymm10
+	vmovdqu	%ymm4, -864(%rax)
+	vpaddw	%ymm2, %ymm7, %ymm4
+	vpsubw	%ymm2, %ymm7, %ymm2
+	vmovdqu	%ymm4, -736(%rax)
+	vpaddw	%ymm3, %ymm1, %ymm4
+	vpsubw	%ymm3, %ymm1, %ymm3
+	vmovdqu	%ymm4, -608(%rax)
+	vmovdqu	%ymm0, -480(%rax)
+	vmovdqu	%ymm10, -352(%rax)
+	vmovdqu	%ymm2, -224(%rax)
+	vmovdqu	%ymm3, -96(%rax)
+	cmpq	%rcx, %rax
+	jne	.L40
+	addq	%r9, %rax
+	addq	%rax, %rsi
+	.p2align 4,,10
+	.p2align 3
+.L42:
+	vmovdqa	1536(%rdx), %ymm0
+	vmovdqu	896(%rax), %ymm5
+	addq	$1024, %rax
+	vmovdqu	-256(%rax), %ymm3
+	vmovdqu	-384(%rax), %ymm6
+	vmovdqu	-640(%rax), %ymm7
+	vmovdqu	-512(%rax), %ymm2
+	vperm2i128	$32, %ymm5, %ymm3, %ymm9
+	vperm2i128	$49, %ymm5, %ymm3, %ymm3
+	vpmulhw	1152(%rdx), %ymm3, %ymm5
+	vpmullw	2720(%rdx), %ymm3, %ymm3
+	vpmulhw	%ymm0, %ymm3, %ymm3
+	vmovdqu	-768(%rax), %ymm11
+	vperm2i128	$32, %ymm6, %ymm2, %ymm15
+	vperm2i128	$49, %ymm6, %ymm2, %ymm2
+	vpmulhw	1280(%rdx), %ymm2, %ymm6
+	vpmullw	2848(%rdx), %ymm2, %ymm2
+	vpmulhw	%ymm0, %ymm2, %ymm2
+	vpmulhw	1024(%rdx), %ymm9, %ymm12
+	vperm2i128	$32, %ymm7, %ymm11, %ymm14
+	vperm2i128	$49, %ymm7, %ymm11, %ymm11
+	vpmulhw	768(%rdx), %ymm11, %ymm4
+	vpmullw	2336(%rdx), %ymm11, %ymm11
+	vpmulhw	%ymm0, %ymm11, %ymm11
+	vmovdqu	-896(%rax), %ymm10
+	vmovdqu	-1024(%rax), %ymm8
+	vpmulhw	1408(%rdx), %ymm15, %ymm1
+	vpsubw	%ymm3, %ymm5, %ymm3
+	vpmullw	2592(%rdx), %ymm9, %ymm5
+	vpmulhw	%ymm0, %ymm5, %ymm5
+	vperm2i128	$32, %ymm10, %ymm8, %ymm13
+	vpsubw	%ymm2, %ymm6, %ymm9
+	vpmullw	2976(%rdx), %ymm15, %ymm6
+	vpmulhw	%ymm0, %ymm6, %ymm6
+	vperm2i128	$49, %ymm10, %ymm8, %ymm8
+	vpsubw	%ymm11, %ymm4, %ymm7
+	vpmullw	2464(%rdx), %ymm14, %ymm4
+	vpmulhw	%ymm0, %ymm4, %ymm4
+	vmovdqa	3136(%rdx), %ymm11
+	vpsubw	%ymm5, %ymm12, %ymm5
+	vpaddw	%ymm3, %ymm5, %ymm2
+	vpsubw	%ymm3, %ymm5, %ymm5
+	vpmulhw	3328(%rdx), %ymm5, %ymm3
+	vpmullw	3168(%rdx), %ymm5, %ymm5
+	vpmulhw	%ymm0, %ymm5, %ymm5
+	vpsubw	%ymm6, %ymm1, %ymm6
+	vpmulhw	896(%rdx), %ymm14, %ymm1
+	vpsubw	%ymm4, %ymm1, %ymm4
+	vpmulhw	640(%rdx), %ymm8, %ymm1
+	vpmullw	2208(%rdx), %ymm8, %ymm8
+	vpmulhw	%ymm0, %ymm8, %ymm8
+	vpsubw	%ymm5, %ymm3, %ymm12
+	vpaddw	%ymm9, %ymm6, %ymm5
+	vpsubw	%ymm9, %ymm6, %ymm6
+	vpmulhw	3360(%rdx), %ymm6, %ymm3
+	vpmullw	3200(%rdx), %ymm6, %ymm6
+	vpmulhw	%ymm0, %ymm6, %ymm6
+	vpsubw	%ymm8, %ymm1, %ymm10
+	vmovdqa	3232(%rdx), %ymm8
+	vpaddw	%ymm7, %ymm4, %ymm9
+	vpsubw	%ymm7, %ymm4, %ymm4
+	vpmulhrsw	%ymm8, %ymm13, %ymm1
+	vpsubw	%ymm6, %ymm3, %ymm3
+	vmovdqa	3296(%rdx), %ymm6
+	vpmulhw	%ymm6, %ymm4, %ymm7
+	vpmullw	%ymm4, %ymm11, %ymm4
+	vpmullw	%ymm0, %ymm1, %ymm1
+	vpmulhw	%ymm0, %ymm4, %ymm4
+	vpsubw	%ymm1, %ymm13, %ymm1
+	vpsubw	%ymm4, %ymm7, %ymm4
+	vpaddw	%ymm10, %ymm1, %ymm7
+	vpsubw	%ymm10, %ymm1, %ymm1
+	vpaddw	%ymm12, %ymm3, %ymm10
+	vpsubw	%ymm12, %ymm3, %ymm3
+	vpmulhw	%ymm6, %ymm3, %ymm12
+	vpmullw	%ymm11, %ymm3, %ymm3
+	vpmulhw	%ymm0, %ymm3, %ymm3
+	vpsubw	%ymm3, %ymm12, %ymm3
+	vpaddw	%ymm2, %ymm5, %ymm12
+	vpsubw	%ymm2, %ymm5, %ymm2
+	vpaddw	%ymm9, %ymm7, %ymm5
+	vpmulhw	%ymm6, %ymm2, %ymm6
+	vpmullw	%ymm11, %ymm2, %ymm2
+	vpaddw	%ymm4, %ymm1, %ymm11
+	vpsubw	%ymm4, %ymm1, %ymm1
+	vpmulhrsw	%ymm8, %ymm12, %ymm4
+	vpsubw	%ymm9, %ymm7, %ymm7
+	vpmulhrsw	%ymm8, %ymm5, %ymm8
+	vpmulhw	%ymm0, %ymm2, %ymm2
+	vpmullw	%ymm0, %ymm4, %ymm4
+	vpmullw	%ymm0, %ymm8, %ymm0
+	vpsubw	%ymm2, %ymm6, %ymm2
+	vpsubw	%ymm4, %ymm12, %ymm12
+	vpsubw	%ymm0, %ymm5, %ymm0
+	vpaddw	%ymm12, %ymm0, %ymm4
+	vpsubw	%ymm12, %ymm0, %ymm0
+	vmovdqu	%ymm4, -1024(%rax)
+	vpaddw	%ymm10, %ymm11, %ymm4
+	vpsubw	%ymm10, %ymm11, %ymm10
+	vmovdqu	%ymm4, -896(%rax)
+	vpaddw	%ymm2, %ymm7, %ymm4
+	vpsubw	%ymm2, %ymm7, %ymm2
+	vmovdqu	%ymm4, -768(%rax)
+	vpaddw	%ymm3, %ymm1, %ymm4
+	vpsubw	%ymm3, %ymm1, %ymm3
+	vmovdqu	%ymm4, -640(%rax)
+	vmovdqu	%ymm0, -512(%rax)
+	vmovdqu	%ymm10, -384(%rax)
+	vmovdqu	%ymm2, -256(%rax)
+	vmovdqu	%ymm3, -128(%rax)
+	cmpq	%rsi, %rax
+	jne	.L42
+.L54:
+	vzeroupper
+	ret
+	.p2align 4,,10
+	.p2align 3
+.L31:
+	leaq	(%rdi,%r11), %rax
+	jmp	.L43
 	.cfi_endproc
-                                        # -- End function
-	.type	qdata_7681,@object      # @qdata_7681
-	.section	.rodata,"a",@progbits
-	.p2align	5
-qdata_7681:
-	.short	7681                    # 0x1e01
-	.short	7681                    # 0x1e01
-	.short	7681                    # 0x1e01
-	.short	7681                    # 0x1e01
-	.short	7681                    # 0x1e01
-	.short	7681                    # 0x1e01
-	.short	7681                    # 0x1e01
-	.short	7681                    # 0x1e01
-	.short	7681                    # 0x1e01
-	.short	7681                    # 0x1e01
-	.short	7681                    # 0x1e01
-	.short	7681                    # 0x1e01
-	.short	7681                    # 0x1e01
-	.short	7681                    # 0x1e01
-	.short	7681                    # 0x1e01
-	.short	7681                    # 0x1e01
-	.short	17474                   # 0x4442
-	.short	17474                   # 0x4442
-	.short	17474                   # 0x4442
-	.short	17474                   # 0x4442
-	.short	17474                   # 0x4442
-	.short	17474                   # 0x4442
-	.short	17474                   # 0x4442
-	.short	17474                   # 0x4442
-	.short	17474                   # 0x4442
-	.short	17474                   # 0x4442
-	.short	17474                   # 0x4442
-	.short	17474                   # 0x4442
-	.short	17474                   # 0x4442
-	.short	17474                   # 0x4442
-	.short	17474                   # 0x4442
-	.short	17474                   # 0x4442
-	.short	16                      # 0x10
-	.short	16                      # 0x10
-	.short	16                      # 0x10
-	.short	16                      # 0x10
-	.short	16                      # 0x10
-	.short	16                      # 0x10
-	.short	16                      # 0x10
-	.short	16                      # 0x10
-	.short	16                      # 0x10
-	.short	16                      # 0x10
-	.short	16                      # 0x10
-	.short	16                      # 0x10
-	.short	16                      # 0x10
-	.short	16                      # 0x10
-	.short	16                      # 0x10
-	.short	16                      # 0x10
-	.short	61759                   # 0xf13f
-	.short	61759                   # 0xf13f
-	.short	61759                   # 0xf13f
-	.short	61759                   # 0xf13f
-	.short	61759                   # 0xf13f
-	.short	61759                   # 0xf13f
-	.short	61759                   # 0xf13f
-	.short	61759                   # 0xf13f
-	.short	61759                   # 0xf13f
-	.short	61759                   # 0xf13f
-	.short	61759                   # 0xf13f
-	.short	61759                   # 0xf13f
-	.short	61759                   # 0xf13f
-	.short	61759                   # 0xf13f
-	.short	61759                   # 0xf13f
-	.short	61759                   # 0xf13f
-	.short	36671                   # 0x8f3f
-	.short	36671                   # 0x8f3f
-	.short	36671                   # 0x8f3f
-	.short	36671                   # 0x8f3f
-	.short	36671                   # 0x8f3f
-	.short	36671                   # 0x8f3f
-	.short	36671                   # 0x8f3f
-	.short	36671                   # 0x8f3f
-	.short	36671                   # 0x8f3f
-	.short	36671                   # 0x8f3f
-	.short	36671                   # 0x8f3f
-	.short	36671                   # 0x8f3f
-	.short	36671                   # 0x8f3f
-	.short	36671                   # 0x8f3f
-	.short	36671                   # 0x8f3f
-	.short	36671                   # 0x8f3f
-	.short	61911                   # 0xf1d7
-	.short	61911                   # 0xf1d7
-	.short	61911                   # 0xf1d7
-	.short	61911                   # 0xf1d7
-	.short	61911                   # 0xf1d7
-	.short	61911                   # 0xf1d7
-	.short	61911                   # 0xf1d7
-	.short	61911                   # 0xf1d7
-	.short	61911                   # 0xf1d7
-	.short	61911                   # 0xf1d7
-	.short	61911                   # 0xf1d7
-	.short	61911                   # 0xf1d7
-	.short	61911                   # 0xf1d7
-	.short	61911                   # 0xf1d7
-	.short	61911                   # 0xf1d7
-	.short	61911                   # 0xf1d7
-	.short	49111                   # 0xbfd7
-	.short	49111                   # 0xbfd7
-	.short	49111                   # 0xbfd7
-	.short	49111                   # 0xbfd7
-	.short	49111                   # 0xbfd7
-	.short	49111                   # 0xbfd7
-	.short	49111                   # 0xbfd7
-	.short	49111                   # 0xbfd7
-	.short	49111                   # 0xbfd7
-	.short	49111                   # 0xbfd7
-	.short	49111                   # 0xbfd7
-	.short	49111                   # 0xbfd7
-	.short	49111                   # 0xbfd7
-	.short	49111                   # 0xbfd7
-	.short	49111                   # 0xbfd7
-	.short	49111                   # 0xbfd7
-	.short	62354                   # 0xf392
-	.short	62354                   # 0xf392
-	.short	62354                   # 0xf392
-	.short	62354                   # 0xf392
-	.short	62354                   # 0xf392
-	.short	62354                   # 0xf392
-	.short	62354                   # 0xf392
-	.short	62354                   # 0xf392
-	.short	62354                   # 0xf392
-	.short	62354                   # 0xf392
-	.short	62354                   # 0xf392
-	.short	62354                   # 0xf392
-	.short	62354                   # 0xf392
-	.short	62354                   # 0xf392
-	.short	62354                   # 0xf392
-	.short	62354                   # 0xf392
-	.short	55186                   # 0xd792
-	.short	55186                   # 0xd792
-	.short	55186                   # 0xd792
-	.short	55186                   # 0xd792
-	.short	55186                   # 0xd792
-	.short	55186                   # 0xd792
-	.short	55186                   # 0xd792
-	.short	55186                   # 0xd792
-	.short	55186                   # 0xd792
-	.short	55186                   # 0xd792
-	.short	55186                   # 0xd792
-	.short	55186                   # 0xd792
-	.short	55186                   # 0xd792
-	.short	55186                   # 0xd792
-	.short	55186                   # 0xd792
-	.short	55186                   # 0xd792
-	.short	61943                   # 0xf1f7
-	.short	61943                   # 0xf1f7
-	.short	61943                   # 0xf1f7
-	.short	61943                   # 0xf1f7
-	.short	63342                   # 0xf76e
-	.short	63342                   # 0xf76e
-	.short	63342                   # 0xf76e
-	.short	63342                   # 0xf76e
-	.short	61911                   # 0xf1d7
-	.short	61911                   # 0xf1d7
-	.short	61911                   # 0xf1d7
-	.short	61911                   # 0xf1d7
-	.short	1100                    # 0x44c
-	.short	1100                    # 0x44c
-	.short	1100                    # 0x44c
-	.short	1100                    # 0x44c
-	.short	61759                   # 0xf13f
-	.short	61759                   # 0xf13f
-	.short	61759                   # 0xf13f
-	.short	61759                   # 0xf13f
-	.short	63080                   # 0xf668
-	.short	63080                   # 0xf668
-	.short	63080                   # 0xf668
-	.short	63080                   # 0xf668
-	.short	3182                    # 0xc6e
-	.short	3182                    # 0xc6e
-	.short	3182                    # 0xc6e
-	.short	3182                    # 0xc6e
-	.short	3696                    # 0xe70
-	.short	3696                    # 0xe70
-	.short	3696                    # 0xe70
-	.short	3696                    # 0xe70
-	.short	3593                    # 0xe09
-	.short	3593                    # 0xe09
-	.short	3593                    # 0xe09
-	.short	3593                    # 0xe09
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	65527                   # 0xfff7
-	.short	65527                   # 0xfff7
-	.short	65527                   # 0xfff7
-	.short	65527                   # 0xfff7
-	.short	4974                    # 0x136e
-	.short	4974                    # 0x136e
-	.short	4974                    # 0x136e
-	.short	4974                    # 0x136e
-	.short	49111                   # 0xbfd7
-	.short	49111                   # 0xbfd7
-	.short	49111                   # 0xbfd7
-	.short	49111                   # 0xbfd7
-	.short	7244                    # 0x1c4c
-	.short	7244                    # 0x1c4c
-	.short	7244                    # 0x1c4c
-	.short	7244                    # 0x1c4c
-	.short	36671                   # 0x8f3f
-	.short	36671                   # 0x8f3f
-	.short	36671                   # 0x8f3f
-	.short	36671                   # 0x8f3f
-	.short	50792                   # 0xc668
-	.short	50792                   # 0xc668
-	.short	50792                   # 0xc668
-	.short	50792                   # 0xc668
-	.short	10350                   # 0x286e
-	.short	10350                   # 0x286e
-	.short	10350                   # 0x286e
-	.short	10350                   # 0x286e
-	.short	61040                   # 0xee70
-	.short	61040                   # 0xee70
-	.short	61040                   # 0xee70
-	.short	61040                   # 0xee70
-	.short	9                       # 0x9
-	.short	9                       # 0x9
-	.short	9                       # 0x9
-	.short	9                       # 0x9
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	61943                   # 0xf1f7
-	.short	61943                   # 0xf1f7
-	.short	61943                   # 0xf1f7
-	.short	61943                   # 0xf1f7
-	.short	1414                    # 0x586
-	.short	1414                    # 0x586
-	.short	1414                    # 0x586
-	.short	1414                    # 0x586
-	.short	63342                   # 0xf76e
-	.short	63342                   # 0xf76e
-	.short	63342                   # 0xf76e
-	.short	63342                   # 0xf76e
-	.short	63041                   # 0xf641
-	.short	63041                   # 0xf641
-	.short	63041                   # 0xf641
-	.short	63041                   # 0xf641
-	.short	61911                   # 0xf1d7
-	.short	61911                   # 0xf1d7
-	.short	61911                   # 0xf1d7
-	.short	61911                   # 0xf1d7
-	.short	2876                    # 0xb3c
-	.short	2876                    # 0xb3c
-	.short	2876                    # 0xb3c
-	.short	2876                    # 0xb3c
-	.short	1100                    # 0x44c
-	.short	1100                    # 0x44c
-	.short	1100                    # 0x44c
-	.short	1100                    # 0x44c
-	.short	63286                   # 0xf736
-	.short	63286                   # 0xf736
-	.short	63286                   # 0xf736
-	.short	63286                   # 0xf736
-	.short	61759                   # 0xf13f
-	.short	61759                   # 0xf13f
-	.short	61759                   # 0xf13f
-	.short	61759                   # 0xf13f
-	.short	63835                   # 0xf95b
-	.short	63835                   # 0xf95b
-	.short	63835                   # 0xf95b
-	.short	63835                   # 0xf95b
-	.short	63080                   # 0xf668
-	.short	63080                   # 0xf668
-	.short	63080                   # 0xf668
-	.short	63080                   # 0xf668
-	.short	834                     # 0x342
-	.short	834                     # 0x342
-	.short	834                     # 0x342
-	.short	834                     # 0x342
-	.short	3182                    # 0xc6e
-	.short	3182                    # 0xc6e
-	.short	3182                    # 0xc6e
-	.short	3182                    # 0xc6e
-	.short	63217                   # 0xf6f1
-	.short	63217                   # 0xf6f1
-	.short	63217                   # 0xf6f1
-	.short	63217                   # 0xf6f1
-	.short	3696                    # 0xe70
-	.short	3696                    # 0xe70
-	.short	3696                    # 0xe70
-	.short	3696                    # 0xe70
-	.short	121                     # 0x79
-	.short	121                     # 0x79
-	.short	121                     # 0x79
-	.short	121                     # 0x79
-	.short	3593                    # 0xe09
-	.short	3593                    # 0xe09
-	.short	3593                    # 0xe09
-	.short	3593                    # 0xe09
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	65527                   # 0xfff7
-	.short	65527                   # 0xfff7
-	.short	65527                   # 0xfff7
-	.short	65527                   # 0xfff7
-	.short	20870                   # 0x5186
-	.short	20870                   # 0x5186
-	.short	20870                   # 0x5186
-	.short	20870                   # 0x5186
-	.short	4974                    # 0x136e
-	.short	4974                    # 0x136e
-	.short	4974                    # 0x136e
-	.short	4974                    # 0x136e
-	.short	22593                   # 0x5841
-	.short	22593                   # 0x5841
-	.short	22593                   # 0x5841
-	.short	22593                   # 0x5841
-	.short	49111                   # 0xbfd7
-	.short	49111                   # 0xbfd7
-	.short	49111                   # 0xbfd7
-	.short	49111                   # 0xbfd7
-	.short	828                     # 0x33c
-	.short	828                     # 0x33c
-	.short	828                     # 0x33c
-	.short	828                     # 0x33c
-	.short	7244                    # 0x1c4c
-	.short	7244                    # 0x1c4c
-	.short	7244                    # 0x1c4c
-	.short	7244                    # 0x1c4c
-	.short	41782                   # 0xa336
-	.short	41782                   # 0xa336
-	.short	41782                   # 0xa336
-	.short	41782                   # 0xa336
-	.short	36671                   # 0x8f3f
-	.short	36671                   # 0x8f3f
-	.short	36671                   # 0x8f3f
-	.short	36671                   # 0x8f3f
-	.short	20315                   # 0x4f5b
-	.short	20315                   # 0x4f5b
-	.short	20315                   # 0x4f5b
-	.short	20315                   # 0x4f5b
-	.short	50792                   # 0xc668
-	.short	50792                   # 0xc668
-	.short	50792                   # 0xc668
-	.short	50792                   # 0xc668
-	.short	18242                   # 0x4742
-	.short	18242                   # 0x4742
-	.short	18242                   # 0x4742
-	.short	18242                   # 0x4742
-	.short	10350                   # 0x286e
-	.short	10350                   # 0x286e
-	.short	10350                   # 0x286e
-	.short	10350                   # 0x286e
-	.short	47345                   # 0xb8f1
-	.short	47345                   # 0xb8f1
-	.short	47345                   # 0xb8f1
-	.short	47345                   # 0xb8f1
-	.short	61040                   # 0xee70
-	.short	61040                   # 0xee70
-	.short	61040                   # 0xee70
-	.short	61040                   # 0xee70
-	.short	53881                   # 0xd279
-	.short	53881                   # 0xd279
-	.short	53881                   # 0xd279
-	.short	53881                   # 0xd279
-	.short	9                       # 0x9
-	.short	9                       # 0x9
-	.short	9                       # 0x9
-	.short	9                       # 0x9
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	61943                   # 0xf1f7
-	.short	64919                   # 0xfd97
-	.short	1414                    # 0x586
-	.short	3706                    # 0xe7a
-	.short	63342                   # 0xf76e
-	.short	64240                   # 0xfaf0
-	.short	63041                   # 0xf641
-	.short	63299                   # 0xf743
-	.short	61911                   # 0xf1d7
-	.short	2830                    # 0xb0e
-	.short	2876                    # 0xb3c
-	.short	63937                   # 0xf9c1
-	.short	1100                    # 0x44c
-	.short	1525                    # 0x5f5
-	.short	63286                   # 0xf736
-	.short	2816                    # 0xb00
-	.short	61759                   # 0xf13f
-	.short	1921                    # 0x781
-	.short	63835                   # 0xf95b
-	.short	2006                    # 0x7d6
-	.short	63080                   # 0xf668
-	.short	1483                    # 0x5cb
-	.short	834                     # 0x342
-	.short	63550                   # 0xf83e
-	.short	3182                    # 0xc6e
-	.short	3364                    # 0xd24
-	.short	63217                   # 0xf6f1
-	.short	63543                   # 0xf837
-	.short	3696                    # 0xe70
-	.short	62979                   # 0xf603
-	.short	121                     # 0x79
-	.short	2088                    # 0x828
-	.short	3593                    # 0xe09
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	65527                   # 0xfff7
-	.short	19351                   # 0x4b97
-	.short	20870                   # 0x5186
-	.short	49786                   # 0xc27a
-	.short	4974                    # 0x136e
-	.short	56048                   # 0xdaf0
-	.short	22593                   # 0x5841
-	.short	7491                    # 0x1d43
-	.short	49111                   # 0xbfd7
-	.short	26382                   # 0x670e
-	.short	828                     # 0x33c
-	.short	23489                   # 0x5bc1
-	.short	7244                    # 0x1c4c
-	.short	20469                   # 0x4ff5
-	.short	41782                   # 0xa336
-	.short	2816                    # 0xb00
-	.short	36671                   # 0x8f3f
-	.short	59777                   # 0xe981
-	.short	20315                   # 0x4f5b
-	.short	62422                   # 0xf3d6
-	.short	50792                   # 0xc668
-	.short	15307                   # 0x3bcb
-	.short	18242                   # 0x4742
-	.short	46142                   # 0xb43e
-	.short	10350                   # 0x286e
-	.short	54564                   # 0xd524
-	.short	47345                   # 0xb8f1
-	.short	34359                   # 0x8637
-	.short	61040                   # 0xee70
-	.short	39939                   # 0x9c03
-	.short	53881                   # 0xd279
-	.short	22568                   # 0x5828
-	.short	9                       # 0x9
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	61943                   # 0xf1f7
-	.short	62732                   # 0xf50c
-	.short	64919                   # 0xfd97
-	.short	65140                   # 0xfe74
-	.short	1414                    # 0x586
-	.short	64987                   # 0xfddb
-	.short	3706                    # 0xe7a
-	.short	810                     # 0x32a
-	.short	63342                   # 0xf76e
-	.short	64215                   # 0xfad7
-	.short	64240                   # 0xfaf0
-	.short	438                     # 0x1b6
-	.short	63041                   # 0xf641
-	.short	63001                   # 0xf619
-	.short	63299                   # 0xf743
-	.short	61847                   # 0xf197
-	.short	61911                   # 0xf1d7
-	.short	2043                    # 0x7fb
-	.short	2830                    # 0xb0e
-	.short	63655                   # 0xf8a7
-	.short	2876                    # 0xb3c
-	.short	3153                    # 0xc51
-	.short	63937                   # 0xf9c1
-	.short	7                       # 0x7
-	.short	1100                    # 0x44c
-	.short	65022                   # 0xfdfe
-	.short	1525                    # 0x5f5
-	.short	63776                   # 0xf920
-	.short	63286                   # 0xf736
-	.short	63096                   # 0xf678
-	.short	2816                    # 0xb00
-	.short	3600                    # 0xe10
-	.short	61759                   # 0xf13f
-	.short	103                     # 0x67
-	.short	1921                    # 0x781
-	.short	62362                   # 0xf39a
-	.short	63835                   # 0xf95b
-	.short	1535                    # 0x5ff
-	.short	2006                    # 0x7d6
-	.short	63649                   # 0xf8a1
-	.short	63080                   # 0xf668
-	.short	1399                    # 0x577
-	.short	1483                    # 0x5cb
-	.short	64857                   # 0xfd59
-	.short	834                     # 0x342
-	.short	3772                    # 0xebc
-	.short	63550                   # 0xf83e
-	.short	1738                    # 0x6ca
-	.short	3182                    # 0xc6e
-	.short	64105                   # 0xfa69
-	.short	3364                    # 0xd24
-	.short	61981                   # 0xf21d
-	.short	63217                   # 0xf6f1
-	.short	63226                   # 0xf6fa
-	.short	63543                   # 0xf837
-	.short	638                     # 0x27e
-	.short	3696                    # 0xe70
-	.short	62580                   # 0xf474
-	.short	62979                   # 0xf603
-	.short	64231                   # 0xfae7
-	.short	121                     # 0x79
-	.short	2555                    # 0x9fb
-	.short	2088                    # 0x828
-	.short	62270                   # 0xf33e
-	.short	3593                    # 0xe09
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	65527                   # 0xfff7
-	.short	36108                   # 0x8d0c
-	.short	19351                   # 0x4b97
-	.short	26228                   # 0x6674
-	.short	20870                   # 0x5186
-	.short	21467                   # 0x53db
-	.short	49786                   # 0xc27a
-	.short	5930                    # 0x172a
-	.short	4974                    # 0x136e
-	.short	51415                   # 0xc8d7
-	.short	56048                   # 0xdaf0
-	.short	44470                   # 0xadb6
-	.short	22593                   # 0x5841
-	.short	2073                    # 0x819
-	.short	7491                    # 0x1d43
-	.short	16279                   # 0x3f97
-	.short	49111                   # 0xbfd7
-	.short	40443                   # 0x9dfb
-	.short	26382                   # 0x670e
-	.short	26279                   # 0x66a7
-	.short	828                     # 0x33c
-	.short	36433                   # 0x8e51
-	.short	23489                   # 0x5bc1
-	.short	11783                   # 0x2e07
-	.short	7244                    # 0x1c4c
-	.short	14846                   # 0x39fe
-	.short	20469                   # 0x4ff5
-	.short	14624                   # 0x3920
-	.short	41782                   # 0xa336
-	.short	59000                   # 0xe678
-	.short	2816                    # 0xb00
-	.short	11792                   # 0x2e10
-	.short	36671                   # 0x8f3f
-	.short	61031                   # 0xee67
-	.short	59777                   # 0xe981
-	.short	59290                   # 0xe79a
-	.short	20315                   # 0x4f5b
-	.short	9215                    # 0x23ff
-	.short	62422                   # 0xf3d6
-	.short	6817                    # 0x1aa1
-	.short	50792                   # 0xc668
-	.short	4983                    # 0x1377
-	.short	15307                   # 0x3bcb
-	.short	36697                   # 0x8f59
-	.short	18242                   # 0x4742
-	.short	1724                    # 0x6bc
-	.short	46142                   # 0xb43e
-	.short	23242                   # 0x5aca
-	.short	10350                   # 0x286e
-	.short	44137                   # 0xac69
-	.short	54564                   # 0xd524
-	.short	35869                   # 0x8c1d
-	.short	47345                   # 0xb8f1
-	.short	43770                   # 0xaafa
-	.short	34359                   # 0x8637
-	.short	15998                   # 0x3e7e
-	.short	61040                   # 0xee70
-	.short	23668                   # 0x5c74
-	.short	39939                   # 0x9c03
-	.short	59623                   # 0xe8e7
-	.short	53881                   # 0xd279
-	.short	40955                   # 0x9ffb
-	.short	22568                   # 0x5828
-	.short	44862                   # 0xaf3e
-	.short	9                       # 0x9
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	61943                   # 0xf1f7
-	.short	2665                    # 0xa69
-	.short	62732                   # 0xf50c
-	.short	62964                   # 0xf5f4
-	.short	64919                   # 0xfd97
-	.short	727                     # 0x2d7
-	.short	65140                   # 0xfe74
-	.short	3417                    # 0xd59
-	.short	1414                    # 0x586
-	.short	2579                    # 0xa13
-	.short	64987                   # 0xfddb
-	.short	373                     # 0x175
-	.short	3706                    # 0xe7a
-	.short	3750                    # 0xea6
-	.short	810                     # 0x32a
-	.short	64482                   # 0xfbe2
-	.short	63342                   # 0xf76e
-	.short	63403                   # 0xf7ab
-	.short	64215                   # 0xfad7
-	.short	1681                    # 0x691
-	.short	64240                   # 0xfaf0
-	.short	64150                   # 0xfa96
-	.short	438                     # 0x1b6
-	.short	62804                   # 0xf554
-	.short	63041                   # 0xf641
-	.short	1919                    # 0x77f
-	.short	63001                   # 0xf619
-	.short	63145                   # 0xf6a9
-	.short	63299                   # 0xf743
-	.short	2835                    # 0xb13
-	.short	61847                   # 0xf197
-	.short	2                       # 0x2
-	.short	61911                   # 0xf1d7
-	.short	64753                   # 0xfcf1
-	.short	2043                    # 0x7fb
-	.short	3145                    # 0xc49
-	.short	2830                    # 0xb0e
-	.short	1533                    # 0x5fd
-	.short	63655                   # 0xf8a7
-	.short	2789                    # 0xae5
-	.short	2876                    # 0xb3c
-	.short	2649                    # 0xa59
-	.short	3153                    # 0xc51
-	.short	3692                    # 0xe6c
-	.short	63937                   # 0xf9c1
-	.short	64146                   # 0xfa92
-	.short	7                       # 0x7
-	.short	64370                   # 0xfb72
-	.short	1100                    # 0x44c
-	.short	3310                    # 0xcee
-	.short	65022                   # 0xfdfe
-	.short	2224                    # 0x8b0
-	.short	1525                    # 0x5f5
-	.short	62793                   # 0xf549
-	.short	63776                   # 0xf920
-	.short	2385                    # 0x951
-	.short	63286                   # 0xf736
-	.short	65050                   # 0xfe1a
-	.short	63096                   # 0xf678
-	.short	63780                   # 0xf924
-	.short	2816                    # 0xb00
-	.short	61720                   # 0xf118
-	.short	3600                    # 0xe10
-	.short	61705                   # 0xf109
-	.short	61759                   # 0xf13f
-	.short	63737                   # 0xf8f9
-	.short	103                     # 0x67
-	.short	1497                    # 0x5d9
-	.short	1921                    # 0x781
-	.short	1521                    # 0x5f1
-	.short	62362                   # 0xf39a
-	.short	65342                   # 0xff3e
-	.short	63835                   # 0xf95b
-	.short	64677                   # 0xfca5
-	.short	1535                    # 0x5ff
-	.short	2175                    # 0x87f
-	.short	2006                    # 0x7d6
-	.short	62774                   # 0xf536
-	.short	63649                   # 0xf8a1
-	.short	63838                   # 0xf95e
-	.short	63080                   # 0xf668
-	.short	62056                   # 0xf268
-	.short	1399                    # 0x577
-	.short	2883                    # 0xb43
-	.short	1483                    # 0x5cb
-	.short	62108                   # 0xf29c
-	.short	64857                   # 0xfd59
-	.short	63423                   # 0xf7bf
-	.short	834                     # 0x342
-	.short	1532                    # 0x5fc
-	.short	3772                    # 0xebc
-	.short	64876                   # 0xfd6c
-	.short	63550                   # 0xf83e
-	.short	62772                   # 0xf534
-	.short	1738                    # 0x6ca
-	.short	64621                   # 0xfc6d
-	.short	3182                    # 0xc6e
-	.short	1056                    # 0x420
-	.short	64105                   # 0xfa69
-	.short	1350                    # 0x546
-	.short	3364                    # 0xd24
-	.short	1464                    # 0x5b8
-	.short	61981                   # 0xf21d
-	.short	2919                    # 0xb67
-	.short	63217                   # 0xf6f1
-	.short	63376                   # 0xf790
-	.short	63226                   # 0xf6fa
-	.short	730                     # 0x2da
-	.short	63543                   # 0xf837
-	.short	63938                   # 0xf9c2
-	.short	638                     # 0x27e
-	.short	3456                    # 0xd80
-	.short	3696                    # 0xe70
-	.short	64368                   # 0xfb70
-	.short	62580                   # 0xf474
-	.short	61948                   # 0xf1fc
-	.short	62979                   # 0xf603
-	.short	64615                   # 0xfc67
-	.short	64231                   # 0xfae7
-	.short	3405                    # 0xd4d
-	.short	121                     # 0x79
-	.short	65132                   # 0xfe6c
-	.short	2555                    # 0x9fb
-	.short	62401                   # 0xf3c1
-	.short	2088                    # 0x828
-	.short	2233                    # 0x8b9
-	.short	62270                   # 0xf33e
-	.short	63110                   # 0xf686
-	.short	3593                    # 0xe09
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	65527                   # 0xfff7
-	.short	48233                   # 0xbc69
-	.short	36108                   # 0x8d0c
-	.short	24052                   # 0x5df4
-	.short	19351                   # 0x4b97
-	.short	53463                   # 0xd0d7
-	.short	26228                   # 0x6674
-	.short	40793                   # 0x9f59
-	.short	20870                   # 0x5186
-	.short	53267                   # 0xd013
-	.short	21467                   # 0x53db
-	.short	19317                   # 0x4b75
-	.short	49786                   # 0xc27a
-	.short	39590                   # 0x9aa6
-	.short	5930                    # 0x172a
-	.short	32738                   # 0x7fe2
-	.short	4974                    # 0x136e
-	.short	60843                   # 0xedab
-	.short	51415                   # 0xc8d7
-	.short	2193                    # 0x891
-	.short	56048                   # 0xdaf0
-	.short	26262                   # 0x6696
-	.short	44470                   # 0xadb6
-	.short	7508                    # 0x1d54
-	.short	22593                   # 0x5841
-	.short	9599                    # 0x257f
-	.short	2073                    # 0x819
-	.short	10409                   # 0x28a9
-	.short	7491                    # 0x1d43
-	.short	53523                   # 0xd113
-	.short	16279                   # 0x3f97
-	.short	50178                   # 0xc402
-	.short	49111                   # 0xbfd7
-	.short	48881                   # 0xbef1
-	.short	40443                   # 0x9dfb
-	.short	32329                   # 0x7e49
-	.short	26382                   # 0x670e
-	.short	24573                   # 0x5ffd
-	.short	26279                   # 0x66a7
-	.short	13541                   # 0x34e5
-	.short	828                     # 0x33c
-	.short	40025                   # 0x9c59
-	.short	36433                   # 0x8e51
-	.short	26220                   # 0x666c
-	.short	23489                   # 0x5bc1
-	.short	56978                   # 0xde92
-	.short	11783                   # 0x2e07
-	.short	40818                   # 0x9f72
-	.short	7244                    # 0x1c4c
-	.short	10478                   # 0x28ee
-	.short	14846                   # 0x39fe
-	.short	26800                   # 0x68b0
-	.short	20469                   # 0x4ff5
-	.short	26441                   # 0x6749
-	.short	14624                   # 0x3920
-	.short	35665                   # 0x8b51
-	.short	41782                   # 0xa336
-	.short	61978                   # 0xf21a
-	.short	59000                   # 0xe678
-	.short	49444                   # 0xc124
-	.short	2816                    # 0xb00
-	.short	8472                    # 0x2118
-	.short	11792                   # 0x2e10
-	.short	58121                   # 0xe309
-	.short	36671                   # 0x8f3f
-	.short	51961                   # 0xcaf9
-	.short	61031                   # 0xee67
-	.short	38873                   # 0x97d9
-	.short	59777                   # 0xe981
-	.short	51185                   # 0xc7f1
-	.short	59290                   # 0xe79a
-	.short	47934                   # 0xbb3e
-	.short	20315                   # 0x4f5b
-	.short	42661                   # 0xa6a5
-	.short	9215                    # 0x23ff
-	.short	9855                    # 0x267f
-	.short	62422                   # 0xf3d6
-	.short	41270                   # 0xa136
-	.short	6817                    # 0x1aa1
-	.short	62814                   # 0xf55e
-	.short	50792                   # 0xc668
-	.short	49768                   # 0xc268
-	.short	4983                    # 0x1377
-	.short	12611                   # 0x3143
-	.short	15307                   # 0x3bcb
-	.short	43676                   # 0xaa9c
-	.short	36697                   # 0x8f59
-	.short	38335                   # 0x95bf
-	.short	18242                   # 0x4742
-	.short	32252                   # 0x7dfc
-	.short	1724                    # 0x6bc
-	.short	21868                   # 0x556c
-	.short	46142                   # 0xb43e
-	.short	56628                   # 0xdd34
-	.short	23242                   # 0x5aca
-	.short	13933                   # 0x366d
-	.short	10350                   # 0x286e
-	.short	17440                   # 0x4420
-	.short	44137                   # 0xac69
-	.short	53574                   # 0xd146
-	.short	54564                   # 0xd524
-	.short	30136                   # 0x75b8
-	.short	35869                   # 0x8c1d
-	.short	63847                   # 0xf967
-	.short	47345                   # 0xb8f1
-	.short	6032                    # 0x1790
-	.short	43770                   # 0xaafa
-	.short	30426                   # 0x76da
-	.short	34359                   # 0x8637
-	.short	15810                   # 0x3dc2
-	.short	15998                   # 0x3e7e
-	.short	3456                    # 0xd80
-	.short	61040                   # 0xee70
-	.short	56176                   # 0xdb70
-	.short	23668                   # 0x5c74
-	.short	27132                   # 0x69fc
-	.short	39939                   # 0x9c03
-	.short	60007                   # 0xea67
-	.short	59623                   # 0xe8e7
-	.short	1869                    # 0x74d
-	.short	53881                   # 0xd279
-	.short	22124                   # 0x566c
-	.short	40955                   # 0x9ffb
-	.short	21953                   # 0x55c1
-	.short	22568                   # 0x5828
-	.short	23225                   # 0x5ab9
-	.short	44862                   # 0xaf3e
-	.short	17030                   # 0x4286
-	.short	9                       # 0x9
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	61943                   # 0xf1f7
-	.short	2005                    # 0x7d5
-	.short	2665                    # 0xa69
-	.short	2891                    # 0xb4b
-	.short	62732                   # 0xf50c
-	.short	2345                    # 0x929
-	.short	62964                   # 0xf5f4
-	.short	1121                    # 0x461
-	.short	64919                   # 0xfd97
-	.short	65348                   # 0xff44
-	.short	727                     # 0x2d7
-	.short	2786                    # 0xae2
-	.short	65140                   # 0xfe74
-	.short	62328                   # 0xf378
-	.short	3417                    # 0xd59
-	.short	65519                   # 0xffef
-	.short	1414                    # 0x586
-	.short	61784                   # 0xf158
-	.short	2579                    # 0xa13
-	.short	2815                    # 0xaff
-	.short	64987                   # 0xfddb
-	.short	1837                    # 0x72d
-	.short	373                     # 0x175
-	.short	151                     # 0x97
-	.short	3706                    # 0xe7a
-	.short	64524                   # 0xfc0c
-	.short	3750                    # 0xea6
-	.short	64027                   # 0xfa1b
-	.short	810                     # 0x32a
-	.short	62322                   # 0xf372
-	.short	64482                   # 0xfbe2
-	.short	3177                    # 0xc69
-	.short	63342                   # 0xf76e
-	.short	64133                   # 0xfa85
-	.short	63403                   # 0xf7ab
-	.short	62222                   # 0xf30e
-	.short	64215                   # 0xfad7
-	.short	83                      # 0x53
-	.short	1681                    # 0x691
-	.short	64878                   # 0xfd6e
-	.short	64240                   # 0xfaf0
-	.short	2070                    # 0x816
-	.short	64150                   # 0xfa96
-	.short	61989                   # 0xf225
-	.short	438                     # 0x1b6
-	.short	3781                    # 0xec5
-	.short	62804                   # 0xf554
-	.short	2230                    # 0x8b6
-	.short	63041                   # 0xf641
-	.short	63867                   # 0xf97b
-	.short	1919                    # 0x77f
-	.short	2589                    # 0xa1d
-	.short	63001                   # 0xf619
-	.short	62224                   # 0xf310
-	.short	63145                   # 0xf6a9
-	.short	61994                   # 0xf22a
-	.short	63299                   # 0xf743
-	.short	64095                   # 0xfa5f
-	.short	2835                    # 0xb13
-	.short	61968                   # 0xf210
-	.short	61847                   # 0xf197
-	.short	65134                   # 0xfe6e
-	.short	2                       # 0x2
-	.short	64466                   # 0xfbd2
-	.short	61911                   # 0xf1d7
-	.short	3763                    # 0xeb3
-	.short	64753                   # 0xfcf1
-	.short	61986                   # 0xf222
-	.short	2043                    # 0x7fb
-	.short	63233                   # 0xf701
-	.short	3145                    # 0xc49
-	.short	65100                   # 0xfe4c
-	.short	2830                    # 0xb0e
-	.short	64643                   # 0xfc83
-	.short	1533                    # 0x5fd
-	.short	1712                    # 0x6b0
-	.short	63655                   # 0xf8a7
-	.short	124                     # 0x7c
-	.short	2789                    # 0xae5
-	.short	63535                   # 0xf82f
-	.short	2876                    # 0xb3c
-	.short	63076                   # 0xf664
-	.short	2649                    # 0xa59
-	.short	3770                    # 0xeba
-	.short	3153                    # 0xc51
-	.short	2965                    # 0xb95
-	.short	3692                    # 0xe6c
-	.short	64333                   # 0xfb4d
-	.short	63937                   # 0xf9c1
-	.short	2874                    # 0xb3a
-	.short	64146                   # 0xfa92
-	.short	64129                   # 0xfa81
-	.short	7                       # 0x7
-	.short	61791                   # 0xf15f
-	.short	64370                   # 0xfb72
-	.short	1649                    # 0x671
-	.short	1100                    # 0x44c
-	.short	2937                    # 0xb79
-	.short	3310                    # 0xcee
-	.short	3461                    # 0xd85
-	.short	65022                   # 0xfdfe
-	.short	64010                   # 0xfa0a
-	.short	2224                    # 0x8b0
-	.short	715                     # 0x2cb
-	.short	1525                    # 0x5f5
-	.short	63847                   # 0xf967
-	.short	62793                   # 0xf549
-	.short	434                     # 0x1b2
-	.short	63776                   # 0xf920
-	.short	62373                   # 0xf3a5
-	.short	2385                    # 0x951
-	.short	64607                   # 0xfc5f
-	.short	63286                   # 0xf736
-	.short	63369                   # 0xf789
-	.short	65050                   # 0xfe1a
-	.short	64392                   # 0xfb88
-	.short	63096                   # 0xf678
-	.short	65166                   # 0xfe8e
-	.short	63780                   # 0xf924
-	.short	2378                    # 0x94a
-	.short	2816                    # 0xb00
-	.short	64452                   # 0xfbc4
-	.short	61720                   # 0xf118
-	.short	63950                   # 0xf9ce
-	.short	3600                    # 0xe10
-	.short	1931                    # 0x78b
-	.short	61705                   # 0xf109
-	.short	64294                   # 0xfb26
-	.short	61759                   # 0xf13f
-	.short	592                     # 0x250
-	.short	63737                   # 0xf8f9
-	.short	2340                    # 0x924
-	.short	103                     # 0x67
-	.short	64198                   # 0xfac6
-	.short	1497                    # 0x5d9
-	.short	63465                   # 0xf7e9
-	.short	1921                    # 0x781
-	.short	1519                    # 0x5ef
-	.short	1521                    # 0x5f1
-	.short	451                     # 0x1c3
-	.short	62362                   # 0xf39a
-	.short	589                     # 0x24d
-	.short	65342                   # 0xff3e
-	.short	61792                   # 0xf160
-	.short	63835                   # 0xf95b
-	.short	3677                    # 0xe5d
-	.short	64677                   # 0xfca5
-	.short	64241                   # 0xfaf1
-	.short	1535                    # 0x5ff
-	.short	642                     # 0x282
-	.short	2175                    # 0x87f
-	.short	61742                   # 0xf12e
-	.short	2006                    # 0x7d6
-	.short	2130                    # 0x852
-	.short	62774                   # 0xf536
-	.short	2918                    # 0xb66
-	.short	63649                   # 0xf8a1
-	.short	3334                    # 0xd06
-	.short	63838                   # 0xf95e
-	.short	2072                    # 0x818
-	.short	63080                   # 0xf668
-	.short	509                     # 0x1fd
-	.short	62056                   # 0xf268
-	.short	2998                    # 0xbb6
-	.short	1399                    # 0x577
-	.short	62128                   # 0xf2b0
-	.short	2883                    # 0xb43
-	.short	1476                    # 0x5c4
-	.short	1483                    # 0x5cb
-	.short	63274                   # 0xf72a
-	.short	62108                   # 0xf29c
-	.short	63757                   # 0xf90d
-	.short	64857                   # 0xfd59
-	.short	2258                    # 0x8d2
-	.short	63423                   # 0xf7bf
-	.short	1348                    # 0x544
-	.short	834                     # 0x342
-	.short	64844                   # 0xfd4c
-	.short	1532                    # 0x5fc
-	.short	2247                    # 0x8c7
-	.short	3772                    # 0xebc
-	.short	2083                    # 0x823
-	.short	64876                   # 0xfd6c
-	.short	65310                   # 0xff1e
-	.short	63550                   # 0xf83e
-	.short	2532                    # 0x9e4
-	.short	62772                   # 0xf534
-	.short	61843                   # 0xf193
-	.short	1738                    # 0x6ca
-	.short	65107                   # 0xfe53
-	.short	64621                   # 0xfc6d
-	.short	63477                   # 0xf7f5
-	.short	3182                    # 0xc6e
-	.short	2812                    # 0xafc
-	.short	1056                    # 0x420
-	.short	3434                    # 0xd6a
-	.short	64105                   # 0xfa69
-	.short	63021                   # 0xf62d
-	.short	1350                    # 0x546
-	.short	65300                   # 0xff14
-	.short	3364                    # 0xd24
-	.short	63150                   # 0xf6ae
-	.short	1464                    # 0x5b8
-	.short	222                     # 0xde
-	.short	61981                   # 0xf21d
-	.short	62573                   # 0xf46d
-	.short	2919                    # 0xb67
-	.short	63114                   # 0xf68a
-	.short	63217                   # 0xf6f1
-	.short	61879                   # 0xf1b7
-	.short	63376                   # 0xf790
-	.short	3450                    # 0xd7a
-	.short	63226                   # 0xf6fa
-	.short	64745                   # 0xfce9
-	.short	730                     # 0x2da
-	.short	1181                    # 0x49d
-	.short	63543                   # 0xf837
-	.short	64132                   # 0xfa84
-	.short	63938                   # 0xf9c2
-	.short	2339                    # 0x923
-	.short	638                     # 0x27e
-	.short	62170                   # 0xf2da
-	.short	3456                    # 0xd80
-	.short	2161                    # 0x871
-	.short	3696                    # 0xe70
-	.short	62193                   # 0xf2f1
-	.short	64368                   # 0xfb70
-	.short	2719                    # 0xa9f
-	.short	62580                   # 0xf474
-	.short	64710                   # 0xfcc6
-	.short	61948                   # 0xf1fc
-	.short	64866                   # 0xfd62
-	.short	62979                   # 0xf603
-	.short	777                     # 0x309
-	.short	64615                   # 0xfc67
-	.short	1151                    # 0x47f
-	.short	64231                   # 0xfae7
-	.short	64740                   # 0xfce4
-	.short	3405                    # 0xd4d
-	.short	64258                   # 0xfb02
-	.short	121                     # 0x79
-	.short	62249                   # 0xf329
-	.short	65132                   # 0xfe6c
-	.short	1072                    # 0x430
-	.short	2555                    # 0x9fb
-	.short	293                     # 0x125
-	.short	62401                   # 0xf3c1
-	.short	2767                    # 0xacf
-	.short	2088                    # 0x828
-	.short	62201                   # 0xf2f9
-	.short	2233                    # 0x8b9
-	.short	3581                    # 0xdfd
-	.short	62270                   # 0xf33e
-	.short	3723                    # 0xe8b
-	.short	63110                   # 0xf686
-	.short	65357                   # 0xff4d
-	.short	3593                    # 0xe09
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	65527                   # 0xfff7
-	.short	4565                    # 0x11d5
-	.short	48233                   # 0xbc69
-	.short	16715                   # 0x414b
-	.short	36108                   # 0x8d0c
-	.short	15145                   # 0x3b29
-	.short	24052                   # 0x5df4
-	.short	42593                   # 0xa661
-	.short	19351                   # 0x4b97
-	.short	1860                    # 0x744
-	.short	53463                   # 0xd0d7
-	.short	36578                   # 0x8ee2
-	.short	26228                   # 0x6674
-	.short	58232                   # 0xe378
-	.short	40793                   # 0x9f59
-	.short	65007                   # 0xfdef
-	.short	20870                   # 0x5186
-	.short	41304                   # 0xa158
-	.short	53267                   # 0xd013
-	.short	10495                   # 0x28ff
-	.short	21467                   # 0x53db
-	.short	49453                   # 0xc12d
-	.short	19317                   # 0x4b75
-	.short	20119                   # 0x4e97
-	.short	49786                   # 0xc27a
-	.short	37900                   # 0x940c
-	.short	39590                   # 0x9aa6
-	.short	53275                   # 0xd01b
-	.short	5930                    # 0x172a
-	.short	38770                   # 0x9772
-	.short	32738                   # 0x7fe2
-	.short	48745                   # 0xbe69
-	.short	4974                    # 0x136e
-	.short	25733                   # 0x6485
-	.short	60843                   # 0xedab
-	.short	20238                   # 0x4f0e
-	.short	51415                   # 0xc8d7
-	.short	18003                   # 0x4653
-	.short	2193                    # 0x891
-	.short	6510                    # 0x196e
-	.short	56048                   # 0xdaf0
-	.short	29718                   # 0x7416
-	.short	26262                   # 0x6696
-	.short	39973                   # 0x9c25
-	.short	44470                   # 0xadb6
-	.short	63685                   # 0xf8c5
-	.short	7508                    # 0x1d54
-	.short	46262                   # 0xb4b6
-	.short	22593                   # 0x5841
-	.short	36731                   # 0x8f7b
-	.short	9599                    # 0x257f
-	.short	42013                   # 0xa41d
-	.short	2073                    # 0x819
-	.short	4880                    # 0x1310
-	.short	10409                   # 0x28a9
-	.short	1578                    # 0x62a
-	.short	7491                    # 0x1d43
-	.short	55391                   # 0xd85f
-	.short	53523                   # 0xd113
-	.short	4624                    # 0x1210
-	.short	16279                   # 0x3f97
-	.short	6766                    # 0x1a6e
-	.short	50178                   # 0xc402
-	.short	24530                   # 0x5fd2
-	.short	49111                   # 0xbfd7
-	.short	5299                    # 0x14b3
-	.short	48881                   # 0xbef1
-	.short	63010                   # 0xf622
-	.short	40443                   # 0x9dfb
-	.short	55553                   # 0xd901
-	.short	32329                   # 0x7e49
-	.short	5708                    # 0x164c
-	.short	26382                   # 0x670e
-	.short	41603                   # 0xa283
-	.short	24573                   # 0x5ffd
-	.short	26288                   # 0x66b0
-	.short	26279                   # 0x66a7
-	.short	30844                   # 0x787c
-	.short	13541                   # 0x34e5
-	.short	30255                   # 0x762f
-	.short	828                     # 0x33c
-	.short	15972                   # 0x3e64
-	.short	40025                   # 0x9c59
-	.short	17082                   # 0x42ba
-	.short	36433                   # 0x8e51
-	.short	38293                   # 0x9595
-	.short	26220                   # 0x666c
-	.short	62797                   # 0xf54d
-	.short	23489                   # 0x5bc1
-	.short	16186                   # 0x3f3a
-	.short	56978                   # 0xde92
-	.short	56449                   # 0xdc81
-	.short	11783                   # 0x2e07
-	.short	53087                   # 0xcf5f
-	.short	40818                   # 0x9f72
-	.short	51313                   # 0xc871
-	.short	7244                    # 0x1c4c
-	.short	56697                   # 0xdd79
-	.short	10478                   # 0x28ee
-	.short	30597                   # 0x7785
-	.short	14846                   # 0x39fe
-	.short	52746                   # 0xce0a
-	.short	26800                   # 0x68b0
-	.short	14539                   # 0x38cb
-	.short	20469                   # 0x4ff5
-	.short	59239                   # 0xe767
-	.short	26441                   # 0x6749
-	.short	9650                    # 0x25b2
-	.short	14624                   # 0x3920
-	.short	40357                   # 0x9da5
-	.short	35665                   # 0x8b51
-	.short	55903                   # 0xda5f
-	.short	41782                   # 0xa336
-	.short	59785                   # 0xe989
-	.short	61978                   # 0xf21a
-	.short	2952                    # 0xb88
-	.short	59000                   # 0xe678
-	.short	23182                   # 0x5a8e
-	.short	49444                   # 0xc124
-	.short	23882                   # 0x5d4a
-	.short	2816                    # 0xb00
-	.short	964                     # 0x3c4
-	.short	8472                    # 0x2118
-	.short	54734                   # 0xd5ce
-	.short	11792                   # 0x2e10
-	.short	48523                   # 0xbd8b
-	.short	58121                   # 0xe309
-	.short	34598                   # 0x8726
-	.short	36671                   # 0x8f3f
-	.short	41552                   # 0xa250
-	.short	51961                   # 0xcaf9
-	.short	53540                   # 0xd124
-	.short	61031                   # 0xee67
-	.short	50886                   # 0xc6c6
-	.short	38873                   # 0x97d9
-	.short	43497                   # 0xa9e9
-	.short	59777                   # 0xe981
-	.short	1007                    # 0x3ef
-	.short	51185                   # 0xc7f1
-	.short	10179                   # 0x27c3
-	.short	59290                   # 0xe79a
-	.short	64589                   # 0xfc4d
-	.short	47934                   # 0xbb3e
-	.short	45408                   # 0xb160
-	.short	20315                   # 0x4f5b
-	.short	10333                   # 0x285d
-	.short	42661                   # 0xa6a5
-	.short	48369                   # 0xbcf1
-	.short	9215                    # 0x23ff
-	.short	50818                   # 0xc682
-	.short	9855                    # 0x267f
-	.short	36142                   # 0x8d2e
-	.short	62422                   # 0xf3d6
-	.short	27730                   # 0x6c52
-	.short	41270                   # 0xa136
-	.short	5990                    # 0x1766
-	.short	6817                    # 0x1aa1
-	.short	22790                   # 0x5906
-	.short	62814                   # 0xf55e
-	.short	14360                   # 0x3818
-	.short	50792                   # 0xc668
-	.short	23549                   # 0x5bfd
-	.short	49768                   # 0xc268
-	.short	47030                   # 0xb7b6
-	.short	4983                    # 0x1377
-	.short	21168                   # 0x52b0
-	.short	12611                   # 0x3143
-	.short	3524                    # 0xdc4
-	.short	15307                   # 0x3bcb
-	.short	2858                    # 0xb2a
-	.short	43676                   # 0xaa9c
-	.short	29453                   # 0x730d
-	.short	36697                   # 0x8f59
-	.short	27858                   # 0x6cd2
-	.short	38335                   # 0x95bf
-	.short	3396                    # 0xd44
-	.short	18242                   # 0x4742
-	.short	5452                    # 0x154c
-	.short	32252                   # 0x7dfc
-	.short	46791                   # 0xb6c7
-	.short	1724                    # 0x6bc
-	.short	60963                   # 0xee23
-	.short	21868                   # 0x556c
-	.short	31518                   # 0x7b1e
-	.short	46142                   # 0xb43e
-	.short	20964                   # 0x51e4
-	.short	56628                   # 0xdd34
-	.short	46995                   # 0xb793
-	.short	23242                   # 0x5aca
-	.short	17491                   # 0x4453
-	.short	13933                   # 0x366d
-	.short	16885                   # 0x41f5
-	.short	10350                   # 0x286e
-	.short	33532                   # 0x82fc
-	.short	17440                   # 0x4420
-	.short	41322                   # 0xa16a
-	.short	44137                   # 0xac69
-	.short	45101                   # 0xb02d
-	.short	53574                   # 0xd146
-	.short	42772                   # 0xa714
-	.short	54564                   # 0xd524
-	.short	37550                   # 0x92ae
-	.short	30136                   # 0x75b8
-	.short	64734                   # 0xfcde
-	.short	35869                   # 0x8c1d
-	.short	11885                   # 0x2e6d
-	.short	63847                   # 0xf967
-	.short	51850                   # 0xca8a
-	.short	47345                   # 0xb8f1
-	.short	32695                   # 0x7fb7
-	.short	6032                    # 0x1790
-	.short	49530                   # 0xc17a
-	.short	43770                   # 0xaafa
-	.short	44777                   # 0xaee9
-	.short	30426                   # 0x76da
-	.short	40605                   # 0x9e9d
-	.short	34359                   # 0x8637
-	.short	33412                   # 0x8284
-	.short	15810                   # 0x3dc2
-	.short	61219                   # 0xef23
-	.short	15998                   # 0x3e7e
-	.short	26330                   # 0x66da
-	.short	3456                    # 0xd80
-	.short	51825                   # 0xca71
-	.short	61040                   # 0xee70
-	.short	46321                   # 0xb4f1
-	.short	56176                   # 0xdb70
-	.short	26783                   # 0x689f
-	.short	23668                   # 0x5c74
-	.short	51398                   # 0xc8c6
-	.short	27132                   # 0x69fc
-	.short	33122                   # 0x8162
-	.short	39939                   # 0x9c03
-	.short	62729                   # 0xf509
-	.short	60007                   # 0xea67
-	.short	8831                    # 0x227f
-	.short	59623                   # 0xe8e7
-	.short	17636                   # 0x44e4
-	.short	1869                    # 0x74d
-	.short	48898                   # 0xbf02
-	.short	53881                   # 0xd279
-	.short	9513                    # 0x2529
-	.short	22124                   # 0x566c
-	.short	25648                   # 0x6430
-	.short	40955                   # 0x9ffb
-	.short	43813                   # 0xab25
-	.short	21953                   # 0x55c1
-	.short	51407                   # 0xc8cf
-	.short	22568                   # 0x5828
-	.short	50425                   # 0xc4f9
-	.short	23225                   # 0x5ab9
-	.short	26621                   # 0x67fd
-	.short	44862                   # 0xaf3e
-	.short	50315                   # 0xc48b
-	.short	17030                   # 0x4286
-	.short	63821                   # 0xf94d
-	.short	9                       # 0x9
-	.zero	30
-	.size	qdata_7681, 2976
-
-	.type	qdata_10753,@object     # @qdata_10753
-	.p2align	5
+.LFE4758:
+	.size	invntt512, .-invntt512
+	.p2align 4,,15
+	.globl	CRYPTO_NAMESPACE(ntt512_7681)
+	.type	CRYPTO_NAMESPACE(ntt512_7681), @function
+CRYPTO_NAMESPACE(ntt512_7681):
+.LFB4756:
+	.cfi_startproc
+	leaq	qdata_7681(%rip), %rdx
+	jmp	ntt512
+	.cfi_endproc
+.LFE4756:
+	.size	CRYPTO_NAMESPACE(ntt512_7681), .-CRYPTO_NAMESPACE(ntt512_7681)
+	.p2align 4,,15
+	.globl	CRYPTO_NAMESPACE(ntt512_10753)
+	.type	CRYPTO_NAMESPACE(ntt512_10753), @function
+CRYPTO_NAMESPACE(ntt512_10753):
+.LFB4757:
+	.cfi_startproc
+	leaq	qdata_10753(%rip), %rdx
+	jmp	ntt512
+	.cfi_endproc
+.LFE4757:
+	.size	CRYPTO_NAMESPACE(ntt512_10753), .-CRYPTO_NAMESPACE(ntt512_10753)
+	.p2align 4,,15
+	.globl	CRYPTO_NAMESPACE(invntt512_7681)
+	.type	CRYPTO_NAMESPACE(invntt512_7681), @function
+CRYPTO_NAMESPACE(invntt512_7681):
+.LFB4759:
+	.cfi_startproc
+	leaq	qdata_7681(%rip), %rdx
+	jmp	invntt512
+	.cfi_endproc
+.LFE4759:
+	.size	CRYPTO_NAMESPACE(invntt512_7681), .-CRYPTO_NAMESPACE(invntt512_7681)
+	.p2align 4,,15
+	.globl	CRYPTO_NAMESPACE(invntt512_10753)
+	.type	CRYPTO_NAMESPACE(invntt512_10753), @function
+CRYPTO_NAMESPACE(invntt512_10753):
+.LFB4760:
+	.cfi_startproc
+	leaq	qdata_10753(%rip), %rdx
+	jmp	invntt512
+	.cfi_endproc
+.LFE4760:
+	.size	CRYPTO_NAMESPACE(invntt512_10753), .-CRYPTO_NAMESPACE(invntt512_10753)
+	.section	.rodata
+	.align 32
+	.type	qdata_10753, @object
+	.size	qdata_10753, 3392
 qdata_10753:
-	.short	10753                   # 0x2a01
-	.short	10753                   # 0x2a01
-	.short	10753                   # 0x2a01
-	.short	10753                   # 0x2a01
-	.short	10753                   # 0x2a01
-	.short	10753                   # 0x2a01
-	.short	10753                   # 0x2a01
-	.short	10753                   # 0x2a01
-	.short	10753                   # 0x2a01
-	.short	10753                   # 0x2a01
-	.short	10753                   # 0x2a01
-	.short	10753                   # 0x2a01
-	.short	10753                   # 0x2a01
-	.short	10753                   # 0x2a01
-	.short	10753                   # 0x2a01
-	.short	10753                   # 0x2a01
-	.short	24964                   # 0x6184
-	.short	24964                   # 0x6184
-	.short	24964                   # 0x6184
-	.short	24964                   # 0x6184
-	.short	24964                   # 0x6184
-	.short	24964                   # 0x6184
-	.short	24964                   # 0x6184
-	.short	24964                   # 0x6184
-	.short	24964                   # 0x6184
-	.short	24964                   # 0x6184
-	.short	24964                   # 0x6184
-	.short	24964                   # 0x6184
-	.short	24964                   # 0x6184
-	.short	24964                   # 0x6184
-	.short	24964                   # 0x6184
-	.short	24964                   # 0x6184
-	.short	8                       # 0x8
-	.short	8                       # 0x8
-	.short	8                       # 0x8
-	.short	8                       # 0x8
-	.short	8                       # 0x8
-	.short	8                       # 0x8
-	.short	8                       # 0x8
-	.short	8                       # 0x8
-	.short	8                       # 0x8
-	.short	8                       # 0x8
-	.short	8                       # 0x8
-	.short	8                       # 0x8
-	.short	8                       # 0x8
-	.short	8                       # 0x8
-	.short	8                       # 0x8
-	.short	8                       # 0x8
-	.short	223                     # 0xdf
-	.short	223                     # 0xdf
-	.short	223                     # 0xdf
-	.short	223                     # 0xdf
-	.short	223                     # 0xdf
-	.short	223                     # 0xdf
-	.short	223                     # 0xdf
-	.short	223                     # 0xdf
-	.short	223                     # 0xdf
-	.short	223                     # 0xdf
-	.short	223                     # 0xdf
-	.short	223                     # 0xdf
-	.short	223                     # 0xdf
-	.short	223                     # 0xdf
-	.short	223                     # 0xdf
-	.short	223                     # 0xdf
-	.short	27359                   # 0x6adf
-	.short	27359                   # 0x6adf
-	.short	27359                   # 0x6adf
-	.short	27359                   # 0x6adf
-	.short	27359                   # 0x6adf
-	.short	27359                   # 0x6adf
-	.short	27359                   # 0x6adf
-	.short	27359                   # 0x6adf
-	.short	27359                   # 0x6adf
-	.short	27359                   # 0x6adf
-	.short	27359                   # 0x6adf
-	.short	27359                   # 0x6adf
-	.short	27359                   # 0x6adf
-	.short	27359                   # 0x6adf
-	.short	27359                   # 0x6adf
-	.short	27359                   # 0x6adf
-	.short	4188                    # 0x105c
-	.short	4188                    # 0x105c
-	.short	4188                    # 0x105c
-	.short	4188                    # 0x105c
-	.short	4188                    # 0x105c
-	.short	4188                    # 0x105c
-	.short	4188                    # 0x105c
-	.short	4188                    # 0x105c
-	.short	4188                    # 0x105c
-	.short	4188                    # 0x105c
-	.short	4188                    # 0x105c
-	.short	4188                    # 0x105c
-	.short	4188                    # 0x105c
-	.short	4188                    # 0x105c
-	.short	4188                    # 0x105c
-	.short	4188                    # 0x105c
-	.short	63580                   # 0xf85c
-	.short	63580                   # 0xf85c
-	.short	63580                   # 0xf85c
-	.short	63580                   # 0xf85c
-	.short	63580                   # 0xf85c
-	.short	63580                   # 0xf85c
-	.short	63580                   # 0xf85c
-	.short	63580                   # 0xf85c
-	.short	63580                   # 0xf85c
-	.short	63580                   # 0xf85c
-	.short	63580                   # 0xf85c
-	.short	63580                   # 0xf85c
-	.short	63580                   # 0xf85c
-	.short	63580                   # 0xf85c
-	.short	63580                   # 0xf85c
-	.short	63580                   # 0xf85c
-	.short	3688                    # 0xe68
-	.short	3688                    # 0xe68
-	.short	3688                    # 0xe68
-	.short	3688                    # 0xe68
-	.short	3688                    # 0xe68
-	.short	3688                    # 0xe68
-	.short	3688                    # 0xe68
-	.short	3688                    # 0xe68
-	.short	3688                    # 0xe68
-	.short	3688                    # 0xe68
-	.short	3688                    # 0xe68
-	.short	3688                    # 0xe68
-	.short	3688                    # 0xe68
-	.short	3688                    # 0xe68
-	.short	3688                    # 0xe68
-	.short	3688                    # 0xe68
-	.short	65128                   # 0xfe68
-	.short	65128                   # 0xfe68
-	.short	65128                   # 0xfe68
-	.short	65128                   # 0xfe68
-	.short	65128                   # 0xfe68
-	.short	65128                   # 0xfe68
-	.short	65128                   # 0xfe68
-	.short	65128                   # 0xfe68
-	.short	65128                   # 0xfe68
-	.short	65128                   # 0xfe68
-	.short	65128                   # 0xfe68
-	.short	65128                   # 0xfe68
-	.short	65128                   # 0xfe68
-	.short	65128                   # 0xfe68
-	.short	65128                   # 0xfe68
-	.short	65128                   # 0xfe68
-	.short	1018                    # 0x3fa
-	.short	1018                    # 0x3fa
-	.short	1018                    # 0x3fa
-	.short	1018                    # 0x3fa
-	.short	2413                    # 0x96d
-	.short	2413                    # 0x96d
-	.short	2413                    # 0x96d
-	.short	2413                    # 0x96d
-	.short	4188                    # 0x105c
-	.short	4188                    # 0x105c
-	.short	4188                    # 0x105c
-	.short	4188                    # 0x105c
-	.short	357                     # 0x165
-	.short	357                     # 0x165
-	.short	357                     # 0x165
-	.short	357                     # 0x165
-	.short	223                     # 0xdf
-	.short	223                     # 0xdf
-	.short	223                     # 0xdf
-	.short	223                     # 0xdf
-	.short	61850                   # 0xf19a
-	.short	61850                   # 0xf19a
-	.short	61850                   # 0xf19a
-	.short	61850                   # 0xf19a
-	.short	61848                   # 0xf198
-	.short	61848                   # 0xf198
-	.short	61848                   # 0xf198
-	.short	61848                   # 0xf198
-	.short	65160                   # 0xfe88
-	.short	65160                   # 0xfe88
-	.short	65160                   # 0xfe88
-	.short	65160                   # 0xfe88
-	.short	64518                   # 0xfc06
-	.short	64518                   # 0xfc06
-	.short	64518                   # 0xfc06
-	.short	64518                   # 0xfc06
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	65530                   # 0xfffa
-	.short	65530                   # 0xfffa
-	.short	65530                   # 0xfffa
-	.short	65530                   # 0xfffa
-	.short	10093                   # 0x276d
-	.short	10093                   # 0x276d
-	.short	10093                   # 0x276d
-	.short	10093                   # 0x276d
-	.short	63580                   # 0xf85c
-	.short	63580                   # 0xf85c
-	.short	63580                   # 0xf85c
-	.short	63580                   # 0xf85c
-	.short	28517                   # 0x6f65
-	.short	28517                   # 0x6f65
-	.short	28517                   # 0x6f65
-	.short	28517                   # 0x6f65
-	.short	27359                   # 0x6adf
-	.short	27359                   # 0x6adf
-	.short	27359                   # 0x6adf
-	.short	27359                   # 0x6adf
-	.short	44442                   # 0xad9a
-	.short	44442                   # 0xad9a
-	.short	44442                   # 0xad9a
-	.short	44442                   # 0xad9a
-	.short	408                     # 0x198
-	.short	408                     # 0x198
-	.short	408                     # 0x198
-	.short	408                     # 0x198
-	.short	44680                   # 0xae88
-	.short	44680                   # 0xae88
-	.short	44680                   # 0xae88
-	.short	44680                   # 0xae88
-	.short	6                       # 0x6
-	.short	6                       # 0x6
-	.short	6                       # 0x6
-	.short	6                       # 0x6
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	1018                    # 0x3fa
-	.short	1018                    # 0x3fa
-	.short	1018                    # 0x3fa
-	.short	1018                    # 0x3fa
-	.short	62841                   # 0xf579
-	.short	62841                   # 0xf579
-	.short	62841                   # 0xf579
-	.short	62841                   # 0xf579
-	.short	2413                    # 0x96d
-	.short	2413                    # 0x96d
-	.short	2413                    # 0x96d
-	.short	2413                    # 0x96d
-	.short	425                     # 0x1a9
-	.short	425                     # 0x1a9
-	.short	425                     # 0x1a9
-	.short	425                     # 0x1a9
-	.short	4188                    # 0x105c
-	.short	4188                    # 0x105c
-	.short	4188                    # 0x105c
-	.short	4188                    # 0x105c
-	.short	60681                   # 0xed09
-	.short	60681                   # 0xed09
-	.short	60681                   # 0xed09
-	.short	60681                   # 0xed09
-	.short	357                     # 0x165
-	.short	357                     # 0x165
-	.short	357                     # 0x165
-	.short	357                     # 0x165
-	.short	62172                   # 0xf2dc
-	.short	62172                   # 0xf2dc
-	.short	62172                   # 0xf2dc
-	.short	62172                   # 0xf2dc
-	.short	223                     # 0xdf
-	.short	223                     # 0xdf
-	.short	223                     # 0xdf
-	.short	223                     # 0xdf
-	.short	730                     # 0x2da
-	.short	730                     # 0x2da
-	.short	730                     # 0x2da
-	.short	730                     # 0x2da
-	.short	61850                   # 0xf19a
-	.short	61850                   # 0xf19a
-	.short	61850                   # 0xf19a
-	.short	61850                   # 0xf19a
-	.short	60992                   # 0xee40
-	.short	60992                   # 0xee40
-	.short	60992                   # 0xee40
-	.short	60992                   # 0xee40
-	.short	61848                   # 0xf198
-	.short	61848                   # 0xf198
-	.short	61848                   # 0xf198
-	.short	61848                   # 0xf198
-	.short	63300                   # 0xf744
-	.short	63300                   # 0xf744
-	.short	63300                   # 0xf744
-	.short	63300                   # 0xf744
-	.short	65160                   # 0xfe88
-	.short	65160                   # 0xfe88
-	.short	65160                   # 0xfe88
-	.short	65160                   # 0xfe88
-	.short	3784                    # 0xec8
-	.short	3784                    # 0xec8
-	.short	3784                    # 0xec8
-	.short	3784                    # 0xec8
-	.short	64518                   # 0xfc06
-	.short	64518                   # 0xfc06
-	.short	64518                   # 0xfc06
-	.short	64518                   # 0xfc06
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	65530                   # 0xfffa
-	.short	65530                   # 0xfffa
-	.short	65530                   # 0xfffa
-	.short	65530                   # 0xfffa
-	.short	7033                    # 0x1b79
-	.short	7033                    # 0x1b79
-	.short	7033                    # 0x1b79
-	.short	7033                    # 0x1b79
-	.short	10093                   # 0x276d
-	.short	10093                   # 0x276d
-	.short	10093                   # 0x276d
-	.short	10093                   # 0x276d
-	.short	18345                   # 0x47a9
-	.short	18345                   # 0x47a9
-	.short	18345                   # 0x47a9
-	.short	18345                   # 0x47a9
-	.short	63580                   # 0xf85c
-	.short	63580                   # 0xf85c
-	.short	63580                   # 0xf85c
-	.short	63580                   # 0xf85c
-	.short	29449                   # 0x7309
-	.short	29449                   # 0x7309
-	.short	29449                   # 0x7309
-	.short	29449                   # 0x7309
-	.short	28517                   # 0x6f65
-	.short	28517                   # 0x6f65
-	.short	28517                   # 0x6f65
-	.short	28517                   # 0x6f65
-	.short	56028                   # 0xdadc
-	.short	56028                   # 0xdadc
-	.short	56028                   # 0xdadc
-	.short	56028                   # 0xdadc
-	.short	27359                   # 0x6adf
-	.short	27359                   # 0x6adf
-	.short	27359                   # 0x6adf
-	.short	27359                   # 0x6adf
-	.short	16090                   # 0x3eda
-	.short	16090                   # 0x3eda
-	.short	16090                   # 0x3eda
-	.short	16090                   # 0x3eda
-	.short	44442                   # 0xad9a
-	.short	44442                   # 0xad9a
-	.short	44442                   # 0xad9a
-	.short	44442                   # 0xad9a
-	.short	28224                   # 0x6e40
-	.short	28224                   # 0x6e40
-	.short	28224                   # 0x6e40
-	.short	28224                   # 0x6e40
-	.short	408                     # 0x198
-	.short	408                     # 0x198
-	.short	408                     # 0x198
-	.short	408                     # 0x198
-	.short	53060                   # 0xcf44
-	.short	53060                   # 0xcf44
-	.short	53060                   # 0xcf44
-	.short	53060                   # 0xcf44
-	.short	44680                   # 0xae88
-	.short	44680                   # 0xae88
-	.short	44680                   # 0xae88
-	.short	44680                   # 0xae88
-	.short	16072                   # 0x3ec8
-	.short	16072                   # 0x3ec8
-	.short	16072                   # 0x3ec8
-	.short	16072                   # 0x3ec8
-	.short	6                       # 0x6
-	.short	6                       # 0x6
-	.short	6                       # 0x6
-	.short	6                       # 0x6
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	1018                    # 0x3fa
-	.short	64016                   # 0xfa10
-	.short	62841                   # 0xf579
-	.short	1341                    # 0x53d
-	.short	2413                    # 0x96d
-	.short	918                     # 0x396
-	.short	425                     # 0x1a9
-	.short	5175                    # 0x1437
-	.short	4188                    # 0x105c
-	.short	61501                   # 0xf03d
-	.short	60681                   # 0xed09
-	.short	341                     # 0x155
-	.short	357                     # 0x165
-	.short	4347                    # 0x10fb
-	.short	62172                   # 0xf2dc
-	.short	5213                    # 0x145d
-	.short	223                     # 0xdf
-	.short	60661                   # 0xecf5
-	.short	730                     # 0x2da
-	.short	1931                    # 0x78b
-	.short	61850                   # 0xf19a
-	.short	63033                   # 0xf639
-	.short	60992                   # 0xee40
-	.short	61441                   # 0xf001
-	.short	61848                   # 0xf198
-	.short	5063                    # 0x13c7
-	.short	63300                   # 0xf744
-	.short	61713                   # 0xf111
-	.short	65160                   # 0xfe88
-	.short	3012                    # 0xbc4
-	.short	3784                    # 0xec8
-	.short	62907                   # 0xf5bb
-	.short	64518                   # 0xfc06
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	65530                   # 0xfffa
-	.short	23056                   # 0x5a10
-	.short	7033                    # 0x1b79
-	.short	829                     # 0x33d
-	.short	10093                   # 0x276d
-	.short	26518                   # 0x6796
-	.short	18345                   # 0x47a9
-	.short	3639                    # 0xe37
-	.short	63580                   # 0xf85c
-	.short	60989                   # 0xee3d
-	.short	29449                   # 0x7309
-	.short	3925                    # 0xf55
-	.short	28517                   # 0x6f65
-	.short	58107                   # 0xe2fb
-	.short	56028                   # 0xdadc
-	.short	53853                   # 0xd25d
-	.short	27359                   # 0x6adf
-	.short	47861                   # 0xbaf5
-	.short	16090                   # 0x3eda
-	.short	14731                   # 0x398b
-	.short	44442                   # 0xad9a
-	.short	39993                   # 0x9c39
-	.short	28224                   # 0x6e40
-	.short	50689                   # 0xc601
-	.short	408                     # 0x198
-	.short	28103                   # 0x6dc7
-	.short	53060                   # 0xcf44
-	.short	10001                   # 0x2711
-	.short	44680                   # 0xae88
-	.short	58308                   # 0xe3c4
-	.short	16072                   # 0x3ec8
-	.short	18363                   # 0x47bb
-	.short	6                       # 0x6
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	1018                    # 0x3fa
-	.short	62601                   # 0xf489
-	.short	64016                   # 0xfa10
-	.short	60792                   # 0xed78
-	.short	62841                   # 0xf579
-	.short	65331                   # 0xff33
-	.short	1341                    # 0x53d
-	.short	1299                    # 0x513
-	.short	2413                    # 0x96d
-	.short	4                       # 0x4
-	.short	918                     # 0x396
-	.short	61157                   # 0xeee5
-	.short	425                     # 0x1a9
-	.short	60920                   # 0xedf8
-	.short	5175                    # 0x1437
-	.short	64992                   # 0xfde0
-	.short	4188                    # 0x105c
-	.short	4129                    # 0x1021
-	.short	61501                   # 0xf03d
-	.short	4102                    # 0x1006
-	.short	60681                   # 0xed09
-	.short	64249                   # 0xfaf9
-	.short	341                     # 0x155
-	.short	63148                   # 0xf6ac
-	.short	357                     # 0x165
-	.short	1284                    # 0x504
-	.short	4347                    # 0x10fb
-	.short	2984                    # 0xba8
-	.short	62172                   # 0xf2dc
-	.short	2178                    # 0x882
-	.short	5213                    # 0x145d
-	.short	62960                   # 0xf5f0
-	.short	223                     # 0xdf
-	.short	2790                    # 0xae6
-	.short	60661                   # 0xecf5
-	.short	4876                    # 0x130c
-	.short	730                     # 0x2da
-	.short	61023                   # 0xee5f
-	.short	1931                    # 0x78b
-	.short	62451                   # 0xf3f3
-	.short	61850                   # 0xf19a
-	.short	3550                    # 0xdde
-	.short	63033                   # 0xf639
-	.short	847                     # 0x34f
-	.short	60992                   # 0xee40
-	.short	193                     # 0xc1
-	.short	61441                   # 0xf001
-	.short	1085                    # 0x43d
-	.short	61848                   # 0xf198
-	.short	3091                    # 0xc13
-	.short	5063                    # 0x13c7
-	.short	60794                   # 0xed7a
-	.short	63300                   # 0xf744
-	.short	2982                    # 0xba6
-	.short	61713                   # 0xf111
-	.short	64527                   # 0xfc0f
-	.short	65160                   # 0xfe88
-	.short	65268                   # 0xfef4
-	.short	3012                    # 0xbc4
-	.short	3062                    # 0xbf6
-	.short	3784                    # 0xec8
-	.short	62971                   # 0xf5fb
-	.short	62907                   # 0xf5bb
-	.short	4189                    # 0x105d
-	.short	64518                   # 0xfc06
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	65530                   # 0xfffa
-	.short	31369                   # 0x7a89
-	.short	23056                   # 0x5a10
-	.short	15736                   # 0x3d78
-	.short	7033                    # 0x1b79
-	.short	41267                   # 0xa133
-	.short	829                     # 0x33d
-	.short	59155                   # 0xe713
-	.short	10093                   # 0x276d
-	.short	22532                   # 0x5804
-	.short	26518                   # 0x6796
-	.short	23781                   # 0x5ce5
-	.short	18345                   # 0x47a9
-	.short	15864                   # 0x3df8
-	.short	3639                    # 0xe37
-	.short	15840                   # 0x3de0
-	.short	63580                   # 0xf85c
-	.short	42529                   # 0xa621
-	.short	60989                   # 0xee3d
-	.short	5126                    # 0x1406
-	.short	29449                   # 0x7309
-	.short	8441                    # 0x20f9
-	.short	3925                    # 0xf55
-	.short	48812                   # 0xbeac
-	.short	28517                   # 0x6f65
-	.short	23812                   # 0x5d04
-	.short	58107                   # 0xe2fb
-	.short	31656                   # 0x7ba8
-	.short	56028                   # 0xdadc
-	.short	46210                   # 0xb482
-	.short	53853                   # 0xd25d
-	.short	38384                   # 0x95f0
-	.short	27359                   # 0x6adf
-	.short	20198                   # 0x4ee6
-	.short	47861                   # 0xbaf5
-	.short	6924                    # 0x1b0c
-	.short	16090                   # 0x3eda
-	.short	22623                   # 0x585f
-	.short	14731                   # 0x398b
-	.short	5619                    # 0x15f3
-	.short	44442                   # 0xad9a
-	.short	41438                   # 0xa1de
-	.short	39993                   # 0x9c39
-	.short	3407                    # 0xd4f
-	.short	28224                   # 0x6e40
-	.short	22209                   # 0x56c1
-	.short	50689                   # 0xc601
-	.short	573                     # 0x23d
-	.short	408                     # 0x198
-	.short	60947                   # 0xee13
-	.short	28103                   # 0x6dc7
-	.short	59770                   # 0xe97a
-	.short	53060                   # 0xcf44
-	.short	53158                   # 0xcfa6
-	.short	10001                   # 0x2711
-	.short	34319                   # 0x860f
-	.short	44680                   # 0xae88
-	.short	63220                   # 0xf6f4
-	.short	58308                   # 0xe3c4
-	.short	45046                   # 0xaff6
-	.short	16072                   # 0x3ec8
-	.short	51195                   # 0xc7fb
-	.short	18363                   # 0x47bb
-	.short	52829                   # 0xce5d
-	.short	6                       # 0x6
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	1018                    # 0x3fa
-	.short	60802                   # 0xed82
-	.short	62601                   # 0xf489
-	.short	65136                   # 0xfe70
-	.short	64016                   # 0xfa10
-	.short	4977                    # 0x1371
-	.short	60792                   # 0xed78
-	.short	62563                   # 0xf463
-	.short	62841                   # 0xf579
-	.short	512                     # 0x200
-	.short	65331                   # 0xff33
-	.short	64757                   # 0xfcf5
-	.short	1341                    # 0x53d
-	.short	64180                   # 0xfab4
-	.short	1299                    # 0x513
-	.short	635                     # 0x27b
-	.short	2413                    # 0x96d
-	.short	567                     # 0x237
-	.short	4                       # 0x4
-	.short	61250                   # 0xef42
-	.short	918                     # 0x396
-	.short	60422                   # 0xec06
-	.short	61157                   # 0xeee5
-	.short	63950                   # 0xf9ce
-	.short	425                     # 0x1a9
-	.short	1615                    # 0x64f
-	.short	60920                   # 0xedf8
-	.short	65200                   # 0xfeb0
-	.short	5175                    # 0x1437
-	.short	63695                   # 0xf8cf
-	.short	64992                   # 0xfde0
-	.short	2234                    # 0x8ba
-	.short	4188                    # 0x105c
-	.short	62095                   # 0xf28f
-	.short	4129                    # 0x1021
-	.short	636                     # 0x27c
-	.short	61501                   # 0xf03d
-	.short	60956                   # 0xee1c
-	.short	4102                    # 0x1006
-	.short	2684                    # 0xa7c
-	.short	60681                   # 0xed09
-	.short	3057                    # 0xbf1
-	.short	64249                   # 0xfaf9
-	.short	62796                   # 0xf54c
-	.short	341                     # 0x155
-	.short	60380                   # 0xebdc
-	.short	63148                   # 0xf6ac
-	.short	65064                   # 0xfe28
-	.short	357                     # 0x165
-	.short	64742                   # 0xfce6
-	.short	1284                    # 0x504
-	.short	578                     # 0x242
-	.short	4347                    # 0x10fb
-	.short	3615                    # 0xe1f
-	.short	2984                    # 0xba8
-	.short	61821                   # 0xf17d
-	.short	62172                   # 0xf2dc
-	.short	2271                    # 0x8df
-	.short	2178                    # 0x882
-	.short	65210                   # 0xfeba
-	.short	5213                    # 0x145d
-	.short	454                     # 0x1c6
-	.short	62960                   # 0xf5f0
-	.short	62199                   # 0xf2f7
-	.short	223                     # 0xdf
-	.short	2998                    # 0xbb6
-	.short	2790                    # 0xae6
-	.short	65385                   # 0xff69
-	.short	60661                   # 0xecf5
-	.short	2981                    # 0xba5
-	.short	4876                    # 0x130c
-	.short	1324                    # 0x52c
-	.short	730                     # 0x2da
-	.short	2774                    # 0xad6
-	.short	61023                   # 0xee5f
-	.short	2206                    # 0x89e
-	.short	1931                    # 0x78b
-	.short	886                     # 0x376
-	.short	62451                   # 0xf3f3
-	.short	64566                   # 0xfc36
-	.short	61850                   # 0xf19a
-	.short	3198                    # 0xc7e
-	.short	3550                    # 0xdde
-	.short	2737                    # 0xab1
-	.short	63033                   # 0xf639
-	.short	64627                   # 0xfc73
-	.short	847                     # 0x34f
-	.short	1068                    # 0x42c
-	.short	60992                   # 0xee40
-	.short	63323                   # 0xf75b
-	.short	193                     # 0xc1
-	.short	2884                    # 0xb44
-	.short	61441                   # 0xf001
-	.short	60728                   # 0xed38
-	.short	1085                    # 0x43d
-	.short	4123                    # 0x101b
-	.short	61848                   # 0xf198
-	.short	5341                    # 0x14dd
-	.short	3091                    # 0xc13
-	.short	5294                    # 0x14ae
-	.short	5063                    # 0x13c7
-	.short	65420                   # 0xff8c
-	.short	60794                   # 0xed7a
-	.short	60420                   # 0xec04
-	.short	63300                   # 0xf744
-	.short	63491                   # 0xf803
-	.short	2982                    # 0xba6
-	.short	63964                   # 0xf9dc
-	.short	61713                   # 0xf111
-	.short	4828                    # 0x12dc
-	.short	64527                   # 0xfc0f
-	.short	467                     # 0x1d3
-	.short	65160                   # 0xfe88
-	.short	5023                    # 0x139f
-	.short	65268                   # 0xfef4
-	.short	62367                   # 0xf39f
-	.short	3012                    # 0xbc4
-	.short	64078                   # 0xfa4e
-	.short	3062                    # 0xbf6
-	.short	64268                   # 0xfb0c
-	.short	3784                    # 0xec8
-	.short	64861                   # 0xfd5d
-	.short	62971                   # 0xf5fb
-	.short	1006                    # 0x3ee
-	.short	62907                   # 0xf5bb
-	.short	5064                    # 0x13c8
-	.short	4189                    # 0x105d
-	.short	864                     # 0x360
-	.short	64518                   # 0xfc06
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	65530                   # 0xfffa
-	.short	39298                   # 0x9982
-	.short	31369                   # 0x7a89
-	.short	40560                   # 0x9e70
-	.short	23056                   # 0x5a10
-	.short	35185                   # 0x8971
-	.short	15736                   # 0x3d78
-	.short	46691                   # 0xb663
-	.short	7033                    # 0x1b79
-	.short	512                     # 0x200
-	.short	41267                   # 0xa133
-	.short	51957                   # 0xcaf5
-	.short	829                     # 0x33d
-	.short	29364                   # 0x72b4
-	.short	59155                   # 0xe713
-	.short	54395                   # 0xd47b
-	.short	10093                   # 0x276d
-	.short	64567                   # 0xfc37
-	.short	22532                   # 0x5804
-	.short	6978                    # 0x1b42
-	.short	26518                   # 0x6796
-	.short	61446                   # 0xf006
-	.short	23781                   # 0x5ce5
-	.short	11726                   # 0x2dce
-	.short	18345                   # 0x47a9
-	.short	4175                    # 0x104f
-	.short	15864                   # 0x3df8
-	.short	7856                    # 0x1eb0
-	.short	3639                    # 0xe37
-	.short	719                     # 0x2cf
-	.short	15840                   # 0x3de0
-	.short	33978                   # 0x84ba
-	.short	63580                   # 0xf85c
-	.short	31887                   # 0x7c8f
-	.short	42529                   # 0xa621
-	.short	43644                   # 0xaa7c
-	.short	60989                   # 0xee3d
-	.short	22044                   # 0x561c
-	.short	5126                    # 0x1406
-	.short	45692                   # 0xb27c
-	.short	29449                   # 0x7309
-	.short	33265                   # 0x81f1
-	.short	8441                    # 0x20f9
-	.short	32076                   # 0x7d4c
-	.short	3925                    # 0xf55
-	.short	54236                   # 0xd3dc
-	.short	48812                   # 0xbeac
-	.short	28200                   # 0x6e28
-	.short	28517                   # 0x6f65
-	.short	16614                   # 0x40e6
-	.short	23812                   # 0x5d04
-	.short	11842                   # 0x2e42
-	.short	58107                   # 0xe2fb
-	.short	63519                   # 0xf81f
-	.short	31656                   # 0x7ba8
-	.short	28541                   # 0x6f7d
-	.short	56028                   # 0xdadc
-	.short	29407                   # 0x72df
-	.short	46210                   # 0xb482
-	.short	31418                   # 0x7aba
-	.short	53853                   # 0xd25d
-	.short	34246                   # 0x85c6
-	.short	38384                   # 0x95f0
-	.short	27895                   # 0x6cf7
-	.short	27359                   # 0x6adf
-	.short	12214                   # 0x2fb6
-	.short	20198                   # 0x4ee6
-	.short	50537                   # 0xc569
-	.short	47861                   # 0xbaf5
-	.short	63909                   # 0xf9a5
-	.short	6924                    # 0x1b0c
-	.short	52524                   # 0xcd2c
-	.short	16090                   # 0x3eda
-	.short	61142                   # 0xeed6
-	.short	22623                   # 0x585f
-	.short	7326                    # 0x1c9e
-	.short	14731                   # 0x398b
-	.short	42870                   # 0xa776
-	.short	5619                    # 0x15f3
-	.short	8246                    # 0x2036
-	.short	44442                   # 0xad9a
-	.short	24702                   # 0x607e
-	.short	41438                   # 0xa1de
-	.short	177                     # 0xb1
-	.short	39993                   # 0x9c39
-	.short	7795                    # 0x1e73
-	.short	3407                    # 0xd4f
-	.short	52268                   # 0xcc2c
-	.short	28224                   # 0x6e40
-	.short	2395                    # 0x95b
-	.short	22209                   # 0x56c1
-	.short	58180                   # 0xe344
-	.short	50689                   # 0xc601
-	.short	48440                   # 0xbd38
-	.short	573                     # 0x23d
-	.short	41499                   # 0xa21b
-	.short	408                     # 0x198
-	.short	53981                   # 0xd2dd
-	.short	60947                   # 0xee13
-	.short	34990                   # 0x88ae
-	.short	28103                   # 0x6dc7
-	.short	1932                    # 0x78c
-	.short	59770                   # 0xe97a
-	.short	17412                   # 0x4404
-	.short	53060                   # 0xcf44
-	.short	31235                   # 0x7a03
-	.short	53158                   # 0xcfa6
-	.short	57820                   # 0xe1dc
-	.short	10001                   # 0x2711
-	.short	64220                   # 0xfadc
-	.short	34319                   # 0x860f
-	.short	25555                   # 0x63d3
-	.short	44680                   # 0xae88
-	.short	64927                   # 0xfd9f
-	.short	63220                   # 0xf6f4
-	.short	56735                   # 0xdd9f
-	.short	58308                   # 0xe3c4
-	.short	11854                   # 0x2e4e
-	.short	45046                   # 0xaff6
-	.short	780                     # 0x30c
-	.short	16072                   # 0x3ec8
-	.short	47965                   # 0xbb5d
-	.short	51195                   # 0xc7fb
-	.short	63470                   # 0xf7ee
-	.short	18363                   # 0x47bb
-	.short	17352                   # 0x43c8
-	.short	52829                   # 0xce5d
-	.short	17248                   # 0x4360
-	.short	6                       # 0x6
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	1018                    # 0x3fa
-	.short	3453                    # 0xd7d
-	.short	60802                   # 0xed82
-	.short	4519                    # 0x11a7
-	.short	62601                   # 0xf489
-	.short	2118                    # 0x846
-	.short	65136                   # 0xfe70
-	.short	64982                   # 0xfdd6
-	.short	64016                   # 0xfa10
-	.short	2196                    # 0x894
-	.short	4977                    # 0x1371
-	.short	1893                    # 0x765
-	.short	60792                   # 0xed78
-	.short	64127                   # 0xfa7f
-	.short	62563                   # 0xf463
-	.short	64483                   # 0xfbe3
-	.short	62841                   # 0xf579
-	.short	4601                    # 0x11f9
-	.short	512                     # 0x200
-	.short	279                     # 0x117
-	.short	65331                   # 0xff33
-	.short	62295                   # 0xf357
-	.short	64757                   # 0xfcf5
-	.short	4889                    # 0x1319
-	.short	1341                    # 0x53d
-	.short	3524                    # 0xdc4
-	.short	64180                   # 0xfab4
-	.short	63873                   # 0xf981
-	.short	1299                    # 0x513
-	.short	2283                    # 0x8eb
-	.short	635                     # 0x27b
-	.short	73                      # 0x49
-	.short	2413                    # 0x96d
-	.short	2428                    # 0x97c
-	.short	567                     # 0x237
-	.short	624                     # 0x270
-	.short	4                       # 0x4
-	.short	63606                   # 0xf876
-	.short	61250                   # 0xef42
-	.short	3419                    # 0xd5b
-	.short	918                     # 0x396
-	.short	63474                   # 0xf7f2
-	.short	60422                   # 0xec06
-	.short	5068                    # 0x13cc
-	.short	61157                   # 0xeee5
-	.short	65439                   # 0xff9f
-	.short	63950                   # 0xf9ce
-	.short	1782                    # 0x6f6
-	.short	425                     # 0x1a9
-	.short	4621                    # 0x120d
-	.short	1615                    # 0x64f
-	.short	355                     # 0x163
-	.short	60920                   # 0xedf8
-	.short	1349                    # 0x545
-	.short	65200                   # 0xfeb0
-	.short	825                     # 0x339
-	.short	5175                    # 0x1437
-	.short	3135                    # 0xc3f
-	.short	63695                   # 0xf8cf
-	.short	1160                    # 0x488
-	.short	64992                   # 0xfde0
-	.short	4408                    # 0x1138
-	.short	2234                    # 0x8ba
-	.short	62931                   # 0xf5d3
-	.short	4188                    # 0x105c
-	.short	854                     # 0x356
-	.short	62095                   # 0xf28f
-	.short	64480                   # 0xfbe0
-	.short	4129                    # 0x1021
-	.short	2439                    # 0x987
-	.short	636                     # 0x27c
-	.short	4967                    # 0x1367
-	.short	61501                   # 0xf03d
-	.short	60754                   # 0xed52
-	.short	60956                   # 0xee1c
-	.short	60268                   # 0xeb6c
-	.short	4102                    # 0x1006
-	.short	64873                   # 0xfd69
-	.short	2684                    # 0xa7c
-	.short	60866                   # 0xedc2
-	.short	60681                   # 0xed09
-	.short	3760                    # 0xeb0
-	.short	3057                    # 0xbf1
-	.short	3535                    # 0xdcf
-	.short	64249                   # 0xfaf9
-	.short	2680                    # 0xa78
-	.short	62796                   # 0xf54c
-	.short	64967                   # 0xfdc7
-	.short	341                     # 0x155
-	.short	2139                    # 0x85b
-	.short	60380                   # 0xebdc
-	.short	3827                    # 0xef3
-	.short	63148                   # 0xf6ac
-	.short	1639                    # 0x667
-	.short	65064                   # 0xfe28
-	.short	1927                    # 0x787
-	.short	357                     # 0x165
-	.short	5172                    # 0x1434
-	.short	64742                   # 0xfce6
-	.short	61533                   # 0xf05d
-	.short	1284                    # 0x504
-	.short	4144                    # 0x1030
-	.short	578                     # 0x242
-	.short	693                     # 0x2b5
-	.short	4347                    # 0x10fb
-	.short	4784                    # 0x12b0
-	.short	3615                    # 0xe1f
-	.short	3125                    # 0xc35
-	.short	2984                    # 0xba8
-	.short	1122                    # 0x462
-	.short	61821                   # 0xf17d
-	.short	2113                    # 0x841
-	.short	62172                   # 0xf2dc
-	.short	64963                   # 0xfdc3
-	.short	2271                    # 0x8df
-	.short	61208                   # 0xef18
-	.short	2178                    # 0x882
-	.short	2909                    # 0xb5d
-	.short	65210                   # 0xfeba
-	.short	61536                   # 0xf060
-	.short	5213                    # 0x145d
-	.short	61089                   # 0xeea1
-	.short	454                     # 0x1c6
-	.short	61541                   # 0xf065
-	.short	62960                   # 0xf5f0
-	.short	61108                   # 0xeeb4
-	.short	62199                   # 0xf2f7
-	.short	2529                    # 0x9e1
-	.short	223                     # 0xdf
-	.short	5309                    # 0x14bd
-	.short	2998                    # 0xbb6
-	.short	5120                    # 0x1400
-	.short	2790                    # 0xae6
-	.short	63486                   # 0xf7fe
-	.short	65385                   # 0xff69
-	.short	2963                    # 0xb93
-	.short	60661                   # 0xecf5
-	.short	2657                    # 0xa61
-	.short	2981                    # 0xba5
-	.short	62729                   # 0xf509
-	.short	4876                    # 0x130c
-	.short	2237                    # 0x8bd
-	.short	1324                    # 0x52c
-	.short	61133                   # 0xeecd
-	.short	730                     # 0x2da
-	.short	2624                    # 0xa40
-	.short	2774                    # 0xad6
-	.short	60453                   # 0xec25
-	.short	61023                   # 0xee5f
-	.short	40                      # 0x28
-	.short	2206                    # 0x89e
-	.short	152                     # 0x98
-	.short	1931                    # 0x78b
-	.short	63963                   # 0xf9db
-	.short	886                     # 0x376
-	.short	2625                    # 0xa41
-	.short	62451                   # 0xf3f3
-	.short	64758                   # 0xfcf6
-	.short	64566                   # 0xfc36
-	.short	60429                   # 0xec0d
-	.short	61850                   # 0xf19a
-	.short	4250                    # 0x109a
-	.short	3198                    # 0xc7e
-	.short	60180                   # 0xeb14
-	.short	3550                    # 0xdde
-	.short	62388                   # 0xf3b4
-	.short	2737                    # 0xab1
-	.short	62176                   # 0xf2e0
-	.short	63033                   # 0xf639
-	.short	63521                   # 0xf821
-	.short	64627                   # 0xfc73
-	.short	3096                    # 0xc18
-	.short	847                     # 0x34f
-	.short	5313                    # 0x14c1
-	.short	1068                    # 0x42c
-	.short	834                     # 0x342
-	.short	60992                   # 0xee40
-	.short	64404                   # 0xfb94
-	.short	63323                   # 0xf75b
-	.short	63385                   # 0xf799
-	.short	193                     # 0xc1
-	.short	63814                   # 0xf946
-	.short	2884                    # 0xb44
-	.short	61143                   # 0xeed7
-	.short	61441                   # 0xf001
-	.short	2662                    # 0xa66
-	.short	60728                   # 0xed38
-	.short	62748                   # 0xf51c
-	.short	1085                    # 0x43d
-	.short	63544                   # 0xf838
-	.short	4123                    # 0x101b
-	.short	5334                    # 0x14d6
-	.short	61848                   # 0xf198
-	.short	5215                    # 0x145f
-	.short	5341                    # 0x14dd
-	.short	63847                   # 0xf967
-	.short	3091                    # 0xc13
-	.short	63419                   # 0xf7bb
-	.short	5294                    # 0x14ae
-	.short	4859                    # 0x12fb
-	.short	5063                    # 0x13c7
-	.short	3410                    # 0xd52
-	.short	65420                   # 0xff8c
-	.short	2205                    # 0x89d
-	.short	60794                   # 0xed7a
-	.short	63162                   # 0xf6ba
-	.short	60420                   # 0xec04
-	.short	60816                   # 0xed90
-	.short	63300                   # 0xf744
-	.short	3570                    # 0xdf2
-	.short	63491                   # 0xf803
-	.short	2813                    # 0xafd
-	.short	2982                    # 0xba6
-	.short	2087                    # 0x827
-	.short	63964                   # 0xf9dc
-	.short	60563                   # 0xec93
-	.short	61713                   # 0xf111
-	.short	458                     # 0x1ca
-	.short	4828                    # 0x12dc
-	.short	3891                    # 0xf33
-	.short	64527                   # 0xfc0f
-	.short	63117                   # 0xf68d
-	.short	467                     # 0x1d3
-	.short	60645                   # 0xece5
-	.short	65160                   # 0xfe88
-	.short	64155                   # 0xfa9b
-	.short	5023                    # 0x139f
-	.short	1204                    # 0x4b4
-	.short	65268                   # 0xfef4
-	.short	274                     # 0x112
-	.short	62367                   # 0xf39f
-	.short	62276                   # 0xf344
-	.short	3012                    # 0xbc4
-	.short	63901                   # 0xf99d
-	.short	64078                   # 0xfa4e
-	.short	4540                    # 0x11bc
-	.short	3062                    # 0xbf6
-	.short	61282                   # 0xef62
-	.short	64268                   # 0xfb0c
-	.short	64425                   # 0xfba9
-	.short	3784                    # 0xec8
-	.short	2230                    # 0x8b6
-	.short	64861                   # 0xfd5d
-	.short	63257                   # 0xf719
-	.short	62971                   # 0xf5fb
-	.short	61177                   # 0xeef9
-	.short	1006                    # 0x3ee
-	.short	64026                   # 0xfa1a
-	.short	62907                   # 0xf5bb
-	.short	5015                    # 0x1397
-	.short	5064                    # 0x13c8
-	.short	63087                   # 0xf66f
-	.short	4189                    # 0x105d
-	.short	60531                   # 0xec73
-	.short	864                     # 0x360
-	.short	2487                    # 0x9b7
-	.short	64518                   # 0xfc06
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	0                       # 0x0
-	.short	65530                   # 0xfffa
-	.short	35709                   # 0x8b7d
-	.short	39298                   # 0x9982
-	.short	43943                   # 0xaba7
-	.short	31369                   # 0x7a89
-	.short	35910                   # 0x8c46
-	.short	40560                   # 0x9e70
-	.short	57814                   # 0xe1d6
-	.short	23056                   # 0x5a10
-	.short	49300                   # 0xc094
-	.short	35185                   # 0x8971
-	.short	30053                   # 0x7565
-	.short	15736                   # 0x3d78
-	.short	9343                    # 0x247f
-	.short	46691                   # 0xb663
-	.short	48611                   # 0xbde3
-	.short	7033                    # 0x1b79
-	.short	14329                   # 0x37f9
-	.short	512                     # 0x200
-	.short	15127                   # 0x3b17
-	.short	41267                   # 0xa133
-	.short	44375                   # 0xad57
-	.short	51957                   # 0xcaf5
-	.short	63769                   # 0xf919
-	.short	829                     # 0x33d
-	.short	58820                   # 0xe5c4
-	.short	29364                   # 0x72b4
-	.short	53121                   # 0xcf81
-	.short	59155                   # 0xe713
-	.short	31467                   # 0x7aeb
-	.short	54395                   # 0xd47b
-	.short	1609                    # 0x649
-	.short	10093                   # 0x276d
-	.short	45436                   # 0xb17c
-	.short	64567                   # 0xfc37
-	.short	41584                   # 0xa270
-	.short	22532                   # 0x5804
-	.short	40054                   # 0x9c76
-	.short	6978                    # 0x1b42
-	.short	8027                    # 0x1f5b
-	.short	26518                   # 0x6796
-	.short	17394                   # 0x43f2
-	.short	61446                   # 0xf006
-	.short	39884                   # 0x9bcc
-	.short	23781                   # 0x5ce5
-	.short	59807                   # 0xe99f
-	.short	11726                   # 0x2dce
-	.short	43766                   # 0xaaf6
-	.short	18345                   # 0x47a9
-	.short	61453                   # 0xf00d
-	.short	4175                    # 0x104f
-	.short	50019                   # 0xc363
-	.short	15864                   # 0x3df8
-	.short	45893                   # 0xb345
-	.short	7856                    # 0x1eb0
-	.short	43321                   # 0xa939
-	.short	3639                    # 0xe37
-	.short	46655                   # 0xb63f
-	.short	719                     # 0x2cf
-	.short	46216                   # 0xb488
-	.short	15840                   # 0x3de0
-	.short	57656                   # 0xe138
-	.short	33978                   # 0x84ba
-	.short	22483                   # 0x57d3
-	.short	63580                   # 0xf85c
-	.short	59222                   # 0xe756
-	.short	31887                   # 0x7c8f
-	.short	15328                   # 0x3be0
-	.short	42529                   # 0xa621
-	.short	58247                   # 0xe387
-	.short	43644                   # 0xaa7c
-	.short	11623                   # 0x2d67
-	.short	60989                   # 0xee3d
-	.short	31058                   # 0x7952
-	.short	22044                   # 0x561c
-	.short	13164                   # 0x336c
-	.short	5126                    # 0x1406
-	.short	50025                   # 0xc369
-	.short	45692                   # 0xb27c
-	.short	6594                    # 0x19c2
-	.short	29449                   # 0x7309
-	.short	11952                   # 0x2eb0
-	.short	33265                   # 0x81f1
-	.short	6095                    # 0x17cf
-	.short	8441                    # 0x20f9
-	.short	23160                   # 0x5a78
-	.short	32076                   # 0x7d4c
-	.short	22471                   # 0x57c7
-	.short	3925                    # 0xf55
-	.short	6747                    # 0x1a5b
-	.short	54236                   # 0xd3dc
-	.short	12531                   # 0x30f3
-	.short	48812                   # 0xbeac
-	.short	8295                    # 0x2067
-	.short	28200                   # 0x6e28
-	.short	57735                   # 0xe187
-	.short	28517                   # 0x6f65
-	.short	35892                   # 0x8c34
-	.short	16614                   # 0x40e6
-	.short	44637                   # 0xae5d
-	.short	23812                   # 0x5d04
-	.short	12336                   # 0x3030
-	.short	11842                   # 0x2e42
-	.short	20661                   # 0x50b5
-	.short	58107                   # 0xe2fb
-	.short	12976                   # 0x32b0
-	.short	63519                   # 0xf81f
-	.short	23093                   # 0x5a35
-	.short	31656                   # 0x7ba8
-	.short	61538                   # 0xf062
-	.short	28541                   # 0x6f7d
-	.short	24129                   # 0x5e41
-	.short	56028                   # 0xdadc
-	.short	65475                   # 0xffc3
-	.short	29407                   # 0x72df
-	.short	65304                   # 0xff18
-	.short	46210                   # 0xb482
-	.short	51549                   # 0xc95d
-	.short	31418                   # 0x7aba
-	.short	12384                   # 0x3060
-	.short	53853                   # 0xd25d
-	.short	33953                   # 0x84a1
-	.short	34246                   # 0x85c6
-	.short	24165                   # 0x5e65
-	.short	38384                   # 0x95f0
-	.short	26292                   # 0x66b4
-	.short	27895                   # 0x6cf7
-	.short	8161                    # 0x1fe1
-	.short	27359                   # 0x6adf
-	.short	4797                    # 0x12bd
-	.short	12214                   # 0x2fb6
-	.short	5120                    # 0x1400
-	.short	20198                   # 0x4ee6
-	.short	19454                   # 0x4bfe
-	.short	50537                   # 0xc569
-	.short	60819                   # 0xed93
-	.short	47861                   # 0xbaf5
-	.short	8289                    # 0x2061
-	.short	63909                   # 0xf9a5
-	.short	31497                   # 0x7b09
-	.short	6924                    # 0x1b0c
-	.short	1725                    # 0x6bd
-	.short	52524                   # 0xcd2c
-	.short	19661                   # 0x4ccd
-	.short	16090                   # 0x3eda
-	.short	35392                   # 0x8a40
-	.short	61142                   # 0xeed6
-	.short	55845                   # 0xda25
-	.short	22623                   # 0x585f
-	.short	28712                   # 0x7028
-	.short	7326                    # 0x1c9e
-	.short	4248                    # 0x1098
-	.short	14731                   # 0x398b
-	.short	3035                    # 0xbdb
-	.short	42870                   # 0xa776
-	.short	24641                   # 0x6041
-	.short	5619                    # 0x15f3
-	.short	41206                   # 0xa0f6
-	.short	8246                    # 0x2036
-	.short	51725                   # 0xca0d
-	.short	44442                   # 0xad9a
-	.short	52378                   # 0xcc9a
-	.short	24702                   # 0x607e
-	.short	41748                   # 0xa314
-	.short	41438                   # 0xa1de
-	.short	27572                   # 0x6bb4
-	.short	177                     # 0xb1
-	.short	13024                   # 0x32e0
-	.short	39993                   # 0x9c39
-	.short	36385                   # 0x8e21
-	.short	7795                    # 0x1e73
-	.short	7192                    # 0x1c18
-	.short	3407                    # 0xd4f
-	.short	27329                   # 0x6ac1
-	.short	52268                   # 0xcc2c
-	.short	12098                   # 0x2f42
-	.short	28224                   # 0x6e40
-	.short	45972                   # 0xb394
-	.short	2395                    # 0x95b
-	.short	56729                   # 0xdd99
-	.short	22209                   # 0x56c1
-	.short	32070                   # 0x7d46
-	.short	58180                   # 0xe344
-	.short	43223                   # 0xa8d7
-	.short	50689                   # 0xc601
-	.short	20070                   # 0x4e66
-	.short	48440                   # 0xbd38
-	.short	23836                   # 0x5d1c
-	.short	573                     # 0x23d
-	.short	51256                   # 0xc838
-	.short	41499                   # 0xa21b
-	.short	63702                   # 0xf8d6
-	.short	408                     # 0x198
-	.short	32351                   # 0x7e5f
-	.short	53981                   # 0xd2dd
-	.short	4967                    # 0x1367
-	.short	60947                   # 0xee13
-	.short	18875                   # 0x49bb
-	.short	34990                   # 0x88ae
-	.short	58619                   # 0xe4fb
-	.short	28103                   # 0x6dc7
-	.short	39250                   # 0x9952
-	.short	1932                    # 0x78c
-	.short	18077                   # 0x469d
-	.short	59770                   # 0xe97a
-	.short	29370                   # 0x72ba
-	.short	17412                   # 0x4404
-	.short	19856                   # 0x4d90
-	.short	53060                   # 0xcf44
-	.short	23026                   # 0x59f2
-	.short	31235                   # 0x7a03
-	.short	35069                   # 0x88fd
-	.short	53158                   # 0xcfa6
-	.short	41511                   # 0xa227
-	.short	57820                   # 0xe1dc
-	.short	52883                   # 0xce93
-	.short	10001                   # 0x2711
-	.short	56778                   # 0xddca
-	.short	64220                   # 0xfadc
-	.short	45363                   # 0xb133
-	.short	34319                   # 0x860f
-	.short	54413                   # 0xd48d
-	.short	25555                   # 0x63d3
-	.short	23269                   # 0x5ae5
-	.short	44680                   # 0xae88
-	.short	35995                   # 0x8c9b
-	.short	64927                   # 0xfd9f
-	.short	31924                   # 0x7cb4
-	.short	63220                   # 0xf6f4
-	.short	3346                    # 0xd12
-	.short	56735                   # 0xdd9f
-	.short	52036                   # 0xcb44
-	.short	58308                   # 0xe3c4
-	.short	14237                   # 0x379d
-	.short	11854                   # 0x2e4e
-	.short	14780                   # 0x39bc
-	.short	45046                   # 0xaff6
-	.short	56162                   # 0xdb62
-	.short	780                     # 0x30c
-	.short	16809                   # 0x41a9
-	.short	16072                   # 0x3ec8
-	.short	11446                   # 0x2cb6
-	.short	47965                   # 0xbb5d
-	.short	56601                   # 0xdd19
-	.short	51195                   # 0xc7fb
-	.short	5369                    # 0x14f9
-	.short	63470                   # 0xf7ee
-	.short	46618                   # 0xb61a
-	.short	18363                   # 0x47bb
-	.short	19863                   # 0x4d97
-	.short	17352                   # 0x43c8
-	.short	49263                   # 0xc06f
-	.short	52829                   # 0xce5d
-	.short	3699                    # 0xe73
-	.short	17248                   # 0x4360
-	.short	951                     # 0x3b7
-	.short	6                       # 0x6
-	.zero	30
-	.size	qdata_10753, 2976
-
-
-	.ident	"clang version 8.0.0 (Fedora 8.0.0-3.fc30)"
-	.section	".note.GNU-stack","",@progbits
+	.value	1018
+	.value	1018
+	.value	1018
+	.value	1018
+	.value	3688
+	.value	3688
+	.value	3688
+	.value	3688
+	.value	1018
+	.value	1018
+	.value	1018
+	.value	1018
+	.value	3688
+	.value	3688
+	.value	3688
+	.value	3688
+	.value	-223
+	.value	-223
+	.value	-223
+	.value	-223
+	.value	-4188
+	.value	-4188
+	.value	-4188
+	.value	-4188
+	.value	-223
+	.value	-223
+	.value	-223
+	.value	-223
+	.value	-4188
+	.value	-4188
+	.value	-4188
+	.value	-4188
+	.value	1018
+	.value	1018
+	.value	1018
+	.value	1018
+	.value	4188
+	.value	4188
+	.value	4188
+	.value	4188
+	.value	1018
+	.value	1018
+	.value	1018
+	.value	1018
+	.value	4188
+	.value	4188
+	.value	4188
+	.value	4188
+	.value	223
+	.value	223
+	.value	223
+	.value	223
+	.value	-3688
+	.value	-3688
+	.value	-3688
+	.value	-3688
+	.value	223
+	.value	223
+	.value	223
+	.value	223
+	.value	-3688
+	.value	-3688
+	.value	-3688
+	.value	-3688
+	.value	1018
+	.value	1018
+	.value	1018
+	.value	1018
+	.value	-376
+	.value	-376
+	.value	-376
+	.value	-376
+	.value	1018
+	.value	1018
+	.value	1018
+	.value	1018
+	.value	-376
+	.value	-376
+	.value	-376
+	.value	-376
+	.value	3688
+	.value	3688
+	.value	3688
+	.value	3688
+	.value	-3686
+	.value	-3686
+	.value	-3686
+	.value	-3686
+	.value	3688
+	.value	3688
+	.value	3688
+	.value	3688
+	.value	-3686
+	.value	-3686
+	.value	-3686
+	.value	-3686
+	.value	1018
+	.value	1018
+	.value	1018
+	.value	1018
+	.value	-2413
+	.value	-2413
+	.value	-2413
+	.value	-2413
+	.value	1018
+	.value	1018
+	.value	1018
+	.value	1018
+	.value	-2413
+	.value	-2413
+	.value	-2413
+	.value	-2413
+	.value	4188
+	.value	4188
+	.value	4188
+	.value	4188
+	.value	-357
+	.value	-357
+	.value	-357
+	.value	-357
+	.value	4188
+	.value	4188
+	.value	4188
+	.value	4188
+	.value	-357
+	.value	-357
+	.value	-357
+	.value	-357
+	.value	1018
+	.value	-3364
+	.value	-376
+	.value	4855
+	.value	3688
+	.value	425
+	.value	-3686
+	.value	2695
+	.value	1018
+	.value	-3364
+	.value	-376
+	.value	4855
+	.value	3688
+	.value	425
+	.value	-3686
+	.value	2695
+	.value	-223
+	.value	-3784
+	.value	357
+	.value	-2236
+	.value	-4188
+	.value	4544
+	.value	2413
+	.value	730
+	.value	-223
+	.value	-3784
+	.value	357
+	.value	-2236
+	.value	-4188
+	.value	4544
+	.value	2413
+	.value	730
+	.value	1018
+	.value	-730
+	.value	-2413
+	.value	-4544
+	.value	4188
+	.value	2236
+	.value	-357
+	.value	3784
+	.value	1018
+	.value	-730
+	.value	-2413
+	.value	-4544
+	.value	4188
+	.value	2236
+	.value	-357
+	.value	3784
+	.value	223
+	.value	-2695
+	.value	3686
+	.value	-425
+	.value	-3688
+	.value	-4855
+	.value	376
+	.value	3364
+	.value	223
+	.value	-2695
+	.value	3686
+	.value	-425
+	.value	-3688
+	.value	-4855
+	.value	376
+	.value	3364
+	.value	1018
+	.value	-5175
+	.value	-3364
+	.value	2503
+	.value	-376
+	.value	1341
+	.value	4855
+	.value	-4875
+	.value	1018
+	.value	-5175
+	.value	-3364
+	.value	2503
+	.value	-376
+	.value	1341
+	.value	4855
+	.value	-4875
+	.value	3688
+	.value	-2629
+	.value	425
+	.value	-4347
+	.value	-3686
+	.value	3823
+	.value	2695
+	.value	-4035
+	.value	3688
+	.value	-2629
+	.value	425
+	.value	-4347
+	.value	-3686
+	.value	3823
+	.value	2695
+	.value	-4035
+	.value	1018
+	.value	5063
+	.value	-730
+	.value	341
+	.value	-2413
+	.value	-3012
+	.value	-4544
+	.value	-5213
+	.value	1018
+	.value	5063
+	.value	-730
+	.value	341
+	.value	-2413
+	.value	-3012
+	.value	-4544
+	.value	-5213
+	.value	4188
+	.value	1520
+	.value	2236
+	.value	1931
+	.value	-357
+	.value	918
+	.value	3784
+	.value	4095
+	.value	4188
+	.value	1520
+	.value	2236
+	.value	1931
+	.value	-357
+	.value	918
+	.value	3784
+	.value	4095
+	.value	1018
+	.value	3085
+	.value	-5175
+	.value	2982
+	.value	-3364
+	.value	-4744
+	.value	2503
+	.value	-4129
+	.value	-376
+	.value	-2576
+	.value	1341
+	.value	-193
+	.value	4855
+	.value	3062
+	.value	-4875
+	.value	4
+	.value	3688
+	.value	2388
+	.value	-2629
+	.value	-4513
+	.value	425
+	.value	4742
+	.value	-4347
+	.value	2935
+	.value	-3686
+	.value	-544
+	.value	3823
+	.value	-2178
+	.value	2695
+	.value	847
+	.value	-4035
+	.value	268
+	.value	-223
+	.value	-1299
+	.value	-4095
+	.value	-1287
+	.value	-3784
+	.value	-4876
+	.value	-918
+	.value	3091
+	.value	357
+	.value	-4189
+	.value	-1931
+	.value	4616
+	.value	-2236
+	.value	2984
+	.value	-1520
+	.value	-3550
+	.value	-4188
+	.value	-1009
+	.value	5213
+	.value	-205
+	.value	4544
+	.value	-4102
+	.value	3012
+	.value	2790
+	.value	2413
+	.value	-1085
+	.value	-341
+	.value	-2565
+	.value	730
+	.value	-4379
+	.value	-5063
+	.value	-1284
+	.value	1018
+	.value	1284
+	.value	5063
+	.value	4379
+	.value	-730
+	.value	2565
+	.value	341
+	.value	1085
+	.value	-2413
+	.value	-2790
+	.value	-3012
+	.value	4102
+	.value	-4544
+	.value	205
+	.value	-5213
+	.value	1009
+	.value	4188
+	.value	3550
+	.value	1520
+	.value	-2984
+	.value	2236
+	.value	-4616
+	.value	1931
+	.value	4189
+	.value	-357
+	.value	-3091
+	.value	918
+	.value	4876
+	.value	3784
+	.value	1287
+	.value	4095
+	.value	1299
+	.value	223
+	.value	-268
+	.value	4035
+	.value	-847
+	.value	-2695
+	.value	2178
+	.value	-3823
+	.value	544
+	.value	3686
+	.value	-2935
+	.value	4347
+	.value	-4742
+	.value	-425
+	.value	4513
+	.value	2629
+	.value	-2388
+	.value	-3688
+	.value	-4
+	.value	4875
+	.value	-3062
+	.value	-4855
+	.value	193
+	.value	-1341
+	.value	2576
+	.value	376
+	.value	4129
+	.value	-2503
+	.value	4744
+	.value	3364
+	.value	-2982
+	.value	5175
+	.value	-3085
+	.value	1018
+	.value	5116
+	.value	3085
+	.value	-3615
+	.value	-5175
+	.value	400
+	.value	2982
+	.value	3198
+	.value	-3364
+	.value	2234
+	.value	-4744
+	.value	-4828
+	.value	2503
+	.value	326
+	.value	-4129
+	.value	-512
+	.value	-376
+	.value	1068
+	.value	-2576
+	.value	-4580
+	.value	1341
+	.value	3169
+	.value	-193
+	.value	-2998
+	.value	4855
+	.value	-635
+	.value	3062
+	.value	-4808
+	.value	-4875
+	.value	-2740
+	.value	4
+	.value	675
+	.value	3688
+	.value	-1324
+	.value	2388
+	.value	5114
+	.value	-2629
+	.value	5294
+	.value	-4513
+	.value	-794
+	.value	425
+	.value	-864
+	.value	4742
+	.value	-886
+	.value	-4347
+	.value	336
+	.value	2935
+	.value	-2045
+	.value	-3686
+	.value	-3715
+	.value	-544
+	.value	4977
+	.value	3823
+	.value	-2737
+	.value	-2178
+	.value	3441
+	.value	2695
+	.value	467
+	.value	847
+	.value	454
+	.value	-4035
+	.value	-779
+	.value	268
+	.value	2213
+	.value	1018
+	.value	1615
+	.value	1284
+	.value	2206
+	.value	5063
+	.value	5064
+	.value	4379
+	.value	472
+	.value	-730
+	.value	-5341
+	.value	2565
+	.value	-4286
+	.value	341
+	.value	2981
+	.value	1085
+	.value	-1268
+	.value	-2413
+	.value	-3057
+	.value	-2790
+	.value	-2884
+	.value	-3012
+	.value	-1356
+	.value	4102
+	.value	-3337
+	.value	-4544
+	.value	5023
+	.value	205
+	.value	-636
+	.value	-5213
+	.value	909
+	.value	1009
+	.value	-2973
+	.value	4188
+	.value	2271
+	.value	3550
+	.value	-1572
+	.value	1520
+	.value	1841
+	.value	-2984
+	.value	970
+	.value	2236
+	.value	-4734
+	.value	-4616
+	.value	578
+	.value	1931
+	.value	-116
+	.value	4189
+	.value	1586
+	.value	-357
+	.value	-2774
+	.value	-3091
+	.value	-1006
+	.value	918
+	.value	-5156
+	.value	4876
+	.value	4123
+	.value	3784
+	.value	-567
+	.value	1287
+	.value	151
+	.value	4095
+	.value	1458
+	.value	1299
+	.value	2684
+	.value	1018
+	.value	-3260
+	.value	5116
+	.value	-1722
+	.value	3085
+	.value	5120
+	.value	-3615
+	.value	3760
+	.value	-5175
+	.value	73
+	.value	400
+	.value	4254
+	.value	2982
+	.value	2788
+	.value	3198
+	.value	-2657
+	.value	-3364
+	.value	569
+	.value	2234
+	.value	1930
+	.value	-4744
+	.value	-2279
+	.value	-4828
+	.value	5215
+	.value	2503
+	.value	-4403
+	.value	326
+	.value	1639
+	.value	-4129
+	.value	5068
+	.value	-512
+	.value	-5015
+	.value	-376
+	.value	-4859
+	.value	1068
+	.value	-40
+	.value	-2576
+	.value	4003
+	.value	-4580
+	.value	-4621
+	.value	1341
+	.value	2487
+	.value	3169
+	.value	-2374
+	.value	-193
+	.value	2625
+	.value	-2998
+	.value	4784
+	.value	4855
+	.value	825
+	.value	-635
+	.value	2118
+	.value	3062
+	.value	-2813
+	.value	-4808
+	.value	-4250
+	.value	-4875
+	.value	-2113
+	.value	-2740
+	.value	-4408
+	.value	4
+	.value	-1893
+	.value	675
+	.value	458
+	.value	1018
+	.value	5120
+	.value	400
+	.value	-2657
+	.value	-4744
+	.value	-4403
+	.value	-512
+	.value	-40
+	.value	1341
+	.value	2625
+	.value	-635
+	.value	-4250
+	.value	4
+	.value	-3360
+	.value	5114
+	.value	-5313
+	.value	425
+	.value	-2151
+	.value	336
+	.value	-2662
+	.value	-544
+	.value	5334
+	.value	3441
+	.value	2117
+	.value	-4035
+	.value	2205
+	.value	-2684
+	.value	-3570
+	.value	-1287
+	.value	-4973
+	.value	5156
+	.value	2419
+	.value	357
+	.value	1204
+	.value	-578
+	.value	1635
+	.value	2984
+	.value	-1111
+	.value	-2271
+	.value	4359
+	.value	5213
+	.value	-2449
+	.value	3337
+	.value	3453
+	.value	2790
+	.value	554
+	.value	-2981
+	.value	-1409
+	.value	730
+	.value	-279
+	.value	-2206
+	.value	3524
+	.value	-3085
+	.value	-73
+	.value	-3198
+	.value	-1930
+	.value	-2503
+	.value	-5068
+	.value	-1068
+	.value	4621
+	.value	193
+	.value	-825
+	.value	4808
+	.value	4408
+	.value	1018
+	.value	4428
+	.value	5064
+	.value	-4000
+	.value	2565
+	.value	573
+	.value	-1268
+	.value	3125
+	.value	-3012
+	.value	-4144
+	.value	5023
+	.value	1927
+	.value	1009
+	.value	-2139
+	.value	-1572
+	.value	3535
+	.value	2236
+	.value	663
+	.value	-116
+	.value	4967
+	.value	-3091
+	.value	-854
+	.value	4123
+	.value	1160
+	.value	4095
+	.value	-1349
+	.value	-2213
+	.value	1782
+	.value	-847
+	.value	2062
+	.value	2737
+	.value	624
+	.value	3686
+	.value	-2283
+	.value	886
+	.value	4889
+	.value	4513
+	.value	-4601
+	.value	1324
+	.value	1893
+	.value	4875
+	.value	-2118
+	.value	2998
+	.value	-2487
+	.value	2576
+	.value	5015
+	.value	-326
+	.value	2279
+	.value	3364
+	.value	-4254
+	.value	3615
+	.value	3260
+	.value	-1284
+	.value	-1381
+	.value	-472
+	.value	-3891
+	.value	-341
+	.value	2087
+	.value	3057
+	.value	4720
+	.value	-4102
+	.value	3410
+	.value	636
+	.value	1689
+	.value	1018
+	.value	-3524
+	.value	1615
+	.value	5268
+	.value	1284
+	.value	4428
+	.value	2206
+	.value	-834
+	.value	5063
+	.value	1381
+	.value	5064
+	.value	279
+	.value	4379
+	.value	2439
+	.value	472
+	.value	-4000
+	.value	-730
+	.value	-2015
+	.value	-5341
+	.value	3891
+	.value	2565
+	.value	1409
+	.value	-4286
+	.value	2605
+	.value	341
+	.value	573
+	.value	2981
+	.value	5356
+	.value	1085
+	.value	-2087
+	.value	-1268
+	.value	-554
+	.value	-2413
+	.value	3135
+	.value	-3057
+	.value	3125
+	.value	-2790
+	.value	-778
+	.value	-2884
+	.value	-4720
+	.value	-3012
+	.value	-3453
+	.value	-1356
+	.value	-355
+	.value	4102
+	.value	-4144
+	.value	-3337
+	.value	-152
+	.value	-4544
+	.value	-3410
+	.value	5023
+	.value	2449
+	.value	205
+	.value	-97
+	.value	-636
+	.value	1927
+	.value	-5213
+	.value	2624
+	.value	909
+	.value	-1689
+	.value	1009
+	.value	-4359
+	.value	-2973
+	.value	-3419
+	.value	10753
+	.value	10753
+	.value	10753
+	.value	10753
+	.value	10753
+	.value	10753
+	.value	10753
+	.value	10753
+	.value	10753
+	.value	10753
+	.value	10753
+	.value	10753
+	.value	10753
+	.value	10753
+	.value	10753
+	.value	10753
+	.value	-6
+	.value	-6
+	.value	-6
+	.value	-6
+	.value	-408
+	.value	-408
+	.value	-408
+	.value	-408
+	.value	-6
+	.value	-6
+	.value	-6
+	.value	-6
+	.value	-408
+	.value	-408
+	.value	-408
+	.value	-408
+	.value	-27359
+	.value	-27359
+	.value	-27359
+	.value	-27359
+	.value	1956
+	.value	1956
+	.value	1956
+	.value	1956
+	.value	-27359
+	.value	-27359
+	.value	-27359
+	.value	-27359
+	.value	1956
+	.value	1956
+	.value	1956
+	.value	1956
+	.value	-6
+	.value	-6
+	.value	-6
+	.value	-6
+	.value	-1956
+	.value	-1956
+	.value	-1956
+	.value	-1956
+	.value	-6
+	.value	-6
+	.value	-6
+	.value	-6
+	.value	-1956
+	.value	-1956
+	.value	-1956
+	.value	-1956
+	.value	27359
+	.value	27359
+	.value	27359
+	.value	27359
+	.value	408
+	.value	408
+	.value	408
+	.value	408
+	.value	27359
+	.value	27359
+	.value	27359
+	.value	27359
+	.value	408
+	.value	408
+	.value	408
+	.value	408
+	.value	-6
+	.value	-6
+	.value	-6
+	.value	-6
+	.value	-20856
+	.value	-20856
+	.value	-20856
+	.value	-20856
+	.value	-6
+	.value	-6
+	.value	-6
+	.value	-6
+	.value	-20856
+	.value	-20856
+	.value	-20856
+	.value	-20856
+	.value	-408
+	.value	-408
+	.value	-408
+	.value	-408
+	.value	-21094
+	.value	-21094
+	.value	-21094
+	.value	-21094
+	.value	-408
+	.value	-408
+	.value	-408
+	.value	-408
+	.value	-21094
+	.value	-21094
+	.value	-21094
+	.value	-21094
+	.value	-6
+	.value	-6
+	.value	-6
+	.value	-6
+	.value	-10093
+	.value	-10093
+	.value	-10093
+	.value	-10093
+	.value	-6
+	.value	-6
+	.value	-6
+	.value	-6
+	.value	-10093
+	.value	-10093
+	.value	-10093
+	.value	-10093
+	.value	-1956
+	.value	-1956
+	.value	-1956
+	.value	-1956
+	.value	-28517
+	.value	-28517
+	.value	-28517
+	.value	-28517
+	.value	-1956
+	.value	-1956
+	.value	-1956
+	.value	-1956
+	.value	-28517
+	.value	-28517
+	.value	-28517
+	.value	-28517
+	.value	-6
+	.value	-9508
+	.value	-20856
+	.value	-29449
+	.value	-408
+	.value	18345
+	.value	-21094
+	.value	-7033
+	.value	-6
+	.value	-9508
+	.value	-20856
+	.value	-29449
+	.value	-408
+	.value	18345
+	.value	-21094
+	.value	-7033
+	.value	-27359
+	.value	-16072
+	.value	28517
+	.value	-12476
+	.value	1956
+	.value	-28224
+	.value	10093
+	.value	16090
+	.value	-27359
+	.value	-16072
+	.value	28517
+	.value	-12476
+	.value	1956
+	.value	-28224
+	.value	10093
+	.value	16090
+	.value	-6
+	.value	-16090
+	.value	-10093
+	.value	28224
+	.value	-1956
+	.value	12476
+	.value	-28517
+	.value	16072
+	.value	-6
+	.value	-16090
+	.value	-10093
+	.value	28224
+	.value	-1956
+	.value	12476
+	.value	-28517
+	.value	16072
+	.value	27359
+	.value	7033
+	.value	21094
+	.value	-18345
+	.value	408
+	.value	29449
+	.value	20856
+	.value	9508
+	.value	27359
+	.value	7033
+	.value	21094
+	.value	-18345
+	.value	408
+	.value	29449
+	.value	20856
+	.value	9508
+	.value	-6
+	.value	-3639
+	.value	-9508
+	.value	25543
+	.value	-20856
+	.value	829
+	.value	-29449
+	.value	-17675
+	.value	-6
+	.value	-3639
+	.value	-9508
+	.value	25543
+	.value	-20856
+	.value	829
+	.value	-29449
+	.value	-17675
+	.value	-408
+	.value	18363
+	.value	18345
+	.value	7429
+	.value	-21094
+	.value	-10001
+	.value	-7033
+	.value	-4547
+	.value	-408
+	.value	18363
+	.value	18345
+	.value	7429
+	.value	-21094
+	.value	-10001
+	.value	-7033
+	.value	-4547
+	.value	-6
+	.value	28103
+	.value	-16090
+	.value	3925
+	.value	-10093
+	.value	7228
+	.value	28224
+	.value	11683
+	.value	-6
+	.value	28103
+	.value	-16090
+	.value	3925
+	.value	-10093
+	.value	7228
+	.value	28224
+	.value	11683
+	.value	-1956
+	.value	-23056
+	.value	12476
+	.value	14731
+	.value	-28517
+	.value	26518
+	.value	16072
+	.value	14847
+	.value	-1956
+	.value	-23056
+	.value	12476
+	.value	14731
+	.value	-28517
+	.value	26518
+	.value	16072
+	.value	14847
+	.value	-6
+	.value	-5619
+	.value	-3639
+	.value	-12378
+	.value	-9508
+	.value	15736
+	.value	25543
+	.value	23007
+	.value	-20856
+	.value	-27152
+	.value	829
+	.value	-22209
+	.value	-29449
+	.value	-20490
+	.value	-17675
+	.value	22532
+	.value	-408
+	.value	16724
+	.value	18363
+	.value	22623
+	.value	18345
+	.value	5766
+	.value	7429
+	.value	-31369
+	.value	-21094
+	.value	15840
+	.value	-10001
+	.value	19326
+	.value	-7033
+	.value	3407
+	.value	-4547
+	.value	2316
+	.value	-27359
+	.value	6381
+	.value	-14847
+	.value	8441
+	.value	-16072
+	.value	-6924
+	.value	-26518
+	.value	-4589
+	.value	28517
+	.value	12707
+	.value	-14731
+	.value	-15864
+	.value	-12476
+	.value	31656
+	.value	23056
+	.value	24098
+	.value	1956
+	.value	-31217
+	.value	-11683
+	.value	-24269
+	.value	-28224
+	.value	-5126
+	.value	-7228
+	.value	20198
+	.value	10093
+	.value	-573
+	.value	-3925
+	.value	-14341
+	.value	16090
+	.value	23781
+	.value	-28103
+	.value	-23812
+	.value	-6
+	.value	23812
+	.value	28103
+	.value	-23781
+	.value	-16090
+	.value	14341
+	.value	3925
+	.value	573
+	.value	-10093
+	.value	-20198
+	.value	7228
+	.value	5126
+	.value	28224
+	.value	24269
+	.value	11683
+	.value	31217
+	.value	-1956
+	.value	-24098
+	.value	-23056
+	.value	-31656
+	.value	12476
+	.value	15864
+	.value	14731
+	.value	-12707
+	.value	-28517
+	.value	4589
+	.value	26518
+	.value	6924
+	.value	16072
+	.value	-8441
+	.value	14847
+	.value	-6381
+	.value	27359
+	.value	-2316
+	.value	4547
+	.value	-3407
+	.value	7033
+	.value	-19326
+	.value	10001
+	.value	-15840
+	.value	21094
+	.value	31369
+	.value	-7429
+	.value	-5766
+	.value	-18345
+	.value	-22623
+	.value	-18363
+	.value	-16724
+	.value	408
+	.value	-22532
+	.value	17675
+	.value	20490
+	.value	29449
+	.value	22209
+	.value	-829
+	.value	27152
+	.value	20856
+	.value	-23007
+	.value	-25543
+	.value	-15736
+	.value	9508
+	.value	12378
+	.value	3639
+	.value	5619
+	.value	-6
+	.value	-17412
+	.value	-5619
+	.value	2017
+	.value	-3639
+	.value	24976
+	.value	-12378
+	.value	24702
+	.value	-9508
+	.value	-31558
+	.value	15736
+	.value	1316
+	.value	25543
+	.value	-31418
+	.value	23007
+	.value	-512
+	.value	-20856
+	.value	-13268
+	.value	-27152
+	.value	22044
+	.value	829
+	.value	8801
+	.value	-22209
+	.value	-12214
+	.value	-29449
+	.value	11141
+	.value	-20490
+	.value	-17096
+	.value	-17675
+	.value	32076
+	.value	22532
+	.value	17571
+	.value	-408
+	.value	13012
+	.value	16724
+	.value	4090
+	.value	18363
+	.value	-30546
+	.value	22623
+	.value	16614
+	.value	18345
+	.value	-17248
+	.value	5766
+	.value	22666
+	.value	7429
+	.value	-7856
+	.value	-31369
+	.value	31235
+	.value	-21094
+	.value	28541
+	.value	15840
+	.value	-30351
+	.value	-10001
+	.value	-177
+	.value	19326
+	.value	-31887
+	.value	-7033
+	.value	25555
+	.value	3407
+	.value	-31290
+	.value	-4547
+	.value	-13579
+	.value	2316
+	.value	-2395
+	.value	-6
+	.value	4175
+	.value	23812
+	.value	7326
+	.value	28103
+	.value	17352
+	.value	-23781
+	.value	-28200
+	.value	-16090
+	.value	11555
+	.value	14341
+	.value	6978
+	.value	3925
+	.value	-1627
+	.value	573
+	.value	780
+	.value	-10093
+	.value	32271
+	.value	-20198
+	.value	7356
+	.value	7228
+	.value	29364
+	.value	5126
+	.value	27895
+	.value	28224
+	.value	-609
+	.value	24269
+	.value	21892
+	.value	11683
+	.value	-7795
+	.value	31217
+	.value	-18845
+	.value	-1956
+	.value	29407
+	.value	-24098
+	.value	-7716
+	.value	-23056
+	.value	-719
+	.value	-31656
+	.value	-8246
+	.value	12476
+	.value	-26238
+	.value	15864
+	.value	11842
+	.value	14731
+	.value	1932
+	.value	-12707
+	.value	-11726
+	.value	-28517
+	.value	4394
+	.value	4589
+	.value	2066
+	.value	26518
+	.value	-11300
+	.value	6924
+	.value	-24037
+	.value	16072
+	.value	969
+	.value	-8441
+	.value	14999
+	.value	14847
+	.value	-11854
+	.value	-6381
+	.value	-19844
+	.value	-6
+	.value	-13500
+	.value	-17412
+	.value	32070
+	.value	-5619
+	.value	5120
+	.value	2017
+	.value	11952
+	.value	-3639
+	.value	1609
+	.value	24976
+	.value	9374
+	.value	-12378
+	.value	-23836
+	.value	24702
+	.value	-8289
+	.value	-9508
+	.value	-22471
+	.value	-31558
+	.value	25482
+	.value	15736
+	.value	-8935
+	.value	1316
+	.value	32351
+	.value	25543
+	.value	19661
+	.value	-31418
+	.value	8295
+	.value	23007
+	.value	-25652
+	.value	-512
+	.value	-19863
+	.value	-20856
+	.value	6917
+	.value	-13268
+	.value	-28712
+	.value	-27152
+	.value	20899
+	.value	22044
+	.value	4083
+	.value	829
+	.value	951
+	.value	8801
+	.value	29370
+	.value	-22209
+	.value	24641
+	.value	-12214
+	.value	12976
+	.value	-29449
+	.value	-22215
+	.value	11141
+	.value	-29626
+	.value	-20490
+	.value	30467
+	.value	-17096
+	.value	13158
+	.value	-17675
+	.value	-24129
+	.value	32076
+	.value	7880
+	.value	22532
+	.value	-30053
+	.value	17571
+	.value	-8758
+	.value	-6
+	.value	5120
+	.value	24976
+	.value	-8289
+	.value	15736
+	.value	19661
+	.value	-512
+	.value	-28712
+	.value	829
+	.value	24641
+	.value	11141
+	.value	13158
+	.value	22532
+	.value	13024
+	.value	4090
+	.value	-27329
+	.value	18345
+	.value	-8807
+	.value	-7856
+	.value	-20070
+	.value	15840
+	.value	-1834
+	.value	-31887
+	.value	-18875
+	.value	-4547
+	.value	18077
+	.value	19844
+	.value	-23026
+	.value	8441
+	.value	-12653
+	.value	11300
+	.value	11123
+	.value	28517
+	.value	31924
+	.value	-11842
+	.value	-14237
+	.value	31656
+	.value	16809
+	.value	-29407
+	.value	-5369
+	.value	-11683
+	.value	-16273
+	.value	-27895
+	.value	-29827
+	.value	20198
+	.value	7722
+	.value	1627
+	.value	9343
+	.value	16090
+	.value	-15127
+	.value	-7326
+	.value	-6716
+	.value	5619
+	.value	-1609
+	.value	-24702
+	.value	-25482
+	.value	-25543
+	.value	25652
+	.value	13268
+	.value	-4083
+	.value	22209
+	.value	22215
+	.value	17096
+	.value	-7880
+	.value	-6
+	.value	-26292
+	.value	17352
+	.value	12384
+	.value	14341
+	.value	61
+	.value	780
+	.value	23093
+	.value	7228
+	.value	-12336
+	.value	-609
+	.value	-7801
+	.value	31217
+	.value	-6747
+	.value	-7716
+	.value	6095
+	.value	12476
+	.value	15511
+	.value	1932
+	.value	11623
+	.value	4589
+	.value	6314
+	.value	-24037
+	.value	-19320
+	.value	14847
+	.value	19643
+	.value	2395
+	.value	-21770
+	.value	-3407
+	.value	-17394
+	.value	177
+	.value	-23952
+	.value	21094
+	.value	-31467
+	.value	-22666
+	.value	-1767
+	.value	-22623
+	.value	-14329
+	.value	-13012
+	.value	30053
+	.value	17675
+	.value	29626
+	.value	12214
+	.value	-951
+	.value	27152
+	.value	19863
+	.value	31418
+	.value	8935
+	.value	9508
+	.value	-9374
+	.value	-2017
+	.value	13500
+	.value	-23812
+	.value	-29541
+	.value	28200
+	.value	20173
+	.value	-3925
+	.value	-24025
+	.value	-32271
+	.value	-19856
+	.value	-5126
+	.value	-26286
+	.value	-21892
+	.value	-4967
+	.value	-6
+	.value	6716
+	.value	4175
+	.value	-13164
+	.value	23812
+	.value	-26292
+	.value	7326
+	.value	-12098
+	.value	28103
+	.value	29541
+	.value	17352
+	.value	15127
+	.value	-23781
+	.value	-7289
+	.value	-28200
+	.value	12384
+	.value	-16090
+	.value	-29151
+	.value	11555
+	.value	-20173
+	.value	14341
+	.value	-9343
+	.value	6978
+	.value	-22483
+	.value	3925
+	.value	61
+	.value	-1627
+	.value	23788
+	.value	573
+	.value	24025
+	.value	780
+	.value	-7722
+	.value	-10093
+	.value	-18881
+	.value	32271
+	.value	23093
+	.value	-20198
+	.value	-24330
+	.value	7356
+	.value	19856
+	.value	7228
+	.value	29827
+	.value	29364
+	.value	15517
+	.value	5126
+	.value	-12336
+	.value	27895
+	.value	-4248
+	.value	28224
+	.value	26286
+	.value	-609
+	.value	16273
+	.value	24269
+	.value	-5729
+	.value	21892
+	.value	-7801
+	.value	11683
+	.value	-30144
+	.value	-7795
+	.value	4967
+	.value	31217
+	.value	5369
+	.value	-18845
+	.value	-8027
+	.value	-27359
+	.value	-27359
+	.value	-27359
+	.value	-27359
+	.value	-27359
+	.value	-27359
+	.value	-27359
+	.value	-27359
+	.value	-27359
+	.value	-27359
+	.value	-27359
+	.value	-27359
+	.value	-27359
+	.value	-27359
+	.value	-27359
+	.value	-27359
+	.value	27359
+	.value	27359
+	.value	27359
+	.value	27359
+	.value	27359
+	.value	27359
+	.value	27359
+	.value	27359
+	.value	27359
+	.value	27359
+	.value	27359
+	.value	27359
+	.value	27359
+	.value	27359
+	.value	27359
+	.value	27359
+	.value	-408
+	.value	-408
+	.value	-408
+	.value	-408
+	.value	-408
+	.value	-408
+	.value	-408
+	.value	-408
+	.value	-408
+	.value	-408
+	.value	-408
+	.value	-408
+	.value	-408
+	.value	-408
+	.value	-408
+	.value	-408
+	.value	-1956
+	.value	-1956
+	.value	-1956
+	.value	-1956
+	.value	-1956
+	.value	-1956
+	.value	-1956
+	.value	-1956
+	.value	-1956
+	.value	-1956
+	.value	-1956
+	.value	-1956
+	.value	-1956
+	.value	-1956
+	.value	-1956
+	.value	-1956
+	.value	3
+	.value	3
+	.value	3
+	.value	3
+	.value	3
+	.value	3
+	.value	3
+	.value	3
+	.value	3
+	.value	3
+	.value	3
+	.value	3
+	.value	3
+	.value	3
+	.value	3
+	.value	3
+	.value	-223
+	.value	-223
+	.value	-223
+	.value	-223
+	.value	-223
+	.value	-223
+	.value	-223
+	.value	-223
+	.value	-223
+	.value	-223
+	.value	-223
+	.value	-223
+	.value	-223
+	.value	-223
+	.value	-223
+	.value	-223
+	.value	223
+	.value	223
+	.value	223
+	.value	223
+	.value	223
+	.value	223
+	.value	223
+	.value	223
+	.value	223
+	.value	223
+	.value	223
+	.value	223
+	.value	223
+	.value	223
+	.value	223
+	.value	223
+	.value	3688
+	.value	3688
+	.value	3688
+	.value	3688
+	.value	3688
+	.value	3688
+	.value	3688
+	.value	3688
+	.value	3688
+	.value	3688
+	.value	3688
+	.value	3688
+	.value	3688
+	.value	3688
+	.value	3688
+	.value	3688
+	.value	4188
+	.value	4188
+	.value	4188
+	.value	4188
+	.value	4188
+	.value	4188
+	.value	4188
+	.value	4188
+	.value	4188
+	.value	4188
+	.value	4188
+	.value	4188
+	.value	4188
+	.value	4188
+	.value	4188
+	.value	4188
+	.align 32
+	.type	qdata_7681, @object
+	.size	qdata_7681, 3392
+qdata_7681:
+	.value	-3593
+	.value	-3593
+	.value	-3593
+	.value	-3593
+	.value	-3625
+	.value	-3625
+	.value	-3625
+	.value	-3625
+	.value	-3593
+	.value	-3593
+	.value	-3593
+	.value	-3593
+	.value	-3625
+	.value	-3625
+	.value	-3625
+	.value	-3625
+	.value	-3777
+	.value	-3777
+	.value	-3777
+	.value	-3777
+	.value	3182
+	.value	3182
+	.value	3182
+	.value	3182
+	.value	-3777
+	.value	-3777
+	.value	-3777
+	.value	-3777
+	.value	3182
+	.value	3182
+	.value	3182
+	.value	3182
+	.value	-3593
+	.value	-3593
+	.value	-3593
+	.value	-3593
+	.value	-3182
+	.value	-3182
+	.value	-3182
+	.value	-3182
+	.value	-3593
+	.value	-3593
+	.value	-3593
+	.value	-3593
+	.value	-3182
+	.value	-3182
+	.value	-3182
+	.value	-3182
+	.value	3777
+	.value	3777
+	.value	3777
+	.value	3777
+	.value	3625
+	.value	3625
+	.value	3625
+	.value	3625
+	.value	3777
+	.value	3777
+	.value	3777
+	.value	3777
+	.value	3625
+	.value	3625
+	.value	3625
+	.value	3625
+	.value	-3593
+	.value	-3593
+	.value	-3593
+	.value	-3593
+	.value	2194
+	.value	2194
+	.value	2194
+	.value	2194
+	.value	-3593
+	.value	-3593
+	.value	-3593
+	.value	-3593
+	.value	2194
+	.value	2194
+	.value	2194
+	.value	2194
+	.value	-3625
+	.value	-3625
+	.value	-3625
+	.value	-3625
+	.value	-1100
+	.value	-1100
+	.value	-1100
+	.value	-1100
+	.value	-3625
+	.value	-3625
+	.value	-3625
+	.value	-3625
+	.value	-1100
+	.value	-1100
+	.value	-1100
+	.value	-1100
+	.value	-3593
+	.value	-3593
+	.value	-3593
+	.value	-3593
+	.value	3696
+	.value	3696
+	.value	3696
+	.value	3696
+	.value	-3593
+	.value	-3593
+	.value	-3593
+	.value	-3593
+	.value	3696
+	.value	3696
+	.value	3696
+	.value	3696
+	.value	-3182
+	.value	-3182
+	.value	-3182
+	.value	-3182
+	.value	-2456
+	.value	-2456
+	.value	-2456
+	.value	-2456
+	.value	-3182
+	.value	-3182
+	.value	-3182
+	.value	-3182
+	.value	-2456
+	.value	-2456
+	.value	-2456
+	.value	-2456
+	.value	-3593
+	.value	1701
+	.value	2194
+	.value	834
+	.value	-3625
+	.value	2319
+	.value	-1100
+	.value	121
+	.value	-3593
+	.value	1701
+	.value	2194
+	.value	834
+	.value	-3625
+	.value	2319
+	.value	-1100
+	.value	121
+	.value	-3777
+	.value	1414
+	.value	2456
+	.value	2495
+	.value	3182
+	.value	2876
+	.value	-3696
+	.value	2250
+	.value	-3777
+	.value	1414
+	.value	2456
+	.value	2495
+	.value	3182
+	.value	2876
+	.value	-3696
+	.value	2250
+	.value	-3593
+	.value	-2250
+	.value	3696
+	.value	-2876
+	.value	-3182
+	.value	-2495
+	.value	-2456
+	.value	-1414
+	.value	-3593
+	.value	-2250
+	.value	3696
+	.value	-2876
+	.value	-3182
+	.value	-2495
+	.value	-2456
+	.value	-1414
+	.value	3777
+	.value	-121
+	.value	1100
+	.value	-2319
+	.value	3625
+	.value	-834
+	.value	-2194
+	.value	-1701
+	.value	3777
+	.value	-121
+	.value	1100
+	.value	-2319
+	.value	3625
+	.value	-834
+	.value	-2194
+	.value	-1701
+	.value	-3593
+	.value	3364
+	.value	1701
+	.value	-1599
+	.value	2194
+	.value	2557
+	.value	834
+	.value	-2816
+	.value	-3593
+	.value	3364
+	.value	1701
+	.value	-1599
+	.value	2194
+	.value	2557
+	.value	834
+	.value	-2816
+	.value	-3625
+	.value	617
+	.value	2319
+	.value	2006
+	.value	-1100
+	.value	-1296
+	.value	121
+	.value	1986
+	.value	-3625
+	.value	617
+	.value	2319
+	.value	2006
+	.value	-1100
+	.value	-1296
+	.value	121
+	.value	1986
+	.value	-3593
+	.value	2237
+	.value	-2250
+	.value	-1483
+	.value	3696
+	.value	3706
+	.value	-2876
+	.value	1921
+	.value	-3593
+	.value	2237
+	.value	-2250
+	.value	-1483
+	.value	3696
+	.value	3706
+	.value	-2876
+	.value	1921
+	.value	-3182
+	.value	2088
+	.value	-2495
+	.value	-1525
+	.value	-2456
+	.value	1993
+	.value	-1414
+	.value	2830
+	.value	-3182
+	.value	2088
+	.value	-2495
+	.value	-1525
+	.value	-2456
+	.value	1993
+	.value	-1414
+	.value	2830
+	.value	-3593
+	.value	514
+	.value	3364
+	.value	438
+	.value	1701
+	.value	2555
+	.value	-1599
+	.value	-1738
+	.value	2194
+	.value	103
+	.value	2557
+	.value	1881
+	.value	834
+	.value	-549
+	.value	-2816
+	.value	638
+	.value	-3625
+	.value	-1399
+	.value	617
+	.value	-1760
+	.value	2319
+	.value	2535
+	.value	2006
+	.value	3266
+	.value	-1100
+	.value	-1431
+	.value	-1296
+	.value	3174
+	.value	121
+	.value	3153
+	.value	1986
+	.value	-810
+	.value	-3777
+	.value	2956
+	.value	-2830
+	.value	-679
+	.value	1414
+	.value	2440
+	.value	-1993
+	.value	-3689
+	.value	2456
+	.value	2804
+	.value	1525
+	.value	3555
+	.value	2495
+	.value	1535
+	.value	-2088
+	.value	-7
+	.value	3182
+	.value	-1321
+	.value	-1921
+	.value	-1305
+	.value	2876
+	.value	-3772
+	.value	-3706
+	.value	3600
+	.value	-3696
+	.value	-2043
+	.value	1483
+	.value	-396
+	.value	2250
+	.value	-2310
+	.value	-2237
+	.value	1887
+	.value	-3593
+	.value	-1887
+	.value	2237
+	.value	2310
+	.value	-2250
+	.value	396
+	.value	-1483
+	.value	2043
+	.value	3696
+	.value	-3600
+	.value	3706
+	.value	3772
+	.value	-2876
+	.value	1305
+	.value	1921
+	.value	1321
+	.value	-3182
+	.value	7
+	.value	2088
+	.value	-1535
+	.value	-2495
+	.value	-3555
+	.value	-1525
+	.value	-2804
+	.value	-2456
+	.value	3689
+	.value	1993
+	.value	-2440
+	.value	-1414
+	.value	679
+	.value	2830
+	.value	-2956
+	.value	3777
+	.value	810
+	.value	-1986
+	.value	-3153
+	.value	-121
+	.value	-3174
+	.value	1296
+	.value	1431
+	.value	1100
+	.value	-3266
+	.value	-2006
+	.value	-2535
+	.value	-2319
+	.value	1760
+	.value	-617
+	.value	1399
+	.value	3625
+	.value	-638
+	.value	2816
+	.value	549
+	.value	-834
+	.value	-1881
+	.value	-2557
+	.value	-103
+	.value	-2194
+	.value	1738
+	.value	1599
+	.value	-2555
+	.value	-1701
+	.value	-438
+	.value	-3364
+	.value	-514
+	.value	-3593
+	.value	-1532
+	.value	514
+	.value	-373
+	.value	3364
+	.value	-3816
+	.value	438
+	.value	-3456
+	.value	1701
+	.value	783
+	.value	2555
+	.value	2883
+	.value	-1599
+	.value	727
+	.value	-1738
+	.value	-2385
+	.value	2194
+	.value	-2160
+	.value	103
+	.value	-2391
+	.value	2557
+	.value	2762
+	.value	1881
+	.value	-2426
+	.value	834
+	.value	3310
+	.value	-549
+	.value	-1350
+	.value	-2816
+	.value	1386
+	.value	638
+	.value	-194
+	.value	-3625
+	.value	404
+	.value	-1399
+	.value	-3692
+	.value	617
+	.value	-2764
+	.value	-1760
+	.value	-1054
+	.value	2319
+	.value	1799
+	.value	2535
+	.value	-3588
+	.value	2006
+	.value	1533
+	.value	3266
+	.value	2113
+	.value	-1100
+	.value	-2579
+	.value	-1431
+	.value	-1756
+	.value	-1296
+	.value	1598
+	.value	3174
+	.value	-2
+	.value	121
+	.value	-3480
+	.value	3153
+	.value	-2572
+	.value	1986
+	.value	2743
+	.value	-810
+	.value	2919
+	.value	-3593
+	.value	2789
+	.value	-1887
+	.value	-921
+	.value	2237
+	.value	-1497
+	.value	2310
+	.value	-2133
+	.value	-2250
+	.value	-915
+	.value	396
+	.value	1390
+	.value	-1483
+	.value	3135
+	.value	2043
+	.value	-859
+	.value	3696
+	.value	2732
+	.value	-3600
+	.value	-1464
+	.value	3706
+	.value	2224
+	.value	3772
+	.value	-2665
+	.value	-2876
+	.value	1698
+	.value	1305
+	.value	2835
+	.value	1921
+	.value	730
+	.value	1321
+	.value	486
+	.value	-3182
+	.value	3417
+	.value	7
+	.value	-3428
+	.value	2088
+	.value	-3145
+	.value	-1535
+	.value	1168
+	.value	-2495
+	.value	-3831
+	.value	-3555
+	.value	-3750
+	.value	-1525
+	.value	660
+	.value	-2804
+	.value	2649
+	.value	-2456
+	.value	3405
+	.value	3689
+	.value	-1521
+	.value	1993
+	.value	1681
+	.value	-2440
+	.value	1056
+	.value	-1414
+	.value	1166
+	.value	679
+	.value	-2233
+	.value	2830
+	.value	2175
+	.value	-2956
+	.value	-1919
+	.value	-3593
+	.value	-1404
+	.value	-1532
+	.value	451
+	.value	514
+	.value	-402
+	.value	-373
+	.value	1278
+	.value	3364
+	.value	-509
+	.value	-3816
+	.value	-3770
+	.value	438
+	.value	-2345
+	.value	-3456
+	.value	-226
+	.value	1701
+	.value	-1689
+	.value	783
+	.value	-1509
+	.value	2555
+	.value	2963
+	.value	2883
+	.value	1242
+	.value	-1599
+	.value	1669
+	.value	727
+	.value	2719
+	.value	-1738
+	.value	642
+	.value	-2385
+	.value	-436
+	.value	2194
+	.value	3335
+	.value	-2160
+	.value	1779
+	.value	103
+	.value	3745
+	.value	-2391
+	.value	17
+	.value	2557
+	.value	2812
+	.value	2762
+	.value	-1144
+	.value	1881
+	.value	83
+	.value	-2426
+	.value	-1181
+	.value	834
+	.value	-1519
+	.value	3310
+	.value	3568
+	.value	-549
+	.value	-796
+	.value	-1350
+	.value	2072
+	.value	-2816
+	.value	-2460
+	.value	1386
+	.value	2891
+	.value	638
+	.value	-2083
+	.value	-194
+	.value	-715
+	.value	-3593
+	.value	-402
+	.value	-3816
+	.value	-226
+	.value	2555
+	.value	1669
+	.value	-2385
+	.value	1779
+	.value	2557
+	.value	83
+	.value	3310
+	.value	2072
+	.value	638
+	.value	1012
+	.value	-3692
+	.value	1295
+	.value	2319
+	.value	-3208
+	.value	1533
+	.value	-2071
+	.value	-1431
+	.value	-2005
+	.value	-2
+	.value	1586
+	.value	1986
+	.value	-293
+	.value	1919
+	.value	-929
+	.value	-679
+	.value	777
+	.value	-1681
+	.value	-3461
+	.value	2456
+	.value	3366
+	.value	3750
+	.value	-1203
+	.value	1535
+	.value	-3657
+	.value	-3417
+	.value	-1712
+	.value	-1921
+	.value	2515
+	.value	2665
+	.value	-1070
+	.value	3600
+	.value	2532
+	.value	-3135
+	.value	-2589
+	.value	2250
+	.value	-2258
+	.value	921
+	.value	-658
+	.value	-514
+	.value	509
+	.value	3456
+	.value	1509
+	.value	1599
+	.value	-642
+	.value	2160
+	.value	-17
+	.value	-1881
+	.value	1519
+	.value	1350
+	.value	-2891
+	.value	-3593
+	.value	-3434
+	.value	-1497
+	.value	893
+	.value	396
+	.value	-2422
+	.value	-859
+	.value	2965
+	.value	3706
+	.value	-2339
+	.value	1698
+	.value	-2937
+	.value	1321
+	.value	-670
+	.value	-3428
+	.value	-3163
+	.value	-2495
+	.value	-1072
+	.value	660
+	.value	1084
+	.value	3689
+	.value	-179
+	.value	1056
+	.value	-1338
+	.value	2830
+	.value	2786
+	.value	-2919
+	.value	-3677
+	.value	-3153
+	.value	-151
+	.value	-1598
+	.value	3334
+	.value	1100
+	.value	-3314
+	.value	3588
+	.value	2262
+	.value	1760
+	.value	-2230
+	.value	-404
+	.value	2083
+	.value	2816
+	.value	-3568
+	.value	2426
+	.value	-2812
+	.value	-103
+	.value	436
+	.value	-727
+	.value	-2963
+	.value	-1701
+	.value	3770
+	.value	373
+	.value	1404
+	.value	1887
+	.value	-1649
+	.value	2133
+	.value	-826
+	.value	1483
+	.value	434
+	.value	-2732
+	.value	3287
+	.value	-3772
+	.value	-2378
+	.value	-2835
+	.value	3723
+	.value	-3593
+	.value	658
+	.value	2789
+	.value	370
+	.value	-1887
+	.value	-3434
+	.value	-921
+	.value	-3752
+	.value	2237
+	.value	1649
+	.value	-1497
+	.value	2258
+	.value	2310
+	.value	3581
+	.value	-2133
+	.value	893
+	.value	-2250
+	.value	3794
+	.value	-915
+	.value	826
+	.value	396
+	.value	2589
+	.value	1390
+	.value	592
+	.value	-1483
+	.value	-2422
+	.value	3135
+	.value	3214
+	.value	2043
+	.value	-434
+	.value	-859
+	.value	-2532
+	.value	3696
+	.value	1121
+	.value	2732
+	.value	2965
+	.value	-3600
+	.value	2998
+	.value	-1464
+	.value	-3287
+	.value	3706
+	.value	1070
+	.value	2224
+	.value	-589
+	.value	3772
+	.value	-2339
+	.value	-2665
+	.value	2070
+	.value	-2876
+	.value	2378
+	.value	1698
+	.value	-2515
+	.value	1305
+	.value	-2815
+	.value	2835
+	.value	-2937
+	.value	1921
+	.value	-1348
+	.value	730
+	.value	-3723
+	.value	1321
+	.value	1712
+	.value	486
+	.value	2130
+	.value	7681
+	.value	7681
+	.value	7681
+	.value	7681
+	.value	7681
+	.value	7681
+	.value	7681
+	.value	7681
+	.value	7681
+	.value	7681
+	.value	7681
+	.value	7681
+	.value	7681
+	.value	7681
+	.value	7681
+	.value	7681
+	.value	-9
+	.value	-9
+	.value	-9
+	.value	-9
+	.value	-16425
+	.value	-16425
+	.value	-16425
+	.value	-16425
+	.value	-9
+	.value	-9
+	.value	-9
+	.value	-9
+	.value	-16425
+	.value	-16425
+	.value	-16425
+	.value	-16425
+	.value	-28865
+	.value	-28865
+	.value	-28865
+	.value	-28865
+	.value	10350
+	.value	10350
+	.value	10350
+	.value	10350
+	.value	-28865
+	.value	-28865
+	.value	-28865
+	.value	-28865
+	.value	10350
+	.value	10350
+	.value	10350
+	.value	10350
+	.value	-9
+	.value	-9
+	.value	-9
+	.value	-9
+	.value	-10350
+	.value	-10350
+	.value	-10350
+	.value	-10350
+	.value	-9
+	.value	-9
+	.value	-9
+	.value	-9
+	.value	-10350
+	.value	-10350
+	.value	-10350
+	.value	-10350
+	.value	28865
+	.value	28865
+	.value	28865
+	.value	28865
+	.value	16425
+	.value	16425
+	.value	16425
+	.value	16425
+	.value	28865
+	.value	28865
+	.value	28865
+	.value	28865
+	.value	16425
+	.value	16425
+	.value	16425
+	.value	16425
+	.value	-9
+	.value	-9
+	.value	-9
+	.value	-9
+	.value	-4974
+	.value	-4974
+	.value	-4974
+	.value	-4974
+	.value	-9
+	.value	-9
+	.value	-9
+	.value	-9
+	.value	-4974
+	.value	-4974
+	.value	-4974
+	.value	-4974
+	.value	-16425
+	.value	-16425
+	.value	-16425
+	.value	-16425
+	.value	-7244
+	.value	-7244
+	.value	-7244
+	.value	-7244
+	.value	-16425
+	.value	-16425
+	.value	-16425
+	.value	-16425
+	.value	-7244
+	.value	-7244
+	.value	-7244
+	.value	-7244
+	.value	-9
+	.value	-9
+	.value	-9
+	.value	-9
+	.value	-4496
+	.value	-4496
+	.value	-4496
+	.value	-4496
+	.value	-9
+	.value	-9
+	.value	-9
+	.value	-9
+	.value	-4496
+	.value	-4496
+	.value	-4496
+	.value	-4496
+	.value	-10350
+	.value	-10350
+	.value	-10350
+	.value	-10350
+	.value	-14744
+	.value	-14744
+	.value	-14744
+	.value	-14744
+	.value	-10350
+	.value	-10350
+	.value	-10350
+	.value	-10350
+	.value	-14744
+	.value	-14744
+	.value	-14744
+	.value	-14744
+	.value	-9
+	.value	-20315
+	.value	-4974
+	.value	18242
+	.value	-16425
+	.value	18191
+	.value	-7244
+	.value	-11655
+	.value	-9
+	.value	-20315
+	.value	-4974
+	.value	18242
+	.value	-16425
+	.value	18191
+	.value	-7244
+	.value	-11655
+	.value	-28865
+	.value	20870
+	.value	14744
+	.value	-22593
+	.value	10350
+	.value	828
+	.value	4496
+	.value	23754
+	.value	-28865
+	.value	20870
+	.value	14744
+	.value	-22593
+	.value	10350
+	.value	828
+	.value	4496
+	.value	23754
+	.value	-9
+	.value	-23754
+	.value	-4496
+	.value	-828
+	.value	-10350
+	.value	22593
+	.value	-14744
+	.value	-20870
+	.value	-9
+	.value	-23754
+	.value	-4496
+	.value	-828
+	.value	-10350
+	.value	22593
+	.value	-14744
+	.value	-20870
+	.value	28865
+	.value	11655
+	.value	7244
+	.value	-18191
+	.value	16425
+	.value	-18242
+	.value	4974
+	.value	20315
+	.value	28865
+	.value	11655
+	.value	7244
+	.value	-18191
+	.value	16425
+	.value	-18242
+	.value	4974
+	.value	20315
+	.value	-9
+	.value	-10972
+	.value	-20315
+	.value	23489
+	.value	-4974
+	.value	25597
+	.value	18242
+	.value	-2816
+	.value	-9
+	.value	-10972
+	.value	-20315
+	.value	23489
+	.value	-4974
+	.value	25597
+	.value	18242
+	.value	-2816
+	.value	-16425
+	.value	-19351
+	.value	18191
+	.value	-3114
+	.value	-7244
+	.value	-9488
+	.value	-11655
+	.value	19394
+	.value	-16425
+	.value	-19351
+	.value	18191
+	.value	-3114
+	.value	-7244
+	.value	-9488
+	.value	-11655
+	.value	19394
+	.value	-9
+	.value	-7491
+	.value	-23754
+	.value	-15307
+	.value	-4496
+	.value	-15750
+	.value	-828
+	.value	-5759
+	.value	-9
+	.value	-7491
+	.value	-23754
+	.value	-15307
+	.value	-4496
+	.value	-15750
+	.value	-828
+	.value	-5759
+	.value	-10350
+	.value	22568
+	.value	22593
+	.value	-20469
+	.value	-14744
+	.value	31177
+	.value	-20870
+	.value	26382
+	.value	-10350
+	.value	22568
+	.value	22593
+	.value	-20469
+	.value	-14744
+	.value	31177
+	.value	-20870
+	.value	26382
+	.value	-9
+	.value	-14846
+	.value	-10972
+	.value	-21066
+	.value	-20315
+	.value	-24581
+	.value	23489
+	.value	-23242
+	.value	-4974
+	.value	-4505
+	.value	25597
+	.value	-26279
+	.value	18242
+	.value	21467
+	.value	-2816
+	.value	15998
+	.value	-16425
+	.value	-4983
+	.value	-19351
+	.value	14624
+	.value	18191
+	.value	-2073
+	.value	-3114
+	.value	20674
+	.value	-7244
+	.value	-21399
+	.value	-9488
+	.value	6246
+	.value	-11655
+	.value	-29103
+	.value	19394
+	.value	-5930
+	.value	-28865
+	.value	-23668
+	.value	-26382
+	.value	-28839
+	.value	20870
+	.value	6536
+	.value	-31177
+	.value	16279
+	.value	14744
+	.value	29428
+	.value	20469
+	.value	29667
+	.value	-22593
+	.value	9215
+	.value	-22568
+	.value	-11783
+	.value	10350
+	.value	-14121
+	.value	5759
+	.value	-5913
+	.value	828
+	.value	-1724
+	.value	15750
+	.value	11792
+	.value	4496
+	.value	25093
+	.value	15307
+	.value	26228
+	.value	23754
+	.value	-21766
+	.value	7491
+	.value	-6817
+	.value	-9
+	.value	6817
+	.value	-7491
+	.value	21766
+	.value	-23754
+	.value	-26228
+	.value	-15307
+	.value	-25093
+	.value	-4496
+	.value	-11792
+	.value	-15750
+	.value	1724
+	.value	-828
+	.value	5913
+	.value	-5759
+	.value	14121
+	.value	-10350
+	.value	11783
+	.value	22568
+	.value	-9215
+	.value	22593
+	.value	-29667
+	.value	-20469
+	.value	-29428
+	.value	-14744
+	.value	-16279
+	.value	31177
+	.value	-6536
+	.value	-20870
+	.value	28839
+	.value	26382
+	.value	23668
+	.value	28865
+	.value	5930
+	.value	-19394
+	.value	29103
+	.value	11655
+	.value	-6246
+	.value	9488
+	.value	21399
+	.value	7244
+	.value	-20674
+	.value	3114
+	.value	2073
+	.value	-18191
+	.value	-14624
+	.value	19351
+	.value	4983
+	.value	16425
+	.value	-15998
+	.value	2816
+	.value	-21467
+	.value	-18242
+	.value	26279
+	.value	-25597
+	.value	4505
+	.value	4974
+	.value	23242
+	.value	-23489
+	.value	24581
+	.value	20315
+	.value	21066
+	.value	10972
+	.value	14846
+	.value	-9
+	.value	-32252
+	.value	-14846
+	.value	-19317
+	.value	-10972
+	.value	8472
+	.value	-21066
+	.value	-3456
+	.value	-20315
+	.value	16655
+	.value	-24581
+	.value	12611
+	.value	23489
+	.value	-12073
+	.value	-23242
+	.value	29871
+	.value	-4974
+	.value	6032
+	.value	-4505
+	.value	10409
+	.value	25597
+	.value	24266
+	.value	-26279
+	.value	17030
+	.value	18242
+	.value	10478
+	.value	21467
+	.value	11962
+	.value	-2816
+	.value	-26262
+	.value	15998
+	.value	-17602
+	.value	-16425
+	.value	-22124
+	.value	-4983
+	.value	-26220
+	.value	-19351
+	.value	-8908
+	.value	14624
+	.value	32738
+	.value	18191
+	.value	13575
+	.value	-2073
+	.value	27132
+	.value	-3114
+	.value	24573
+	.value	20674
+	.value	27201
+	.value	-7244
+	.value	12269
+	.value	-21399
+	.value	-16092
+	.value	-9488
+	.value	-15810
+	.value	6246
+	.value	15358
+	.value	-11655
+	.value	-15768
+	.value	-29103
+	.value	24052
+	.value	19394
+	.value	-26441
+	.value	-5930
+	.value	-1689
+	.value	-9
+	.value	13541
+	.value	6817
+	.value	-5529
+	.value	-7491
+	.value	26663
+	.value	21766
+	.value	-4693
+	.value	-23754
+	.value	13933
+	.value	-26228
+	.value	8558
+	.value	-15307
+	.value	-21953
+	.value	-25093
+	.value	-22875
+	.value	-4496
+	.value	-7508
+	.value	-11792
+	.value	-30136
+	.value	-15750
+	.value	26800
+	.value	1724
+	.value	17303
+	.value	-828
+	.value	2722
+	.value	5913
+	.value	-12013
+	.value	-5759
+	.value	30426
+	.value	14121
+	.value	3558
+	.value	-10350
+	.value	-24743
+	.value	11783
+	.value	-21860
+	.value	22568
+	.value	-32329
+	.value	-9215
+	.value	9360
+	.value	22593
+	.value	-7415
+	.value	-29667
+	.value	25946
+	.value	-20469
+	.value	-21868
+	.value	-29428
+	.value	-25511
+	.value	-14744
+	.value	1869
+	.value	-16279
+	.value	14351
+	.value	31177
+	.value	2193
+	.value	-6536
+	.value	17440
+	.value	-20870
+	.value	24718
+	.value	28839
+	.value	-23225
+	.value	26382
+	.value	9855
+	.value	23668
+	.value	-9599
+	.value	-9
+	.value	-32124
+	.value	-32252
+	.value	10179
+	.value	-14846
+	.value	6766
+	.value	-19317
+	.value	16638
+	.value	-10972
+	.value	-23549
+	.value	8472
+	.value	-17082
+	.value	-21066
+	.value	-15145
+	.value	-3456
+	.value	31518
+	.value	-20315
+	.value	-6297
+	.value	16655
+	.value	-12261
+	.value	-24581
+	.value	-11885
+	.value	12611
+	.value	30938
+	.value	23489
+	.value	28805
+	.value	-12073
+	.value	26783
+	.value	-23242
+	.value	-14718
+	.value	29871
+	.value	5708
+	.value	-4974
+	.value	15111
+	.value	6032
+	.value	-29453
+	.value	-4505
+	.value	12449
+	.value	10409
+	.value	529
+	.value	25597
+	.value	-32004
+	.value	24266
+	.value	2952
+	.value	-26279
+	.value	18003
+	.value	17030
+	.value	24931
+	.value	18242
+	.value	-1007
+	.value	10478
+	.value	-4624
+	.value	21467
+	.value	17636
+	.value	11962
+	.value	14360
+	.value	-2816
+	.value	15972
+	.value	-26262
+	.value	16715
+	.value	15998
+	.value	4573
+	.value	-17602
+	.value	-14539
+	.value	-9
+	.value	6766
+	.value	8472
+	.value	31518
+	.value	-24581
+	.value	28805
+	.value	29871
+	.value	-29453
+	.value	25597
+	.value	18003
+	.value	10478
+	.value	14360
+	.value	15998
+	.value	27636
+	.value	-26220
+	.value	17167
+	.value	18191
+	.value	-7304
+	.value	24573
+	.value	-22039
+	.value	-21399
+	.value	-4565
+	.value	15358
+	.value	10802
+	.value	19394
+	.value	21723
+	.value	9599
+	.value	-9633
+	.value	-28839
+	.value	-2807
+	.value	-2193
+	.value	-30597
+	.value	14744
+	.value	-26330
+	.value	-25946
+	.value	-2739
+	.value	9215
+	.value	32695
+	.value	24743
+	.value	-26288
+	.value	5759
+	.value	20435
+	.value	-17303
+	.value	24530
+	.value	11792
+	.value	20964
+	.value	21953
+	.value	23523
+	.value	23754
+	.value	-27858
+	.value	5529
+	.value	6510
+	.value	14846
+	.value	23549
+	.value	3456
+	.value	12261
+	.value	-23489
+	.value	14718
+	.value	-6032
+	.value	-529
+	.value	26279
+	.value	1007
+	.value	-11962
+	.value	-16715
+	.value	-9
+	.value	24214
+	.value	26663
+	.value	23933
+	.value	-26228
+	.value	-13686
+	.value	-22875
+	.value	-27243
+	.value	-15750
+	.value	4317
+	.value	2722
+	.value	8839
+	.value	14121
+	.value	-32414
+	.value	-21860
+	.value	-25179
+	.value	22593
+	.value	-25648
+	.value	-21868
+	.value	-964
+	.value	-16279
+	.value	-1715
+	.value	17440
+	.value	-14650
+	.value	26382
+	.value	-28958
+	.value	1689
+	.value	-10333
+	.value	29103
+	.value	-20119
+	.value	15810
+	.value	22790
+	.value	7244
+	.value	20238
+	.value	-27132
+	.value	-2858
+	.value	-14624
+	.value	19274
+	.value	22124
+	.value	-4573
+	.value	2816
+	.value	4624
+	.value	-17030
+	.value	32004
+	.value	4505
+	.value	-5708
+	.value	12073
+	.value	11885
+	.value	20315
+	.value	17082
+	.value	19317
+	.value	32124
+	.value	-6817
+	.value	14223
+	.value	4693
+	.value	-14138
+	.value	15307
+	.value	9650
+	.value	7508
+	.value	-9513
+	.value	-1724
+	.value	-23882
+	.value	12013
+	.value	-15221
+	.value	-9
+	.value	-6510
+	.value	13541
+	.value	-23182
+	.value	6817
+	.value	24214
+	.value	-5529
+	.value	-24232
+	.value	-7491
+	.value	-14223
+	.value	26663
+	.value	27858
+	.value	21766
+	.value	26621
+	.value	-4693
+	.value	23933
+	.value	-23754
+	.value	29394
+	.value	13933
+	.value	14138
+	.value	-26228
+	.value	-23523
+	.value	8558
+	.value	-23984
+	.value	-15307
+	.value	-13686
+	.value	-21953
+	.value	26766
+	.value	-25093
+	.value	-9650
+	.value	-22875
+	.value	-20964
+	.value	-4496
+	.value	-22943
+	.value	-7508
+	.value	-27243
+	.value	-11792
+	.value	-18506
+	.value	-30136
+	.value	9513
+	.value	-15750
+	.value	-24530
+	.value	26800
+	.value	947
+	.value	1724
+	.value	4317
+	.value	17303
+	.value	29718
+	.value	-828
+	.value	23882
+	.value	2722
+	.value	-20435
+	.value	5913
+	.value	-10495
+	.value	-12013
+	.value	8839
+	.value	-5759
+	.value	-3396
+	.value	30426
+	.value	15221
+	.value	14121
+	.value	26288
+	.value	3558
+	.value	27730
+	.value	-28865
+	.value	-28865
+	.value	-28865
+	.value	-28865
+	.value	-28865
+	.value	-28865
+	.value	-28865
+	.value	-28865
+	.value	-28865
+	.value	-28865
+	.value	-28865
+	.value	-28865
+	.value	-28865
+	.value	-28865
+	.value	-28865
+	.value	-28865
+	.value	28865
+	.value	28865
+	.value	28865
+	.value	28865
+	.value	28865
+	.value	28865
+	.value	28865
+	.value	28865
+	.value	28865
+	.value	28865
+	.value	28865
+	.value	28865
+	.value	28865
+	.value	28865
+	.value	28865
+	.value	28865
+	.value	-16425
+	.value	-16425
+	.value	-16425
+	.value	-16425
+	.value	-16425
+	.value	-16425
+	.value	-16425
+	.value	-16425
+	.value	-16425
+	.value	-16425
+	.value	-16425
+	.value	-16425
+	.value	-16425
+	.value	-16425
+	.value	-16425
+	.value	-16425
+	.value	-10350
+	.value	-10350
+	.value	-10350
+	.value	-10350
+	.value	-10350
+	.value	-10350
+	.value	-10350
+	.value	-10350
+	.value	-10350
+	.value	-10350
+	.value	-10350
+	.value	-10350
+	.value	-10350
+	.value	-10350
+	.value	-10350
+	.value	-10350
+	.value	4
+	.value	4
+	.value	4
+	.value	4
+	.value	4
+	.value	4
+	.value	4
+	.value	4
+	.value	4
+	.value	4
+	.value	4
+	.value	4
+	.value	4
+	.value	4
+	.value	4
+	.value	4
+	.value	-3777
+	.value	-3777
+	.value	-3777
+	.value	-3777
+	.value	-3777
+	.value	-3777
+	.value	-3777
+	.value	-3777
+	.value	-3777
+	.value	-3777
+	.value	-3777
+	.value	-3777
+	.value	-3777
+	.value	-3777
+	.value	-3777
+	.value	-3777
+	.value	3777
+	.value	3777
+	.value	3777
+	.value	3777
+	.value	3777
+	.value	3777
+	.value	3777
+	.value	3777
+	.value	3777
+	.value	3777
+	.value	3777
+	.value	3777
+	.value	3777
+	.value	3777
+	.value	3777
+	.value	3777
+	.value	-3625
+	.value	-3625
+	.value	-3625
+	.value	-3625
+	.value	-3625
+	.value	-3625
+	.value	-3625
+	.value	-3625
+	.value	-3625
+	.value	-3625
+	.value	-3625
+	.value	-3625
+	.value	-3625
+	.value	-3625
+	.value	-3625
+	.value	-3625
+	.value	-3182
+	.value	-3182
+	.value	-3182
+	.value	-3182
+	.value	-3182
+	.value	-3182
+	.value	-3182
+	.value	-3182
+	.value	-3182
+	.value	-3182
+	.value	-3182
+	.value	-3182
+	.value	-3182
+	.value	-3182
+	.value	-3182
+	.value	-3182
+	.ident	"GCC: (Debian 7.4.0-6) 7.4.0"
+	.section	.note.GNU-stack,"",@progbits

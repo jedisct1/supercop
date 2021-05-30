@@ -4,7 +4,7 @@
 	.globl	CRYPTO_NAMESPACE(crypto_core_wforcesntrup761)
 	.type	CRYPTO_NAMESPACE(crypto_core_wforcesntrup761), @function
 CRYPTO_NAMESPACE(crypto_core_wforcesntrup761):
-.LFB5279:
+.LFB5347:
 	.cfi_startproc
 	pushq	%rbp
 	.cfi_def_cfa_offset 16
@@ -98,7 +98,7 @@ CRYPTO_NAMESPACE(crypto_core_wforcesntrup761):
 	.cfi_def_cfa 7, 8
 	ret
 	.cfi_endproc
-.LFE5279:
+.LFE5347:
 	.size	CRYPTO_NAMESPACE(crypto_core_wforcesntrup761), .-CRYPTO_NAMESPACE(crypto_core_wforcesntrup761)
 	.section	.rodata.cst32,"aM",@progbits,32
 	.align 32
@@ -107,5 +107,5 @@ CRYPTO_NAMESPACE(crypto_core_wforcesntrup761):
 	.quad	72340172838076673
 	.quad	72340172838076673
 	.quad	72340172838076673
-	.ident	"GCC: (GNU) 9.2.1 20190827 (Red Hat 9.2.1-1)"
+	.ident	"GCC: (GNU) 10.3.1 20210422 (Red Hat 10.3.1-1)"
 	.section	.note.GNU-stack,"",@progbits

@@ -11,18 +11,24 @@
 CRYPTO_NAMESPACE(crypto_decode_761x3): # @CRYPTO_NAMESPACE(crypto_decode_761x3)
 	.cfi_startproc
 # %bb.0:
-	leaq	120(%rdi), %r8
+	pushq	%rbx
+	.cfi_def_cfa_offset 16
+	.cfi_offset %rbx, -16
+	leaq	120(%rdi), %r11
 	leaq	30(%rsi), %r10
-	movq	$-2, %rcx
+	movl	$7, %ecx
+	movq	$-2, %rbx
+	movl	$32, %r8d
 	vpbroadcastb	.LCPI0_0(%rip), %ymm0 # ymm0 = [15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15]
 	vpbroadcastb	.LCPI0_1(%rip), %ymm1 # ymm1 = [3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3]
 	vpcmpeqd	%ymm2, %ymm2, %ymm2
-	movq	%rsi, %rax
-	movq	%rdi, %rdx
-	movq	%r8, %r11
+	movq	%rsi, %rdx
+	movq	%rdi, %rax
 .LBB0_1:                                # =>This Inner Loop Header: Depth=1
-	movq	%rcx, %r9
-	vmovdqu	(%rax), %ymm3
+	movq	%rbx, %r9
+	vmovdqu	(%rdx), %ymm3
+	movq	%r10, %rdx
+	addq	%r8, %r10
 	vpsrlw	$4, %ymm3, %ymm4
 	vpand	%ymm0, %ymm3, %ymm3
 	vpand	%ymm0, %ymm4, %ymm4
@@ -46,29 +52,28 @@ CRYPTO_NAMESPACE(crypto_decode_761x3): # @CRYPTO_NAMESPACE(crypto_decode_761x3)
 	vpaddb	%ymm2, %ymm4, %ymm4
 	vperm2i128	$49, %ymm3, %ymm6, %ymm3 # ymm3 = ymm6[2,3],ymm3[2,3]
 	vpaddb	%ymm2, %ymm3, %ymm3
-	vmovdqu	%ymm5, (%rdx)
-	vmovdqu	%ymm8, 32(%rdx)
-	vmovdqu	%ymm4, 64(%rdx)
-	vmovdqu	%ymm3, 96(%rdx)
-	movq	%r10, %rax
-	leaq	32(%r10), %r10
-	subq	$-128, %r11
-	leaq	32(%rcx), %rcx
-	movq	%r8, %rdx
-	movq	%r11, %r8
-	cmpl	$190, %ecx
-	jne	.LBB0_1
+	vmovdqu	%ymm5, (%rax)
+	vmovdqu	%ymm8, 32(%rax)
+	vmovdqu	%ymm4, 64(%rax)
+	vmovdqu	%ymm3, 96(%rax)
+	decl	%ecx
+	addq	%r8, %rbx
+	movq	%r11, %rax
+	addq	$128, %r11
+	cmpl	$1, %ecx
+	ja	.LBB0_1
 # %bb.2:
 	movb	32(%rsi,%r9), %al
 	andb	$3, %al
 	decb	%al
 	movb	%al, 128(%rdi,%r9,4)
+	popq	%rbx
+	.cfi_def_cfa_offset 8
 	vzeroupper
 	retq
 .Lfunc_end0:
 	.size	CRYPTO_NAMESPACE(crypto_decode_761x3), .Lfunc_end0-CRYPTO_NAMESPACE(crypto_decode_761x3)
 	.cfi_endproc
                                         # -- End function
-
-	.ident	"clang version 8.0.0 (Fedora 8.0.0-3.fc30)"
+	.ident	"clang version 10.0.1 (Fedora 10.0.1-3.fc32)"
 	.section	".note.GNU-stack","",@progbits

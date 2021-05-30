@@ -3,7 +3,7 @@
 	.globl	CRYPTO_NAMESPACE(crypto_encode_761x1531round)
 	.type	CRYPTO_NAMESPACE(crypto_encode_761x1531round), @function
 CRYPTO_NAMESPACE(crypto_encode_761x1531round):
-.LFB5274:
+.LFB5342:
 	.cfi_startproc
 	pushq	%rbp
 	.cfi_def_cfa_offset 16
@@ -47,7 +47,7 @@ CRYPTO_NAMESPACE(crypto_encode_761x1531round):
 	vpaddd	%ymm3, %ymm0, %ymm0
 	vpshufb	%ymm2, %ymm0, %ymm0
 	vpermq	$216, %ymm0, %ymm0
-	vmovups	%xmm0, -16(%rdx)
+	vmovdqu	%xmm0, -16(%rdx)
 	vextracti128	$0x1, %ymm0, %xmm0
 	vmovd	%xmm0, -8(%rdi)
 	vpextrd	$2, %xmm0, -4(%rdi)
@@ -122,7 +122,7 @@ CRYPTO_NAMESPACE(crypto_encode_761x1531round):
 	vpaddd	%ymm4, %ymm0, %ymm0
 	vpshufb	%ymm2, %ymm0, %ymm0
 	vpermq	$216, %ymm0, %ymm0
-	vmovups	%xmm0, -16(%rcx)
+	vmovdqu	%xmm0, -16(%rcx)
 	vextracti128	$0x1, %ymm0, %xmm0
 	vmovd	%xmm0, (%rsi)
 	vpextrd	$2, %xmm0, 4(%rsi)
@@ -164,7 +164,7 @@ CRYPTO_NAMESPACE(crypto_encode_761x1531round):
 	vpaddd	%ymm3, %ymm0, %ymm0
 	vpshufb	%ymm2, %ymm0, %ymm0
 	vpermq	$216, %ymm0, %ymm0
-	vmovups	%xmm0, (%rax,%rcx,2)
+	vmovdqu	%xmm0, (%rax,%rcx,2)
 	vextracti128	$0x1, %ymm0, %xmm0
 	vmovd	%xmm0, 96(%rdi,%rcx)
 	vpextrd	$2, %xmm0, 100(%rdi,%rcx)
@@ -196,7 +196,7 @@ CRYPTO_NAMESPACE(crypto_encode_761x1531round):
 	vpaddd	%ymm3, %ymm0, %ymm0
 	vpshufb	%ymm2, %ymm0, %ymm0
 	vpermq	$216, %ymm0, %ymm0
-	vmovups	%xmm0, -16(%rcx)
+	vmovdqu	%xmm0, -16(%rcx)
 	vextracti128	$0x1, %ymm0, %xmm0
 	decl	%r9d
 	vmovd	%xmm0, (%rsi)
@@ -248,7 +248,7 @@ CRYPTO_NAMESPACE(crypto_encode_761x1531round):
 	.cfi_def_cfa 7, 8
 	ret
 	.cfi_endproc
-.LFE5274:
+.LFE5342:
 	.size	CRYPTO_NAMESPACE(crypto_encode_761x1531round), .-CRYPTO_NAMESPACE(crypto_encode_761x1531round)
 	.section	.rodata.cst32,"aM",@progbits,32
 	.align 32
@@ -445,5 +445,5 @@ CRYPTO_NAMESPACE(crypto_encode_761x1531round):
 	.long	1526
 	.long	1526
 	.long	1526
-	.ident	"GCC: (GNU) 9.2.1 20190827 (Red Hat 9.2.1-1)"
+	.ident	"GCC: (GNU) 10.3.1 20210422 (Red Hat 10.3.1-1)"
 	.section	.note.GNU-stack,"",@progbits

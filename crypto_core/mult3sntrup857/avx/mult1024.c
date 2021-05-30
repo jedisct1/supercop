@@ -114,17 +114,17 @@ static const ALIGNED int16 y_7681[512] = {
 
 static void mult1024(int16 h[2048],const int16 f[1024],const int16 g[1024])
 {
-  ALIGNED int16 fpad[4][512];
-  ALIGNED int16 gpad[4][512];
-  ALIGNED int16 h_7681[2048];
+  ALIGNED int16 fgpad[8][512];
+#define fpad fgpad
+#define gpad (fgpad+4)
 #define hpad fpad
+  ALIGNED int16 h_7681[2048];
   int i;
 
   stride(fpad,f);
-  ntt512_7681(fpad[0],4);
-
   stride(gpad,g);
-  ntt512_7681(gpad[0],4);
+
+  ntt512_7681(fgpad[0],8);
 
   /* XXX: try arbitrary-degree Karatsuba */
 

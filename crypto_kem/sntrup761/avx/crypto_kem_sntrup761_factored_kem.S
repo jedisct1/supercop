@@ -20,32 +20,33 @@ Short_random:
 	andq	$-32, %rsp
 	subq	$3072, %rsp
 	.cfi_offset 3, -40
-	movq	%rsp, %rbx
-	movq	%rbx, %rdi
-	movq	%rbx, %r13
+	movq	%rsp, %r13
+	movq	%r13, %rdi
+	movq	%r13, %rbx
 	call	randombytes@PLT
-	movq	%rbx, %rsi
-	movq	%rbx, %rdi
+	movq	%r13, %rsi
+	movq	%r13, %rdi
 	call	CRYPTO_NAMESPACE(crypto_decode_761xint32)@PLT
 	vmovdqa	.LC0(%rip), %ymm1
 	leaq	1120(%rsp), %rdx
-	movq	%rbx, %rax
+	movq	%r13, %rax
 	.p2align 4,,10
 	.p2align 3
 .L2:
 	vpand	(%rax), %ymm1, %ymm0
 	addq	$32, %rax
 	vmovdqa	%ymm0, -32(%rax)
-	cmpq	%rdx, %rax
+	cmpq	%rax, %rdx
 	jne	.L2
-	vmovdqa	.LC1(%rip), %ymm2
-	vmovdqa	.LC2(%rip), %ymm1
+	vmovdqa	.LC1(%rip), %xmm0
+	vpand	1120(%rsp), %xmm0, %xmm0
 	movabsq	$-4294967298, %rax
-	leaq	3032(%rbx), %rdx
-	andq	%rax, 1120(%rsp)
-	andq	%rax, 1128(%rsp)
+	leaq	3032(%r13), %rdx
+	vmovdqa	.LC2(%rip), %ymm2
+	vmovdqa	.LC3(%rip), %ymm1
 	andq	%rax, 1136(%rsp)
 	leaq	1144(%rsp), %rax
+	vmovdqa	%xmm0, 1120(%rsp)
 	.p2align 4,,10
 	.p2align 3
 .L3:
@@ -58,11 +59,11 @@ Short_random:
 	movl	3032(%rsp), %eax
 	vpcmpeqd	%xmm0, %xmm0, %xmm0
 	movl	$768, %esi
-	movq	%rbx, %rdi
+	movq	%r13, %rdi
 	movl	$-1, 3060(%rsp)
 	movq	$-1, 3064(%rsp)
 	andl	$-4, %eax
-	vmovups	%xmm0, 3044(%rsp)
+	vmovdqu	%xmm0, 3044(%rsp)
 	orl	$1, %eax
 	movl	%eax, 3032(%rsp)
 	movl	3036(%rsp), %eax
@@ -74,23 +75,23 @@ Short_random:
 	orl	$1, %eax
 	movl	%eax, 3040(%rsp)
 	vzeroupper
+	addq	$2944, %r13
 	call	CRYPTO_NAMESPACE(crypto_sort_uint32)@PLT
-	vmovdqa	.LC3(%rip), %ymm2
+	vmovdqa	.LC4(%rip), %ymm2
 	movq	%r12, %rax
 	vpcmpeqd	%ymm4, %ymm4, %ymm4
-	vmovdqa	.LC4(%rip), %ymm3
-	vmovdqa	.LC5(%rip), %ymm5
-	leaq	2944(%rbx), %rdx
+	vmovdqa	.LC5(%rip), %ymm3
+	vmovdqa	.LC6(%rip), %ymm5
 	.p2align 4,,10
 	.p2align 3
 .L4:
-	vpand	32(%r13), %ymm2, %ymm1
-	vpand	0(%r13), %ymm2, %ymm0
-	subq	$-128, %r13
+	vpand	32(%rbx), %ymm2, %ymm1
+	vpand	(%rbx), %ymm2, %ymm0
+	subq	$-128, %rbx
 	addq	$32, %rax
-	vpand	-32(%r13), %ymm2, %ymm6
+	vpand	-32(%rbx), %ymm2, %ymm6
 	vpackusdw	%ymm1, %ymm0, %ymm0
-	vpand	-64(%r13), %ymm2, %ymm1
+	vpand	-64(%rbx), %ymm2, %ymm1
 	vpermq	$216, %ymm0, %ymm0
 	vpackusdw	%ymm6, %ymm1, %ymm1
 	vpand	%ymm0, %ymm3, %ymm0
@@ -101,19 +102,59 @@ Short_random:
 	vpand	%ymm0, %ymm5, %ymm0
 	vpaddb	%ymm4, %ymm0, %ymm0
 	vmovdqu	%ymm0, -32(%rax)
-	cmpq	%r13, %rdx
+	cmpq	%r13, %rbx
 	jne	.L4
-	movl	$736, %edx
-	.p2align 4,,10
-	.p2align 3
-.L5:
-	movl	(%rbx,%rdx,4), %eax
+	movl	3008(%rsp), %eax
+	vmovdqa	.LC7(%rip), %xmm1
+	vpand	2960(%rsp), %xmm1, %xmm2
+	vpand	2944(%rsp), %xmm1, %xmm0
 	andl	$3, %eax
 	decl	%eax
-	movb	%al, (%r12,%rdx)
-	incq	%rdx
-	cmpq	$761, %rdx
-	jne	.L5
+	vpackusdw	%xmm2, %xmm0, %xmm0
+	vpand	2976(%rsp), %xmm1, %xmm2
+	movb	%al, 752(%r12)
+	movl	3012(%rsp), %eax
+	vpand	2992(%rsp), %xmm1, %xmm1
+	andl	$3, %eax
+	decl	%eax
+	vpackusdw	%xmm1, %xmm2, %xmm1
+	vmovdqa	.LC8(%rip), %xmm2
+	movb	%al, 753(%r12)
+	movl	3016(%rsp), %eax
+	vpand	%xmm0, %xmm2, %xmm0
+	vpand	%xmm1, %xmm2, %xmm2
+	vpcmpeqd	%xmm1, %xmm1, %xmm1
+	andl	$3, %eax
+	vpackuswb	%xmm2, %xmm0, %xmm0
+	vpand	.LC9(%rip), %xmm0, %xmm0
+	decl	%eax
+	movb	%al, 754(%r12)
+	movl	3020(%rsp), %eax
+	vpaddb	%xmm1, %xmm0, %xmm0
+	vmovdqu	%xmm0, 736(%r12)
+	andl	$3, %eax
+	decl	%eax
+	movb	%al, 755(%r12)
+	movl	3024(%rsp), %eax
+	andl	$3, %eax
+	decl	%eax
+	movb	%al, 756(%r12)
+	movl	3028(%rsp), %eax
+	andl	$3, %eax
+	decl	%eax
+	movb	%al, 757(%r12)
+	movl	3032(%rsp), %eax
+	andl	$3, %eax
+	decl	%eax
+	movb	%al, 758(%r12)
+	movl	3036(%rsp), %eax
+	andl	$3, %eax
+	decl	%eax
+	movb	%al, 759(%r12)
+	movl	3040(%rsp), %eax
+	andl	$3, %eax
+	decl	%eax
+	movb	%al, 760(%r12)
 	vzeroupper
 	leaq	-24(%rbp), %rsp
 	popq	%rbx
@@ -181,22 +222,19 @@ Hide:
 	movq	%r14, %rdi
 	movl	$192, %edx
 	call	CRYPTO_NAMESPACE(crypto_hash_sha512)@PLT
+	movq	%r12, %rax
 	vmovdqa	32(%rsp), %xmm0
 	vmovdqa	48(%rsp), %xmm1
-	leaq	33(%r12), %rdx
-	leaq	32(%rbx), %rax
-	vmovups	%xmm0, 1(%r12)
-	vmovups	%xmm1, 17(%r12)
-	cmpq	%rax, %rdx
-	jnb	.L17
-	leaq	65(%r12), %rax
-	cmpq	%rax, %rbx
-	jb	.L16
-.L17:
+	subq	%rbx, %rax
+	addq	$32, %rax
+	vmovdqu	%xmm0, 1(%r12)
+	vmovdqu	%xmm1, 17(%r12)
+	cmpq	$30, %rax
+	jbe	.L13
 	vmovdqu	(%rbx), %ymm4
 	vmovdqu	%ymm4, 33(%r12)
 	vzeroupper
-.L15:
+.L12:
 	movb	$2, (%r12)
 	movq	%r12, %rsi
 	movq	%r14, %rdi
@@ -204,8 +242,8 @@ Hide:
 	call	CRYPTO_NAMESPACE(crypto_hash_sha512)@PLT
 	vmovdqa	32(%rsp), %xmm2
 	vmovdqa	48(%rsp), %xmm3
-	vmovups	%xmm2, 1007(%r13)
-	vmovups	%xmm3, 1023(%r13)
+	vmovdqu	%xmm2, 1007(%r13)
+	vmovdqu	%xmm3, 1023(%r13)
 	leaq	-40(%rbp), %rsp
 	popq	%rbx
 	popq	%r12
@@ -216,18 +254,18 @@ Hide:
 	.cfi_remember_state
 	.cfi_def_cfa 7, 8
 	ret
-.L16:
+.L13:
 	.cfi_restore_state
 	xorl	%eax, %eax
 	.p2align 4,,10
 	.p2align 3
-.L13:
+.L11:
 	movzbl	(%rbx,%rax), %edx
 	movb	%dl, 33(%r12,%rax)
 	incq	%rax
 	cmpq	$32, %rax
-	jne	.L13
-	jmp	.L15
+	jne	.L11
+	jmp	.L12
 	.cfi_endproc
 .LFE8:
 	.size	Hide, .-Hide
@@ -243,172 +281,244 @@ CRYPTO_NAMESPACE(keypair):
 	movq	%rsp, %rbp
 	.cfi_def_cfa_register 6
 	pushq	%r15
-	.cfi_offset 15, -24
-	movq	%rdi, %r15
 	pushq	%r14
 	pushq	%r13
-	pushq	%r12
+	.cfi_offset 15, -24
 	.cfi_offset 14, -32
 	.cfi_offset 13, -40
-	.cfi_offset 12, -48
-	movq	%rsi, %r12
+	movq	%rdi, %r13
+	pushq	%r12
 	pushq	%rbx
 	andq	$-32, %rsp
-	subq	$4608, %rsp
+	subq	$4640, %rsp
+	.cfi_offset 12, -48
 	.cfi_offset 3, -56
-	leaq	1536(%rsp), %r13
-	movq	%rsp, %r14
-	leaq	4480(%rsp), %rbx
-	.p2align 4,,10
-	.p2align 3
-.L26:
-	movl	$3044, %esi
-	movq	%r13, %rdi
-	vzeroupper
-	call	randombytes@PLT
-	movq	%r13, %rsi
-	movq	%r13, %rdi
-	call	CRYPTO_NAMESPACE(crypto_decode_761xint32)@PLT
-	movq	%r13, %rax
-	movq	%r14, %rdx
-	vpcmpeqd	%ymm5, %ymm5, %ymm5
-	vmovdqa	.LC6(%rip), %ymm3
-	vmovdqa	.LC4(%rip), %ymm4
-	vmovdqa	.LC3(%rip), %ymm2
+	movq	%rsi, 24(%rsp)
+	leaq	1568(%rsp), %r12
+	leaq	32(%rsp), %r14
+	leaq	4512(%rsp), %rbx
+	leaq	800(%rsp), %r15
 	.p2align 4,,10
 	.p2align 3
 .L21:
+	movl	$3044, %esi
+	movq	%r12, %rdi
+	vzeroupper
+	call	randombytes@PLT
+	movq	%r12, %rsi
+	movq	%r12, %rdi
+	call	CRYPTO_NAMESPACE(crypto_decode_761xint32)@PLT
+	vmovdqa	.LC7(%rip), %xmm5
+	movq	%r12, %rax
+	vmovdqa	.LC11(%rip), %xmm6
+	vmovdqa	.LC10(%rip), %ymm3
+	vmovdqa	.LC5(%rip), %ymm4
+	movq	%r14, %rdx
+	vmovdqa	.LC4(%rip), %ymm2
+	.p2align 4,,10
+	.p2align 3
+.L17:
 	vpand	(%rax), %ymm3, %ymm0
-	vpand	32(%rax), %ymm3, %ymm6
+	vpand	32(%rax), %ymm3, %ymm7
 	subq	$-128, %rax
 	addq	$32, %rdx
-	vpand	-32(%rax), %ymm3, %ymm7
+	vpand	-32(%rax), %ymm3, %ymm8
 	vpslld	$1, %ymm0, %ymm1
 	vpaddd	%ymm0, %ymm1, %ymm1
-	vpslld	$1, %ymm6, %ymm0
-	vpaddd	%ymm6, %ymm0, %ymm0
+	vpslld	$1, %ymm7, %ymm0
+	vpaddd	%ymm7, %ymm0, %ymm0
 	vpsrld	$30, %ymm1, %ymm1
-	vpand	-64(%rax), %ymm3, %ymm6
+	vpand	-64(%rax), %ymm3, %ymm7
 	vpsrld	$30, %ymm0, %ymm0
 	vpand	%ymm1, %ymm2, %ymm1
 	vpand	%ymm0, %ymm2, %ymm0
 	vpackusdw	%ymm0, %ymm1, %ymm1
-	vpslld	$1, %ymm6, %ymm0
-	vpaddd	%ymm6, %ymm0, %ymm0
-	vpslld	$1, %ymm7, %ymm6
+	vpslld	$1, %ymm7, %ymm0
+	vpaddd	%ymm7, %ymm0, %ymm0
+	vpslld	$1, %ymm8, %ymm7
 	vpermq	$216, %ymm1, %ymm1
-	vpaddd	%ymm7, %ymm6, %ymm6
+	vpaddd	%ymm8, %ymm7, %ymm7
 	vpsrld	$30, %ymm0, %ymm0
 	vpand	%ymm1, %ymm4, %ymm1
-	vpsrld	$30, %ymm6, %ymm6
+	vpsrld	$30, %ymm7, %ymm7
 	vpand	%ymm0, %ymm2, %ymm0
-	vpand	%ymm6, %ymm2, %ymm6
-	vpackusdw	%ymm6, %ymm0, %ymm0
+	vpand	%ymm7, %ymm2, %ymm7
+	vpackusdw	%ymm7, %ymm0, %ymm0
 	vpermq	$216, %ymm0, %ymm0
 	vpand	%ymm0, %ymm4, %ymm0
 	vpackuswb	%ymm0, %ymm1, %ymm0
 	vpermq	$216, %ymm0, %ymm0
-	vpaddb	%ymm0, %ymm5, %ymm0
+	vpaddb	.LC12(%rip), %ymm0, %ymm0
 	vmovdqa	%ymm0, -32(%rdx)
 	cmpq	%rbx, %rax
-	jne	.L21
-	movl	$736, %edx
-	.p2align 4,,10
-	.p2align 3
-.L22:
-	movl	0(%r13,%rdx,4), %eax
+	jne	.L17
+	movl	4576(%rsp), %eax
+	xorl	%ecx, %ecx
+	xorl	%edx, %edx
+	movq	%r14, %rsi
+	vpand	4512(%rsp), %xmm6, %xmm0
+	movq	%r12, %rdi
+	vpand	4528(%rsp), %xmm6, %xmm7
+	vpand	4560(%rsp), %xmm6, %xmm8
+	andl	$1073741823, %eax
+	leal	(%rax,%rax,2), %eax
+	vpslld	$1, %xmm0, %xmm1
+	shrl	$30, %eax
+	vpaddd	%xmm0, %xmm1, %xmm1
+	vpslld	$1, %xmm7, %xmm0
+	vpsrld	$30, %xmm1, %xmm1
+	decl	%eax
+	movb	%al, 784(%rsp)
+	vpaddd	%xmm7, %xmm0, %xmm0
+	vpand	%xmm1, %xmm5, %xmm1
+	movl	4580(%rsp), %eax
+	vpand	4544(%rsp), %xmm6, %xmm7
+	vpsrld	$30, %xmm0, %xmm0
+	andl	$1073741823, %eax
+	vpand	%xmm0, %xmm5, %xmm0
+	leal	(%rax,%rax,2), %eax
+	vpackusdw	%xmm0, %xmm1, %xmm1
+	vpand	.LC8(%rip), %xmm1, %xmm1
+	shrl	$30, %eax
+	vpslld	$1, %xmm7, %xmm0
+	decl	%eax
+	vpaddd	%xmm7, %xmm0, %xmm0
+	movb	%al, 785(%rsp)
+	vpslld	$1, %xmm8, %xmm7
+	vpsrld	$30, %xmm0, %xmm0
+	movl	4584(%rsp), %eax
+	vpaddd	%xmm8, %xmm7, %xmm7
+	vpand	%xmm0, %xmm5, %xmm0
+	andl	$1073741823, %eax
+	vpsrld	$30, %xmm7, %xmm7
+	leal	(%rax,%rax,2), %eax
+	vpand	%xmm7, %xmm5, %xmm7
+	shrl	$30, %eax
+	vpackusdw	%xmm7, %xmm0, %xmm0
+	vpand	.LC8(%rip), %xmm0, %xmm0
+	decl	%eax
+	movb	%al, 786(%rsp)
+	movl	4588(%rsp), %eax
+	vpackuswb	%xmm0, %xmm1, %xmm0
+	vpaddb	.LC13(%rip), %xmm0, %xmm0
+	andl	$1073741823, %eax
+	vmovdqa	%xmm0, 768(%rsp)
+	leal	(%rax,%rax,2), %eax
+	shrl	$30, %eax
+	decl	%eax
+	movb	%al, 787(%rsp)
+	movl	4592(%rsp), %eax
 	andl	$1073741823, %eax
 	leal	(%rax,%rax,2), %eax
 	shrl	$30, %eax
 	decl	%eax
-	movb	%al, (%r14,%rdx)
-	incq	%rdx
-	cmpq	$761, %rdx
-	jne	.L22
-	xorl	%ecx, %ecx
-	xorl	%edx, %edx
-	movq	%r14, %rsi
-	movq	%r13, %rdi
+	movb	%al, 788(%rsp)
+	movl	4596(%rsp), %eax
+	andl	$1073741823, %eax
+	leal	(%rax,%rax,2), %eax
+	shrl	$30, %eax
+	decl	%eax
+	movb	%al, 789(%rsp)
+	movl	4600(%rsp), %eax
+	andl	$1073741823, %eax
+	leal	(%rax,%rax,2), %eax
+	shrl	$30, %eax
+	decl	%eax
+	movb	%al, 790(%rsp)
+	movl	4604(%rsp), %eax
+	andl	$1073741823, %eax
+	leal	(%rax,%rax,2), %eax
+	shrl	$30, %eax
+	decl	%eax
+	movb	%al, 791(%rsp)
+	movl	4608(%rsp), %eax
+	andl	$1073741823, %eax
+	leal	(%rax,%rax,2), %eax
+	shrl	$30, %eax
+	decl	%eax
+	movb	%al, 792(%rsp)
 	vzeroupper
 	call	CRYPTO_NAMESPACE(crypto_core_inv3sntrup761)@PLT
-	cmpb	$0, 2297(%rsp)
-	jne	.L26
-	leaq	191(%r12), %rdi
-	movq	%r13, %rsi
+	movzbl	2329(%rsp), %eax
+	movl	$1, %esi
+	movq	%r15, %rdi
+	movb	%al, 800(%rsp)
+	call	crypto_declassify@PLT
+	cmpb	$0, 800(%rsp)
+	jne	.L21
+	movq	24(%rsp), %rbx
+	movq	%r12, %rsi
+	leaq	191(%rbx), %rdi
 	vzeroupper
 	call	CRYPTO_NAMESPACE(crypto_encode_761x3)@PLT
-	leaq	768(%rsp), %rbx
-	movq	%rbx, %rdi
+	movq	%r15, %rdi
 	call	Short_random
-	movq	%rbx, %rsi
-	movq	%r12, %rdi
+	movq	%rbx, %rdi
+	movq	%r15, %rsi
 	call	CRYPTO_NAMESPACE(crypto_encode_761x3)@PLT
 	xorl	%ecx, %ecx
 	xorl	%edx, %edx
-	movq	%rbx, %rsi
-	movq	%r13, %rdi
+	movq	%r15, %rsi
+	movq	%r12, %rdi
 	call	CRYPTO_NAMESPACE(crypto_core_invsntrup761)@PLT
-	movq	%r13, %rsi
-	movq	%r13, %rdi
+	movq	%r12, %rsi
+	movq	%r12, %rdi
 	call	CRYPTO_NAMESPACE(crypto_decode_761xint16)@PLT
-	movq	%r13, %rsi
-	movq	%r13, %rdi
+	movq	%r12, %rsi
+	movq	%r12, %rdi
 	call	CRYPTO_NAMESPACE(crypto_encode_761xint16)@PLT
 	movq	%r14, %rdx
 	xorl	%ecx, %ecx
-	movq	%r13, %rsi
-	movq	%r13, %rdi
+	movq	%r12, %rsi
+	movq	%r12, %rdi
 	call	CRYPTO_NAMESPACE(crypto_core_multsntrup761)@PLT
-	movq	%r13, %rsi
-	movq	%r13, %rdi
+	movq	%r12, %rsi
+	movq	%r12, %rdi
 	call	CRYPTO_NAMESPACE(crypto_decode_761xint16)@PLT
-	movq	%r13, %rsi
-	movq	%r15, %rdi
+	movq	%r12, %rsi
+	movq	%r13, %rdi
 	call	CRYPTO_NAMESPACE(crypto_encode_761x4591)@PLT
-	leaq	382(%r12), %rdx
-	leaq	32(%r15), %rax
-	movzbl	381(%r12), %ebx
-	cmpq	%rax, %rdx
-	jnb	.L29
-	leaq	414(%r12), %rax
-	cmpq	%rax, %r15
-	jb	.L36
-.L29:
+	movq	%rbx, %rax
+	movzbl	381(%rbx), %ebx
+	subq	%r13, %rax
+	leaq	381(%rax), %rdx
 	xorl	%eax, %eax
-	.p2align 4,,10
-	.p2align 3
-.L24:
-	vmovdqu	(%r15,%rax), %ymm5
-	vmovdqu	%ymm5, 382(%r12,%rax)
+	cmpq	$30, %rdx
+	jbe	.L20
+.L19:
+	vmovdqu	0(%r13,%rax), %ymm5
+	movq	24(%rsp), %rcx
+	vmovdqu	%ymm5, 382(%rcx,%rax)
 	addq	$32, %rax
 	cmpq	$1152, %rax
-	jne	.L24
-	movzbl	1152(%r15), %eax
-	movb	%al, 1534(%r12)
-	movzbl	1153(%r15), %eax
-	movb	%al, 1535(%r12)
-	movzbl	1154(%r15), %eax
-	movb	%al, 1536(%r12)
-	movzbl	1155(%r15), %eax
-	movb	%al, 1537(%r12)
-	movzbl	1156(%r15), %eax
-	movb	%al, 1538(%r12)
-	movzbl	1157(%r15), %eax
-	movb	%al, 1539(%r12)
+	jne	.L19
+	movzbl	1152(%r13), %eax
+	movb	%al, 1534(%rcx)
+	movzbl	1153(%r13), %eax
+	movb	%al, 1535(%rcx)
+	movzbl	1154(%r13), %eax
+	movb	%al, 1536(%rcx)
+	movzbl	1155(%r13), %eax
+	movb	%al, 1537(%rcx)
+	movzbl	1156(%r13), %eax
+	movb	%al, 1538(%rcx)
+	movzbl	1157(%r13), %eax
+	movb	%al, 1539(%rcx)
 	vzeroupper
-.L27:
-	leaq	381(%r12), %rsi
-	movq	%r13, %rdi
+	movq	%rcx, %r15
+.L22:
+	movb	$4, 381(%r15)
+	leaq	381(%r15), %rsi
+	movq	%r12, %rdi
 	movl	$1159, %edx
-	movb	$4, 381(%r12)
 	call	CRYPTO_NAMESPACE(crypto_hash_sha512)@PLT
-	movb	%bl, 381(%r12)
+	movb	%bl, 381(%r15)
 	movl	$191, %esi
-	vmovdqa	1536(%rsp), %xmm5
-	leaq	1540(%r12), %rdi
-	vmovups	%xmm5, 1731(%r12)
-	vmovdqa	1552(%rsp), %xmm5
-	vmovups	%xmm5, 1747(%r12)
+	vmovdqa	1568(%rsp), %xmm6
+	leaq	1540(%r15), %rdi
+	vmovdqu	%xmm6, 1731(%r15)
+	vmovdqa	1584(%rsp), %xmm6
+	vmovdqu	%xmm6, 1747(%r15)
 	call	randombytes@PLT
 	leaq	-40(%rbp), %rsp
 	xorl	%eax, %eax
@@ -421,18 +531,18 @@ CRYPTO_NAMESPACE(keypair):
 	.cfi_remember_state
 	.cfi_def_cfa 7, 8
 	ret
-.L36:
-	.cfi_restore_state
-	xorl	%eax, %eax
 	.p2align 4,,10
 	.p2align 3
-.L25:
-	movzbl	(%r15,%rax), %edx
-	movb	%dl, 382(%r12,%rax)
+.L20:
+	.cfi_restore_state
+	movzbl	0(%r13,%rax), %edx
+	movq	24(%rsp), %rcx
+	movb	%dl, 382(%rcx,%rax)
 	incq	%rax
 	cmpq	$1158, %rax
-	jne	.L25
-	jmp	.L27
+	jne	.L20
+	movq	%rcx, %r15
+	jmp	.L22
 	.cfi_endproc
 .LFE9:
 	.size	CRYPTO_NAMESPACE(keypair), .-CRYPTO_NAMESPACE(keypair)
@@ -474,10 +584,10 @@ CRYPTO_NAMESPACE(enc):
 	movb	$4, 1056(%rsp)
 	call	CRYPTO_NAMESPACE(crypto_hash_sha512)@PLT
 	movq	%r14, %rdi
-	vmovdqa	288(%rsp), %xmm0
-	vmovdqa	304(%rsp), %xmm1
-	vmovaps	%xmm0, (%rsp)
-	vmovaps	%xmm1, 16(%rsp)
+	vmovdqu	288(%rsp), %xmm0
+	vmovdqu	304(%rsp), %xmm1
+	vmovdqu	%xmm0, (%rsp)
+	vmovdqu	%xmm1, 16(%rsp)
 	call	Short_random
 	movq	%rsp, %r9
 	movq	%r12, %r8
@@ -495,11 +605,11 @@ CRYPTO_NAMESPACE(enc):
 	movl	$1072, %edx
 	movb	$1, 1056(%rsp)
 	call	CRYPTO_NAMESPACE(crypto_hash_sha512)@PLT
-	vmovdqa	32(%rsp), %xmm2
-	vmovdqa	48(%rsp), %xmm3
+	vmovdqu	32(%rsp), %xmm2
+	vmovdqu	48(%rsp), %xmm3
 	xorl	%eax, %eax
-	vmovups	%xmm2, (%rbx)
-	vmovups	%xmm3, 16(%rbx)
+	vmovdqu	%xmm2, (%rbx)
+	vmovdqu	%xmm3, 16(%rbx)
 	addq	$2224, %rsp
 	.cfi_def_cfa_offset 48
 	popq	%rbx
@@ -529,32 +639,32 @@ CRYPTO_NAMESPACE(dec):
 	.cfi_def_cfa_register 6
 	pushq	%r15
 	pushq	%r14
-	pushq	%r13
-	pushq	%r12
 	.cfi_offset 15, -24
 	.cfi_offset 14, -32
+	movq	%rsi, %r14
+	pushq	%r13
+	pushq	%r12
+	pushq	%rbx
 	.cfi_offset 13, -40
 	.cfi_offset 12, -48
-	movq	%rsi, %r12
-	pushq	%rbx
 	.cfi_offset 3, -56
 	movq	%rdx, %rbx
 	andq	$-32, %rsp
 	subq	$4224, %rsp
 	leaq	2688(%rsp), %r13
-	leaq	1648(%rsp), %r15
-	movq	%rdi, 24(%rsp)
+	leaq	1648(%rsp), %r12
+	movq	%rdi, 16(%rsp)
 	movq	%r13, %rdi
-	leaq	864(%rsp), %r14
+	leaq	864(%rsp), %r15
 	call	CRYPTO_NAMESPACE(crypto_decode_761x1531)@PLT
-	movq	%r15, %rdi
 	movq	%rbx, %rsi
+	movq	%r12, %rdi
 	call	CRYPTO_NAMESPACE(crypto_decode_761x3)@PLT
 	movq	%r13, %rsi
 	movq	%r13, %rdi
 	call	CRYPTO_NAMESPACE(crypto_encode_761xint16)@PLT
-	movq	%r15, %rdx
 	xorl	%ecx, %ecx
+	movq	%r12, %rdx
 	movq	%r13, %rsi
 	movq	%r13, %rdi
 	call	CRYPTO_NAMESPACE(crypto_core_multsntrup761)@PLT
@@ -573,109 +683,187 @@ CRYPTO_NAMESPACE(dec):
 	movq	%r13, %rdi
 	call	CRYPTO_NAMESPACE(crypto_decode_761xint16)@PLT
 	movq	%r13, %rsi
-	movq	%r14, %rdi
-	call	CRYPTO_NAMESPACE(crypto_encode_761xfreeze3)@PLT
 	movq	%r15, %rdi
+	call	CRYPTO_NAMESPACE(crypto_encode_761xfreeze3)@PLT
 	leaq	191(%rbx), %rsi
+	movq	%r12, %rdi
 	call	CRYPTO_NAMESPACE(crypto_decode_761x3)@PLT
 	leaq	96(%rsp), %r11
-	movq	%r15, %rdx
 	xorl	%ecx, %ecx
+	movq	%r12, %rdx
+	movq	%r15, %rsi
 	movq	%r11, %rdi
-	movq	%r14, %rsi
-	movq	%r11, 16(%rsp)
+	movq	%r11, 24(%rsp)
 	call	CRYPTO_NAMESPACE(crypto_core_mult3sntrup761)@PLT
-	movq	16(%rsp), %r11
+	movq	24(%rsp), %r11
 	xorl	%ecx, %ecx
 	xorl	%edx, %edx
 	movq	%r11, %rsi
 	movq	%r11, %rdi
 	call	CRYPTO_NAMESPACE(crypto_core_wforcesntrup761)@PLT
-	movq	16(%rsp), %r11
-	movq	%r14, %rdx
-	movq	%r15, %rsi
+	movq	24(%rsp), %r11
+	movq	%r15, %rdx
+	movq	%r12, %rsi
 	leaq	1731(%rbx), %r9
 	leaq	382(%rbx), %r8
 	movq	%r13, %rdi
 	movq	%r11, %rcx
 	call	Hide
-	movq	%r15, %rsi
-	movq	%r12, %rdi
+	movq	%r12, %rsi
+	movq	%r14, %rdi
 	call	CRYPTO_NAMESPACE(crypto_verify_1039)@PLT
-	vmovdqu	1540(%rbx), %ymm2
-	vpxor	865(%rsp), %ymm2, %ymm0
-	leaq	1025(%rsp), %rdx
-	movl	%eax, %esi
-	vmovdqu	1572(%rbx), %ymm3
-	vmovdqu	1604(%rbx), %ymm4
-	movl	%eax, %r15d
-	vmovd	%esi, %xmm1
-	vmovdqu	1636(%rbx), %ymm5
-	vmovdqu	1668(%rbx), %ymm6
-	leaq	1700(%rbx), %r10
+	vmovdqu	1540(%rbx), %ymm3
+	movq	%r15, %rsi
+	vpxor	865(%rsp), %ymm3, %ymm0
+	vmovd	%eax, %xmm1
+	vmovdqu	1572(%rbx), %ymm4
+	movl	%eax, %r12d
+	vmovdqu	1604(%rbx), %ymm5
 	vpbroadcastb	%xmm1, %ymm1
-	leaq	1056(%rsp), %rdi
+	movzbl	1041(%rsp), %edx
+	vmovd	%eax, %xmm2
+	movzbl	1716(%rbx), %eax
 	vpand	%ymm1, %ymm0, %ymm0
+	vmovdqu	1636(%rbx), %ymm6
+	vpbroadcastb	%xmm2, %xmm2
 	vpxor	865(%rsp), %ymm0, %ymm0
+	xorl	%edx, %eax
+	vmovdqu	1668(%rbx), %ymm7
 	vmovdqu	%ymm0, 865(%rsp)
-	vpxor	897(%rsp), %ymm3, %ymm0
+	andl	%r12d, %eax
+	vpxor	897(%rsp), %ymm4, %ymm0
+	xorl	%edx, %eax
+	movzbl	1042(%rsp), %edx
 	vpand	%ymm1, %ymm0, %ymm0
+	movb	%al, 1041(%rsp)
 	vpxor	897(%rsp), %ymm0, %ymm0
+	movzbl	1717(%rbx), %eax
 	vmovdqu	%ymm0, 897(%rsp)
-	vpxor	929(%rsp), %ymm4, %ymm0
+	vpxor	929(%rsp), %ymm5, %ymm0
+	xorl	%edx, %eax
 	vpand	%ymm1, %ymm0, %ymm0
+	andl	%r12d, %eax
 	vpxor	929(%rsp), %ymm0, %ymm0
+	xorl	%edx, %eax
+	movzbl	1043(%rsp), %edx
 	vmovdqu	%ymm0, 929(%rsp)
-	vpxor	961(%rsp), %ymm5, %ymm0
+	vpxor	961(%rsp), %ymm6, %ymm0
+	movb	%al, 1042(%rsp)
+	movzbl	1718(%rbx), %eax
 	vpand	%ymm1, %ymm0, %ymm0
 	vpxor	961(%rsp), %ymm0, %ymm0
+	xorl	%edx, %eax
 	vmovdqu	%ymm0, 961(%rsp)
-	vpxor	993(%rsp), %ymm6, %ymm0
+	andl	%r12d, %eax
+	vpxor	993(%rsp), %ymm7, %ymm0
+	xorl	%edx, %eax
 	vpand	%ymm1, %ymm0, %ymm0
+	movb	%al, 1043(%rsp)
 	vpxor	993(%rsp), %ymm0, %ymm0
+	vmovdqu	1025(%rsp), %xmm1
 	vmovdqu	%ymm0, 993(%rsp)
-	.p2align 4,,10
-	.p2align 3
-.L40:
-	movzbl	(%rdx), %ecx
-	movzbl	(%r10), %eax
-	incq	%rdx
-	incq	%r10
-	xorl	%ecx, %eax
-	andl	%esi, %eax
-	xorl	%ecx, %eax
-	movb	%al, -1(%rdx)
-	cmpq	%rdi, %rdx
-	jne	.L40
-	leaq	32(%rsp), %r8
+	vpxor	1700(%rbx), %xmm1, %xmm0
+	vpand	%xmm2, %xmm0, %xmm0
+	vpxor	%xmm1, %xmm0, %xmm0
+	vmovdqu	%xmm0, 1025(%rsp)
+	movzbl	1044(%rsp), %edx
+	movzbl	1719(%rbx), %eax
+	xorl	%edx, %eax
+	andl	%r12d, %eax
+	xorl	%edx, %eax
+	movzbl	1045(%rsp), %edx
+	movb	%al, 1044(%rsp)
+	movzbl	1720(%rbx), %eax
+	xorl	%edx, %eax
+	andl	%r12d, %eax
+	xorl	%edx, %eax
+	movzbl	1046(%rsp), %edx
+	movb	%al, 1045(%rsp)
+	movzbl	1721(%rbx), %eax
+	xorl	%edx, %eax
+	andl	%r12d, %eax
+	xorl	%edx, %eax
+	movzbl	1047(%rsp), %edx
+	movb	%al, 1046(%rsp)
+	movzbl	1722(%rbx), %eax
+	xorl	%edx, %eax
+	andl	%r12d, %eax
+	xorl	%edx, %eax
+	movzbl	1048(%rsp), %edx
+	movb	%al, 1047(%rsp)
+	movzbl	1723(%rbx), %eax
+	xorl	%edx, %eax
+	andl	%r12d, %eax
+	xorl	%edx, %eax
+	movzbl	1049(%rsp), %edx
+	movb	%al, 1048(%rsp)
+	movzbl	1724(%rbx), %eax
+	xorl	%edx, %eax
+	andl	%r12d, %eax
+	xorl	%edx, %eax
+	movzbl	1050(%rsp), %edx
+	movb	%al, 1049(%rsp)
+	movzbl	1725(%rbx), %eax
+	xorl	%edx, %eax
+	andl	%r12d, %eax
+	xorl	%edx, %eax
+	movzbl	1051(%rsp), %edx
+	movb	%al, 1050(%rsp)
+	movzbl	1726(%rbx), %eax
+	xorl	%edx, %eax
+	andl	%r12d, %eax
+	xorl	%edx, %eax
+	movzbl	1052(%rsp), %edx
+	movb	%al, 1051(%rsp)
+	movzbl	1727(%rbx), %eax
+	xorl	%edx, %eax
+	andl	%r12d, %eax
+	xorl	%edx, %eax
+	movzbl	1053(%rsp), %edx
+	movb	%al, 1052(%rsp)
+	movzbl	1728(%rbx), %eax
+	xorl	%edx, %eax
+	andl	%r12d, %eax
+	xorl	%edx, %eax
+	movzbl	1054(%rsp), %edx
+	movb	%al, 1053(%rsp)
+	movzbl	1729(%rbx), %eax
+	xorl	%edx, %eax
+	andl	%r12d, %eax
+	xorl	%edx, %eax
+	movb	%al, 1054(%rsp)
+	movzbl	1055(%rsp), %edx
+	movzbl	1730(%rbx), %eax
+	leaq	32(%rsp), %rbx
+	movq	%rbx, %rdi
+	xorl	%edx, %eax
+	andl	%r12d, %eax
+	xorl	%edx, %eax
 	movl	$192, %edx
-	movq	%r14, %rsi
-	movq	%r8, %rdi
-	movq	%r8, 16(%rsp)
+	movb	%al, 1055(%rsp)
 	vzeroupper
+	incl	%r12d
 	call	CRYPTO_NAMESPACE(crypto_hash_sha512)@PLT
-	movq	%r12, %rsi
+	vmovdqa	32(%rsp), %xmm2
+	movq	%r14, %rsi
 	movl	$1039, %edx
-	vmovdqa	32(%rsp), %xmm7
-	vmovdqa	48(%rsp), %xmm2
+	vmovdqa	48(%rsp), %xmm3
 	leaq	2721(%rsp), %rdi
-	incl	%r15d
-	vmovups	%xmm7, 2689(%rsp)
-	vmovups	%xmm2, 2705(%rsp)
+	vmovdqu	%xmm2, 2689(%rsp)
+	vmovdqu	%xmm3, 2705(%rsp)
 	call	memcpy@PLT
-	movq	16(%rsp), %r8
 	movq	%r13, %rsi
+	movq	%rbx, %rdi
 	movl	$1072, %edx
-	movb	%r15b, 2688(%rsp)
-	movq	%r8, %rdi
+	movb	%r12b, 2688(%rsp)
 	call	CRYPTO_NAMESPACE(crypto_hash_sha512)@PLT
-	movq	24(%rsp), %rax
-	vmovdqa	32(%rsp), %xmm3
-	vmovdqa	48(%rsp), %xmm4
-	vmovups	%xmm3, (%rax)
-	vmovups	%xmm4, 16(%rax)
-	leaq	-40(%rbp), %rsp
+	movq	16(%rsp), %r10
+	vmovdqa	32(%rsp), %xmm4
 	xorl	%eax, %eax
+	vmovdqa	48(%rsp), %xmm5
+	vmovdqu	%xmm4, (%r10)
+	vmovdqu	%xmm5, 16(%r10)
+	leaq	-40(%rbp), %rsp
 	popq	%rbx
 	popq	%r12
 	popq	%r13
@@ -698,90 +886,134 @@ CRYPTO_NAMESPACE(dec):
 	.long	-2
 	.long	-2
 	.long	-2
-	.align 32
+	.section	.rodata.cst16,"aM",@progbits,16
+	.align 16
 .LC1:
-	.long	-4
-	.long	-4
-	.long	-4
-	.long	-4
-	.long	-4
-	.long	-4
-	.long	-4
-	.long	-4
+	.long	-2
+	.long	-2
+	.long	-2
+	.long	-2
+	.section	.rodata.cst32
 	.align 32
 .LC2:
-	.long	1
-	.long	1
-	.long	1
-	.long	1
-	.long	1
-	.long	1
-	.long	1
-	.long	1
+	.long	-4
+	.long	-4
+	.long	-4
+	.long	-4
+	.long	-4
+	.long	-4
+	.long	-4
+	.long	-4
 	.align 32
 .LC3:
-	.long	65535
-	.long	65535
-	.long	65535
-	.long	65535
-	.long	65535
-	.long	65535
-	.long	65535
-	.long	65535
+	.long	1
+	.long	1
+	.long	1
+	.long	1
+	.long	1
+	.long	1
+	.long	1
+	.long	1
 	.align 32
 .LC4:
-	.value	255
-	.value	255
-	.value	255
-	.value	255
-	.value	255
-	.value	255
-	.value	255
-	.value	255
-	.value	255
-	.value	255
-	.value	255
-	.value	255
-	.value	255
-	.value	255
-	.value	255
-	.value	255
+	.long	65535
+	.long	65535
+	.long	65535
+	.long	65535
+	.long	65535
+	.long	65535
+	.long	65535
+	.long	65535
 	.align 32
 .LC5:
-	.byte	3
-	.byte	3
-	.byte	3
-	.byte	3
-	.byte	3
-	.byte	3
-	.byte	3
-	.byte	3
-	.byte	3
-	.byte	3
-	.byte	3
-	.byte	3
-	.byte	3
-	.byte	3
-	.byte	3
-	.byte	3
-	.byte	3
-	.byte	3
-	.byte	3
-	.byte	3
-	.byte	3
-	.byte	3
-	.byte	3
-	.byte	3
-	.byte	3
-	.byte	3
-	.byte	3
-	.byte	3
-	.byte	3
-	.byte	3
-	.byte	3
-	.byte	3
+	.value	255
+	.value	255
+	.value	255
+	.value	255
+	.value	255
+	.value	255
+	.value	255
+	.value	255
+	.value	255
+	.value	255
+	.value	255
+	.value	255
+	.value	255
+	.value	255
+	.value	255
+	.value	255
 	.align 32
 .LC6:
+	.byte	3
+	.byte	3
+	.byte	3
+	.byte	3
+	.byte	3
+	.byte	3
+	.byte	3
+	.byte	3
+	.byte	3
+	.byte	3
+	.byte	3
+	.byte	3
+	.byte	3
+	.byte	3
+	.byte	3
+	.byte	3
+	.byte	3
+	.byte	3
+	.byte	3
+	.byte	3
+	.byte	3
+	.byte	3
+	.byte	3
+	.byte	3
+	.byte	3
+	.byte	3
+	.byte	3
+	.byte	3
+	.byte	3
+	.byte	3
+	.byte	3
+	.byte	3
+	.section	.rodata.cst16
+	.align 16
+.LC7:
+	.long	65535
+	.long	65535
+	.long	65535
+	.long	65535
+	.align 16
+.LC8:
+	.value	255
+	.value	255
+	.value	255
+	.value	255
+	.value	255
+	.value	255
+	.value	255
+	.value	255
+	.align 16
+.LC9:
+	.byte	3
+	.byte	3
+	.byte	3
+	.byte	3
+	.byte	3
+	.byte	3
+	.byte	3
+	.byte	3
+	.byte	3
+	.byte	3
+	.byte	3
+	.byte	3
+	.byte	3
+	.byte	3
+	.byte	3
+	.byte	3
+	.section	.rodata.cst32
+	.align 32
+.LC10:
 	.long	1073741823
 	.long	1073741823
 	.long	1073741823
@@ -790,5 +1022,66 @@ CRYPTO_NAMESPACE(dec):
 	.long	1073741823
 	.long	1073741823
 	.long	1073741823
-	.ident	"GCC: (GNU) 9.2.1 20190827 (Red Hat 9.2.1-1)"
+	.section	.rodata.cst16
+	.align 16
+.LC11:
+	.long	1073741823
+	.long	1073741823
+	.long	1073741823
+	.long	1073741823
+	.section	.rodata.cst32
+	.align 32
+.LC12:
+	.byte	-1
+	.byte	-1
+	.byte	-1
+	.byte	-1
+	.byte	-1
+	.byte	-1
+	.byte	-1
+	.byte	-1
+	.byte	-1
+	.byte	-1
+	.byte	-1
+	.byte	-1
+	.byte	-1
+	.byte	-1
+	.byte	-1
+	.byte	-1
+	.byte	-1
+	.byte	-1
+	.byte	-1
+	.byte	-1
+	.byte	-1
+	.byte	-1
+	.byte	-1
+	.byte	-1
+	.byte	-1
+	.byte	-1
+	.byte	-1
+	.byte	-1
+	.byte	-1
+	.byte	-1
+	.byte	-1
+	.byte	-1
+	.section	.rodata.cst16
+	.align 16
+.LC13:
+	.byte	-1
+	.byte	-1
+	.byte	-1
+	.byte	-1
+	.byte	-1
+	.byte	-1
+	.byte	-1
+	.byte	-1
+	.byte	-1
+	.byte	-1
+	.byte	-1
+	.byte	-1
+	.byte	-1
+	.byte	-1
+	.byte	-1
+	.byte	-1
+	.ident	"GCC: (GNU) 10.3.1 20210422 (Red Hat 10.3.1-1)"
 	.section	.note.GNU-stack,"",@progbits

@@ -16,6 +16,5 @@ CRYPTO_NAMESPACE(crypto_encode_857xint16): # @CRYPTO_NAMESPACE(crypto_encode_857
 	.size	CRYPTO_NAMESPACE(crypto_encode_857xint16), .Lfunc_end0-CRYPTO_NAMESPACE(crypto_encode_857xint16)
 	.cfi_endproc
                                         # -- End function
-
-	.ident	"clang version 8.0.0 (Fedora 8.0.0-3.fc30)"
+	.ident	"clang version 10.0.1 (Fedora 10.0.1-3.fc32)"
 	.section	".note.GNU-stack","",@progbits
