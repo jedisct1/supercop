@@ -1,5 +1,8 @@
 /*
   This file is for Benes network related functions
+
+  For the implementation strategy, see
+  https://eprint.iacr.org/2017/793.pdf
 */
 
 #include "util.h"
@@ -170,7 +173,7 @@ static void layer_5(uint64_t *bs, uint64_t *cond)
 }
 
 /* input: bits, control bits as array of bytes */
-/* output: out, control bits as array of 128-bit vectors */
+/* output: out, control bits as array of 64-bit vectors */
 void load_bits(uint64_t out[][32], const unsigned char * bits)
 {
 	int i, low, block = 0;
@@ -211,7 +214,7 @@ void load_bits(uint64_t out[][32], const unsigned char * bits)
 }
 
 /* input: r, sequence of bits to be permuted */
-/*        cond, control bits as array of 128-bit vectors  */
+/*        cond, control bits as array of 64-bit vectors  */
 /*        rev, 0 for normal application; !0 for inverse */
 /* output: r, permuted bits */
 void benes(uint64_t * r, uint64_t cond[][32], int rev)

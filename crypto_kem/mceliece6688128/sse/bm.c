@@ -5,6 +5,9 @@
 /*
   This file is for the inversion-free Berlekamp-Massey algorithm
   see https://ieeexplore.ieee.org/document/87857
+
+  For the implementation strategy, see
+  https://eprint.iacr.org/2017/793.pdf
 */
 
 #include "bm.h"
@@ -74,7 +77,7 @@ static inline void interleave(vec128 *in, int idx0, int idx1, vec128 *mask, int 
 /* output: out, field elements in non-bitsliced form */
 static inline void get_coefs(gf *out, vec128 *in)
 {
-	int i, j, k;
+	int i, k;
 
 	vec128 mask[4][2];
 	vec128 buf[16];

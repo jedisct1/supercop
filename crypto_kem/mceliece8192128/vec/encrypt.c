@@ -5,10 +5,20 @@
 #include "encrypt.h"
 
 #include "randombytes.h"
+#include "uint16_sort.h"
 #include "params.h"
 #include "util.h"
 
 #include <stdint.h>
+#include "crypto_declassify.h"
+#include "crypto_uint32.h"
+
+static inline crypto_uint32 uint32_is_equal_declassify(uint32_t t,uint32_t u)
+{
+  crypto_uint32 mask = crypto_uint32_equal_mask(t,u);
+  crypto_declassify(&mask,sizeof mask);
+  return mask;
+}
 
 /* output: e, an error vector of weight t */
 static void gen_e(unsigned char *e)
@@ -31,12 +41,12 @@ static void gen_e(unsigned char *e)
 
 		// check for repetition
 
+		uint16_sort(ind, SYS_T);
+		
 		eq = 0;
-
-		for (i = 1; i < SYS_T; i++) 
-			for (j = 0; j < i; j++)
-				if (ind[i] == ind[j]) 
-					eq = 1;
+		for (i = 1; i < SYS_T; i++)
+			if (uint32_is_equal_declassify(ind[i-1],ind[i]))
+				eq = 1;
 
 		if (eq == 0)
 			break;

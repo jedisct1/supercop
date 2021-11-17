@@ -14,6 +14,15 @@
 #include <string.h>
 
 #include "gf.h"
+#include "crypto_declassify.h"
+#include "crypto_uint32.h"
+
+static inline crypto_uint32 uint32_is_equal_declassify(uint32_t t,uint32_t u)
+{
+  crypto_uint32 mask = crypto_uint32_equal_mask(t,u);
+  crypto_declassify(&mask,sizeof mask);
+  return mask;
+}
 
 static inline unsigned char same_mask(uint16_t x, uint16_t y)
 {
@@ -50,7 +59,7 @@ static void gen_e(unsigned char *e)
 
 		for (i = 1; i < SYS_T; i++) 
 			for (j = 0; j < i; j++)
-				if (ind[i] == ind[j]) 
+			        if (uint32_is_equal_declassify(ind[i],ind[j]))
 					eq = 1;
 
 		if (eq == 0)

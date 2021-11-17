@@ -790,7 +790,7 @@ do
                 fi
                 [ "$ok" = 1 ] || continue
 
-                if sh -c "killafter 600 valgrind -q --error-exitcode=99 --track-origins=yes ./try-timecop $version $abi $implementationdir $compilerword"' || exit $?' >../outputs 2>../errors
+                if sh -c "killafter 3600 valgrind -q --max-stackframe=16777216 --error-exitcode=99 --track-origins=yes ./try-timecop $version $abi $implementationdir $compilerword"' || exit $?' >../outputs 2>../errors
                 then
                   echo "$version $shorthostname $abi $startdate $o $p/$security timecop_pass $implementationdir $compilerword $TIMECOP $?" >&5
                   word=timecop_output

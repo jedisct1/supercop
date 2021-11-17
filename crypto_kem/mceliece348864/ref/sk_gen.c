@@ -9,6 +9,15 @@
 #include "params.h"
 #include "util.h"
 #include "gf.h"
+#include "crypto_declassify.h"
+#include "crypto_uint16.h"
+
+static inline crypto_uint16 gf_is_zero_declassify(gf t)
+{
+  crypto_uint16 mask = crypto_uint16_zero_mask(t);
+  crypto_declassify(&mask,sizeof mask);
+  return mask;
+}
 
 /* input: f, element in GF((2^m)^t) */
 /* output: out, minimal polynomial of f */
@@ -46,7 +55,7 @@ int genpoly_gen(gf *out, gf *f)
 
 		}
 
-		if ( mat[ j ][ j ] == 0 ) // return if not systematic
+		if ( gf_is_zero_declassify(mat[ j ][ j ]) ) // return if not systematic
 		{
 			return -1;
 		}

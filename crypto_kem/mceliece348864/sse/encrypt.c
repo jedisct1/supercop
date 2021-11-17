@@ -9,12 +9,30 @@
 #include "gf.h"
 #include "util.h"
 #include "params.h"
+#include "uint16_sort.h"
 #include "randombytes.h"
 
 #include <stdint.h>
 #include <stdio.h>
 #include <assert.h>
 #include <string.h>
+#include "crypto_declassify.h"
+#include "crypto_uint16.h"
+#include "crypto_uint32.h"
+
+static inline crypto_uint16 uint16_is_smaller_declassify(uint16_t t,uint16_t u)
+{
+  crypto_uint16 mask = crypto_uint16_smaller_mask(t,u);
+  crypto_declassify(&mask,sizeof mask);
+  return mask;
+}
+
+static inline crypto_uint32 uint32_is_equal_declassify(uint32_t t,uint32_t u)
+{
+  crypto_uint32 mask = crypto_uint32_equal_mask(t,u);
+  crypto_declassify(&mask,sizeof mask);
+  return mask;
+}
 
 /* input: public key pk, error vector e */
 /* output: syndrome s */
@@ -48,19 +66,19 @@ static void gen_e(unsigned char *e)
 
 		count = 0;
 		for (i = 0; i < SYS_T*2 && count < SYS_T; i++)
-			if (buf.nums[i] < SYS_N)
+			if (uint16_is_smaller_declassify(buf.nums[i],SYS_N))
 				ind[ count++ ] = buf.nums[i];
 		
 		if (count < SYS_T) continue;
 
 		// check for repetition
 
+		uint16_sort(ind, SYS_T);
+		
 		eq = 0;
-
-		for (i = 1; i < SYS_T; i++) 
-			for (j = 0; j < i; j++)
-				if (ind[i] == ind[j]) 
-					eq = 1;
+		for (i = 1; i < SYS_T; i++)
+			if (uint32_is_equal_declassify(ind[i-1],ind[i]))
+				eq = 1;
 
 		if (eq == 0)
 			break;

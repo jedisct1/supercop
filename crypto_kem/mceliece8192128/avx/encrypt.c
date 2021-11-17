@@ -8,10 +8,19 @@
 
 #include "util.h"
 #include "params.h"
-#include "uint32_sort.h"
+#include "int32_sort.h"
 #include "randombytes.h"
 
 #include <stdint.h>
+#include "crypto_declassify.h"
+#include "crypto_uint32.h"
+
+static inline crypto_uint32 uint32_is_equal_declassify(uint32_t t,uint32_t u)
+{
+  crypto_uint32 mask = crypto_uint32_equal_mask(t,u);
+  crypto_declassify(&mask,sizeof mask);
+  return mask;
+}
 
 /* input: public key pk, error vector e */
 /* output: syndrome s */
@@ -22,7 +31,7 @@ static void gen_e(unsigned char *e)
 {
 	int i, j, eq;
 
-	uint32_t ind[ SYS_T ];
+	int32_t ind[ SYS_T ]; // can also use uint16 or int16
 	unsigned char bytes[ SYS_T * 2 ];
 	uint64_t e_int[ SYS_N/64 ];	
 	uint64_t one = 1;	
@@ -38,11 +47,11 @@ static void gen_e(unsigned char *e)
 
 		// check for repetition
 
-		uint32_sort(ind, SYS_T);
+		int32_sort(ind, SYS_T);
 
 		eq = 0;
 		for (i = 1; i < SYS_T; i++)
-			if (ind[i-1] == ind[i])
+			if (uint32_is_equal_declassify(ind[i-1],ind[i]))
 				eq = 1;
 
 		if (eq == 0)

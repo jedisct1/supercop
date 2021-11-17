@@ -11,7 +11,19 @@
 #include "vec128.h"
 #include "util.h"
 #include "gf.h"
+#include "crypto_declassify.h"
+#include "crypto_uint16.h"
 
+static inline crypto_uint16 gf_is_zero_declassify(gf t)
+{
+  crypto_uint16 mask = crypto_uint16_zero_mask(t);
+  crypto_declassify(&mask,sizeof mask);
+  return mask;
+}
+
+/* input: v, a list of GF(2^m) elements in bitsliced form */
+/* input: idx, an index */
+/* return: the idx-th element in v */
 static inline gf extract_gf(uint64_t v[GFBITS][2], int idx)
 {
 	int i;
@@ -27,6 +39,7 @@ static inline gf extract_gf(uint64_t v[GFBITS][2], int idx)
 	return ret;
 }
 
+/* same as extract_gf but reduces return value to 1 bit */
 static inline uint64_t extract_bit(uint64_t v[GFBITS][2], int idx)
 {
 	int i;
@@ -161,7 +174,7 @@ int genpoly_gen(gf *out, gf *f)
 
 		t = extract_gf(mat.d[i], i);
 
-		if (t == 0) return -1; // return if not systematic
+		if (gf_is_zero_declassify(t)) return -1; // return if not systematic
 
 		//
 

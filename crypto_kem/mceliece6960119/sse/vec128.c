@@ -67,12 +67,15 @@ void vec128_inv(vec128 * out, vec128 * in)
 	vec128_sq(out, out); // ^1111111111110
 }
 
+/* input: v, an element in GF(2^m)[y]/(y^119+y^8+1) in bitsliced form */
+/* input: a, an element in GF(2^m)[y]/(y^119+y^8+1) as an array of coefficients */
+/* output: out, the product of v and a in bitsliced form */
 void vec128_mul_GF(vec128 out[ GFBITS ], vec128 v[ GFBITS ], gf a[ SYS_T ])
 {
 	int i, j;
 	uint64_t buf[GFBITS][4];
 	vec128 prod[GFBITS];
-	uint64_t p[GFBITS], tmp[GFBITS];
+	uint64_t p[GFBITS];
 
 	const uint64_t allone = -1;
 
@@ -108,62 +111,39 @@ void vec128_mul_GF(vec128 out[ GFBITS ], vec128 v[ GFBITS ], gf a[ SYS_T ])
 		}
 	}
 	
-	// reduction
+	// reduction modulo y^119 + y^8 + 1
 
 	for (i = 0; i < GFBITS; i++) 
+	{
 		p[i] = buf[i][3];
 
-	vec_mul_gf(tmp, p, 6400);
-
-	for (i = 0; i < GFBITS; i++) 
-	{
-		buf[i][2] ^= tmp[i] >> (SYS_T - 2 - 64);
-		buf[i][1] ^= tmp[i] << (64 - (SYS_T - 2 - 64));
-	}
-
-	vec_mul_gf(tmp, p, 3134);
-
-	for (i = 0; i < GFBITS; i++) 
-	{
-		buf[i][2] ^= tmp[i] >> (SYS_T - 64);
-		buf[i][1] ^= tmp[i] << (64 - (SYS_T - 64));
+		buf[i][2] ^= p[i] >> (SYS_T - 8 - 64);
+		buf[i][1] ^= p[i] << (64 - (SYS_T - 8 - 64));
+		buf[i][2] ^= p[i] >> (SYS_T - 64);
+		buf[i][1] ^= p[i] << (64 - (SYS_T - 64));
 	}
 
 	//
 
 	for (i = 0; i < GFBITS; i++) 
+	{
 		p[i] = buf[i][2];
 
-	vec_mul_gf(tmp, p, 6400);
-
-	for (i = 0; i < GFBITS; i++) 
-	{
-		buf[i][1] ^= tmp[i] >> (SYS_T - 2 - 64);
-		buf[i][0] ^= tmp[i] << (64 - (SYS_T - 2 - 64));
-	}
-
-	vec_mul_gf(tmp, p, 3134);
-
-	for (i = 0; i < GFBITS; i++) 
-	{
-		buf[i][1] ^= tmp[i] >> (SYS_T - 64);
-		buf[i][0] ^= tmp[i] << (64 - (SYS_T - 64));
+		buf[i][1] ^= p[i] >> (SYS_T - 8 - 64);
+		buf[i][0] ^= p[i] << (64 - (SYS_T - 8 - 64));
+		buf[i][1] ^= p[i] >> (SYS_T - 64);
+		buf[i][0] ^= p[i] << (64 - (SYS_T - 64));
 	}
 
 	//
 
 	for (i = 0; i < GFBITS; i++) 
+	{
 		p[i] = buf[i][1] & (allone << (SYS_T - 64));
 
-	vec_mul_gf(tmp, p, 6400);
-
-	for (i = 0; i < GFBITS; i++) 
-		buf[i][0] ^= tmp[i] >> (SYS_T - 2 - 64);
-
-	vec_mul_gf(tmp, p, 3134);
-
-	for (i = 0; i < GFBITS; i++) 
-		buf[i][0] ^= tmp[i] >> (SYS_T - 64);
+		buf[i][0] ^= p[i] >> (SYS_T - 8 - 64);
+		buf[i][0] ^= p[i] >> (SYS_T - 64);
+	}
 
 	//
 

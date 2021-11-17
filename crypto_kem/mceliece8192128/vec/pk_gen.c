@@ -5,10 +5,27 @@
 #include "pk_gen.h"
 
 #include "controlbits.h"
+#include "uint64_sort.h"
 #include "params.h"
 #include "benes.h"
 #include "util.h"
 #include "fft.h"
+#include "crypto_declassify.h"
+#include "crypto_uint64.h"
+
+static crypto_uint64 uint64_is_equal_declassify(uint64_t t,uint64_t u)
+{
+  crypto_uint64 mask = crypto_uint64_equal_mask(t,u);
+  crypto_declassify(&mask,sizeof mask);
+  return mask;
+}
+
+static crypto_uint64 uint64_is_zero_declassify(uint64_t t)
+{
+  crypto_uint64 mask = crypto_uint64_zero_mask(t);
+  crypto_declassify(&mask,sizeof mask);
+  return mask;
+}
 
 #include <stdint.h>
 
@@ -50,13 +67,13 @@ static void to_bitslicing_2x(vec out0[][GFBITS], vec out1[][GFBITS], const uint6
 	}
 }
 
-int pk_gen(unsigned char * pk, const unsigned char * irr, uint32_t * perm)
+int pk_gen(unsigned char * pk, const unsigned char * irr, uint32_t * perm, int16_t * pi)
 {
 	int i, j, k;
 	int row, c, d;
 	
-	uint64_t mat[ GFBITS * SYS_T ][ 128 ];
-	uint64_t ops[ GFBITS * SYS_T ][ GFBITS * SYS_T / 64 ];
+	uint64_t mat[ PK_NROWS ][ 128 ];
+	uint64_t ops[ PK_NROWS ][ PK_NROWS / 64 ];
 
 	uint64_t mask;	
 
@@ -68,7 +85,7 @@ int pk_gen(unsigned char * pk, const unsigned char * irr, uint32_t * perm)
 	vec tmp[ GFBITS ];
 
 	uint64_t list[1 << GFBITS];
-	uint64_t one_row[ (SYS_N - GFBITS*SYS_T)/64 ];
+	uint64_t one_row[ PK_NCOLS/64 ];
 
 	// compute the inverses 
 
@@ -102,23 +119,23 @@ int pk_gen(unsigned char * pk, const unsigned char * irr, uint32_t * perm)
 		list[i] |= ((uint64_t) perm[i]) << 31;
 	}
 
-	sort_63b(1 << GFBITS, list);
+	uint64_sort(list, 1 << GFBITS);
 
 	for (i = 1; i < (1 << GFBITS); i++)
-		if ((list[i-1] >> 31) == (list[i] >> 31))
+		if (uint64_is_equal_declassify(list[i-1] >> 31,list[i] >> 31))
 			return -1;
 
 	to_bitslicing_2x(consts, prod, list);
 
 	for (i = 0; i < (1 << GFBITS); i++)
-		perm[i] = list[i] & GFMASK;
+		pi[i] = list[i] & GFMASK;
 
-	for (j = 0; j < (GFBITS * SYS_T + 63)/64; j++)
+	for (j = 0; j < (PK_NROWS + 63)/64; j++)
 	for (k = 0; k < GFBITS; k++)
 		mat[ k ][ j ] = prod[ j ][ k ];
 
 	for (i = 1; i < SYS_T; i++)
-	for (j = 0; j < (GFBITS * SYS_T + 63)/64; j++)
+	for (j = 0; j < (PK_NROWS + 63)/64; j++)
 	{
 		vec_mul(prod[j], prod[j], consts[j]);
 
@@ -129,15 +146,15 @@ int pk_gen(unsigned char * pk, const unsigned char * irr, uint32_t * perm)
 	// gaussian elimination to obtain an upper triangular matrix 
 	// and keep track of the operations in ops
 
-	for (i = 0; i < (GFBITS * SYS_T) / 64; i++)
+	for (i = 0; i < PK_NROWS / 64; i++)
 	for (j = 0; j < 64; j++)
 	{
 		row = i*64 + j;			
-		for (c = 0; c < (GFBITS * SYS_T) / 64; c++)
+		for (c = 0; c < PK_NROWS / 64; c++)
 			ops[ row ][ c ] = 0;
 	}
 
-	for (i = 0; i < (GFBITS * SYS_T) / 64; i++)
+	for (i = 0; i < PK_NROWS / 64; i++)
 	for (j = 0; j < 64; j++)
 	{
 		row = i*64 + j;			
@@ -146,36 +163,36 @@ int pk_gen(unsigned char * pk, const unsigned char * irr, uint32_t * perm)
 		ops[ row ][ i ] <<= j;
 	}
 
-	for (i = 0; i < (GFBITS * SYS_T) / 64; i++)
+	for (i = 0; i < PK_NROWS / 64; i++)
 	for (j = 0; j < 64; j++)
 	{
 		row = i*64 + j;			
 
-		for (k = row + 1; k < GFBITS * SYS_T; k++)
+		for (k = row + 1; k < PK_NROWS; k++)
 		{
 			mask = mat[ row ][ i ] >> j;
 			mask &= 1;
 			mask -= 1;
 
-			for (c = 0; c < (GFBITS * SYS_T) / 64; c++)
+			for (c = 0; c < PK_NROWS / 64; c++)
 			{
 				mat[ row ][ c ] ^= mat[ k ][ c ] & mask;
 				ops[ row ][ c ] ^= ops[ k ][ c ] & mask;
 			}
 		}
 
-		if ( ((mat[ row ][ i ] >> j) & 1) == 0 ) // return if not systematic
+                if ( uint64_is_zero_declassify((mat[ row ][ i ] >> j) & 1) ) // return if not systematic
 		{
 			return -1;
 		}
 
-		for (k = row+1; k < GFBITS * SYS_T; k++)
+		for (k = row+1; k < PK_NROWS; k++)
 		{
 			mask = mat[ k ][ i ] >> j;
 			mask &= 1;
 			mask = -mask;
 
-			for (c = 0; c < (GFBITS * SYS_T) / 64; c++)
+			for (c = 0; c < PK_NROWS / 64; c++)
 			{
 				mat[ k ][ c ] ^= mat[ row ][ c ] & mask;
 				ops[ k ][ c ] ^= ops[ row ][ c ] & mask;
@@ -185,7 +202,7 @@ int pk_gen(unsigned char * pk, const unsigned char * irr, uint32_t * perm)
 
 	// computing the lineaer map required to obatin the systematic form
 
-	for (i = (GFBITS * SYS_T) / 64 - 1; i >= 0; i--)
+	for (i = PK_NROWS / 64 - 1; i >= 0; i--)
 	for (j = 63; j >= 0; j--)
 	{
 		row = i*64 + j;			
@@ -197,7 +214,7 @@ int pk_gen(unsigned char * pk, const unsigned char * irr, uint32_t * perm)
 				mask &= 1;
 				mask = -mask;
 
-				for (c = 0; c < (GFBITS * SYS_T) / 64; c++)
+				for (c = 0; c < PK_NROWS / 64; c++)
 					ops[ k ][ c ] ^= ops[ row ][ c ] & mask;
 			}
 		}
@@ -205,12 +222,12 @@ int pk_gen(unsigned char * pk, const unsigned char * irr, uint32_t * perm)
 
 	// apply the linear map to the non-systematic part
 
-	for (j = (GFBITS * SYS_T + 63)/64; j < 128; j++)
+	for (j = (PK_NROWS + 63)/64; j < 128; j++)
 	for (k = 0; k < GFBITS; k++)
 		mat[ k ][ j ] = prod[ j ][ k ];
 
 	for (i = 1; i < SYS_T; i++)
-	for (j = (GFBITS * SYS_T + 63)/64; j < 128; j++)
+	for (j = (PK_NROWS + 63)/64; j < 128; j++)
 	{
 		vec_mul(prod[j], prod[j], consts[j]);
 
@@ -218,26 +235,26 @@ int pk_gen(unsigned char * pk, const unsigned char * irr, uint32_t * perm)
 			mat[ i*GFBITS + k ][ j ] = prod[ j ][ k ];
 	}
 
-	for (i = 0; i < (GFBITS * SYS_T) / 64; i++)
+	for (i = 0; i < PK_NROWS / 64; i++)
 	for (j = 0; j < 64; j++)
 	{
 		row = i*64 + j;			
 
-		for (k = 0; k < (SYS_N - GFBITS*SYS_T)/64; k++)
+		for (k = 0; k < PK_NCOLS/64; k++)
 			one_row[ k ] = 0;
 
-		for (c = 0; c < (GFBITS * SYS_T) / 64; c++)
+		for (c = 0; c < PK_NROWS / 64; c++)
 		for (d = 0; d < 64; d++)
 		{
 			mask = ops[ row ][ c ] >> d;
 			mask &= 1;
 			mask = -mask;
 
-			for (k = 0; k < (SYS_N - GFBITS*SYS_T)/64; k++)
-				one_row[ k ] ^= mat[ c*64 + d ][ k + (GFBITS*SYS_T)/64 ] & mask;
+			for (k = 0; k < PK_NCOLS/64; k++)
+				one_row[ k ] ^= mat[ c*64 + d ][ k + PK_NROWS/64 ] & mask;
 		}
 
-		for (k = 0; k < (SYS_N - GFBITS*SYS_T)/64; k++)
+		for (k = 0; k < PK_NCOLS/64; k++)
 		{
 			store8(pk, one_row[ k ]);
 			pk += 8;		

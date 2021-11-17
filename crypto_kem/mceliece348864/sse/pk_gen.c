@@ -5,22 +5,38 @@
 #include "pk_gen.h"
 
 #include "controlbits.h"
+#include "uint64_sort.h"
+#include "int32_sort.h"
 #include "params.h"
-#include "benes.h"
 #include "util.h"
 #include "fft.h"
+#include "crypto_declassify.h"
+#include "crypto_uint64.h"
+
+static crypto_uint64 uint64_is_equal_declassify(uint64_t t,uint64_t u)
+{
+  crypto_uint64 mask = crypto_uint64_equal_mask(t,u);
+  crypto_declassify(&mask,sizeof mask);
+  return mask;
+}
+
+static crypto_uint64 uint64_is_zero_declassify(uint64_t t)
+{
+  crypto_uint64 mask = crypto_uint64_zero_mask(t);
+  crypto_declassify(&mask,sizeof mask);
+  return mask;
+}
 
 #include <stdint.h>
 
 #define par_width 11
 
-/* set m and mm to 11...1 if the i-th bit of x is 0 and the i-th bit of y is 1 */
-/* set m and mm to 00...0 otherwise */
-static inline void extract_01_masks(uint32_t *m, vec128 *mm, uint64_t *x, uint64_t *y, int i)
+/* set m to 11...1 if the i-th bit of x is 0 and the i-th bit of y is 1 */
+/* set m to 00...0 otherwise */
+static inline void extract_01_masks(uint16_t *m, uint64_t *x, uint64_t *y, int i)
 {
 	*m = (((~x[ i>>6 ]) & y[ i>>6 ]) >> (i&63)) & 1;
 	*m = -(*m);
-	*mm = vec128_set1_32b(*m);
 }
 
 /* return a 128-bit vector of which each bits is set to the i-th bit of v */
@@ -35,9 +51,9 @@ static inline vec128 extract_mask128(uint64_t v[], int i)
 }
 
 /* swap x and y if m = 11...1 */
-static inline void uint32_cswap(uint32_t *x, uint32_t *y, uint32_t m)
+static inline void uint16_cswap(uint16_t *x, uint16_t *y, uint16_t m)
 {
-	uint32_t d;
+	uint16_t d;
 
 	d = *x ^ *y;
 	d &= m;
@@ -58,18 +74,18 @@ static inline void vec128_cswap(vec128 *x, vec128 *y, vec128 m)
 
 /* swap   x[i0] and   x[i1]  if x[i1] > x[i0] */
 /* swap mat[i0] and mat[i1]  if x[i1] > x[i0] */
-static inline void minmax_rows(uint32_t *x, vec128 (*mat)[par_width], int i0, int i1)
+static inline void minmax_rows(uint16_t *x, vec128 (*mat)[par_width], int i0, int i1)
 {
 	int i;
-	uint32_t m;
+	uint16_t m;
 	vec128 mm;
 
 	m = x[i1] - x[i0];
-	m >>= 31;
+	m >>= 15;
 	m = -m;
-	mm  = vec128_set1_32b(m);
+	mm = vec128_set1_16b(m);
 
-	uint32_cswap(&x[i0], &x[i1], m);
+	uint16_cswap(&x[i0], &x[i1], m);
 
 	for (i = 0; i < par_width; i++)
 		vec128_cswap(&mat[i0][i], &mat[i1][i], mm);
@@ -77,7 +93,7 @@ static inline void minmax_rows(uint32_t *x, vec128 (*mat)[par_width], int i0, in
 
 /* merge first half of x[0],x[step],...,x[(2*n-1)*step] with second half */
 /* requires n to be a power of 2 */
-static void merge_rows(int n, int bound, uint32_t *x, vec128 (*mat)[par_width], int off, int step)
+static void merge_rows(int n, int bound, uint16_t *x, vec128 (*mat)[par_width], int off, int step)
 {
 	int i;
 
@@ -97,7 +113,7 @@ static void merge_rows(int n, int bound, uint32_t *x, vec128 (*mat)[par_width], 
 }
 
 /* permute the rows of mat by sorting x */
-static void sort_rows(int n, int bound, uint32_t *x, vec128 (*mat)[par_width], int off)
+static void sort_rows(int n, int bound, uint16_t *x, vec128 (*mat)[par_width], int off)
 {
 	if (n <= 1) return;
 	sort_rows(n/2, bound, x, mat, off);
@@ -108,7 +124,7 @@ static void sort_rows(int n, int bound, uint32_t *x, vec128 (*mat)[par_width], i
 /* extract numbers represented in bitsliced form */
 static void de_bitslicing(uint64_t * out, const vec128 in[][GFBITS])
 {
-	int i, j, k, r;
+	int i, j, r;
 	uint64_t u = 0;
 
 	for (i = 0; i < (1 << GFBITS); i++)
@@ -155,11 +171,32 @@ static void to_bitslicing_2x(vec128 out0[][GFBITS], vec128 out1[][GFBITS], const
 	}
 }
 
+/* y[pi[i]] = x[i] */
+/* requires pi to be a permutation */
+static void composeinv(int n, uint16_t y[n], uint16_t x[n], uint16_t pi[n])
+{
+  int i;
+  int32_t t[n];
+
+  for (i = 0;i < n;++i) 
+  {
+    t[i] = pi[i];
+    t[i] <<= 16;
+    t[i] |= x[i];
+  }
+
+  int32_sort(t,n);
+
+  for (i = 0;i < n;++i)
+    y[i] = t[i] & 0xFFFF;
+}
+
 /* input: irr, an irreducible polynomial */
 /*        perm, a permutation represented as an array of 32-bit numbers */
+/*        pi, same permutation represented as an array of 16-bit numbers */
 /* output: pk, the public key*/
 /* return: 0 if pk is successfully generated, -1 otherwise */
-int pk_gen(unsigned char * pk, const unsigned char * irr, uint32_t * perm)
+int pk_gen(unsigned char * pk, const unsigned char * irr, uint32_t * perm, int16_t * pi)
 {
 	const int nBlocks_I = (PK_NROWS + 127) / 128;
 
@@ -168,8 +205,8 @@ int pk_gen(unsigned char * pk, const unsigned char * irr, uint32_t * perm)
 		
 	union
 	{
-		uint64_t w[ GFBITS * SYS_T ][ nBlocks_I*2 ];
-		vec128   v[ GFBITS * SYS_T ][ nBlocks_I ];
+		uint64_t w[ PK_NROWS ][ nBlocks_I*2 ];
+		vec128   v[ PK_NROWS ][ nBlocks_I ];
 	} mat;
 
 	union
@@ -178,7 +215,7 @@ int pk_gen(unsigned char * pk, const unsigned char * irr, uint32_t * perm)
 		 vec128 v[ PK_NROWS ][ par_width ];
 	} par;
 
-	uint32_t m;	
+	uint16_t m;	
 	vec128 mm;
 
 	uint64_t sk_int[ GFBITS ];
@@ -192,8 +229,8 @@ int pk_gen(unsigned char * pk, const unsigned char * irr, uint32_t * perm)
 	uint64_t one = 1;
 	uint64_t t;
 
-	uint32_t ind[ (1 << GFBITS)/4 ];
-	uint32_t ind_inv[ (1 << GFBITS)/4 ];
+	uint16_t ind[ (1 << GFBITS)/4 ];
+	uint16_t ind_inv[ (1 << GFBITS)/4 ];
 
 	// compute the inverses 
 
@@ -227,16 +264,16 @@ int pk_gen(unsigned char * pk, const unsigned char * irr, uint32_t * perm)
 		list[i] |= ((uint64_t) perm[i]) << 31;
 	}
 
-	sort_63b(1 << GFBITS, list);
+	uint64_sort(list, 1 << GFBITS);
 
 	for (i = 1; i < (1 << GFBITS); i++)
-		if ((list[i-1] >> 31) == (list[i] >> 31))
+		if (uint64_is_equal_declassify(list[i-1] >> 31,list[i] >> 31))
 			return -1;
 
 	to_bitslicing_2x(consts, prod, list);
 
 	for (i = 0; i < (1 << GFBITS); i++)
-		perm[i] = list[i] & GFMASK;
+		pi[i] = list[i] & GFMASK;
 
 	for (j = 0; j < nBlocks_I; j++)
 	for (k = 0; k < GFBITS; k++)
@@ -265,14 +302,15 @@ int pk_gen(unsigned char * pk, const unsigned char * irr, uint32_t * perm)
 
 		for (k = row + 1; k < PK_NROWS; k++)
 		{
-			extract_01_masks(&m , &mm, mat.w[ row ], mat.w[ k ], row);
-			uint32_cswap(&ind[row], &ind[k], m);
+			extract_01_masks(&m, mat.w[ row ], mat.w[ k ], row);
+			uint16_cswap(&ind[row], &ind[k], m);
 
+			mm = vec128_set1_16b(m);
 			for (c = 0; c < nBlocks_I; c++)
 				vec128_cswap(&mat.v[ row ][ c ], &mat.v[ k ][ c ], mm);
 		}
 
-		if ( ((mat.w[ row ][ i ] >> j) & 1) == 0 ) // return if not systematic
+                if ( uint64_is_zero_declassify((mat.w[ row ][ i ] >> j) & 1) ) // return if not systematic
 		{
 			return -1;
 		}
@@ -289,7 +327,7 @@ int pk_gen(unsigned char * pk, const unsigned char * irr, uint32_t * perm)
 		}
 	}
 
-	// apply the linear map to the non-systematic part
+	// apply M^-1 to the remaining columns
 
 	composeinv((1 << GFBITS)/4, ind_inv, ind_inv, ind);
 
