@@ -1,1 +1,1 @@
-../../../picnicl1fs/optimizedct/c/picnic.c
+../../../picnicl1full/optimizedct/c/picnic.c

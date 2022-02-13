@@ -1,1 +1,1 @@
-../../../picnic3l1/optimizedct/c/bitstream.h
+../../../picnic3l1/optimizedct/neon/bitstream.h

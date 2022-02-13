@@ -1,1 +1,1 @@
-../../../picnic3l1/ref/sha3/brg_endian.h
+../../../picnic2l1fs/ref/sha3/brg_endian.h

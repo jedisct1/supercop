@@ -18,7 +18,7 @@
 #endif
 #endif
 
-#if defined(_WIN16) || defined(_WIN32) || defined(_WIN64)
+#if defined(_WIN16) || defined(_WIN32)
 #define PICNIC_CALLING_CONVENTION __stdcall
 #else
 #define PICNIC_CALLING_CONVENTION
@@ -51,8 +51,35 @@ extern "C" {
 
 #define LOWMC_BLOCK_SIZE(p) PICNIC_CONCAT(LOWMC_BLOCK_SIZE, p)
 
+/* Private and public key sizes */
 #define PICNIC_PRIVATE_KEY_SIZE(p) (1 + 3 * LOWMC_BLOCK_SIZE(p))
 #define PICNIC_PUBLIC_KEY_SIZE(p) (1 + 2 * LOWMC_BLOCK_SIZE(p))
+
+#define PICNIC_PRIVATE_KEY_SIZE_Picnic_L1_FS PICNIC_PRIVATE_KEY_SIZE(Picnic_L1_FS)
+#define PICNIC_PRIVATE_KEY_SIZE_Picnic_L1_UR PICNIC_PRIVATE_KEY_SIZE(Picnic_L1_UR)
+#define PICNIC_PRIVATE_KEY_SIZE_Picnic_L3_FS PICNIC_PRIVATE_KEY_SIZE(Picnic_L3_FS)
+#define PICNIC_PRIVATE_KEY_SIZE_Picnic_L3_UR PICNIC_PRIVATE_KEY_SIZE(Picnic_L3_UR)
+#define PICNIC_PRIVATE_KEY_SIZE_Picnic_L5_FS PICNIC_PRIVATE_KEY_SIZE(Picnic_L5_FS)
+#define PICNIC_PRIVATE_KEY_SIZE_Picnic_L5_UR PICNIC_PRIVATE_KEY_SIZE(Picnic_L5_UR)
+#define PICNIC_PRIVATE_KEY_SIZE_Picnic3_L1 PICNIC_PRIVATE_KEY_SIZE(Picnic3_L1)
+#define PICNIC_PRIVATE_KEY_SIZE_Picnic3_L3 PICNIC_PRIVATE_KEY_SIZE(Picnic3_L3)
+#define PICNIC_PRIVATE_KEY_SIZE_Picnic3_L5 PICNIC_PRIVATE_KEY_SIZE(Picnic3_L5)
+#define PICNIC_PRIVATE_KEY_SIZE_Picnic_L1_full PICNIC_PRIVATE_KEY_SIZE(Picnic_L1_full)
+#define PICNIC_PRIVATE_KEY_SIZE_Picnic_L3_full PICNIC_PRIVATE_KEY_SIZE(Picnic_L3_full)
+#define PICNIC_PRIVATE_KEY_SIZE_Picnic_L5_full PICNIC_PRIVATE_KEY_SIZE(Picnic_L5_full)
+
+#define PICNIC_PUBLIC_KEY_SIZE_Picnic_L1_FS PICNIC_PUBLIC_KEY_SIZE(Picnic_L1_FS)
+#define PICNIC_PUBLIC_KEY_SIZE_Picnic_L1_UR PICNIC_PUBLIC_KEY_SIZE(Picnic_L1_UR)
+#define PICNIC_PUBLIC_KEY_SIZE_Picnic_L3_FS PICNIC_PUBLIC_KEY_SIZE(Picnic_L3_FS)
+#define PICNIC_PUBLIC_KEY_SIZE_Picnic_L3_UR PICNIC_PUBLIC_KEY_SIZE(Picnic_L3_UR)
+#define PICNIC_PUBLIC_KEY_SIZE_Picnic_L5_FS PICNIC_PUBLIC_KEY_SIZE(Picnic_L5_FS)
+#define PICNIC_PUBLIC_KEY_SIZE_Picnic_L5_UR PICNIC_PUBLIC_KEY_SIZE(Picnic_L5_UR)
+#define PICNIC_PUBLIC_KEY_SIZE_Picnic3_L1 PICNIC_PUBLIC_KEY_SIZE(Picnic3_L1)
+#define PICNIC_PUBLIC_KEY_SIZE_Picnic3_L3 PICNIC_PUBLIC_KEY_SIZE(Picnic3_L3)
+#define PICNIC_PUBLIC_KEY_SIZE_Picnic3_L5 PICNIC_PUBLIC_KEY_SIZE(Picnic3_L5)
+#define PICNIC_PUBLIC_KEY_SIZE_Picnic_L1_full PICNIC_PUBLIC_KEY_SIZE(Picnic_L1_full)
+#define PICNIC_PUBLIC_KEY_SIZE_Picnic_L3_full PICNIC_PUBLIC_KEY_SIZE(Picnic_L3_full)
+#define PICNIC_PUBLIC_KEY_SIZE_Picnic_L5_full PICNIC_PUBLIC_KEY_SIZE(Picnic_L5_full)
 
 /* Max. signature sizes per parameter */
 #define PICNIC_SIGNATURE_SIZE_Picnic_L1_FS 34032
@@ -109,12 +136,30 @@ typedef struct {
 /**
  * Get a string representation of the parameter set.
  *
- * @param parameters A parameter set
+ * @param[in] parameters A parameter set
  *
  * @return A null-terminated string describing the parameter set.
  */
 PICNIC_EXPORT const char* PICNIC_CALLING_CONVENTION
 picnic_get_param_name(picnic_params_t parameters);
+
+/**
+ * Get the size of a private key for serialization
+ *
+ * @param[in] parameters A parameter set
+ *
+ * @return The size of serialized private key, or 0 on error.
+ */
+PICNIC_EXPORT size_t PICNIC_CALLING_CONVENTION picnic_get_private_key_size(picnic_params_t param);
+
+/**
+ * Get the size of a public key for serialization
+ *
+ * @param[in] parameters A parameter set
+ *
+ * @return The size of serialized public key, or 0 on error.
+ */
+PICNIC_EXPORT size_t PICNIC_CALLING_CONVENTION picnic_get_public_key_size(picnic_params_t param);
 
 /* Signature API */
 
@@ -260,6 +305,43 @@ PICNIC_EXPORT int PICNIC_CALLING_CONVENTION picnic_read_private_key(picnic_priva
  */
 PICNIC_EXPORT int PICNIC_CALLING_CONVENTION
 picnic_validate_keypair(const picnic_privatekey_t* privatekey, const picnic_publickey_t* publickey);
+
+/**
+ * Clear data of a private key.
+ *
+ * @param[out] key The private key to clear
+ */
+PICNIC_EXPORT void PICNIC_CALLING_CONVENTION picnic_clear_private_key(picnic_privatekey_t* key);
+
+/**
+ * Compute public key from private key.
+ *
+ * @param[in] privatekey The private key
+ * @param[out] publickey The public key to be populated
+ * @return Returns 0 on success, or a nonzero value indicating an error.
+ **/
+PICNIC_EXPORT int PICNIC_CALLING_CONVENTION picnic_sk_to_pk(const picnic_privatekey_t* privatekey,
+                                                            picnic_publickey_t* publickey);
+
+/**
+ * Get the parameter set identifier from a private key.
+ *
+ * @param[in] privatekey The private key
+ *
+ * @return Return the corresponding parameter set, or PARAMETER_SET_INVALID on error.
+ */
+PICNIC_EXPORT picnic_params_t PICNIC_CALLING_CONVENTION
+picnic_get_private_key_param(const picnic_privatekey_t* privatekey);
+
+/**
+ * Get the parameter set identifier from a public key.
+ *
+ * @param[in] publickey The public key
+ *
+ * @return Return the corresponding parameter set, or PARAMETER_SET_INVALID on error.
+ */
+PICNIC_EXPORT picnic_params_t PICNIC_CALLING_CONVENTION
+picnic_get_public_key_param(const picnic_publickey_t* publickey);
 
 #ifdef __cplusplus
 }

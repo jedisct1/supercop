@@ -15,50 +15,29 @@
 #include "picnic.h"
 
 #define SALT_SIZE 32
-#define MAX_DIGEST_SIZE 64
+
+/* max digest and seed size */
+#define MAX_DIGEST_SIZE 32
+#define MAX_SEED_SIZE 16
 
 typedef struct picnic_instance_t {
-  lowmc_parameters_t lowmc;
-
-  uint32_t digest_size;       /* bytes */
-  uint32_t seed_size;         /* bytes */
-  uint32_t num_rounds;        // T
-  uint32_t num_opened_rounds; // u
-  uint32_t num_MPC_parties;   // N
-
-  uint32_t input_size;      /* bytes */
-  uint32_t output_size;     /* bytes */
-  uint32_t view_size;       /* bytes */
-  uint32_t view_round_size; /* bits (per round) */
-
-  uint32_t collapsed_challenge_size;       /* bytes */
-  uint32_t unruh_without_input_bytes_size; /* bytes */
-  uint32_t unruh_with_input_bytes_size;    /* bytes */
-  uint32_t max_signature_size;             /* bytes */
-
-  picnic_params_t params;
-
-  struct {
-    lowmc_implementation_f lowmc;
-    lowmc_compute_aux_implementation_f lowmc_aux;
-    lowmc_simulate_online_f lowmc_simulate_online;
-  } impls;
+  const lowmc_parameters_t lowmc;
+  const uint16_t num_rounds;       // T
+  const uint8_t digest_size;       // bytes
+  const uint8_t seed_size;         // bytes
+  const uint8_t input_output_size; // bytes
+  const uint8_t view_size;         // bytes
+  const uint8_t num_opened_rounds; // u (KKW only)
+  const uint8_t num_MPC_parties;   // N (KKW only)
 } picnic_instance_t;
 
-const picnic_instance_t* picnic_instance_get(picnic_params_t param);
+ATTR_PURE const picnic_instance_t* picnic_instance_get(picnic_params_t param);
+
+ATTR_CONST static inline bool picnic_instance_is_unruh(picnic_params_t param) {
+  return param == Picnic_L1_UR || param == Picnic_L3_UR || param == Picnic_L5_UR;
+}
 
 PICNIC_EXPORT size_t PICNIC_CALLING_CONVENTION picnic_get_lowmc_block_size(picnic_params_t param);
-PICNIC_EXPORT size_t PICNIC_CALLING_CONVENTION picnic_get_private_key_size(picnic_params_t param);
-PICNIC_EXPORT size_t PICNIC_CALLING_CONVENTION picnic_get_public_key_size(picnic_params_t param);
-/**
- * Compute public key from secret key.
- *
- * @param[in] sk The secret key
- * @param[out] pk The public key to be populated
- * @return Returns 0 on success, or a nonzero value indicating an error.
- **/
-PICNIC_EXPORT int PICNIC_CALLING_CONVENTION picnic_sk_to_pk(const picnic_privatekey_t* sk,
-                                                            picnic_publickey_t* pk);
 
 /* Prefix values for domain separation */
 static const uint8_t HASH_PREFIX_0 = 0;

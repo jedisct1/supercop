@@ -24,6 +24,7 @@
 
 #include "lowmc_192_192_4.h"
 
+// clang-format off
 
 #if !defined(NO_UINT64_FALLBACK)
 
@@ -288,11 +289,11 @@ static void sbox_aux_uint64_lowmc_192_192_4(mzd_local_t* statein, mzd_local_t* s
     word128 t0[2] ATTR_ALIGNED(alignof(word128));                                                  \
     word128 t1[2] ATTR_ALIGNED(alignof(word128));                                                  \
     word128 t2[2] ATTR_ALIGNED(alignof(word128));                                                  \
-    mzd_local_t tmp[1], aux[1];                                                                    \
+    word128 aux[2] ATTR_ALIGNED(alignof(word128));                                                 \
     SHR(t2, fresh_output_ca, 2);                                                                   \
     SHR(t1, fresh_output_bc, 1);                                                                   \
     XOR(t2, t2, t1);                                                                               \
-    XOR(aux->w128, t2, fresh_output_ab);                                                           \
+    XOR(aux, t2, fresh_output_ab);                                                                 \
                                                                                                    \
     /* a & b */                                                                                    \
     AND(t0, a, b);                                                                                 \
@@ -304,21 +305,21 @@ static void sbox_aux_uint64_lowmc_192_192_4(mzd_local_t* statein, mzd_local_t* s
     SHR(t1, t1, 1);                                                                                \
     XOR(t2, t2, t1);                                                                               \
     XOR(t2, t2, t0);                                                                               \
-    XOR(aux->w128, aux->w128, t2);                                                                 \
+    XOR(aux, aux, t2);                                                                             \
                                                                                                    \
     bitstream_t parity_tape     = {{tapes->parity_tapes}, tapes->pos};                             \
     bitstream_t last_party_tape = {{tapes->tape[15]}, tapes->pos};                                 \
                                                                                                    \
     /* calculate aux_bits to fix and_helper */                                                     \
-    mzd_from_bitstream(&parity_tape, tmp, (LOWMC_N + 63) / (sizeof(uint64_t) * 8), LOWMC_N);       \
-    XOR(aux->w128, aux->w128, tmp->w128);                                                          \
-    mzd_from_bitstream(&last_party_tape, tmp, (LOWMC_N + 63) / (sizeof(uint64_t) * 8), LOWMC_N);   \
-    XOR(aux->w128, aux->w128, tmp->w128);                                                          \
+    w128_from_bitstream(&parity_tape, t0, (LOWMC_N + 63) / (sizeof(uint64_t) * 8), LOWMC_N);       \
+    XOR(aux, aux, t0);                                                                             \
+    w128_from_bitstream(&last_party_tape, t1, (LOWMC_N + 63) / (sizeof(uint64_t) * 8), LOWMC_N);   \
+    XOR(aux, aux, t1);                                                                             \
                                                                                                    \
     last_party_tape.position = tapes->pos;                                                         \
-    mzd_to_bitstream(&last_party_tape, aux, (LOWMC_N + 63) / (sizeof(uint64_t) * 8), LOWMC_N);     \
+    w128_to_bitstream(&last_party_tape, aux, (LOWMC_N + 63) / (sizeof(uint64_t) * 8), LOWMC_N);    \
     bitstream_t aux_tape = {{tapes->aux_bits}, tapes->aux_pos};                                    \
-    mzd_to_bitstream(&aux_tape, aux, (LOWMC_N + 63) / (sizeof(uint64_t) * 8), LOWMC_N);            \
+    w128_to_bitstream(&aux_tape, aux, (LOWMC_N + 63) / (sizeof(uint64_t) * 8), LOWMC_N);           \
                                                                                                    \
     tapes->aux_pos += LOWMC_N;                                                                     \
   } while (0)
@@ -394,37 +395,38 @@ static void sbox_aux_s128_lowmc_192_192_4(mzd_local_t* statein, mzd_local_t* sta
     word256 t0 ATTR_ALIGNED(alignof(word256));                                                     \
     word256 t1 ATTR_ALIGNED(alignof(word256));                                                     \
     word256 t2 ATTR_ALIGNED(alignof(word256));                                                     \
-    mzd_local_t tmp[1], aux[1];                                                                    \
-    t2        = ROR(fresh_output_ca, 2);                                                           \
-    t1        = ROR(fresh_output_bc, 1);                                                           \
-    t2        = XOR(t2, t1);                                                                       \
-    aux->w256 = XOR(t2, fresh_output_ab);                                                          \
+    word256 aux ATTR_ALIGNED(alignof(word256));                                                    \
+                                                                                                   \
+    t2  = ROR(fresh_output_ca, 2);                                                                 \
+    t1  = ROR(fresh_output_bc, 1);                                                                 \
+    t2  = XOR(t2, t1);                                                                             \
+    aux = XOR(t2, fresh_output_ab);                                                                \
                                                                                                    \
     /* a & b */                                                                                    \
     t0 = AND(a, b);                                                                                \
     /* b & c */                                                                                    \
     t1 = AND(b, c);                                                                                \
     /* c & a */                                                                                    \
-    t2        = AND(c, a);                                                                         \
-    t2        = ROR(t2, 2);                                                                        \
-    t1        = ROR(t1, 1);                                                                        \
-    t2        = XOR(t2, t1);                                                                       \
-    t2        = XOR(t2, t0);                                                                       \
-    aux->w256 = XOR(aux->w256, t2);                                                                \
+    t2  = AND(c, a);                                                                               \
+    t2  = ROR(t2, 2);                                                                              \
+    t1  = ROR(t1, 1);                                                                              \
+    t2  = XOR(t2, t1);                                                                             \
+    t2  = XOR(t2, t0);                                                                             \
+    aux = XOR(aux, t2);                                                                            \
                                                                                                    \
     bitstream_t parity_tape     = {{tapes->parity_tapes}, tapes->pos};                             \
     bitstream_t last_party_tape = {{tapes->tape[15]}, tapes->pos};                                 \
                                                                                                    \
     /* calculate aux_bits to fix and_helper */                                                     \
-    mzd_from_bitstream(&parity_tape, tmp, (LOWMC_N + 63) / (sizeof(uint64_t) * 8), LOWMC_N);       \
-    aux->w256 = XOR(aux->w256, tmp->w256);                                                         \
-    mzd_from_bitstream(&last_party_tape, tmp, (LOWMC_N + 63) / (sizeof(uint64_t) * 8), LOWMC_N);   \
-    aux->w256 = XOR(aux->w256, tmp->w256);                                                         \
+    t0  = w256_from_bitstream(&parity_tape, (LOWMC_N + 63) / (sizeof(uint64_t) * 8), LOWMC_N);     \
+    aux = XOR(aux, t0);                                                                            \
+    t1  = w256_from_bitstream(&last_party_tape, (LOWMC_N + 63) / (sizeof(uint64_t) * 8), LOWMC_N); \
+    aux = XOR(aux, t1);                                                                            \
                                                                                                    \
     last_party_tape.position = tapes->pos;                                                         \
-    mzd_to_bitstream(&last_party_tape, aux, (LOWMC_N + 63) / (sizeof(uint64_t) * 8), LOWMC_N);     \
+    w256_to_bitstream(&last_party_tape, aux, (LOWMC_N + 63) / (sizeof(uint64_t) * 8), LOWMC_N);    \
     bitstream_t aux_tape = {{tapes->aux_bits}, tapes->aux_pos};                                    \
-    mzd_to_bitstream(&aux_tape, aux, (LOWMC_N + 63) / (sizeof(uint64_t) * 8), LOWMC_N);            \
+    w256_to_bitstream(&aux_tape, aux, (LOWMC_N + 63) / (sizeof(uint64_t) * 8), LOWMC_N);           \
                                                                                                    \
     tapes->aux_pos += LOWMC_N;                                                                     \
   } while (0)
@@ -455,57 +457,75 @@ static void sbox_aux_s256_lowmc_192_192_4(mzd_local_t* statein, mzd_local_t* sta
 #include "lowmc_256_256_38_fns_s256.h"
 #include "lowmc.c.i"
 
-lowmc_implementation_f lowmc_get_implementation(const lowmc_parameters_t* lowmc) {
-  assert((lowmc->m == 43 && lowmc->n == 129) || (lowmc->m == 64 && lowmc->n == 192) ||
-         (lowmc->m == 85 && lowmc->n == 255) ||
-         (lowmc->m == 10 && (lowmc->n == 128 || lowmc->n == 192 || lowmc->n == 256)));
-
+void lowmc_compute(const lowmc_parameters_t* lowmc, const lowmc_key_t* key, const mzd_local_t* x,
+                   mzd_local_t* y) {
+  const uint32_t lowmc_id = LOWMC_GET_ID(lowmc);
   /* AVX2 enabled instances */
   if (CPU_SUPPORTS_AVX2) {
-
-    /* Instances with full Sbox layer */
-    if (lowmc->n == 192 && lowmc->m == 64)
-      return lowmc_s256_lowmc_192_192_4;
+    switch (lowmc_id) {
+      /* Instances with full Sbox layer */
+    case LOWMC_ID(192, 64):
+      lowmc_s256_lowmc_192_192_4(key, x, y);
+      return;
+    }
   }
 
   /* SSE2/NEON enabled instances */
   if (CPU_SUPPORTS_SSE2 || CPU_SUPPORTS_NEON) {
-
-    /* Instances with full Sbox layer */
-    if (lowmc->n == 192 && lowmc->m == 64)
-      return lowmc_s128_lowmc_192_192_4;
+    switch (lowmc_id) {
+      /* Instances with full Sbox layer */
+    case LOWMC_ID(192, 64):
+      lowmc_s128_lowmc_192_192_4(key, x, y);
+      return;
+    }
   }
 
 #if !defined(NO_UINT64_FALLBACK)
   /* uint64_t implementations */
-
-  /* Instances with full Sbox layer */
-  if (lowmc->n == 192 && lowmc->m == 64)
-    return lowmc_uint64_lowmc_192_192_4;
+  switch (lowmc_id) {
+    /* Instances with full Sbox layer */
+  case LOWMC_ID(192, 64):
+    lowmc_uint64_lowmc_192_192_4(key, x, y);
+    return;
+  }
 #endif
 
-  return NULL;
+  UNREACHABLE;
 }
 
 
-lowmc_compute_aux_implementation_f
-lowmc_compute_aux_get_implementation(const lowmc_parameters_t* lowmc) {
-  assert((lowmc->m == 43 && lowmc->n == 129) || (lowmc->m == 64 && lowmc->n == 192) ||
-         (lowmc->m == 85 && lowmc->n == 255));
 
+void lowmc_compute_aux(const lowmc_parameters_t* lowmc, lowmc_key_t* key, randomTape_t* tapes) {
+  const uint32_t lowmc_id = LOWMC_GET_ID(lowmc);
+  /* AVX2 enabled instances */
   if (CPU_SUPPORTS_AVX2) {
-    if (lowmc->n == 192 && lowmc->m == 64)
-      return lowmc_compute_aux_s256_lowmc_192_192_4;
+    switch (lowmc_id) {
+      /* Instances with full Sbox layer */
+    case LOWMC_ID(192, 64):
+      lowmc_aux_s256_lowmc_192_192_4(key, tapes);
+      return;
+    }
   }
+
+  /* SSE2/NEON enabled instances */
   if (CPU_SUPPORTS_SSE2 || CPU_SUPPORTS_NEON) {
-    if (lowmc->n == 192 && lowmc->m == 64)
-      return lowmc_compute_aux_s128_lowmc_192_192_4;
+    switch (lowmc_id) {
+      /* Instances with full Sbox layer */
+    case LOWMC_ID(192, 64):
+      lowmc_aux_s128_lowmc_192_192_4(key, tapes);
+      return;
+    }
   }
 
 #if !defined(NO_UINT64_FALLBACK)
-  if (lowmc->n == 192 && lowmc->m == 64)
-    return lowmc_compute_aux_uint64_lowmc_192_192_4;
+  /* uint64_t implementations */
+  switch (lowmc_id) {
+    /* Instances with full Sbox layer */
+  case LOWMC_ID(192, 64):
+    lowmc_aux_uint64_lowmc_192_192_4(key, tapes);
+    return;
+  }
 #endif
 
-  return NULL;
+  UNREACHABLE;
 }

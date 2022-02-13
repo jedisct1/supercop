@@ -1,1 +1,1 @@
-../../../picnic3l1/optimizedct/c/aligned_alloc.c
+../c/aligned_alloc.c

@@ -56,6 +56,7 @@
     }                                                                                              \
   } while (0)
 
+// clang-format off
 
 /* MPC Sbox implementation for full instances */
 #if !defined(NO_UINT64_FALLBACK)
@@ -197,6 +198,13 @@ static void mpc_sbox_verify_uint64_lowmc_255_255_4(mzd_local_t* out, const mzd_l
   bitsliced_step_2(SC_VERIFY, mzd_xor_uint64_256, mzd_shift_right_uint64_256);
 }
 #endif /* NO_UINT_FALLBACK */
+
+#define NROLR(a, b, c)                                                                             \
+  do {                                                                                             \
+    a[0] = b[0];                                                                                   \
+    a[1] = b[1];                                                                                   \
+    (void)c;                                                                                       \
+  } while (0)
 
 /* requires IN and RVEC to be defined */
 #define bitsliced_mm_step_1(sc, type, AND, ROL, MASK_A, MASK_B, MASK_C)                            \
@@ -393,8 +401,7 @@ static inline void mpc_sbox_prove_s128_256(mzd_local_t* out, const mzd_local_t* 
                                mask_a->w128, mask_b->w128, mask_c->w128);
 
   // a & b
-  mpc_mm_multiple_and_def(word128, 2, mm128_and_256, mm128_xor_256, mm128_shift_right_256, r0m, x0s,
-                          x1s, r2m, 0);
+  mpc_mm_multiple_and_def(word128, 2, mm128_and_256, mm128_xor_256, NROLR, r0m, x0s, x1s, r2m, 0);
   // b & c
   mpc_mm_multiple_and_def(word128, 2, mm128_and_256, mm128_xor_256, mm128_shift_right_256, r2m, x1s,
                           x2m, r1s, 1);
@@ -413,8 +420,8 @@ static inline void mpc_sbox_verify_s128_256(mzd_local_t* out, const mzd_local_t*
                                mask_a->w128, mask_b->w128, mask_c->w128);
 
   // a & b
-  mpc_mm_multiple_and_verify_def(word128, 2, mm128_and_256, mm128_xor_256, mm128_shift_left_256,
-                                 mm128_shift_right_256, r0m, x0s, x1s, r2m, mask_c->w128, 0);
+  mpc_mm_multiple_and_verify_def(word128, 2, mm128_and_256, mm128_xor_256, NROLR, NROLR, r0m, x0s,
+                                 x1s, r2m, mask_c->w128, 0);
   // b & c
   mpc_mm_multiple_and_verify_def(word128, 2, mm128_and_256, mm128_xor_256, mm128_shift_left_256,
                                  mm128_shift_right_256, r2m, x1s, x2m, r1s, mask_c->w128, 1);
@@ -527,65 +534,57 @@ static void mpc_sbox_verify_s128_lowmc_255_255_4(mzd_local_t* out, const mzd_loc
 
 
 zkbpp_lowmc_implementation_f get_zkbpp_lowmc_implementation(const lowmc_parameters_t* lowmc) {
-  assert((lowmc->m == 43 && lowmc->n == 129) || (lowmc->m == 64 && lowmc->n == 192) ||
-         (lowmc->m == 85 && lowmc->n == 255) ||
-         (lowmc->m == 10 && (lowmc->n == 128 || lowmc->n == 192 || lowmc->n == 256)));
+  const uint32_t lowmc_id = LOWMC_GET_ID(lowmc);
 
-
+  /* SSE2/NEON enabled instances */
   if (CPU_SUPPORTS_SSE2 || CPU_SUPPORTS_NEON) {
-    if (lowmc->m == 10) {
-      switch (lowmc->n) {
-      }
-    }
-
-    if (lowmc->n == 255 && lowmc->m == 85) {
+    switch (lowmc_id) {
+      /* Instances with partial Sbox layer */
+      /* Instances with full Sbox layer */
+    case LOWMC_ID(255, 85):
       return mpc_lowmc_prove_s128_lowmc_255_255_4;
     }
   }
 
 #if !defined(NO_UINT64_FALLBACK)
-  if (lowmc->m == 10) {
-    switch (lowmc->n) {
-    }
-  }
-
-  if (lowmc->n == 255 && lowmc->m == 85) {
+  /* uint64_t implementations */
+  switch (lowmc_id) {
+    /* Instances with partial Sbox layer */
+    /* Instances with full Sbox layer */
+  case LOWMC_ID(255, 85):
     return mpc_lowmc_prove_uint64_lowmc_255_255_4;
   }
 #endif
 
+  UNREACHABLE;
   return NULL;
 }
 
 zkbpp_lowmc_verify_implementation_f
 get_zkbpp_lowmc_verify_implementation(const lowmc_parameters_t* lowmc) {
-  assert((lowmc->m == 43 && lowmc->n == 129) || (lowmc->m == 64 && lowmc->n == 192) ||
-         (lowmc->m == 85 && lowmc->n == 255) ||
-         (lowmc->m == 10 && (lowmc->n == 128 || lowmc->n == 192 || lowmc->n == 256)));
+  const uint32_t lowmc_id = LOWMC_GET_ID(lowmc);
 
-
+  /* SSE2/NEON enabled instances */
   if (CPU_SUPPORTS_SSE2 || CPU_SUPPORTS_NEON) {
-    if (lowmc->m == 10) {
-      switch (lowmc->n) {
-      }
-    }
-
-    if (lowmc->n == 255 && lowmc->m == 85) {
+    switch (lowmc_id) {
+      /* Instances with partial Sbox layer */
+      /* Instances with full Sbox layer */
+    case LOWMC_ID(255, 85):
       return mpc_lowmc_verify_s128_lowmc_255_255_4;
     }
   }
 
 #if !defined(NO_UINT64_FALLBACK)
-  if (lowmc->m == 10) {
-    switch (lowmc->n) {
-    }
-  }
-
-  if (lowmc->n == 255 && lowmc->m == 85) {
+  /* uint64_t implementations */
+  switch (lowmc_id) {
+    /* Instances with partial Sbox layer */
+    /* Instances with full Sbox layer */
+  case LOWMC_ID(255, 85):
     return mpc_lowmc_verify_uint64_lowmc_255_255_4;
   }
 #endif
 
+  UNREACHABLE;
   return NULL;
 }
 

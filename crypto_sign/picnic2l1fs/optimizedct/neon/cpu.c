@@ -1,1 +1,1 @@
-../../../picnic3l1/optimizedct/avx2/cpu.c
+../avx2/cpu.c

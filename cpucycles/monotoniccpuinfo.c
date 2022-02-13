@@ -4,7 +4,6 @@
 #include <unistd.h>
 #include <sys/time.h>
 #include <sys/types.h>
-#include <sys/sysctl.h>
 #include "osfreq.c"
 
 static double cpufrequency = 0;

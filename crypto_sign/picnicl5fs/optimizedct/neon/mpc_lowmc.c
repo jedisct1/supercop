@@ -56,6 +56,8 @@
     }                                                                                              \
   } while (0)
 
+// clang-format off
+// clang-format on
 /* MPC Sbox implementation for partical Sbox */
 static void mpc_and_uint64(uint64_t* res, uint64_t const* first, uint64_t const* second,
                            uint64_t const* r, view_t* view, unsigned viewshift) {
@@ -203,6 +205,13 @@ static void mpc_sbox_verify_uint64_10(uint64_t* in, view_t* view, uint64_t const
 
 
 #endif /* NO_UINT_FALLBACK */
+
+#define NROLR(a, b, c)                                                                             \
+  do {                                                                                             \
+    a[0] = b[0];                                                                                   \
+    a[1] = b[1];                                                                                   \
+    (void)c;                                                                                       \
+  } while (0)
 
 /* requires IN and RVEC to be defined */
 #define bitsliced_mm_step_1(sc, type, AND, ROL, MASK_A, MASK_B, MASK_C)                            \
@@ -481,61 +490,57 @@ static void mpc_sbox_verify_uint64_10(uint64_t* in, view_t* view, uint64_t const
 
 
 zkbpp_lowmc_implementation_f get_zkbpp_lowmc_implementation(const lowmc_parameters_t* lowmc) {
-  assert((lowmc->m == 43 && lowmc->n == 129) || (lowmc->m == 64 && lowmc->n == 192) ||
-         (lowmc->m == 85 && lowmc->n == 255) ||
-         (lowmc->m == 10 && (lowmc->n == 128 || lowmc->n == 192 || lowmc->n == 256)));
+  const uint32_t lowmc_id = LOWMC_GET_ID(lowmc);
 
-
+  /* SSE2/NEON enabled instances */
   if (CPU_SUPPORTS_SSE2 || CPU_SUPPORTS_NEON) {
-    if (lowmc->m == 10) {
-      switch (lowmc->n) {
-      case 256:
-        return mpc_lowmc_prove_s128_lowmc_256_256_38;
-      }
+    switch (lowmc_id) {
+      /* Instances with partial Sbox layer */
+    case LOWMC_ID(256, 10):
+      return mpc_lowmc_prove_s128_lowmc_256_256_38;
+      /* Instances with full Sbox layer */
     }
-
   }
 
 #if !defined(NO_UINT64_FALLBACK)
-  if (lowmc->m == 10) {
-    switch (lowmc->n) {
-    case 256:
-      return mpc_lowmc_prove_uint64_lowmc_256_256_38;
-    }
+  /* uint64_t implementations */
+  switch (lowmc_id) {
+    /* Instances with partial Sbox layer */
+  case LOWMC_ID(256, 10):
+    return mpc_lowmc_prove_uint64_lowmc_256_256_38;
+    /* Instances with full Sbox layer */
   }
-
 #endif
 
+  UNREACHABLE;
   return NULL;
 }
 
 zkbpp_lowmc_verify_implementation_f
 get_zkbpp_lowmc_verify_implementation(const lowmc_parameters_t* lowmc) {
-  assert((lowmc->m == 43 && lowmc->n == 129) || (lowmc->m == 64 && lowmc->n == 192) ||
-         (lowmc->m == 85 && lowmc->n == 255) ||
-         (lowmc->m == 10 && (lowmc->n == 128 || lowmc->n == 192 || lowmc->n == 256)));
+  const uint32_t lowmc_id = LOWMC_GET_ID(lowmc);
 
-
+  /* SSE2/NEON enabled instances */
   if (CPU_SUPPORTS_SSE2 || CPU_SUPPORTS_NEON) {
-    if (lowmc->m == 10) {
-      switch (lowmc->n) {
-      case 256:
-        return mpc_lowmc_verify_s128_lowmc_256_256_38;
-      }
+    switch (lowmc_id) {
+      /* Instances with partial Sbox layer */
+    case LOWMC_ID(256, 10):
+      return mpc_lowmc_verify_s128_lowmc_256_256_38;
+      /* Instances with full Sbox layer */
     }
-
   }
 
 #if !defined(NO_UINT64_FALLBACK)
-  if (lowmc->m == 10) {
-    switch (lowmc->n) {
-    case 256:
-      return mpc_lowmc_verify_uint64_lowmc_256_256_38;
-    }
+  /* uint64_t implementations */
+  switch (lowmc_id) {
+    /* Instances with partial Sbox layer */
+  case LOWMC_ID(256, 10):
+    return mpc_lowmc_verify_uint64_lowmc_256_256_38;
+    /* Instances with full Sbox layer */
   }
-
 #endif
 
+  UNREACHABLE;
   return NULL;
 }
 

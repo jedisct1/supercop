@@ -1,1 +1,1 @@
-../../../picnic3l1/optimizedct/c/crypto_sign.h
+../c/crypto_sign.h

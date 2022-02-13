@@ -59,14 +59,27 @@ static inline uint64_t ATTR_CONST bswap64(uint64_t x) {
 #endif
 #endif
 
-/* OS X / OpenBSD */
-#if defined(__APPLE__) || defined(__OpenBSD__)
+/* Cygwin */
+#if defined(__CYGWIN__)
+#include <endian.h>
+#define HAVE_HOSTSWAP
+#endif
+
+/* OS X */
+#if defined(__APPLE__)
 #include <machine/endian.h>
+#endif
+
+/* OpenBSD */
+#if defined(__OpenBSD__)
+#include <machine/endian.h>
+#define HAVE_HOSTSWAP
 #endif
 
 /* other BSDs */
 #if defined(__FreeBSD__) || defined(__NETBSD__) || defined(__NetBSD__)
 #include <sys/endian.h>
+#define HAVE_HOSTSWAP
 #endif
 
 #if !defined(PICNIC_IS_LITTLE_ENDIAN) && !defined(PICNIC_IS_BIG_ENDIAN)
@@ -122,6 +135,16 @@ static inline uint64_t ATTR_CONST bswap64(uint64_t x) {
 #define PICNIC_IS_BIG_ENDIAN
 #elif defined(__LITTLE_ENDIAN__)
 #define PICNIC_IS_LITTLE_ENDIAN
+#endif
+#endif
+
+#if !defined(PICNIC_IS_LITTLE_ENDIAN) && !defined(PICNIC_IS_BIG_ENDIAN)
+#if defined(__ORDER_BIG_ENDIAN__) && defined(__ORDER_LITTLE_ENDIAN__)
+#if defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
+#define PICNIC_IS_BIG_ENDIAN
+#elif defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
+#define PICNIC_IS_LITTLE_ENDIAN
+#endif
 #endif
 #endif
 

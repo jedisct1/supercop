@@ -21,6 +21,8 @@
 
 #include "lowmc_192_192_30.h"
 
+// clang-format off
+// clang-format on
 /* S-box for m = 10 */
 static inline uint64_t sbox_layer_10_bitsliced_uint64(uint64_t in) {
   // a, b, c
@@ -133,73 +135,62 @@ static inline void sbox_s128_full(mzd_local_t* in, const word128* mask_a, const 
 #include "lowmc.c.i"
 
 
-lowmc_implementation_f lowmc_get_implementation(const lowmc_parameters_t* lowmc) {
-  assert((lowmc->m == 43 && lowmc->n == 129) || (lowmc->m == 64 && lowmc->n == 192) ||
-         (lowmc->m == 85 && lowmc->n == 255) ||
-         (lowmc->m == 10 && (lowmc->n == 128 || lowmc->n == 192 || lowmc->n == 256)));
-
+void lowmc_compute(const lowmc_parameters_t* lowmc, const lowmc_key_t* key, const mzd_local_t* x,
+                   mzd_local_t* y) {
+  const uint32_t lowmc_id = LOWMC_GET_ID(lowmc);
 
   /* SSE2/NEON enabled instances */
   if (CPU_SUPPORTS_SSE2 || CPU_SUPPORTS_NEON) {
-    /* Instances with partial Sbox layer */
-    if (lowmc->m == 10) {
-      switch (lowmc->n) {
-      case 192:
-        return lowmc_s128_lowmc_192_192_30;
-      }
+    switch (lowmc_id) {
+      /* Instances with partial Sbox layer */
+    case LOWMC_ID(192, 10):
+      lowmc_s128_lowmc_192_192_30(key, x, y);
+      return;
+      /* Instances with full Sbox layer */
     }
-
-    /* Instances with full Sbox layer */
   }
 
 #if !defined(NO_UINT64_FALLBACK)
   /* uint64_t implementations */
-  /* Instances with partial Sbox layer */
-  if (lowmc->m == 10) {
-    switch (lowmc->n) {
-    case 192:
-      return lowmc_uint64_lowmc_192_192_30;
-    }
+  switch (lowmc_id) {
+    /* Instances with partial Sbox layer */
+  case LOWMC_ID(192, 10):
+    lowmc_uint64_lowmc_192_192_30(key, x, y);
+    return;
+    /* Instances with full Sbox layer */
   }
-
-  /* Instances with full Sbox layer */
 #endif
 
-  return NULL;
+  UNREACHABLE;
 }
 
-lowmc_store_implementation_f lowmc_store_get_implementation(const lowmc_parameters_t* lowmc) {
-  assert((lowmc->m == 43 && lowmc->n == 129) || (lowmc->m == 64 && lowmc->n == 192) ||
-         (lowmc->m == 85 && lowmc->n == 255) ||
-         (lowmc->m == 10 && (lowmc->n == 128 || lowmc->n == 192 || lowmc->n == 256)));
 
+void lowmc_record_state(const lowmc_parameters_t* lowmc, const lowmc_key_t* key,
+                        const mzd_local_t* x, recorded_state_t* state) {
+  const uint32_t lowmc_id = LOWMC_GET_ID(lowmc);
 
   /* SSE2/NEON enabled instances */
   if (CPU_SUPPORTS_SSE2 || CPU_SUPPORTS_NEON) {
-    /* Instances with partial Sbox layer */
-    if (lowmc->m == 10) {
-      switch (lowmc->n) {
-      case 192:
-        return lowmc_store_s128_lowmc_192_192_30;
-      }
+    switch (lowmc_id) {
+      /* Instances with partial Sbox layer */
+    case LOWMC_ID(192, 10):
+      lowmc_store_s128_lowmc_192_192_30(key, x, state);
+      return;
+      /* Instances with full Sbox layer */
     }
-
-    /* Instances with full Sbox layer */
   }
 
 #if !defined(NO_UINT64_FALLBACK)
   /* uint64_t implementations */
-  /* Instances with partial Sbox layer */
-  if (lowmc->m == 10) {
-    switch (lowmc->n) {
-    case 192:
-      return lowmc_store_uint64_lowmc_192_192_30;
-    }
+  switch (lowmc_id) {
+    /* Instances with partial Sbox layer */
+  case LOWMC_ID(192, 10):
+    lowmc_store_uint64_lowmc_192_192_30(key, x, state);
+    return;
+    /* Instances with full Sbox layer */
   }
-
-  /* Instances with full Sbox layer */
 #endif
 
-  return NULL;
+  UNREACHABLE;
 }
 

@@ -1,1 +1,1 @@
-../../../picnic3l1/optimizedct/avx2/cpu.c
+../../../picnic2l1fs/optimizedct/avx2/cpu.c

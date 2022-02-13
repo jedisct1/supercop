@@ -1,1 +1,1 @@
-../../../picnicl1fs/optimizedct/c/picnic_instances.h
+../../../picnicl3fs/optimizedct/c/picnic_instances.h

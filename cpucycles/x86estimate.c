@@ -1,7 +1,6 @@
 #include <time.h>
 #include <sys/time.h>
 #include <sys/types.h>
-#include <sys/sysctl.h>
 
 long long cpucycles_x86estimate(void)
 {

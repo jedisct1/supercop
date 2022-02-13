@@ -1,1 +1,1 @@
-../../../picnic3l1/optimizedct/c/compat.h
+../../../picnic2l1fs/optimizedct/c/compat.h

@@ -1,6 +1,1 @@
-#ifndef CRYPTO_SIGN_H
-#define CRYPTO_SIGN_H
-
-#include "api.h"
-
-#endif
+../../../picnic2l1fs/optimizedct/c/crypto_sign.h

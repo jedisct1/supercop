@@ -1,1 +1,1 @@
-../../../picnic3l1/optimizedct/c/kdf_shake.h
+../../../picnic2l1fs/optimizedct/c/kdf_shake.h

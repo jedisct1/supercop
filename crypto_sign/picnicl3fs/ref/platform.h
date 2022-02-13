@@ -1,1 +1,1 @@
-../../picnic3l1/ref/platform.h
+../../picnic2l1fs/ref/platform.h

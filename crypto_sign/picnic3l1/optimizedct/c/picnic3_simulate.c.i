@@ -19,7 +19,6 @@ static int SIM_ONLINE(mzd_local_t* maskedKey, randomTape_t* tapes, msgs_t* msgs,
                       const picnic_instance_t* params) {
 
 #define mpc_sbox CONCAT(picnic3_mpc_sbox, CONCAT(IMPL, LOWMC_INSTANCE))
-  int ret = 0;
   mzd_local_t state[(LOWMC_N + 255) / 256];
   mzd_local_t temp[(LOWMC_N + 255) / 256];
 
@@ -39,11 +38,9 @@ static int SIM_ONLINE(mzd_local_t* maskedKey, randomTape_t* tapes, msgs_t* msgs,
 
   /* check that the output is correct */
   uint8_t output[MAX_LOWMC_BLOCK_SIZE];
-  mzd_to_char_array(output, state, params->output_size);
+  mzd_to_char_array(output, state, params->input_output_size);
 
-  if (memcmp(output, pubKey, params->output_size) != 0) {
-    ret = -1;
-  }
-  return ret;
+  (void)pubKey;
+  return 0;
 }
 #endif

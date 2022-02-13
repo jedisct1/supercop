@@ -1,1 +1,1 @@
-../../../picnic3l1/optimizedct/c/endian_compat.h
+../c/endian_compat.h

@@ -1,1 +1,1 @@
-../../../picnic3l1/optimizedct/avx2/KeccakSpongetimes4.inc
+../../../picnic2l1fs/optimizedct/avx2/KeccakSpongetimes4.inc

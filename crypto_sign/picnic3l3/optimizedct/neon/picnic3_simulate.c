@@ -20,6 +20,7 @@
 #include <stdalign.h>
 #endif
 
+#include "compat.h"
 #include "bitstream.h"
 #include "io.h"
 #include "picnic3_simulate.h"
@@ -204,17 +205,17 @@ static void picnic3_mpc_sbox_uint64_lowmc_192_192_4(mzd_local_t* statein, random
     /* a & b */                                                                                    \
     AND(s_ab, a, b);                                                                               \
     for (int i = 0; i < 16; i++) {                                                                 \
-      mzd_local_t tmp[1];                                                                          \
+      word128 tmp[2] ATTR_ALIGNED(alignof(word128));                                               \
       bitstream_t party_msgs = {{msgs->msgs[i]}, msgs->pos};                                       \
       if (i == msgs->unopened) {                                                                   \
         /* we are in verify, just grab the broadcast s from the msgs array */                      \
-        mzd_from_bitstream(&party_msgs, tmp, (LOWMC_N + 63) / (sizeof(uint64_t) * 8), LOWMC_N);    \
+        w128_from_bitstream(&party_msgs, tmp, (LOWMC_N + 63) / (sizeof(uint64_t) * 8), LOWMC_N);   \
         /* a */                                                                                    \
-        AND(t0, bitmask_a->w128, tmp->w128);                                                       \
+        AND(t0, bitmask_a->w128, tmp);                                                             \
         /* b */                                                                                    \
-        AND(t1, bitmask_b->w128, tmp->w128);                                                       \
+        AND(t1, bitmask_b->w128, tmp);                                                             \
         /* c */                                                                                    \
-        AND(t2, bitmask_c->w128, tmp->w128);                                                       \
+        AND(t2, bitmask_c->w128, tmp);                                                             \
         SHL(t0, t0, 2);                                                                            \
         SHL(t1, t1, 1);                                                                            \
         XOR(s_ab, t2, s_ab);                                                                       \
@@ -228,13 +229,13 @@ static void picnic3_mpc_sbox_uint64_lowmc_192_192_4(mzd_local_t* statein, random
       word128 mask_a[2] ATTR_ALIGNED(alignof(word128));                                            \
       word128 mask_b[2] ATTR_ALIGNED(alignof(word128));                                            \
       word128 mask_c[2] ATTR_ALIGNED(alignof(word128));                                            \
-      mzd_from_bitstream(&party_tape, tmp, (LOWMC_N + 63) / (sizeof(uint64_t) * 8), LOWMC_N);      \
+      w128_from_bitstream(&party_tape, tmp, (LOWMC_N + 63) / (sizeof(uint64_t) * 8), LOWMC_N);     \
       /* a */                                                                                      \
-      AND(mask_a, bitmask_a->w128, tmp->w128);                                                     \
+      AND(mask_a, bitmask_a->w128, tmp);                                                           \
       /* b */                                                                                      \
-      AND(mask_b, bitmask_b->w128, tmp->w128);                                                     \
+      AND(mask_b, bitmask_b->w128, tmp);                                                           \
       /* c */                                                                                      \
-      AND(mask_c, bitmask_c->w128, tmp->w128);                                                     \
+      AND(mask_c, bitmask_c->w128, tmp);                                                           \
       SHL(mask_a, mask_a, 2);                                                                      \
       SHL(mask_b, mask_b, 1);                                                                      \
                                                                                                    \
@@ -242,13 +243,13 @@ static void picnic3_mpc_sbox_uint64_lowmc_192_192_4(mzd_local_t* statein, random
       word128 and_helper_ab[2] ATTR_ALIGNED(alignof(word128));                                     \
       word128 and_helper_bc[2] ATTR_ALIGNED(alignof(word128));                                     \
       word128 and_helper_ca[2] ATTR_ALIGNED(alignof(word128));                                     \
-      mzd_from_bitstream(&party_tape, tmp, (LOWMC_N + 63) / (sizeof(uint64_t) * 8), LOWMC_N);      \
+      w128_from_bitstream(&party_tape, tmp, (LOWMC_N + 63) / (sizeof(uint64_t) * 8), LOWMC_N);     \
       /* a */                                                                                      \
-      AND(and_helper_ab, bitmask_c->w128, tmp->w128);                                              \
+      AND(and_helper_ab, bitmask_c->w128, tmp);                                                    \
       /* b */                                                                                      \
-      AND(and_helper_bc, bitmask_b->w128, tmp->w128);                                              \
+      AND(and_helper_bc, bitmask_b->w128, tmp);                                                    \
       /* c */                                                                                      \
-      AND(and_helper_ca, bitmask_a->w128, tmp->w128);                                              \
+      AND(and_helper_ca, bitmask_a->w128, tmp);                                                    \
       SHL(and_helper_ca, and_helper_ca, 2);                                                        \
       SHL(and_helper_bc, and_helper_bc, 1);                                                        \
                                                                                                    \
@@ -256,8 +257,8 @@ static void picnic3_mpc_sbox_uint64_lowmc_192_192_4(mzd_local_t* statein, random
       AND(t0, a, mask_b);                                                                          \
       AND(t1, b, mask_a);                                                                          \
       XOR(t0, t0, t1);                                                                             \
-      XOR(tmp->w128, t0, and_helper_ab);                                                           \
-      XOR(s_ab, tmp->w128, s_ab);                                                                  \
+      XOR(tmp, t0, and_helper_ab);                                                                 \
+      XOR(s_ab, tmp, s_ab);                                                                        \
       /* s_bc */                                                                                   \
       AND(t0, b, mask_c);                                                                          \
       AND(t1, c, mask_b);                                                                          \
@@ -266,7 +267,7 @@ static void picnic3_mpc_sbox_uint64_lowmc_192_192_4(mzd_local_t* statein, random
       XOR(s_bc, t0, s_bc);                                                                         \
                                                                                                    \
       SHR(t0, t0, 1);                                                                              \
-      XOR(tmp->w128, tmp->w128, t0);                                                               \
+      XOR(tmp, tmp, t0);                                                                           \
       /* s_ca */                                                                                   \
       AND(t0, c, mask_a);                                                                          \
       AND(t1, a, mask_c);                                                                          \
@@ -275,8 +276,8 @@ static void picnic3_mpc_sbox_uint64_lowmc_192_192_4(mzd_local_t* statein, random
       XOR(s_ca, t0, s_ca);                                                                         \
                                                                                                    \
       SHR(t0, t0, 2);                                                                              \
-      XOR(tmp->w128, tmp->w128, t0);                                                               \
-      mzd_to_bitstream(&party_msgs, tmp, (LOWMC_N + 63) / (sizeof(uint64_t) * 8), LOWMC_N);        \
+      XOR(tmp, tmp, t0);                                                                           \
+      w128_to_bitstream(&party_msgs, tmp, (LOWMC_N + 63) / (sizeof(uint64_t) * 8), LOWMC_N);       \
     }                                                                                              \
     tapes->pos += LOWMC_N;                                                                         \
     tapes->pos += LOWMC_N;                                                                         \

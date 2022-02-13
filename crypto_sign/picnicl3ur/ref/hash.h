@@ -1,1 +1,1 @@
-../../picnic3l1/ref/hash.h
+../../picnic2l1fs/ref/hash.h

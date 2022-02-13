@@ -20,6 +20,7 @@
 
 #include "lowmc_255_255_4.h"
 
+// clang-format off
 
 #if !defined(NO_UINT64_FALLBACK)
 
@@ -93,47 +94,40 @@ static void sbox_uint64_lowmc_255_255_4(mzd_local_t* in) {
 #endif
 
 
-lowmc_implementation_f lowmc_get_implementation(const lowmc_parameters_t* lowmc) {
-  assert((lowmc->m == 43 && lowmc->n == 129) || (lowmc->m == 64 && lowmc->n == 192) ||
-         (lowmc->m == 85 && lowmc->n == 255) ||
-         (lowmc->m == 10 && (lowmc->n == 128 || lowmc->n == 192 || lowmc->n == 256)));
-
+void lowmc_compute(const lowmc_parameters_t* lowmc, const lowmc_key_t* key, const mzd_local_t* x,
+                   mzd_local_t* y) {
+  const uint32_t lowmc_id = LOWMC_GET_ID(lowmc);
 
 #if !defined(NO_UINT64_FALLBACK)
   /* uint64_t implementations */
-  /* Instances with partial Sbox layer */
-  if (lowmc->m == 10) {
-    switch (lowmc->n) {
-    }
+  switch (lowmc_id) {
+    /* Instances with partial Sbox layer */
+    /* Instances with full Sbox layer */
+  case LOWMC_ID(255, 85):
+    lowmc_uint64_lowmc_255_255_4(key, x, y);
+    return;
   }
-
-  /* Instances with full Sbox layer */
-  if (lowmc->n == 255 && lowmc->m == 85)
-    return lowmc_uint64_lowmc_255_255_4;
 #endif
 
-  return NULL;
+  UNREACHABLE;
 }
 
-lowmc_store_implementation_f lowmc_store_get_implementation(const lowmc_parameters_t* lowmc) {
-  assert((lowmc->m == 43 && lowmc->n == 129) || (lowmc->m == 64 && lowmc->n == 192) ||
-         (lowmc->m == 85 && lowmc->n == 255) ||
-         (lowmc->m == 10 && (lowmc->n == 128 || lowmc->n == 192 || lowmc->n == 256)));
 
+void lowmc_record_state(const lowmc_parameters_t* lowmc, const lowmc_key_t* key,
+                        const mzd_local_t* x, recorded_state_t* state) {
+  const uint32_t lowmc_id = LOWMC_GET_ID(lowmc);
 
 #if !defined(NO_UINT64_FALLBACK)
   /* uint64_t implementations */
-  /* Instances with partial Sbox layer */
-  if (lowmc->m == 10) {
-    switch (lowmc->n) {
-    }
+  switch (lowmc_id) {
+    /* Instances with partial Sbox layer */
+    /* Instances with full Sbox layer */
+  case LOWMC_ID(255, 85):
+    lowmc_store_uint64_lowmc_255_255_4(key, x, state);
+    return;
   }
-
-  /* Instances with full Sbox layer */
-  if (lowmc->n == 255 && lowmc->m == 85)
-    return lowmc_store_uint64_lowmc_255_255_4;
 #endif
 
-  return NULL;
+  UNREACHABLE;
 }
 

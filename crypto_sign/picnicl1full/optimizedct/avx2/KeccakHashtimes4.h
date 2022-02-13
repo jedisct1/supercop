@@ -1,1 +1,1 @@
-../../../picnic3l1/optimizedct/avx2/KeccakHashtimes4.h
+../../../picnic3l1/optimizedct/c/KeccakHashtimes4.h

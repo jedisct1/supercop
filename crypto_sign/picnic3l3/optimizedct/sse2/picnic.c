@@ -1,1 +1,1 @@
-../../../picnic3l1/optimizedct/c/picnic.c
+../c/picnic.c

@@ -23,7 +23,7 @@ void allocateRandomTape(randomTape_t* tape, const picnic_instance_t* params) {
   tape->nTapes         = params->num_MPC_parties;
   tape->tape           = malloc(tape->nTapes * sizeof(uint8_t*));
   tape->aux_bits       = calloc(1, params->view_size);
-  tape->buffer         = aligned_alloc(32, 16 * sizeof(uint16_t));
+  tape->buffer         = picnic_aligned_alloc(32, 16 * sizeof(uint16_t));
   size_t tapeSizeBytes = 2 * params->view_size;
   tape->parity_tapes   = calloc(1, tapeSizeBytes);
   uint8_t* slab        = calloc(1, tape->nTapes * tapeSizeBytes);
@@ -40,19 +40,17 @@ void freeRandomTape(randomTape_t* tape) {
     free(tape->tape[0]);
     free(tape->tape);
     free(tape->parity_tapes);
-    aligned_free(tape->buffer);
+    picnic_aligned_free(tape->buffer);
     free(tape->aux_bits);
   }
 }
 
 void allocateProof2(proof2_t* proof, const picnic_instance_t* params) {
-  memset(proof, 0, sizeof(proof2_t));
-
   proof->unOpenedIndex = 0;
   proof->seedInfo      = NULL; // Sign/verify code sets it
   proof->seedInfoLen   = 0;
   proof->C             = malloc(params->digest_size);
-  proof->input         = malloc(params->input_size);
+  proof->input         = malloc(params->input_output_size);
   proof->aux           = malloc(params->view_size);
   proof->msgs          = malloc(params->view_size);
 }
@@ -70,9 +68,9 @@ void allocateSignature2(signature2_t* sig, const picnic_instance_t* params) {
   sig->iSeedInfoLen = 0;
   sig->cvInfo       = NULL; // Sign/verify code sets it
   sig->cvInfoLen    = 0;
-  sig->challenge    = (uint8_t*)malloc(params->digest_size);
-  sig->challengeC   = (uint16_t*)malloc(params->num_opened_rounds * sizeof(uint16_t));
-  sig->challengeP   = (uint16_t*)malloc(params->num_opened_rounds * sizeof(uint16_t));
+  sig->challenge    = malloc(params->digest_size);
+  sig->challengeC   = malloc(params->num_opened_rounds * sizeof(uint16_t));
+  sig->challengeP   = malloc(params->num_opened_rounds * sizeof(uint16_t));
   sig->proofs       = calloc(params->num_rounds, sizeof(proof2_t));
   // Individual proofs are allocated during signature generation, only for rounds when neeeded
 }
@@ -112,7 +110,7 @@ void freeCommitments2(commitments_t* commitments) {
 }
 
 inputs_t allocateInputs(const picnic_instance_t* params) {
-  uint8_t* slab = calloc(1, params->num_rounds * (params->input_size + sizeof(uint8_t*)));
+  uint8_t* slab = calloc(1, params->num_rounds * (params->input_output_size + sizeof(uint8_t*)));
 
   inputs_t inputs = (uint8_t**)slab;
 
@@ -120,7 +118,7 @@ inputs_t allocateInputs(const picnic_instance_t* params) {
 
   for (uint32_t i = 0; i < params->num_rounds; i++) {
     inputs[i] = (uint8_t*)slab;
-    slab += params->input_size;
+    slab += params->input_output_size;
   }
 
   return inputs;
@@ -179,7 +177,7 @@ void freeMsgs(msgs_t* msgs) {
 commitments_t* allocateCommitments(const picnic_instance_t* params, size_t numCommitments) {
   commitments_t* commitments = malloc(params->num_rounds * sizeof(commitments_t));
 
-  commitments->nCommitments = (numCommitments) ? numCommitments : params->num_MPC_parties;
+  commitments->nCommitments = numCommitments ? numCommitments : params->num_MPC_parties;
 
   uint8_t* slab = malloc(params->num_rounds * (commitments->nCommitments * params->digest_size +
                                                commitments->nCommitments * sizeof(uint8_t*)));
