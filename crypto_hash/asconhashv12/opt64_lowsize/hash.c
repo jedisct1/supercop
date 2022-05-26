@@ -1,1 +1,1 @@
-../../asconxofv12/bi8/hash.c
+../../asconhashabi32v12/bi32_lowsize/hash.c

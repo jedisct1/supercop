@@ -1,1 +1,1 @@
-../../ascon128v12/opt8/word.h
+../../ascon128av12/opt8/word.h

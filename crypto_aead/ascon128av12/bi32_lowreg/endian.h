@@ -1,1 +1,1 @@
-../../ascon128v12/bi8/endian.h
+../../ascon128abi32v12/bi32/endian.h

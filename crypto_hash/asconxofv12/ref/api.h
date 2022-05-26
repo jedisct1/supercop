@@ -1,2 +1,1 @@
-#define CRYPTO_VERSION "1.2.4"
-#define CRYPTO_BYTES 32
+../bi8/api.h

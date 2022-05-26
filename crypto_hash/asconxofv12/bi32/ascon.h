@@ -1,1 +1,1 @@
-../bi8/ascon.h
+../../asconhashabi32v12/bi32/ascon.h

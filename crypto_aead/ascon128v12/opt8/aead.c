@@ -1,1 +1,1 @@
-../bi8/aead.c
+../../ascon128abi32v12/bi32/aead.c

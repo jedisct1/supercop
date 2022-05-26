@@ -1,1 +1,1 @@
-../opt64/word.h
+../../asconhashav12/armv6/word.h

@@ -1,1 +1,1 @@
-../bi32_lowsize/config.h
+../../asconhashav12/armv7m_small/config.h

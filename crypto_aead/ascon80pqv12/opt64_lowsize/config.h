@@ -1,1 +1,1 @@
-../../ascon128v12/bi32_lowsize/config.h
+../../ascon128av12/armv7m_small/config.h

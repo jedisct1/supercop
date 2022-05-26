@@ -1,1 +1,1 @@
-../../ascon128v12/bi32_lowsize/update.c
+../../ascon128abi32v12/bi32_lowsize/update.c

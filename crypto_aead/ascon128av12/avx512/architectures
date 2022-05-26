@@ -1,1 +1,2 @@
-../../ascon128v12/avx512/architectures
+amd64
+x86

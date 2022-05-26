@@ -1,1 +1,1 @@
-../../ascon128v12/bi32/config.h
+../../ascon128av12/bi32/config.h

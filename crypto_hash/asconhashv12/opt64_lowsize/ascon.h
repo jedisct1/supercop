@@ -1,1 +1,1 @@
-../../asconxofv12/bi32_lowsize/ascon.h
+../../asconhashabi32v12/bi32_lowsize/ascon.h

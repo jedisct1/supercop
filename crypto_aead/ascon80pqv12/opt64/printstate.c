@@ -1,1 +1,1 @@
-../../ascon128v12/bi8/printstate.c
+../../ascon128abi32v12/ref/printstate.c

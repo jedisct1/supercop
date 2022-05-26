@@ -1,1 +1,1 @@
-../bi32/word.h
+../../asconhashabi32v12/bi32/word.h

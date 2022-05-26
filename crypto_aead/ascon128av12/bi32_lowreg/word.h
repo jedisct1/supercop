@@ -1,1 +1,1 @@
-../../ascon128v12/bi32/word.h
+../../ascon128abi32v12/bi32/word.h

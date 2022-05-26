@@ -1,1 +1,1 @@
-../../ascon128v12/ref/api.h
+../../ascon128abi32v12/ref/api.h

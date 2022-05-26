@@ -1,1 +1,1 @@
-../bi8/endian.h
+../../asconhashabi32v12/bi32/endian.h

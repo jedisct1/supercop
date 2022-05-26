@@ -1,1 +1,1 @@
-../../ascon128v12/opt64/word.h
+../neon/word.h
