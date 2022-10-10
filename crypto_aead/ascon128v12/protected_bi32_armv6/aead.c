@@ -3,8 +3,8 @@
 #include "permutations.h"
 #include "printstate.h"
 
-void ascon_initaead(state_t* s, const mask_npub_uint32_t* n,
-                    const mask_key_uint32_t* k) {
+void ascon_initaead(ascon_state_t* s, const mask_key_uint32_t* k,
+                    const mask_npub_uint32_t* n) {
   word_t N0, N1;
   word_t K1, K2;
   /* randomize the initial state */
@@ -28,7 +28,7 @@ void ascon_initaead(state_t* s, const mask_npub_uint32_t* n,
   printstate("init 2nd key xor", s, NUM_SHARES_KEY);
 }
 
-void ascon_adata(state_t* s, const mask_ad_uint32_t* ad, uint64_t adlen) {
+void ascon_adata(ascon_state_t* s, const mask_ad_uint32_t* ad, uint64_t adlen) {
   const int nr = ASCON_PB_ROUNDS;
   if (adlen) {
     /* full associated data blocks */
@@ -54,8 +54,8 @@ void ascon_adata(state_t* s, const mask_ad_uint32_t* ad, uint64_t adlen) {
   printstate("domain separation", s, NUM_SHARES_AD);
 }
 
-void ascon_encrypt(state_t* s, mask_c_uint32_t* c, const mask_m_uint32_t* m,
-                   uint64_t mlen) {
+void ascon_encrypt(ascon_state_t* s, mask_c_uint32_t* c,
+                   const mask_m_uint32_t* m, uint64_t mlen) {
   const int nr = ASCON_PB_ROUNDS;
   /* full plaintext blocks */
   while (mlen >= ASCON_AEAD_RATE) {
@@ -78,8 +78,8 @@ void ascon_encrypt(state_t* s, mask_c_uint32_t* c, const mask_m_uint32_t* m,
   printstate("pad plaintext", s, NUM_SHARES_M);
 }
 
-void ascon_decrypt(state_t* s, mask_m_uint32_t* m, const mask_c_uint32_t* c,
-                   uint64_t clen) {
+void ascon_decrypt(ascon_state_t* s, mask_m_uint32_t* m,
+                   const mask_c_uint32_t* c, uint64_t clen) {
   const int nr = ASCON_PB_ROUNDS;
   /* full ciphertext blocks */
   while (clen >= ASCON_AEAD_RATE) {
@@ -99,13 +99,14 @@ void ascon_decrypt(state_t* s, mask_m_uint32_t* m, const mask_c_uint32_t* c,
     word_t cx = MLOAD((uint32_t*)c, NUM_SHARES_C);
     s->x[0] = MXOR(s->x[0], cx, NUM_SHARES_C);
     MSTORE((uint32_t*)m, s->x[0], NUM_SHARES_M);
-    word_t mask = MMASK(clen, NUM_SHARES_C);
-    s->x[0] = MXORAND(cx, s->x[0], mask, NUM_SHARES_C);
+    word_t mask = MMASK(s->x[5], clen);
+    s->x[0] = MXORAND(cx, mask, s->x[0], NUM_SHARES_M);
+    s->x[5] = MREUSE(s->x[5], 0, NUM_SHARES_M);
   }
   printstate("pad ciphertext", s, NUM_SHARES_M);
 }
 
-void ascon_final(state_t* s, const mask_key_uint32_t* k) {
+void ascon_final(ascon_state_t* s, const mask_key_uint32_t* k) {
   word_t K1, K2;
   K1 = MLOAD((uint32_t*)k, NUM_SHARES_KEY);
   K2 = MLOAD((uint32_t*)(k + 2), NUM_SHARES_KEY);
@@ -123,7 +124,7 @@ void ascon_final(state_t* s, const mask_key_uint32_t* k) {
   printstate("final 2nd key xor", s, NUM_SHARES_KEY);
 }
 
-void ascon_settag(state_t* s, mask_c_uint32_t* t) {
+void ascon_settag(ascon_state_t* s, mask_c_uint32_t* t) {
   MSTORE((uint32_t*)t, s->x[3], NUM_SHARES_C);
   MSTORE((uint32_t*)(t + 2), s->x[4], NUM_SHARES_C);
 }
@@ -143,7 +144,7 @@ static const uint32_t c[4] = {0x9e5ce5e3, 0xd40e9b87, 0x0bfc74af, 0xf8e408a9};
 static const uint32_t c[4] = {0x11874f08, 0x7520afef, 0xa4dd41b4, 0x4bd6f9a4};
 #endif
 
-void ascon_xortag(state_t* s, const mask_c_uint32_t* t) {
+void ascon_xortag(ascon_state_t* s, const mask_c_uint32_t* t) {
   /* set x0, x1, x2 to zero */
   s->x[0] = MREUSE(s->x[0], 0, NUM_SHARES_KEY);
   s->x[1] = MREUSE(s->x[1], 0, NUM_SHARES_KEY);
@@ -162,7 +163,7 @@ void ascon_xortag(state_t* s, const mask_c_uint32_t* t) {
   s->x[4].s[0].w[1] ^= c[3];
 }
 
-int ascon_iszero(state_t* s) {
+int ascon_iszero(ascon_state_t* s) {
 #if NUM_SHARES_KEY >= 2
   s->x[3].s[0].w[0] ^= ROR32(s->x[3].s[1].w[0], ROT(1));
   s->x[3].s[0].w[1] ^= ROR32(s->x[3].s[1].w[1], ROT(1));
@@ -187,9 +188,4 @@ int ascon_iszero(state_t* s) {
   result |= result >> 16;
   result |= result >> 8;
   return ((((int)(result & 0xff) - 1) >> 8) & 1) - 1;
-}
-
-int ascon_verify(state_t* s, const mask_c_uint32_t* t) {
-  ascon_xortag(s, t);
-  return ascon_iszero(s);
 }

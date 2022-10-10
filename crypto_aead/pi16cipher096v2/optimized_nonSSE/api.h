@@ -1,4 +1,1 @@
-#define CRYPTO_KEYBYTES 12
-#define CRYPTO_NSECBYTES 16
-#define CRYPTO_NPUBBYTES 4
-#define CRYPTO_ABYTES 8192
+../ref/api.h

@@ -91,7 +91,7 @@ void skinny128_384_plus(
     __m128i perm_tk  = {0x0304060205000701, 0x0b0c0e0a0d080f09};
 
     // put internal state into output buffer
-    _mm_storeu_si64((__m128i*)rtk_1, tk_1);
+    _mm_storel_epi64((__m128i*)rtk_1, tk_1);
     tk_1 = _mm_shuffle_epi8(tk_1, _mm_set_epi32(0x03040602, 0x05000701, 0x0b0c0e0a, 0x0d080f09));
     _mm_storeu_si128((__m128i*)(rtk_1+8), tk_1);
     tk_1 = _mm_shuffle_epi8(tk_1, perm_tk);
@@ -107,7 +107,7 @@ void skinny128_384_plus(
     tk_1 = _mm_shuffle_epi8(tk_1, perm_tk);
     _mm_storeu_si128((__m128i*)(rtk_1+104), tk_1);
     tk_1 = _mm_shuffle_epi8(tk_1, perm_tk);
-    _mm_storeu_si64((__m128i*)(rtk_1+120), tk_1);
+    _mm_storel_epi64((__m128i*)(rtk_1+120), tk_1);
 
     // skinny-128-384+ has 40 rounds
     DOUBLE_ROUND(rtk_1,     rtk_23);
@@ -210,7 +210,7 @@ void tk_schedule_23(
     // first round tweakeys is simply extracted from the initial tweakey states
     tmp0    = _mm_xor_si128(tmp3, rtk_3);
     tmp0    = _mm_xor_si128(tmp0, rtk_2);
-    _mm_storeu_si64((__m128i*)rtk_23, tmp0);
+    _mm_storel_epi64((__m128i*)rtk_23, tmp0);
     rtk_23  += 8;
     // next round tweakeys are computed using double updates to save cycles
     DOUBLE_TK23_UPDATE(0x03, 0x00, 0x07, 0x00, perm_0);
@@ -254,7 +254,7 @@ void tk_schedule_23(
     rtk_2   = _mm_or_si128(tmp2, tmp3);
     tmp0    = _mm_xor_si128(tmp0, rtk_3);
     tmp0    = _mm_xor_si128(tmp0, rtk_2);
-    _mm_storeu_si64((__m128i*)rtk_23, tmp0);
+    _mm_storel_epi64((__m128i*)rtk_23, tmp0);
 }
 
 /**
@@ -275,7 +275,7 @@ void tk_schedule_3(
 
     // first round tweakeys is simply extracted from the initial tweakey states
     tmp0    = _mm_xor_si128(tmp0, rtk_3);
-    _mm_storeu_si64((__m128i*)rtk, tmp0);
+    _mm_storel_epi64((__m128i*)rtk, tmp0);
     rtk += 8;
     // next round tweakeys are computed using double updates to save cycles
     DOUBLE_TK3_UPDATE(0x03, 0x00, 0x07, 0x00, perm_0);

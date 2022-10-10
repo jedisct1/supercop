@@ -66,7 +66,7 @@ void get_ad_block(BYTE* output, const BYTE* ad, SIZE adlen, const BYTE* npub, SI
     }
 }
 
-// Return the ith assocated data block.
+// Return the ith ciphertext block.
 // clen is the length of the ciphertext in bytes 
 void get_c_block(BYTE* output, const BYTE* c, SIZE clen, SIZE i)
 {
@@ -78,7 +78,7 @@ void get_c_block(BYTE* output, const BYTE* c, SIZE clen, SIZE i)
         return;
     }
     const SIZE r_clen  = clen - block_offset;
-    // Fill with associated data if available
+    // Fill with ciphertext if available
     if(BLOCK_SIZE <= r_clen) { // enough ciphertext
         memcpy(output, c + block_offset, BLOCK_SIZE);
     } else { // not enough ciphertext, need to pad
@@ -96,10 +96,10 @@ void crypto_aead_impl(
     const BYTE* npub, const BYTE* k, int encrypt)
 { 
     // Compute number of blocks
-    const SIZE nblocks_c  = mlen ? 1 + mlen / BLOCK_SIZE : 0;
-    const SIZE nblocks_m  = (!mlen || mlen % BLOCK_SIZE) ? nblocks_c : nblocks_c - 1;
+    const SIZE nblocks_c  = 1 + mlen / BLOCK_SIZE;
+    const SIZE nblocks_m  = (mlen % BLOCK_SIZE) ? nblocks_c : nblocks_c - 1;
     const SIZE nblocks_ad = 1 + (CRYPTO_NPUBBYTES + adlen) / BLOCK_SIZE;
-    const SIZE nb_it = (nblocks_m > nblocks_ad) ? nblocks_m : nblocks_ad + 1;
+    const SIZE nb_it = (nblocks_c > nblocks_ad) ? nblocks_c : nblocks_ad + 1;
 
     // Storage for the expanded key L
     BYTE expanded_key[BLOCK_SIZE] = {0};
@@ -110,7 +110,7 @@ void crypto_aead_impl(
     BYTE mask_buffer_1[BLOCK_SIZE] = {0};
     BYTE mask_buffer_2[BLOCK_SIZE] = {0};
     BYTE mask_buffer_3[BLOCK_SIZE] = {0};
-    memcpy(mask_buffer_2, expanded_key, CRYPTO_KEYBYTES);
+    memcpy(mask_buffer_2, expanded_key, BLOCK_SIZE);
 
     BYTE* previous_mask = mask_buffer_1;
     BYTE* current_mask = mask_buffer_2;

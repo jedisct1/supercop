@@ -26,6 +26,7 @@
 // crypto_hash/[algorithm]/ directory
 
 #include <string.h>
+#include "crypto_hash.h"
 #include "api.h"
 #include "crypto_hash.h"
 #include "eschconfig.h"

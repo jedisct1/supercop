@@ -2,9 +2,12 @@
 #define ROUND_H_
 
 #include "ascon.h"
+#include "constants.h"
+#include "forceinline.h"
 #include "printstate.h"
+#include "word.h"
 
-forceinline void ROUND(state_t* s, uint64_t C) {
+forceinline void ROUND(ascon_state_t* s, uint64_t C) {
   uint64_t xtemp;
   /* round constant */
   s->x[2] ^= C;
@@ -36,7 +39,7 @@ forceinline void ROUND(state_t* s, uint64_t C) {
   printstate(" round output", s);
 }
 
-forceinline void PROUNDS(state_t* s, int nr) {
+forceinline void PROUNDS(ascon_state_t* s, int nr) {
   int i = START(nr);
   do {
     ROUND(s, RC(i));

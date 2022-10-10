@@ -3,21 +3,25 @@
 
 #include <stdint.h>
 
-#include "word.h"
+#include "api.h"
 
 typedef union {
   uint64_t x[5];
   uint32_t w[5][2];
   uint8_t b[5][8];
-} state_t;
+} ascon_state_t;
 
-typedef struct {
-#if (CRYPTO_KEYBYTES == 20)
-  uint64_t k0;
+#ifdef ASCON_AEAD_RATE
+
+#define ASCON_KEYWORDS (CRYPTO_KEYBYTES + 7) / 8
+
+typedef union {
+  uint64_t x[ASCON_KEYWORDS];
+  uint32_t w[ASCON_KEYWORDS][2];
+  uint8_t b[ASCON_KEYWORDS][8];
+} ascon_key_t;
+
 #endif
-  uint64_t k1;
-  uint64_t k2;
-} key_t;
 
 #define ASCON_ABSORB 0x1
 #define ASCON_SQUEEZE 0x2
@@ -26,8 +30,8 @@ typedef struct {
 #define ASCON_ENCRYPT (ASCON_ABSORB | ASCON_SQUEEZE)
 #define ASCON_DECRYPT (ASCON_ABSORB | ASCON_SQUEEZE | ASCON_INSERT)
 
-void ascon_update(state_t* s, uint8_t* out, const uint8_t* in, uint64_t len,
-                  uint8_t mode);
+void ascon_update(uint8_t mode, ascon_state_t* s, uint8_t* out,
+                  const uint8_t* in, uint64_t len);
 
 void ascon_aead(uint8_t* t, uint8_t* out, const uint8_t* in, uint64_t len,
                 const uint8_t* ad, uint64_t adlen, const uint8_t* npub,

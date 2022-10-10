@@ -213,7 +213,7 @@ void tk_schedule_23(
     // first round tweakeys is simply extracted from the initial tweakey states
     tmp0    = _mm_xor_si128(tmp3, rtk_3);
     tmp0    = _mm_xor_si128(tmp0, rtk_2);
-    _mm_storeu_si64((__m128i*)rtk_23, tmp0);
+    _mm_storel_epi64((__m128i*)rtk_23, tmp0);
     rtk_23  += 8;
     // next round tweakeys are computed using double updates to save cycles
     DOUBLE_TK23_UPDATE(0x03, 0x00, 0x07, 0x00, perm_0);
@@ -257,5 +257,5 @@ void tk_schedule_23(
     rtk_2   = _mm_or_si128(tmp2, tmp3);
     tmp0    = _mm_xor_si128(tmp0, rtk_3);
     tmp0    = _mm_xor_si128(tmp0, rtk_2);
-    _mm_storeu_si64((__m128i*)rtk_23, tmp0);
+    _mm_storel_epi64((__m128i*)rtk_23, tmp0);
 }

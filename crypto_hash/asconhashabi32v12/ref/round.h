@@ -2,6 +2,7 @@
 #define ROUND_H_
 
 #include "ascon.h"
+#include "constants.h"
 #include "printstate.h"
 
 static inline uint32_t ROR32(uint32_t x, int n) {
@@ -17,8 +18,8 @@ static inline uint64_t ROR(uint64_t x, int n) {
   return (uint64_t)bh << 32 | bl;
 }
 
-static inline void ROUND(state_t* s, uint64_t C) {
-  state_t t;
+static inline void ROUND(ascon_state_t* s, uint64_t C) {
+  ascon_state_t t;
   /* addition of round constant */
   s->x[2] ^= C;
   /* printstate(" round constant", s); */
