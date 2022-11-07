@@ -19,18 +19,15 @@ int crypto_kem_enc(
        const unsigned char *pk
 )
 {
-	unsigned char two_e[ 1 + SYS_N/8 ] = {2};
-	unsigned char *e = two_e + 1;
-	unsigned char one_ec[ 1 + SYS_N/8 + (SYND_BYTES + 32) ] = {1};
+	unsigned char e[ SYS_N/8 ];
+	unsigned char one_ec[ 1 + SYS_N/8 + SYND_BYTES ] = {1};
 
 	//
 
 	encrypt(c, pk, e);
 
-	crypto_hash_32b(c + SYND_BYTES, two_e, sizeof(two_e)); 
-
 	memcpy(one_ec + 1, e, SYS_N/8);
-	memcpy(one_ec + 1 + SYS_N/8, c, SYND_BYTES + 32);
+	memcpy(one_ec + 1 + SYS_N/8, c, SYND_BYTES);
 
 	crypto_hash_32b(key, one_ec, sizeof(one_ec));
 
@@ -45,15 +42,12 @@ int crypto_kem_dec(
 {
 	int i;
 
-	unsigned char ret_confirm = 0;
 	unsigned char ret_decrypt = 0;
 
 	uint16_t m;
 
-	unsigned char conf[32];
-	unsigned char two_e[ 1 + SYS_N/8 ] = {2};
-	unsigned char *e = two_e + 1;
-	unsigned char preimage[ 1 + SYS_N/8 + (SYND_BYTES + 32) ];
+	unsigned char e[ SYS_N/8 ];
+	unsigned char preimage[ 1 + SYS_N/8 + SYND_BYTES ];
 	unsigned char *x = preimage;
 	const unsigned char *s = sk + 40 + IRR_BYTES + COND_BYTES;
 
@@ -61,12 +55,7 @@ int crypto_kem_dec(
 
 	ret_decrypt = decrypt(e, sk + 40, c);
 
-	crypto_hash_32b(conf, two_e, sizeof(two_e)); 
-
-	for (i = 0; i < 32; i++) 
-		ret_confirm |= conf[i] ^ c[SYND_BYTES + i];
-
-	m = ret_decrypt | ret_confirm;
+	m = ret_decrypt;
 	m -= 1;
 	m >>= 8;
 
@@ -74,7 +63,7 @@ int crypto_kem_dec(
 	for (i = 0; i < SYS_N/8; i++) 
 		*x++ = (~m & s[i]) | (m & e[i]);
 
-	for (i = 0; i < SYND_BYTES + 32; i++) 
+	for (i = 0; i < SYND_BYTES; i++) 
 		*x++ = c[i];
 
 	crypto_hash_32b(key, preimage, sizeof(preimage)); 

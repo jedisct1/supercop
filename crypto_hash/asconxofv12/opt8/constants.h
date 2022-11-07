@@ -1,1 +1,1 @@
-../../asconhashav12/opt8/constants.h
+../../asconhashav12/avr/constants.h

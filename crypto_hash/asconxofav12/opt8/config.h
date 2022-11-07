@@ -1,1 +1,1 @@
-../../asconhashav12/opt8/config.h
+../../asconhashav12/avr/config.h

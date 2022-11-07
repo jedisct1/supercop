@@ -1,1 +1,1 @@
-../../asconhashabi32v12/bi32/hash.c
+../../asconhashav12/avr/hash.c

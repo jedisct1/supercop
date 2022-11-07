@@ -1,1 +1,1 @@
-../../ascon128av12/neon/constants.h
+../../ascon128av12/avr/constants.h

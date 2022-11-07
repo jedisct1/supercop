@@ -1,1 +1,1 @@
-../../asconhashv12/esp32/permutations.c
+../../asconhashav12/esp32/permutations.c

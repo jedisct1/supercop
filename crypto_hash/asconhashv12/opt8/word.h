@@ -1,1 +1,1 @@
-../../asconhashav12/opt8/word.h
+../../asconhashav12/avr/word.h

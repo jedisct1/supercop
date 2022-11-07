@@ -1,1 +1,1 @@
-../../asconhashabi32v12/ref/printstate.c
+../../asconhashabi32v12/bi32/printstate.c
