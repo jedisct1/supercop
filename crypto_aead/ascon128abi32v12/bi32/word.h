@@ -5,7 +5,7 @@
 #include <string.h>
 
 #include "config.h"
-#include "endian.h"
+#include "bendian.h"
 #include "forceinline.h"
 #include "interleave.h"
 

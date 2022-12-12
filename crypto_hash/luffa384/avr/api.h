@@ -1,2 +1,1 @@
-#define CRYPTO_BYTES 48
-
+../arm/api.h

@@ -1,3 +1,1 @@
-#define CRYPTO_BYTES 48
-#define CRYPTO_VERSION "1.2"
-
+../asm-PS-v2-FP/api.h

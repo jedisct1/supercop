@@ -1,3 +1,1 @@
-#define CRYPTO_PUBLICKEYBYTES 48
-#define CRYPTO_SECRETKEYBYTES 96
-#define CRYPTO_BYTES 35664
+../../sphincsf192harakarobust/ref/api.h

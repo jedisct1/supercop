@@ -4,7 +4,7 @@
 #include <stdint.h>
 
 #include "config.h"
-#include "endian.h"
+#include "bendian.h"
 #include "forceinline.h"
 
 #if ASCON_INLINE_BI

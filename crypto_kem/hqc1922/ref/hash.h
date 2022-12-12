@@ -1,2 +1,1 @@
-#include "crypto_hash_sha512.h"
-#define sha512 crypto_hash_sha512
+../../hqc1281/opt/hash.h

@@ -6,7 +6,7 @@
 
 #include "asm.h"
 #include "config.h"
-#include "endian.h"
+#include "bendian.h"
 #include "forceinline.h"
 #include "interleave.h"
 #include "shares.h"

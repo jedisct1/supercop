@@ -1,2 +1,1 @@
-#define CRYPTO_BYTES 48
-#define CRYPTO_VERSION "1"
+../../oncore32bits/api.h
