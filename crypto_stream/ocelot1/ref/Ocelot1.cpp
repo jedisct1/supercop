@@ -142,12 +142,12 @@ void Ocelot1::Expansion(UINT const* data, int size, UINT* res, int dim, short it
     BYTE temp[4];
     temp[0] = _ss[0]; temp[1] = _ss[64];
     temp[2] = _ss[128]; temp[3] = _ss[192];
-    register UINT val1 = Bytes2Word(temp);
+    UINT val1 = Bytes2Word(temp);
     temp[0] = _ss[32]; temp[1] = _ss[96];
     temp[2] = _ss[160]; temp[3] = _ss[224];
-    register UINT val2 = Bytes2Word(temp);
+    UINT val2 = Bytes2Word(temp);
     UINT temp1, temp2;
-    register int k, i, ix = lend2;
+    int k, i, ix = lend2;
     for (k = 0; k < iter; k++)
     {
         for (i = 0; i < size; i++, ix++)

@@ -26,6 +26,8 @@
 #include <stdlib.h>
 #include "_core.h"
 
+CRYMPIX crympix;
+
 void crympix_init(uni_t maxlen)
 {
 #ifdef DEBUG_ON

@@ -1,1 +1,1 @@
-../../../hecfp128i/v02/var/divisor_dbl.s
+../varglv4/divisor_dbl.s

@@ -8,7 +8,7 @@ void Counter::Increment()
     static UINT carry = 0;
     static long long res;
     carry = 0;
-    for (register int i = 0; i < _size; i++)
+    for (int i = 0; i < _size; i++)
     {
         res = _data[i] + _incr[i] + carry;
         _data[i] = (UINT)res;
@@ -24,7 +24,7 @@ void Counter::MakeGoodIncrement()
     //A good increment should provide fast variation.
     //Ensure that each byte is between 64 and 191.
     BYTE* pbytes = (BYTE*)&_incr[0];
-    for (register int i = 0; i < _size4; i++,pbytes++)
+    for (int i = 0; i < _size4; i++,pbytes++)
     {
         if ((*pbytes & 0x80) != 0)
         {

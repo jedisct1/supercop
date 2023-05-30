@@ -8,34 +8,38 @@ void nope()
   exit(1);
 }
 
+#define CPUID(func,leaf,a,b,c,d) \
+  __asm volatile(".byte 15;.byte 162":"=a"(a),"=b"(b),"=c"(c),"=d"(d):"a"(func),"c"(leaf):)
+
+static void putword(unsigned int x)
+{
+  int j;
+  for (j = 0;j < 4;++j) {
+    unsigned int c = 255&(x>>(8*j));
+    if (c < 32) c = 32;
+    if (c > 126) c = 126;
+    putchar(c);
+  }
+}
+
+static unsigned int cpuidmax,b0,c0,d0;
+static unsigned int a1,b1,c1,d1;
+static unsigned int a26,b26,c26,d26;
+
 int main()
 {
-  unsigned long x[4];
-  unsigned long y[4];
-  int i;
-  int j;
-  char c;
-
   signal(SIGILL,nope);
 
-  x[0] = 0;
-  x[1] = 0;
-  x[2] = 0;
-  x[3] = 0;
+  CPUID(0,0,cpuidmax,b0,c0,d0);
+  if (!cpuidmax) return 1;
+  CPUID(1,0,a1,b1,c1,d1);
+  if (cpuidmax >= 26) CPUID(26,0,a26,b26,c26,d26);
 
-  asm volatile(".byte 15;.byte 162" : "=a"(x[0]),"=b"(x[1]),"=c"(x[3]),"=d"(x[2]) : "0"(0) );
-  if (!x[0]) return 0;
-  asm volatile(".byte 15;.byte 162" : "=a"(y[0]),"=b"(y[1]),"=c"(y[2]),"=d"(y[3]) : "0"(1) );
-
-  for (i = 1;i < 4;++i)
-    for (j = 0;j < 4;++j) {
-      c = x[i] >> (8 * j);
-      if (c < 32) c = 32;
-      if (c > 126) c = 126;
-      putchar(c);
-    }
-
-  printf("-%08x-%08x\n",(unsigned int) y[0],(unsigned int) y[3]);
-
+  putword(b0);
+  putword(d0);
+  putword(c0);
+  printf("-%08x",a1);
+  if (cpuidmax >= 26) printf("-%02x",a26>>24);
+  printf("-%08x\n",d1);
   return 0;
 }

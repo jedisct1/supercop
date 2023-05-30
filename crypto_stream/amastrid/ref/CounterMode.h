@@ -35,7 +35,7 @@ public:
 
     void GetWords(UINT* words, int n)
     {
-        for (register int i = 0; i < n; i++)
+        for (int i = 0; i < n; i++)
         {
             GetNextWord(words[i]);
         }
@@ -43,7 +43,7 @@ public:
 
     void GetBytes(BYTE* bytes, int n)
     {
-        for (register int i = 0; i < n; i++)
+        for (int i = 0; i < n; i++)
         {
             GetNextByte(bytes[i]);
         }

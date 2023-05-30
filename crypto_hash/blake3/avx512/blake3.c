@@ -133,7 +133,7 @@ INLINE size_t compress_parents_parallel(const uint8_t *child_chaining_values,
 
 // The wide helper function returns (writes out) an array of chaining values
 // and returns the length of that array. The number of chaining values returned
-// is the dyanmically detected SIMD degree, at most MAX_SIMD_DEGREE. Or fewer,
+// is the dynamically detected SIMD degree, at most MAX_SIMD_DEGREE. Or fewer,
 // if the input is shorter than that many chunks. The reason for maintaining a
 // wide array of chaining values going back up the tree, is to allow the
 // implementation to hash as many parents in parallel as possible.
@@ -141,17 +141,18 @@ INLINE size_t compress_parents_parallel(const uint8_t *child_chaining_values,
 // As a special case when the SIMD degree is 1, this function will still return
 // at least 2 outputs. This guarantees that this function doesn't perform the
 // root compression. (If it did, it would use the wrong flags, and also we
-// wouldn't be able to implement exendable ouput.) Note that this function is
+// wouldn't be able to implement exendable output.) Note that this function is
 // not used when the whole input is only 1 chunk long; that's a different
 // codepath.
 //
 // Why not just have the caller split the input on the first update(), instead
 // of implementing this special rule? Because we don't want to limit SIMD or
 // multi-threading parallelism for that update().
-size_t blake3_compress_subtree_wide(const uint8_t *input, size_t input_len,
-                                    const uint32_t key[8],
-                                    uint64_t chunk_counter, uint8_t flags,
-                                    uint8_t *out) {
+static size_t blake3_compress_subtree_wide(const uint8_t *input,
+                                           size_t input_len,
+                                           const uint32_t key[8],
+                                           uint64_t chunk_counter,
+                                           uint8_t flags, uint8_t *out) {
   // Note that the single chunk case does *not* bump the SIMD degree up to 2
   // when it is 1. If this implementation adds multi-threading in the future,
   // this gives us the option of multi-threading even the 2-chunk case, which
@@ -223,15 +224,21 @@ INLINE void compress_subtree_to_parent_node(
   assert(input_len > BLAKE3_CHUNK_LEN);
 #endif
 
-  uint8_t cv_array[2 * MAX_SIMD_DEGREE_OR_2 * BLAKE3_OUT_LEN];
+  uint8_t cv_array[MAX_SIMD_DEGREE_OR_2 * BLAKE3_OUT_LEN];
   size_t num_cvs = blake3_compress_subtree_wide(input, input_len, key,
                                                 chunk_counter, flags, cv_array);
+  assert(num_cvs <= MAX_SIMD_DEGREE_OR_2);
 
   // If MAX_SIMD_DEGREE is greater than 2 and there's enough input,
   // compress_subtree_wide() returns more than 2 chaining values. Condense
   // them into 2 by forming parent nodes repeatedly.
   uint8_t out_array[MAX_SIMD_DEGREE_OR_2 * BLAKE3_OUT_LEN / 2];
-  while (num_cvs > 2) {
+  // The second half of this loop condition is always true, and we just
+  // asserted it above. But GCC can't tell that it's always true, and if NDEBUG
+  // is set on platforms where MAX_SIMD_DEGREE_OR_2 == 2, GCC emits spurious
+  // warnings here. GCC 8.5 is particularly sensitive, so if you're changing
+  // this code, test it against that version.
+  while (num_cvs > 2 && num_cvs <= MAX_SIMD_DEGREE_OR_2) {
     num_cvs =
         compress_parents_parallel(cv_array, num_cvs, key, flags, out_array);
     memcpy(cv_array, out_array, num_cvs * BLAKE3_OUT_LEN);

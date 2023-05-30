@@ -1,1 +1,1 @@
-../../../hecfp128i/v02/var/smul.c
+../../../hecfp128bk/v02/w8s01glv4/smul.c

@@ -238,7 +238,7 @@ private:
 
     void Bytes2Words(UINT* ar1, UINT* ar2, int const& len)
     {
-        for(register int i=0; i<len; i++)
+        for(int i=0; i<len; i++)
         {
             ar2[i] = Bytes2Word((BYTE*)&ar1[i]);
         }
@@ -247,7 +247,7 @@ private:
     void Words2Bytes(UINT* ar1, BYTE* ar2, int const& len)
     {
         BYTE* pbytes = ar2;
-        for(register int i=0; i<len; i++,pbytes+=4)
+        for(int i=0; i<len; i++,pbytes+=4)
         {
             Word2Bytes(ar1[i], pbytes);
         }

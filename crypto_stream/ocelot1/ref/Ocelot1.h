@@ -115,7 +115,7 @@ public:
 
     void GetWords(UINT* words, int n)
     {
-        for (register int i = 0; i < n; i++)
+        for (int i = 0; i < n; i++)
         {
             GetNextWord(words[i]);
         }
@@ -123,7 +123,7 @@ public:
 
     void GetBytes(BYTE* bytes, int n)
     {
-        for (register int i = 0; i < n; i++)
+        for (int i = 0; i < n; i++)
         {
             GetNextByte(bytes[i]);
         }
@@ -140,8 +140,8 @@ private:
 
     void SwapLE(UINT const& val1, UINT const& val2)
     {
-        register BYTE *p1, *p2;
-        register BYTE temp, v1, v2;
+        BYTE *p1, *p2;
+        BYTE temp, v1, v2;
         p1 = (BYTE*)(&val1) + 3;
         p2 = (BYTE*)(&val2) + 3;
         //1
@@ -160,8 +160,8 @@ private:
 
     void SwapBE(UINT const& val1, UINT const& val2)
     {
-        register BYTE *p1, *p2;
-        register BYTE temp, v1, v2;
+        BYTE *p1, *p2;
+        BYTE temp, v1, v2;
         p1 = (BYTE*)&val1;
         p2 = (BYTE*)&val2;
         //1
@@ -242,7 +242,7 @@ private:
 
     void Bytes2Words(UINT* ar1, UINT* ar2, int const& len)
     {
-        for(register int i=0; i<len; i++)
+        for(int i=0; i<len; i++)
         {
             ar2[i] = Bytes2Word((BYTE*)&ar1[i]);
         }
@@ -251,7 +251,7 @@ private:
     void Words2Bytes(UINT* ar1, BYTE* ar2, int const& len)
     {
         BYTE* pbytes = ar2;
-        for(register int i=0; i<len; i++,pbytes+=4)
+        for(int i=0; i<len; i++,pbytes+=4)
         {
             Word2Bytes(ar1[i], pbytes);
         }

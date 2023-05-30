@@ -1,1 +1,1 @@
-../../../hecfp61e2i/v01/var/divisor.c
+../varglv8/divisor.c

@@ -107,7 +107,7 @@ typedef struct CRYMPIX_RUNTIME{
 	uni_t maxlen;
 } CRYMPIX_t, *CRYMPIX;
 
-CRYMPIX crympix;
+extern CRYMPIX crympix;
 
 #define ERR_NULL_POINTER 0
 #define ERR_DIVIDE_BY_ZERO 1

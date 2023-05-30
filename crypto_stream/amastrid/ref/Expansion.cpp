@@ -34,11 +34,11 @@ void Expansion::Expand(UINT const* data, UINT const& len, BYTE* res)
     //Propagate differences
     BYTE temp[4];
     temp[0] = _kk1[0]; temp[1] = _kk1[64]; temp[2] = _kk1[128]; temp[3] = _kk1[192];
-    register UINT val1 = Bytes2Word(temp);
+    UINT val1 = Bytes2Word(temp);
     temp[0] = _kk1[32]; temp[1] = _kk1[96]; temp[2] = _kk1[160]; temp[3] = _kk1[224];
-    register UINT val2 = Bytes2Word(temp);
-    register UINT temp1, temp2;
-    register UINT k, i, ix = lend2;
+    UINT val2 = Bytes2Word(temp);
+    UINT temp1, temp2;
+    UINT k, i, ix = lend2;
     for (k = 0; k < _iter; k++)
     {
         if (k == 1)

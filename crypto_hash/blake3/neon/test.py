@@ -94,7 +94,9 @@ def main():
             shutil.copy(filepath, tempdir)
             if filepath.suffix in (".c", ".S"):
                 c_files.append(filepath.name)
-    cmd = ["gcc", "-O3", "-march=native", "-o", "blake3.exe", "main.c"]
+    # We omit -march=native here, to avoid triggering the "wider
+    # implementations on this platform" error case in blake3_static_dispatch.h.
+    cmd = ["gcc", "-O3", "-o", "blake3.exe", "main.c"]
     cmd += c_files
     print(" ".join(cmd))
     subprocess.run(cmd, check=True, cwd=tempdir)
