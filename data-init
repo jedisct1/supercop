@@ -245,7 +245,7 @@ do
           cat "try-anything.c"
           cat "measure-anything.c"
           find "$implementationdir" -follow -type f \
-          | egrep '\.h$|\.c$|\.s$|\.S$|\.cc$|\.cpp$' \
+          | grep -E '\.h$|\.c$|\.s$|\.S$|\.cc$|\.cpp$' \
           | xargs cat
         ) \
         | grep '#include' \

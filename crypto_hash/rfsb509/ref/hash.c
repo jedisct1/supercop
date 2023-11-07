@@ -35,7 +35,7 @@ int crypto_hash(
   for(; i<padlen-8;i++)
     pad[i] = 0;
   for(; i<padlen;i++)
-    pad[i] = (inlen >> 8*(i-40)) & 0xff;
+    pad[i] = (inlen >> 8*(i-(padlen-8))) & 0xff;
 
   crypto_hashblocks_rfsb509(t,pad,padlen);
 

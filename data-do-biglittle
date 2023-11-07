@@ -471,7 +471,7 @@ def parse_args():
         help='data-summarize command',
     )
     parser.add_argument(
-        '-H', '--hostname', action='store', default=node(), help='set hostname'
+        '-H', '--hostname', action='store', default=node().split('.')[0], help='set hostname'
     )
     parser.add_argument(
         '-f',
