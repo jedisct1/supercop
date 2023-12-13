@@ -1,0 +1,2 @@
+20231107 bolerobullseye1 amd64 20231212 crypto_kem sntrup761/constbranchindex timecop_pass crypto_kem/sntrup761/compact gcc_-march=native_-mtune=native_-Os_-fomit-frame-pointer_-fwrapv_-fPIC_-fPIE 10 0
+20231107 bolerobullseye1 amd64 20231212 crypto_kem sntrup761/constbranchindex timecop_output crypto_kem/sntrup761/compact gcc_-march=native_-mtune=native_-Os_-fomit-frame-pointer_-fwrapv_-fPIC_-fPIE 562714993031d004336cb22dceb4a1ceca0d91ed6bbbebcd00c3152b5d4ed338 284332550 47801556071 1699515000 crypto_kem/sntrup761/compact

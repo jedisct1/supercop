@@ -1,5 +1,5 @@
 /*
- * measure-anything.c version 20200809
+ * measure-anything.c version 20231211
  * D. J. Bernstein
  * Public domain.
  */
@@ -167,6 +167,8 @@ void limits()
 
 void crypto_declassify(void *x,unsigned long long xlen)
 {
+  (void) x;
+  (void) xlen;
 }
 
 static unsigned char randombyte[1];

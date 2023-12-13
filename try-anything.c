@@ -1,5 +1,5 @@
 /*
- * try-anything.c version 20200815
+ * try-anything.c version 20231211
  * D. J. Bernstein
  * Some portions adapted from TweetNaCl by Bernstein, Janssen, Lange, Schwabe.
  * Public domain.
@@ -112,13 +112,14 @@ static void increment(u8 *n)
           if (!++n[4])
             if (!++n[5])
               if (!++n[6])
-                if (!++n[7])
+                if (!++n[7]) {
                   ;
+                }
 }
 
 static void testvector(unsigned char *x,unsigned long long xlen)
 {
-  const static unsigned char testvector_k[33] = "generate inputs for test vectors";
+  static const unsigned char testvector_k[33] = "generate inputs for test vectors";
   static unsigned char testvector_n[8];
   salsa20(x,xlen,testvector_n,testvector_k);
   increment(testvector_n);
@@ -142,7 +143,7 @@ unsigned long long myrandom(void)
 
 static void canary(unsigned char *x,unsigned long long xlen)
 {
-  const static unsigned char canary_k[33] = "generate pad to catch overwrites";
+  static const unsigned char canary_k[33] = "generate pad to catch overwrites";
   static unsigned char canary_n[8];
   salsa20(x,xlen,canary_n,canary_k);
   increment(canary_n);
@@ -196,7 +197,7 @@ static char checksum_hex[65];
 void checksum(const unsigned char *x,unsigned long long xlen)
 {
   u8 block[16];
-  int i;
+  unsigned long long i;
   while (xlen >= 16) {
     core(checksum_state,x,checksum_state);
     x += 16;
@@ -237,7 +238,7 @@ void fail(const char *why)
 unsigned char *alignedcalloc(unsigned long long len)
 {
   unsigned char *x = (unsigned char *) calloc(1,len + 256);
-  long long i;
+  unsigned long long i;
   if (!x) fail("out of memory");
   /* will never deallocate so shifting is ok */
   for (i = 0;i < len + 256;++i) x[i] = random();
@@ -274,6 +275,8 @@ void limits()
 
 void poison(void *x,unsigned long long xlen)
 {
+  (void) x;
+  (void) xlen;
 #ifdef TIMECOP
   VALGRIND_MAKE_MEM_UNDEFINED(x,xlen);
 #endif
@@ -281,6 +284,8 @@ void poison(void *x,unsigned long long xlen)
 
 void unpoison(void *x,unsigned long long xlen)
 {
+  (void) x;
+  (void) xlen;
 #ifdef TIMECOP
   VALGRIND_MAKE_MEM_DEFINED(x,xlen);
 #endif
@@ -288,6 +293,8 @@ void unpoison(void *x,unsigned long long xlen)
 
 void crypto_declassify(void *x,unsigned long long xlen)
 {
+  (void) x;
+  (void) xlen;
 #ifdef TIMECOP
   unpoison(x,xlen);
 #endif
@@ -299,6 +306,8 @@ extern "C" {
 
 void randombytes_callback(unsigned char *x,unsigned long long xlen)
 {
+  (void) x;
+  (void) xlen;
 #ifdef TIMECOP
   poison(x,xlen);
 #endif
