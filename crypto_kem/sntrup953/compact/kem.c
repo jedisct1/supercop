@@ -25,8 +25,7 @@ static Fq Fq_freeze(int32_t x) {
   const int32_t q28 = (0x10000000 + q / 2) / q;
   x -= q * ((q16 * x) >> 16);
   x -= q * ((q20 * x) >> 20);
-  x -= q * ((q28 * x + 0x8000000) >> 28);
-  return x;
+  return x - q * ((q28 * x + 0x8000000) >> 28);
 }
 
 static int int16_nonzero_mask(int16_t x) { return -((-(uint32_t)(uint16_t)x) >> 31); }
@@ -151,16 +150,14 @@ static void R3_mult(small* h, const small* f, const small* g) {
   for (i = 0; i < p + p - 1; ++i) fg[i] = 0;
   for (i = 0; i < p; ++i)
     for (j = 0; j < p; ++j) fg[i + j] += f[i] * (int16_t)g[j];
-  for (i = p + p - 2; i >= p; --i) {
-    fg[i - p] += fg[i];
-    fg[i - p + 1] += fg[i];
-  }
+  for (i = p; i < p + p - 1; ++i) fg[i - p] += fg[i];
+  for (i = p; i < p + p - 1; ++i) fg[i - p + 1] += fg[i];
   for (i = 0; i < p; ++i) h[i] = F3_freeze(fg[i]);
 }
 
-static int R3_recip(small* out, const small* in) {
+static int R3_recip(small *out, const small *in) {
   small f[p + 1], g[p + 1], v[p + 1], r[p + 1];
-  int i, loop, delta, sign, swap, t;
+  int sign, swap, t, i, loop, delta = 1;
   for (i = 0; i < p + 1; ++i) v[i] = 0;
   for (i = 0; i < p + 1; ++i) r[i] = 0;
   r[0] = 1;
@@ -169,7 +166,6 @@ static int R3_recip(small* out, const small* in) {
   f[p - 1] = f[p] = -1;
   for (i = 0; i < p; ++i) g[p - 1 - i] = in[i];
   g[p] = 0;
-  delta = 1;
   for (loop = 0; loop < 2 * p - 1; ++loop) {
     for (i = p; i > 0; --i) v[i] = v[i - 1];
     v[0] = 0;
@@ -201,10 +197,8 @@ static void Rq_mult_small(Fq* h, const Fq* f, const small* g) {
   for (i = 0; i < p + p - 1; ++i) fg[i] = 0;
   for (i = 0; i < p; ++i)
     for (j = 0; j < p; ++j) fg[i + j] += f[i] * (int32_t)g[j];
-  for (i = p + p - 2; i >= p; --i) {
-    fg[i - p] += fg[i];
-    fg[i - p + 1] += fg[i];
-  }
+  for (i = p; i < p + p - 1; ++i) fg[i - p] += fg[i];
+  for (i = p; i < p + p - 1; ++i) fg[i - p + 1] += fg[i];
   for (i = 0; i < p; ++i) h[i] = Fq_freeze(fg[i]);
 }
 
@@ -224,10 +218,9 @@ static Fq Fq_recip(Fq a1) {
 }
 
 static int Rq_recip3(Fq* out, const small* in) {
-  Fq f[p + 1], g[p + 1], v[p + 1], r[p + 1];
+  Fq f[p + 1], g[p + 1], v[p + 1], r[p + 1], scale;
   int swap, t, i, loop, delta = 1;
   int32_t f0, g0;
-  Fq scale;
   for (i = 0; i < p + 1; ++i) v[i] = 0;
   for (i = 0; i < p + 1; ++i) r[i] = 0;
   r[0] = Fq_recip(3);
@@ -287,13 +280,11 @@ static void Hash_prefix(unsigned char* out, int b, const unsigned char* in, int 
 
 static uint32_t urandom32(void) {
   unsigned char c[4];
-  uint32_t out[4];
+  uint32_t result = 0;
+  int i;
   randombytes(c, 4);
-  out[0] = (uint32_t)c[0];
-  out[1] = ((uint32_t)c[1]) << 8;
-  out[2] = ((uint32_t)c[2]) << 16;
-  out[3] = ((uint32_t)c[3]) << 24;
-  return out[0] + out[1] + out[2] + out[3];
+  for (i = 0; i < 4; ++i) result += ((uint32_t)c[i]) << (8 * i);
+  return result;
 }
 
 static void Short_random(small* out) {
@@ -342,32 +333,23 @@ static void Decrypt(small* r, const Fq* c, const small* f, const small* ginv) {
   for (i = w; i < p; ++i) r[i] = ev[i] & ~mask;
 }
 
-static void Small_encode(unsigned char* s, const small* f) {
-  small x;
-  int i;
+static void Small_encode(unsigned char *s, const small *f) {
+  int i, j;
   for (i = 0; i < p / 4; ++i) {
-    x = *f++ + 1;
-    x += (*f++ + 1) << 2;
-    x += (*f++ + 1) << 4;
-    x += (*f++ + 1) << 6;
+    small x = 0;
+    for (j = 0;j < 4;++j) x += (*f++ + 1) << (2 * j);
     *s++ = x;
   }
-  x = *f++ + 1;
-  *s++ = x;
+  *s = *f++ + 1;
 }
 
-static void Small_decode(small* f, const unsigned char* s) {
-  unsigned char x;
-  int i;
+static void Small_decode(small *f, const unsigned char *s) {
+  int i, j;
   for (i = 0; i < p / 4; ++i) {
-    x = *s++;
-    *f++ = ((small)(x & 3)) - 1;
-    *f++ = ((small)((x >> 2) & 3)) - 1;
-    *f++ = ((small)((x >> 4) & 3)) - 1;
-    *f++ = ((small)((x >> 6) & 3)) - 1;
+    unsigned char x = *s++;
+    for (j = 0;j < 4;++j) *f++ = ((small)((x >> (2 * j)) & 3)) - 1;
   }
-  x = *s++;
-  *f++ = ((small)(x & 3)) - 1;
+  *f++ = ((small)(*s & 3)) - 1;
 }
 
 static void Rq_encode(unsigned char* s, const Fq* r) {
@@ -461,8 +443,7 @@ static void Hide(unsigned char* c, unsigned char* r_enc, const Inputs r, const u
 
 int crypto_kem_enc(unsigned char* c, unsigned char* k, const unsigned char* pk) {
   Inputs r;
-  unsigned char r_enc[Small_bytes];
-  unsigned char cache[Hash_bytes];
+  unsigned char r_enc[Small_bytes], cache[Hash_bytes];
   Hash_prefix(cache, 4, pk, crypto_kem_PUBLICKEYBYTES);
   Short_random(r);
   Hide(c, r_enc, r, pk, cache);
@@ -482,8 +463,7 @@ int crypto_kem_dec(unsigned char* k, const unsigned char* c, const unsigned char
   const unsigned char* rho = pk + crypto_kem_PUBLICKEYBYTES;
   const unsigned char* cache = rho + Small_bytes;
   Inputs r;
-  unsigned char r_enc[Small_bytes];
-  unsigned char cnew[crypto_kem_CIPHERTEXTBYTES];
+  unsigned char r_enc[Small_bytes], cnew[crypto_kem_CIPHERTEXTBYTES];
   int mask, i;
   ZDecrypt(r, c, sk);
   Hide(cnew, r_enc, r, pk, cache);

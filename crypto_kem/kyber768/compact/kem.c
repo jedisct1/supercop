@@ -11,14 +11,11 @@
 #define KYBER_Q 3329
 #define QINV 62209
 #define KYBER_SYMBYTES 32
-#define KYBER_SSBYTES 32
 #define KYBER_POLYBYTES 384
 #define KYBER_POLYVECBYTES (KYBER_K * KYBER_POLYBYTES)
-#define KYBER_ETA1 2
 #define KYBER_POLYCOMPRESSEDBYTES 128
 #define KYBER_POLYVECCOMPRESSEDBYTES (KYBER_K * 320)
-#define KYBER_ETA2 2
-#define kdf(OUT, IN, INBYTES) SHAKE256(OUT, KYBER_SSBYTES, IN, INBYTES)
+#define kdf(OUT, IN, INBYTES) SHAKE256(OUT, crypto_kem_BYTES, IN, INBYTES)
 #define XOF_BLOCKBYTES 168
 #define xof_squeezeblocks(OUT, OUTBLOCKS, STATE) KeccakWidth1600_SpongeSqueeze(STATE, OUT, OUTBLOCKS *XOF_BLOCKBYTES)
 #define gen_a(A, B) gen_matrix(A, B, 0)
@@ -54,28 +51,25 @@ static const int16_t zetas[128] = {-1044, -758, -359, -1517, 1493, 1422, 287, 20
 
 static int16_t montgomery_reduce(int32_t a) {
   int16_t u = a * QINV;
-  int32_t t = (int32_t)u * KYBER_Q;
-  return (a - t) >> 16;
+  return (a - KYBER_Q * (int32_t)u) >> 16;
 }
 
 static int16_t barrett_reduce(int16_t a) {
   const int16_t v = ((1U << 26) + KYBER_Q / 2) / KYBER_Q;
-  int16_t t = ((int32_t)v * a + (1 << 25)) >> 26;
-  return a - t * KYBER_Q;
+  return a - KYBER_Q * (((int32_t)v * a + (1 << 25)) >> 26);
 }
 
 static int16_t fqmul(int16_t a, int16_t b) { return montgomery_reduce((int32_t)a * b); }
 
 static void ntt(int16_t r[256]) {
   unsigned int len, start, j, k = 1;
-  int16_t t, zeta;
   for (len = 128; len >= 2; len >>= 1) {
     for (start = 0; start < 256; start = j + len) {
-      zeta = zetas[k++];
+      int16_t zeta = zetas[k++];
       for (j = start; j < start + len; j++) {
-        t = fqmul(zeta, r[j + len]);
+        int16_t t = fqmul(zeta, r[j + len]);
         r[j + len] = r[j] - t;
-        r[j] = r[j] + t;
+        r[j] += t;
       }
     }
   }
@@ -83,16 +77,14 @@ static void ntt(int16_t r[256]) {
 
 static void invntt(int16_t r[256]) {
   unsigned int start, len, j, k = 127;
-  int16_t t, zeta;
   const int16_t f = 1441;
   for (len = 2; len <= 128; len <<= 1) {
     for (start = 0; start < 256; start = j + len) {
-      zeta = zetas[k--];
+      int16_t zeta = zetas[k--];
       for (j = start; j < start + len; j++) {
-        t = r[j];
+        int16_t t = r[j];
         r[j] = barrett_reduce(t + r[j + len]);
-        r[j + len] = r[j + len] - t;
-        r[j + len] = fqmul(zeta, r[j + len]);
+        r[j + len] = fqmul(zeta, r[j + len] - t);
       }
     }
   }
@@ -100,53 +92,41 @@ static void invntt(int16_t r[256]) {
 }
 
 static void basemul(int16_t r[2], const int16_t a[2], const int16_t b[2], int16_t zeta) {
-  r[0] = fqmul(a[1], b[1]);
-  r[0] = fqmul(r[0], zeta);
-  r[0] += fqmul(a[0], b[0]);
-  r[1] = fqmul(a[0], b[1]);
-  r[1] += fqmul(a[1], b[0]);
+  r[0] = fqmul(fqmul(a[1], b[1]), zeta) + fqmul(a[0], b[0]);
+  r[1] = fqmul(a[0], b[1]) + fqmul(a[1], b[0]);
 }
 
 static uint32_t load32_littleendian(const uint8_t x[4]) {
-  uint32_t r;
-  r = (uint32_t)x[0];
-  r |= (uint32_t)x[1] << 8;
-  r |= (uint32_t)x[2] << 16;
-  r |= (uint32_t)x[3] << 24;
+  uint32_t r = 0;
+  int i;
+  for (i = 0; i < 4; i++) r |= (uint32_t)x[i] << (8 * i);
   return r;
 }
 
 static void cbd2(poly *r, const uint8_t buf[2 * KYBER_N / 4]) {
   unsigned int i, j;
-  uint32_t t, d;
-  int16_t a, b;
   for (i = 0; i < KYBER_N / 8; i++) {
-    t = load32_littleendian(buf + 4 * i);
-    d = t & 0x55555555;
+    uint32_t t = load32_littleendian(buf + 4 * i);
+    uint32_t d = t & 0x55555555;
     d += (t >> 1) & 0x55555555;
     for (j = 0; j < 8; j++) {
-      a = (d >> (4 * j + 0)) & 0x3;
-      b = (d >> (4 * j + 2)) & 0x3;
+      int16_t a = (d >> (4 * j + 0)) & 0x3;
+      int16_t b = (d >> (4 * j + 2)) & 0x3;
       r->coeffs[8 * i + j] = a - b;
     }
   }
 }
 
 static void poly_compress(uint8_t r[KYBER_POLYCOMPRESSEDBYTES], const poly *a) {
-  unsigned int i, j;
-  int16_t u;
+  unsigned int i, j, k;
   uint8_t t[8];
   for (i = 0; i < KYBER_N / 8; i++) {
     for (j = 0; j < 8; j++) {
-      u = a->coeffs[8 * i + j];
+      int16_t u = a->coeffs[8 * i + j];
       u += (u >> 15) & KYBER_Q;
       t[j] = ((((uint16_t)u << 4) + KYBER_Q / 2) / KYBER_Q) & 15;
     }
-    r[0] = t[0] | (t[1] << 4);
-    r[1] = t[2] | (t[3] << 4);
-    r[2] = t[4] | (t[5] << 4);
-    r[3] = t[6] | (t[7] << 4);
-    r += 4;
+    for (k = 0; k < 4; k++) r[i * 4 + k] = t[2 * k] | (t[2 * k + 1] << 4);
   }
 }
 
@@ -161,11 +141,10 @@ static void poly_decompress(poly *r, const uint8_t a[KYBER_POLYCOMPRESSEDBYTES])
 
 static void poly_tobytes(uint8_t r[KYBER_POLYBYTES], const poly *a) {
   unsigned int i;
-  uint16_t t0, t1;
   for (i = 0; i < KYBER_N / 2; i++) {
-    t0 = a->coeffs[2 * i];
+    uint16_t t0 = a->coeffs[2 * i];
+    uint16_t t1 = a->coeffs[2 * i + 1];
     t0 += ((int16_t)t0 >> 15) & KYBER_Q;
-    t1 = a->coeffs[2 * i + 1];
     t1 += ((int16_t)t1 >> 15) & KYBER_Q;
     r[3 * i + 0] = (t0 >> 0);
     r[3 * i + 1] = (t0 >> 8) | (t1 << 4);
@@ -183,10 +162,9 @@ static void poly_frombytes(poly *r, const uint8_t a[KYBER_POLYBYTES]) {
 
 static void poly_frommsg(poly *r, const uint8_t msg[KYBER_SYMBYTES]) {
   unsigned int i, j;
-  int16_t mask;
   for (i = 0; i < KYBER_N / 8; i++) {
     for (j = 0; j < 8; j++) {
-      mask = -(int16_t)((msg[i] >> j) & 1);
+      int16_t mask = -(int16_t)((msg[i] >> j) & 1);
       r->coeffs[8 * i + j] = mask & ((KYBER_Q + 1) / 2);
     }
   }
@@ -194,26 +172,18 @@ static void poly_frommsg(poly *r, const uint8_t msg[KYBER_SYMBYTES]) {
 
 static void poly_tomsg(uint8_t msg[KYBER_SYMBYTES], const poly *a) {
   unsigned int i, j;
-  uint16_t t;
   for (i = 0; i < KYBER_N / 8; i++) {
     msg[i] = 0;
     for (j = 0; j < 8; j++) {
-      t = a->coeffs[8 * i + j];
-      t += ((int16_t)t >> 15) & KYBER_Q;
-      t = (((t << 1) + KYBER_Q / 2) / KYBER_Q) & 1;
-      msg[i] |= t << j;
+      uint32_t t = a->coeffs[8 * i + j];
+      t = (80635 * ((t << 1) + 1665)) >> 28;
+      msg[i] |= (1 & t) << j;
     }
   }
 }
 
-static void poly_getnoise_eta1(poly *r, const uint8_t seed[KYBER_SYMBYTES], uint8_t nonce) {
-  uint8_t buf[KYBER_ETA1 * KYBER_N / 4];
-  prf(buf, sizeof(buf), seed, nonce);
-  cbd2(r, buf);
-}
-
-static void poly_getnoise_eta2(poly *r, const uint8_t seed[KYBER_SYMBYTES], uint8_t nonce) {
-  uint8_t buf[KYBER_ETA2 * KYBER_N / 4];
+static void poly_getnoise_2(poly *r, const uint8_t seed[KYBER_SYMBYTES], uint8_t nonce) {
+  uint8_t buf[2 * KYBER_N / 4];
   prf(buf, sizeof(buf), seed, nonce);
   cbd2(r, buf);
 }
@@ -262,11 +232,8 @@ static void polyvec_compress(uint8_t r[KYBER_POLYVECCOMPRESSEDBYTES], const poly
         t[k] += ((int16_t)t[k] >> 15) & KYBER_Q;
         t[k] = ((((uint32_t)t[k] << 10) + KYBER_Q / 2) / KYBER_Q) & 0x3ff;
       }
-      r[0] = (t[0] >> 0);
-      r[1] = (t[0] >> 8) | (t[1] << 2);
-      r[2] = (t[1] >> 6) | (t[2] << 4);
-      r[3] = (t[2] >> 4) | (t[3] << 6);
-      r[4] = (t[3] >> 2);
+      for (k = 0; k < 5; k++) r[k] = 0;
+      for (k = 0; k < 40; k++) r[k / 8] |= (1 & (t[k / 10] >> (k % 10))) << (k % 8);
       r += 5;
     }
   }
@@ -277,10 +244,8 @@ static void polyvec_decompress(polyvec *r, const uint8_t a[KYBER_POLYVECCOMPRESS
   uint16_t t[4];
   for (i = 0; i < KYBER_K; i++) {
     for (j = 0; j < KYBER_N / 4; j++) {
-      t[0] = (a[0] >> 0) | ((uint16_t)a[1] << 8);
-      t[1] = (a[1] >> 2) | ((uint16_t)a[2] << 6);
-      t[2] = (a[2] >> 4) | ((uint16_t)a[3] << 4);
-      t[3] = (a[3] >> 6) | ((uint16_t)a[4] << 2);
+      for (k = 0; k < 4; k++) t[k] = 0;
+      for (k = 0; k < 40; k++) t[k / 10] |= (1 & (a[k / 8] >> (k % 8))) << (k % 10);
       a += 5;
       for (k = 0; k < 4; k++) r->vec[i].coeffs[4 * j + k] = ((uint32_t)(t[k] & 0x3FF) * KYBER_Q + 512) >> 10;
     }
@@ -352,10 +317,9 @@ static void unpack_ciphertext(polyvec *b, poly *v, const uint8_t c[crypto_kem_CI
 
 static unsigned int rej_uniform(int16_t *r, unsigned int len, const uint8_t *buf, unsigned int buflen) {
   unsigned int ctr = 0, pos = 0;
-  uint16_t val0, val1;
   while (ctr < len && pos + 3 <= buflen) {
-    val0 = ((buf[pos + 0] >> 0) | ((uint16_t)buf[pos + 1] << 8)) & 0xFFF;
-    val1 = ((buf[pos + 1] >> 4) | ((uint16_t)buf[pos + 2] << 4)) & 0xFFF;
+    uint16_t val0 = ((buf[pos + 0] >> 0) | ((uint16_t)buf[pos + 1] << 8)) & 0xFFF;
+    uint16_t val1 = ((buf[pos + 1] >> 4) | ((uint16_t)buf[pos + 2] << 4)) & 0xFFF;
     pos += 3;
     if (val0 < KYBER_Q) r[ctr++] = val0;
     if (ctr < len && val1 < KYBER_Q) r[ctr++] = val1;
@@ -390,16 +354,14 @@ static void gen_matrix(polyvec *a, const uint8_t seed[KYBER_SYMBYTES], int trans
 
 static void indcpa_keypair(uint8_t pk[crypto_kem_PUBLICKEYBYTES], uint8_t sk[KYBER_POLYVECBYTES]) {
   unsigned int i;
-  uint8_t buf[2 * KYBER_SYMBYTES];
-  const uint8_t *publicseed = buf;
-  const uint8_t *noiseseed = buf + KYBER_SYMBYTES;
-  uint8_t nonce = 0;
+  uint8_t buf[2 * KYBER_SYMBYTES], nonce = 0;
+  const uint8_t *publicseed = buf, *noiseseed = buf + KYBER_SYMBYTES;
   polyvec a[KYBER_K], e, pkpv, skpv;
   randombytes(buf, KYBER_SYMBYTES);
   SHA3_512(buf, buf, KYBER_SYMBYTES);
   gen_a(a, publicseed);
-  for (i = 0; i < KYBER_K; i++) poly_getnoise_eta1(&skpv.vec[i], noiseseed, nonce++);
-  for (i = 0; i < KYBER_K; i++) poly_getnoise_eta1(&e.vec[i], noiseseed, nonce++);
+  for (i = 0; i < KYBER_K; i++) poly_getnoise_2(&skpv.vec[i], noiseseed, nonce++);
+  for (i = 0; i < KYBER_K; i++) poly_getnoise_2(&e.vec[i], noiseseed, nonce++);
   polyvec_ntt(&skpv);
   polyvec_ntt(&e);
   for (i = 0; i < KYBER_K; i++) {
@@ -414,16 +376,15 @@ static void indcpa_keypair(uint8_t pk[crypto_kem_PUBLICKEYBYTES], uint8_t sk[KYB
 
 static void indcpa_enc(uint8_t c[crypto_kem_CIPHERTEXTBYTES], const uint8_t m[KYBER_SYMBYTES], const uint8_t pk[crypto_kem_PUBLICKEYBYTES], const uint8_t coins[KYBER_SYMBYTES]) {
   unsigned int i;
-  uint8_t seed[KYBER_SYMBYTES];
-  uint8_t nonce = 0;
+  uint8_t seed[KYBER_SYMBYTES], nonce = 0;
   polyvec sp, pkpv, ep, at[KYBER_K], b;
   poly v, k, epp;
   unpack_pk(&pkpv, seed, pk);
   poly_frommsg(&k, m);
   gen_at(at, seed);
-  for (i = 0; i < KYBER_K; i++) poly_getnoise_eta1(sp.vec + i, coins, nonce++);
-  for (i = 0; i < KYBER_K; i++) poly_getnoise_eta2(ep.vec + i, coins, nonce++);
-  poly_getnoise_eta2(&epp, coins, nonce++);
+  for (i = 0; i < KYBER_K; i++) poly_getnoise_2(sp.vec + i, coins, nonce++);
+  for (i = 0; i < KYBER_K; i++) poly_getnoise_2(ep.vec + i, coins, nonce++);
+  poly_getnoise_2(&epp, coins, nonce++);
   polyvec_ntt(&sp);
   for (i = 0; i < KYBER_K; i++) polyvec_basemul_acc_montgomery(&b.vec[i], &at[i], &sp);
   polyvec_basemul_acc_montgomery(&v, &pkpv, &sp);
