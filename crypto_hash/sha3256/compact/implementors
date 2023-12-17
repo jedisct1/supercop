@@ -1,0 +1,3 @@
+original source: https://twitter.com/tweetfips202 from Daniel J. Bernstein, Peter Schwabe, Gilles Van Assche
+changes for libmceliece/crypto_xof/shake256: djb
+changes for supercop/crypto_hash/sha3256/compact: djb
