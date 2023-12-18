@@ -1,0 +1,480 @@
+inline fn update(#secret reg u128[6] st, #secret reg u128 m)
+     -> #secret reg u128[6]
+{
+    reg u128 st5 t;
+    st5 = st[5];
+    t = st[0] ^ m;
+    st[5] = #VAESENC(st[4], st5);
+    st[4] = #VAESENC(st[3], st[4]);
+    st[3] = #VAESENC(st[2], st[3]);
+    st[2] = #VAESENC(st[1], st[2]);
+    st[1] = #VAESENC(st[0], st[1]);
+    st[0] = #VAESENC(st5, t);
+
+    return st;
+}
+
+inline fn update2(#secret reg u128[6] st, #secret reg u128 m, #secret
+                  reg u128 st5)
+     -> #secret reg u128[6]
+{
+    reg u128 t;
+    t = st[0] ^ m;
+    st[5] = #VAESENC(st[4], st5);
+    st[4] = #VAESENC(st[3], st[4]);
+    st[3] = #VAESENC(st[2], st[3]);
+    st[2] = #VAESENC(st[1], st[2]);
+    st[1] = #VAESENC(st[0], st[1]);
+    st[0] = #VAESENC(st5, t);
+
+    return st;
+}
+
+inline fn absorb(#secret reg u128[6] st, #secret reg u128 t)
+    -> #secret reg u128[6]
+{
+    st = update(st, t);
+
+    return st;
+}
+
+inline fn enc(#secret reg u128[6] st, #secret reg u128 t)
+    -> #secret reg u128[6], #transient reg u128
+{
+    reg u128 out mask z st5;
+    z = st[1] ^ st[4];
+    mask = st[2] & st[3];
+    st5 = st[5];
+    z ^= mask;
+    z ^= st5;
+    #declassify out = t ^ z;
+    st = update2(st, t, st5);
+
+    return st, out;
+}
+
+inline fn dec(#secret reg u128[6] st, #public reg u128 t)
+    -> #secret reg u128[6], #secret reg u128
+{
+    reg u128 out mask z st5;
+    z = st[1] ^ st[4];
+    mask = st[2] & st[3];
+    st5 = st[5];
+    z ^= mask;
+    z ^= st5;
+    out = t ^ z;
+    st = update2(st, out, st5);
+
+    return st, out;
+}
+
+inline fn declast(#secret reg u128[6] st, #public reg u128 t,
+                  #public reg u64 left)
+    -> #secret reg u128[6], #secret reg u128
+{
+    reg u128 out mask z st5;
+    z = st[1] ^ st[4];
+    mask = st[2] & st[3];
+    st5 = st[5];
+    z ^= mask;
+    z ^= st5;
+    out = t ^ z;
+
+    stack u128[1] pad;
+    pad[0] = out;
+    reg u64 i;
+    i = left;
+    reg u64 ms;
+    while (i < 16) {
+        pad[u8(int) i] = 0;
+        i += 1;
+    }
+    st = update2(st, pad[0], st5);
+
+    return st, out;
+}
+
+inline fn init(#public reg u64 key_p, #public reg u64 nonce_p)
+    -> #secret reg u128[6]
+{
+    global u128 c0 c1;
+    c0 = (16u8)[0x62, 0x79, 0xe9, 0x90, 0x59, 0x37, 0x22, 0x15, 0x0d, 0x08, 0x05, 0x03, 0x02, 0x01, 0x01, 0x00];
+    c1 = (16u8)[0xdd, 0x28, 0xb5, 0x73, 0x42, 0x31, 0x11, 0x20, 0xf1, 0x2f, 0xc2, 0x6d, 0x55, 0x18, 0x3d, 0xdb];
+
+    #secret reg u128 k0 k1;
+    #public reg u128 n0 n1;
+    k0 = (u128)[key_p];
+    k1 = (u128)[key_p + 16];
+    #declassify n0 = (u128)[nonce_p];
+    #declassify n1 = (u128)[nonce_p + 16];
+
+    #secret reg u128 k0n0 k1n1 k0c0 k1c1;
+
+    k0n0 = k0 ^ n0;
+    k1n1 = k1 ^ n1;
+    k0c0 = k0 ^ c0;
+    k1c1 = k1 ^ c1;
+
+    #secret reg u128[6] st;
+    st[0] = k0n0;
+    st[1] = k1n1;
+    st[2] = c1;
+    st[3] = c0;
+    st[4] = k0c0;
+    st[5] = k1c1;
+
+    inline int i;
+    for i = 0 to 4 {
+        st = update(st, k0);
+        st = update(st, k1);
+        st = update(st, k0n0);
+        st = update(st, k1n1);
+    }
+    return st;
+}
+
+inline fn reject_weak(#secret reg u128[6] st)
+    -> #secret reg u64
+{
+    reg u128 w;
+    w = st[0] ^ st[1];
+    reg u128[6] x;
+    inline int i;
+    for i = 2 to 6 {
+        x[i] = st[0] ^ st[i];
+    }
+    for i = 2 to 6 {
+        w |= x[i];
+    }
+    reg u128 zero;
+    zero = #set0_128();
+    w = #VPCMPEQ_2u64(w, zero);
+    reg u64 ret;
+    ret = #VPMOVMSKB_u128u64(w);
+    ret += 1;
+    ret >>= 16;
+    ret = -ret;
+
+    return ret;
+}
+
+inline fn finalize(#secret reg u128[6] st,
+                   #public reg u64 tag_p, #public  reg u8 tag_len,
+                   #public reg u64 ad_len, #public reg u64 msg_len,
+                   #public inline bool verify)
+    -> #secret reg u64
+{
+    reg u64 ret;
+    ret = reject_weak(st);
+
+    stack u64[2] sizes;
+    ad_len <<= 3;
+    msg_len <<= 3;
+    sizes[0] = ad_len;
+    sizes[1] = msg_len;
+    reg u128 t;
+    t = st[3] ^ sizes[u128 0];
+
+    inline int i;
+    for i = 0 to 7 {
+        st = update(st, t);
+    }
+
+    if (tag_len == 16) {
+        reg u128 tag;
+        tag = st[0] ^ st[1];
+        tag ^= st[2];
+        tag ^= st[3];
+        tag ^= st[4];
+        tag ^= st[5];
+
+        if (verify) {
+            reg u128 valid;
+            valid = (u128)[tag_p];
+            valid = #VPCMPEQ_2u64(valid, tag);
+            reg u64 ret0;
+            ret0 = #VPMOVMSKB_u128u64(valid);
+            ret0 += 1;
+            ret0 >>= 16;
+            ret0 -= 1;
+            ret |= ret0;
+        } else {
+            (u128)[tag_p] = tag;
+        }
+    } else {
+        reg u128[2] tag;
+        tag[0] = st[0] ^ st[1];
+        tag[1] = st[3] ^ st[4];
+        tag[0] ^= st[2];
+        tag[1] ^= st[5];
+
+        if (verify) {
+            reg u128[2] valid;
+            valid[0] = (u128)[tag_p];
+            valid[1] = (u128)[tag_p + 16];
+            valid[0] = #VPCMPEQ_2u64(valid[0], tag[0]);
+            valid[1] = #VPCMPEQ_2u64(valid[1], tag[1]);
+            valid[0] &= valid[1];
+            reg u64 ret0;
+            ret0 = #VPMOVMSKB_u128u64(valid[0]);
+            ret0 += 1;
+            ret0 >>= 16;
+            ret0 -= 1;
+            ret |= ret0;
+        } else {
+            (u128)[tag_p] = tag[0];
+            (u128)[tag_p + 16] = tag[1];
+        }
+    }
+    inline int i;
+    for i = 0 to 6 {
+        st[i] = 0;
+    }
+    return ret;
+}
+
+export fn _aegis256_encrypt(#public reg u64 params)
+    -> #secret reg u64
+{
+    #public reg u64 ct_p tag_p msg_p ad_p key_p nonce_p;
+    #public stack u64 ad_len_ msg_len_;
+    #public reg u8 tag_len;
+
+    #declassify ct_p = (u64)[params + 8 * 0];
+    // ignored: ct_len = (u64)[params + 8 * 1];
+    #declassify tag_p = (u64)[params + 8 * 2];
+    #declassify tag_len = (u8)[params + 8 * 3];
+    #declassify msg_p = (u64)[params + 8 * 4];
+    #declassify msg_len_ = (u64)[params + 8 * 5];
+    #declassify ad_p = (u64)[params + 8 * 6];
+    #declassify ad_len_ = (u64)[params + 8 * 7];
+    #declassify key_p = (u64)[params + 8 * 8];
+    #declassify nonce_p = (u64)[params + 8 * 9];
+
+    #secret reg u128[6] st;
+    st = init(key_p, nonce_p);
+
+    // ad
+
+    reg u64 full_blocks;
+    full_blocks = ad_len_;
+    full_blocks = full_blocks & -16;
+
+    reg u64 i;
+    inline int j;
+
+    i = #set0();
+
+    #align while (i < full_blocks) {
+        st = absorb(st, (u128)[ad_p + i]);
+        i += 16;
+    }
+    reg u64 left;
+    left = ad_len_;
+    left -= i;
+
+    if (left > 0) {
+        ad_p += i;
+
+        stack u128[1] pad;
+        reg u128 zero;
+        zero = #set0_128();
+        pad[0] = zero;
+
+        i = #set0();
+        while (i < left) {
+            pad[u8(int) i] = (u8)[ad_p + i];
+            i += 1;
+        }
+        st = absorb(st, pad[0]);
+    }
+
+    // message
+
+    full_blocks = msg_len_;
+    full_blocks = full_blocks & -32;
+
+    reg u64 i;
+    inline int j;
+
+    i = #set0();
+    #align while (i < full_blocks) {
+        st, (u128)[ct_p + i] = enc(st, (u128)[msg_p + i]);
+        st, (u128)[ct_p + i + 16] = enc(st, (u128)[msg_p + i + 16]);
+        i += 32;
+    }
+    left = msg_len_;
+    left -= i;
+    if (left >= 16) {
+        st, (u128)[ct_p + i] = enc(st, (u128)[msg_p + i]);
+        left -= 16;
+        i += 16;
+    }
+    if (left > 0) {
+        msg_p += i;
+        ct_p += i;
+
+        stack u128[1] pad;
+        reg u128 zero;
+        zero = #set0_128();
+        pad[0] = zero;
+
+        i = #set0();
+        while (i < left) {
+            pad[u8(int) i] = (u8)[msg_p + i];
+            i += 1;
+        }
+
+        st, pad[0] = enc(st, pad[0]);
+
+        i = #set0();
+        while (i < left) {
+            (u8)[ct_p + i] = pad[u8(int) i];
+            i += 1;
+        }
+    }
+
+    // finalize
+
+    reg u64 ret;
+    ret = finalize(st, tag_p, tag_len, ad_len_, msg_len_, false);
+
+    return ret;
+}
+
+export fn _aegis256_decrypt(#public reg u64 params)
+    -> #secret reg u64
+{
+    #public reg u64 ct_p tag_p msg_p ad_p key_p nonce_p;
+    #public stack u64 ad_len_ ct_len_;
+    #public reg u8 tag_len;
+
+    #declassify ct_p = (u64)[params + 8 * 0];
+    #declassify ct_len_ = (u64)[params + 8 * 1];
+    #declassify tag_p = (u64)[params + 8 * 2];
+    #declassify tag_len = (u8)[params + 8 * 3];
+    #declassify msg_p = (u64)[params + 8 * 4];
+    // ignored: msg_len_ = (u64)[params + 8 * 5];
+    #declassify ad_p = (u64)[params + 8 * 6];
+    #declassify ad_len_ = (u64)[params + 8 * 7];
+    #declassify key_p = (u64)[params + 8 * 8];
+    #declassify nonce_p = (u64)[params + 8 * 9];
+
+    #secret reg u128[6] st;
+    st = init(key_p, nonce_p);
+
+    // ad
+
+    reg u64 full_blocks;
+    full_blocks = ad_len_;
+    full_blocks = full_blocks & -16;
+
+    reg u64 i;
+    inline int j;
+
+    i = #set0();
+    #align while (i < full_blocks) {
+        st = absorb(st, (u128)[ad_p + i]);
+        i += 16;
+    }
+    reg u64 left;
+    left = ad_len_;
+    left -= i;
+
+    if (left > 0) {
+        ad_p += i;
+
+        stack u128[1] pad;
+        reg u128 zero;
+        zero = #set0_128();
+        pad[0] = zero;
+
+        i = #set0();
+        while (i < left) {
+            pad[u8(int) i] = (u8)[ad_p + i];
+            i += 1;
+        }
+
+        st = absorb(st, pad[0]);
+    }
+
+    // ciphertext
+
+    full_blocks = ct_len_;
+    full_blocks = full_blocks & -32;
+
+    reg u64 i;
+    inline int j;
+
+    i = #set0();
+    #align while (i < full_blocks) {
+        #public reg u128 t;
+        #declassify t = (u128)[ct_p + i];
+        st, (u128)[msg_p + i] = dec(st, t);
+        #declassify t = (u128)[ct_p + i + 16];
+        st, (u128)[msg_p + i + 16] = dec(st, t);
+        i += 32;
+    }
+    left = ct_len_;
+    left -= i;
+    if (left > 16) {
+        #public reg u128 t;
+        #declassify t = (u128)[ct_p + i];
+        st, (u128)[msg_p + i] = dec(st, t);
+        left -= 16;
+        i += 16;
+    }
+    if (left > 0) {
+        msg_p += i;
+        ct_p += i;
+
+        #flexible stack u128[1] pad;
+        reg u128 zero;
+        zero = #set0_128();
+        pad[0] = zero;
+
+        i = #set0();
+        while (i < left) {
+            pad[u8(int) i] = (u8)[ct_p + i];
+            i += 1;
+        }
+
+        #public reg u128 t;
+        #declassify t = pad[0];
+
+        st, pad[0] = declast(st, t, left);
+
+        i = #set0();
+        while (i < left) {
+            (u8)[msg_p + i] = pad[u8(int) i];
+            i += 1;
+        }
+    }
+
+    // reject weak states
+
+    reg u128 w;
+    w = st[0] ^ st[1];
+    reg u128[6] x;
+    for j = 2 to 6 {
+        x[j] = st[0] ^ st[j];
+    }
+    for j = 2 to 6 {
+        w |= x[j];
+    }
+    reg u128 zero;
+    zero = #set0_128();
+    w = #VPCMPEQ_2u64(w, zero);
+    reg u64 ret0;
+    ret0 = #VPMOVMSKB_u128u64(w);
+    ret0 += 1;
+    ret0 >>= 16;
+    ret0 = -ret0;
+
+    // finalize
+
+    reg u64 ret;
+    ret = finalize(st, tag_p, tag_len, ad_len_, ct_len_, true);
+
+    return ret;
+}

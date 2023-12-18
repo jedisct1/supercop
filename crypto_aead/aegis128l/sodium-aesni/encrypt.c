@@ -12,9 +12,9 @@
 #include <wmmintrin.h>
 
 #ifdef __clang__
-#    pragma clang attribute push(__attribute__((target("aes,avx"))), apply_to = function)
+#    pragma clang attribute push(__attribute__((target("aes,sse4.2"))), apply_to = function)
 #elif defined(__GNUC__)
-#    pragma GCC target("aes,avx")
+#    pragma GCC target("aes,sse4.2")
 #endif
 
 #define AES_BLOCK_LENGTH 16
