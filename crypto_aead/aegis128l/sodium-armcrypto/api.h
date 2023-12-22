@@ -1,1 +1,1 @@
-../sodium-softaes/api.h
+../sodium-aesni/api.h

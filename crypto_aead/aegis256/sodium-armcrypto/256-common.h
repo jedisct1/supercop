@@ -1,1 +1,1 @@
-../sodium-softaes/256-common.h
+../sodium-aesni/256-common.h
