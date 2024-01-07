@@ -124,7 +124,7 @@ static void poly_compress(uint8_t r[KYBER_POLYCOMPRESSEDBYTES], const poly *a) {
     for (j = 0; j < 8; j++) {
       int16_t u = a->coeffs[8 * i + j];
       u += (u >> 15) & KYBER_Q;
-      t[j] = ((((uint16_t)u << 4) + KYBER_Q / 2) / KYBER_Q) & 15;
+      t[j] = (((((uint32_t)u << 4) + 1665) * 80635) >> 28) & 15;
     }
     for (k = 0; k < 4; k++) r[i * 4 + k] = t[2 * k] | (t[2 * k + 1] << 4);
   }
@@ -230,7 +230,7 @@ static void polyvec_compress(uint8_t r[KYBER_POLYVECCOMPRESSEDBYTES], const poly
       for (k = 0; k < 4; k++) {
         t[k] = a->vec[i].coeffs[4 * j + k];
         t[k] += ((int16_t)t[k] >> 15) & KYBER_Q;
-        t[k] = ((((uint32_t)t[k] << 10) + KYBER_Q / 2) / KYBER_Q) & 0x3ff;
+        t[k] = (((((uint64_t)t[k] << 10) + 1665) * 1290167) >> 32) & 0x3ff;
       }
       for (k = 0; k < 5; k++) r[k] = 0;
       for (k = 0; k < 40; k++) r[k / 8] |= (1 & (t[k / 10] >> (k % 10))) << (k % 8);
