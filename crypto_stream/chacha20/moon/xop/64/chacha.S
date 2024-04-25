@@ -557,3 +557,4 @@ CRYPTO_NAMESPACE(constants):
 
 
 
+.section	.note.GNU-stack,"",@progbits

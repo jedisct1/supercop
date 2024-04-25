@@ -1,0 +1,18 @@
+TIMECOP in supercop-20240107 issued alerts for some code using
+crypto_int64_zero_mask() compiled with gcc 11.4. Some tracking located
+the following unfortunate November 2021 patch from ARM:
+
+   https://gcc.gnu.org/git/?p=gcc.git;a=commit;f=gcc/match.pd;h=d70720c2382e687e192a9d666e80acb41bfda856
+
+The patch converts (-x)>>63, which is a common idiom in code designed to
+be constant-time, into -(x>0), which can produce a variable-time branch.
+Sigh.
+
+crypto_int64_negative_mask() now internally calls separately compiled
+functions sar5() and sarb6() that shift right by 5 bits and 58 bits
+respectively. Hopefully this stops the compiler from introducing bool.
+The higher-level functions such as crypto_int64_zero_mask() don't have
+any obvious bool as long as sar5() and sarb6() are black boxes, but it
+might be safer to separately compile them. It might also be safer to
+rewrite everything in asm for all popular architectures in case
+compilers start turning on link-time optimization by default.

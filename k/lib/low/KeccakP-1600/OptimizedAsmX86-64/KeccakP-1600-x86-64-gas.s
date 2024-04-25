@@ -1188,3 +1188,4 @@ KeccakF1600_FastLoop_Absorb_VariableLaneCountLoop:
     jnc     KeccakF1600_FastLoop_Absorb_VariableLaneCountLoop
     jmp     KeccakF1600_FastLoop_Absorb_Exit
 
+.section	.note.GNU-stack,"",@progbits

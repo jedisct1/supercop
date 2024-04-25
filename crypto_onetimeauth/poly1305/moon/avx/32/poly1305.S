@@ -1073,3 +1073,4 @@ popl %esi
 ret
 FN_END poly1305_init_ext_avx
 
+.section	.note.GNU-stack,"",@progbits

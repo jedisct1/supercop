@@ -27,11 +27,11 @@
 #endif
 
 #if defined(__XOP__)
-# include <ammintrin.h>
-# if defined(__GNUC__)
+# if defined(CRYPTOPP_GCC_COMPATIBLE)
 #  include <x86intrin.h>
 # endif
-#endif
+# include <ammintrin.h>
+#endif  // XOP
 
 // Squash MS LNK4221 and libtool warnings
 extern const char KECCAK_SIMD_FNAME[] = __FILE__;
@@ -54,10 +54,6 @@ CRYPTOPP_ALIGN_DATA(16)
 const word64
 rho56[2] = {W64LIT(0x0007060504030201), W64LIT(0x080F0E0D0C0B0A09)};
 
-// Clang intrinsic casts, http://bugs.llvm.org/show_bug.cgi?id=20670
-#define M128_CAST(x) ((__m128i *)(void *)(x))
-#define CONST_M128_CAST(x) ((const __m128i *)(const void *)(x))
-
 #if defined(__XOP__)
 # define ROL64in128(a, o)    _mm_roti_epi64((a), (o))
 # define ROL64in128_8(a)     ROL64in128((a), 8)
@@ -71,7 +67,7 @@ rho56[2] = {W64LIT(0x0007060504030201), W64LIT(0x080F0E0D0C0B0A09)};
 // Damn Visual Studio is missing too many intrinsics...
 inline __m128i SPLAT64(const word64 a)
 {
-#if defined(_MSC_VER)
+#if defined(CRYPTOPP_MSC_VERSION)
     double x; std::memcpy(&x, &a, 8);
     return _mm_castpd_si128(_mm_loaddup_pd(&x));
 #else

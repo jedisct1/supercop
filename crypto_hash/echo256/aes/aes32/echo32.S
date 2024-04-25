@@ -2553,4 +2553,4 @@ Hash:
 	.long	0
 	.long	0
 	.ident	"GCC: (Ubuntu 4.4.3-4ubuntu5) 4.4.3"
-	.section	.note.GNU-stack,"",@progbits
+.section	.note.GNU-stack,"",@progbits

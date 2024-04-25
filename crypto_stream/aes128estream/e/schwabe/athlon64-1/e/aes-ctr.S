@@ -5902,3 +5902,4 @@ aes_table3:
 .long 0xbb000000
 .long 0x00160000
 .long 0x16000000
+.section	.note.GNU-stack,"",@progbits

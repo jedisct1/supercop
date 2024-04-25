@@ -588,3 +588,4 @@ vmovdqa		%ymm7,224(%rdi)
 ret
 
 
+.section	.note.GNU-stack,"",@progbits

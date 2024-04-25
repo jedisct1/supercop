@@ -4162,3 +4162,4 @@ add %g0,0,%i0
 # qhasm: leave
 ret
 restore
+.section	.note.GNU-stack,"",@progbits

@@ -672,3 +672,4 @@ mulq %foo # (rax, rdx) := foo*rax (l,h)
 K = GF(2**130-5)
 R.<x> = K[]
 */
+.section	.note.GNU-stack,"",@progbits

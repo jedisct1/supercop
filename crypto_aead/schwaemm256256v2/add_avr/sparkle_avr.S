@@ -597,4 +597,4 @@ RCON:
 .long 0xBB1185EB, 0x4F7C7B57, 0xCFBFA1C8, 0xC2B3293D
 
 
-.end
+.section	.note.GNU-stack,"",@progbits

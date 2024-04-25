@@ -16,8 +16,15 @@
 
 // For _xgetbv on Microsoft 32-bit and 64-bit Intel platforms
 // https://github.com/weidai11/cryptopp/issues/972
-#if _MSC_VER >= 1600 && (defined(_M_IX86) || defined(_M_X64))
+#if (CRYPTOPP_MSC_VERSION >= 1600) && (defined(_M_IX86) || defined(_M_X64))
 # include <immintrin.h>
+#endif
+
+// For IsProcessorFeaturePresent on Microsoft Arm64 platforms,
+// https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-isprocessorfeaturepresent
+#if defined(_WIN32) && defined(_M_ARM64)
+# include <Windows.h>
+# include <processthreadsapi.h>
 #endif
 
 #ifdef _AIX
@@ -51,6 +58,13 @@ unsigned long int getauxval(unsigned long int) { return 0; }
 # include <sys/sysctl.h>
 #endif
 
+// FreeBSD headers are giving us trouble...
+// https://github.com/weidai11/cryptopp/pull/1029
+#if defined(__FreeBSD__)
+# include <sys/auxv.h>
+# include <sys/elf_common.h>
+#endif
+
 // The cpu-features header and source file are located in
 // "$ANDROID_NDK_ROOT/sources/android/cpufeatures".
 // setenv-android.sh will copy the header and source file
@@ -64,9 +78,10 @@ unsigned long int getauxval(unsigned long int) { return 0; }
 # include <setjmp.h>
 #endif
 
-// Visual Studio 2008 and below are missing _xgetbv and _cpuidex.
-// The 32-bit versions use inline ASM below. The 64-bit versions are in x64dll.asm.
-#if defined(_MSC_VER) && defined(_M_X64)
+// Required by Visual Studio 2008 and below and Clang on Windows.
+// Use it for all MSVC-compatible compilers.
+// XGETBV64 and CPUID64 are in x64dll.asm.
+#if defined(_M_X64) && defined(CRYPTOPP_MS_STYLE_INLINE_ASSEMBLY)
 extern "C" unsigned long long __fastcall XGETBV64(unsigned int);
 extern "C" unsigned long long __fastcall CPUID64(unsigned int, unsigned int, unsigned int*);
 #endif
@@ -213,17 +228,16 @@ public:
 		{
 			// M1 machine?
 			std::string brand;
-			size_t size = 0;
+			size_t size = 32;
 
-			if (sysctlbyname("machdep.cpu.brand_string", NULL, &size, NULL, 0) == 0 && size > 0)
+			// Supply an oversized buffer, and avoid
+			// an extra call to sysctlbyname.
+			brand.resize(size);
+			if (sysctlbyname("machdep.cpu.brand_string", &brand[0], &size, NULL, 0) == 0 && size > 0)
 			{
+				if (brand[size-1] == '\0')
+					size--;
 				brand.resize(size);
-				if (sysctlbyname("machdep.cpu.brand_string", &brand[0], &size, NULL, 0) == 0 && size > 0)
-				{
-					if (brand[size-1] == '\0')
-						size--;
-					brand.resize(size);
-				}
 			}
 
 			if (brand == "Apple M1")
@@ -374,19 +388,15 @@ extern bool CPU_ProbeSSE2();
 // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=85684.
 word64 XGetBV(word32 num)
 {
-// Visual Studio 2010 SP1 and above, 32 and 64-bit
-// https://github.com/weidai11/cryptopp/issues/972
-#if defined(_MSC_VER) && (_MSC_FULL_VER >= 160040219)
-
-	return _xgetbv(num);
-
-// Visual Studio 2008 and below, 64-bit
-#elif defined(_MSC_VER) && defined(_M_X64)
+// Required by Visual Studio 2008 and below and Clang on Windows.
+// Use it for all MSVC-compatible compilers.
+#if defined(_M_X64) && defined(CRYPTOPP_MS_STYLE_INLINE_ASSEMBLY)
 
 	return XGETBV64(num);
 
-// Visual Studio 2008 and below, 32-bit
-#elif defined(_MSC_VER) && defined(_M_IX86)
+// Required by Visual Studio 2008 and below and Clang on Windows.
+// Use it for all MSVC-compatible compilers.
+#elif defined(_M_IX86) && defined(CRYPTOPP_MS_STYLE_INLINE_ASSEMBLY)
 
 	word32 a=0, d=0;
 	__asm {
@@ -436,20 +446,16 @@ word64 XGetBV(word32 num)
 // cpu.cpp (131): E2211 Inline assembly not allowed in inline and template functions
 bool CpuId(word32 func, word32 subfunc, word32 output[4])
 {
-// Visual Studio 2010 and above, 32 and 64-bit
-#if defined(_MSC_VER) && (_MSC_VER >= 1600)
-
-	__cpuidex((int *)output, func, subfunc);
-	return true;
-
-// Visual Studio 2008 and below, 64-bit
-#elif defined(_MSC_VER) && defined(_M_X64)
+// Required by Visual Studio 2008 and below and Clang on Windows.
+// Use it for all MSVC-compatible compilers.
+#if defined(_M_X64) && defined(CRYPTOPP_MS_STYLE_INLINE_ASSEMBLY)
 
 	CPUID64(func, subfunc, output);
 	return true;
 
-// Visual Studio 2008 and below, 32-bit
-#elif (defined(_MSC_VER) && defined(_M_IX86)) || defined(__BORLANDC__)
+// Required by Visual Studio 2008 and below and Clang on Windows.
+// Use it for all MSVC-compatible compilers.
+#elif defined(_M_IX86) && defined(CRYPTOPP_MS_STYLE_INLINE_ASSEMBLY)
 
 	__try
 	{
@@ -569,7 +575,8 @@ void DetectX86Features()
     // x86_64 machines don't check some flags because SSE2
     // is part of the core instruction set architecture
     CRYPTOPP_UNUSED(MMX_FLAG); CRYPTOPP_UNUSED(SSE_FLAG);
-    CRYPTOPP_UNUSED(SSE3_FLAG); CRYPTOPP_UNUSED(XSAVE_FLAG);
+    CRYPTOPP_UNUSED(SSE2_FLAG); CRYPTOPP_UNUSED(SSE3_FLAG);
+    CRYPTOPP_UNUSED(XSAVE_FLAG);
 
 #if (CRYPTOPP_BOOL_X32 || CRYPTOPP_BOOL_X64)
 	// 64-bit core instruction set includes SSE2. Just check
@@ -585,10 +592,12 @@ void DetectX86Features()
 		            (cpuid1[ECX_REG] & OSXSAVE_FLAG) != 0;
 #endif
 
+#if defined(__sun)
 	// Solaris 11 i86pc does not signal SSE support using
 	// OSXSAVE. We need to probe for SSE support.
 	if (g_hasSSE2 == false)
 		g_hasSSE2 = CPU_ProbeSSE2();
+#endif
 
 	if (g_hasSSE2 == false)
 		goto done;
@@ -833,6 +842,9 @@ inline bool CPU_QueryARMv7()
 #elif defined(__APPLE__) && defined(__arm__)
 	// Apple hardware is ARMv7 or above.
 	return true;
+#elif defined(_WIN32) && defined(_M_ARM64)
+	// Windows 10 ARM64 is only supported on Armv8a and above
+	return true;
 #endif
 	return false;
 }
@@ -858,7 +870,12 @@ inline bool CPU_QueryNEON()
 		return true;
 #elif defined(__APPLE__) && defined(__aarch64__)
 	// Core feature set for Aarch32 and Aarch64.
-	return true;
+	if (IsAppleMachineARMv8())
+		return true;
+#elif defined(_WIN32) && defined(_M_ARM64)
+	// Windows 10 ARM64 is only supported on Armv8a and above
+	if (IsProcessorFeaturePresent(PF_ARM_V8_INSTRUCTIONS_AVAILABLE) != 0)
+		return true;
 #endif
 	return false;
 }
@@ -882,6 +899,9 @@ inline bool CPU_QueryCRC32()
 #elif defined(__APPLE__) && defined(__aarch64__)
 	// M1 processor
 	if (IsAppleMachineARMv82())
+		return true;
+#elif defined(_WIN32) && defined(_M_ARM64)
+	if (IsProcessorFeaturePresent(PF_ARM_V8_CRC32_INSTRUCTIONS_AVAILABLE) != 0)
 		return true;
 #endif
 	return false;
@@ -907,6 +927,9 @@ inline bool CPU_QueryPMULL()
 	// M1 processor
 	if (IsAppleMachineARMv82())
 		return true;
+#elif defined(_WIN32) && defined(_M_ARM64)
+	if (IsProcessorFeaturePresent(PF_ARM_V8_CRYPTO_INSTRUCTIONS_AVAILABLE) != 0)
+		return true;
 #endif
 	return false;
 }
@@ -928,7 +951,12 @@ inline bool CPU_QueryAES()
 	if ((getauxval(AT_HWCAP2) & HWCAP2_AES) != 0)
 		return true;
 #elif defined(__APPLE__) && defined(__aarch64__)
-	return IsAppleMachineARMv8();
+	// M1 processor
+	if (IsAppleMachineARMv82())
+		return true;
+#elif defined(_WIN32) && defined(_M_ARM64)
+	if (IsProcessorFeaturePresent(PF_ARM_V8_CRYPTO_INSTRUCTIONS_AVAILABLE) != 0)
+		return true;
 #endif
 	return false;
 }
@@ -950,7 +978,12 @@ inline bool CPU_QuerySHA1()
 	if ((getauxval(AT_HWCAP2) & HWCAP2_SHA1) != 0)
 		return true;
 #elif defined(__APPLE__) && defined(__aarch64__)
-	return IsAppleMachineARMv8();
+	// M1 processor
+	if (IsAppleMachineARMv82())
+		return true;
+#elif defined(_WIN32) && defined(_M_ARM64)
+	if (IsProcessorFeaturePresent(PF_ARM_V8_CRYPTO_INSTRUCTIONS_AVAILABLE) != 0)
+		return true;
 #endif
 	return false;
 }
@@ -972,7 +1005,12 @@ inline bool CPU_QuerySHA256()
 	if ((getauxval(AT_HWCAP2) & HWCAP2_SHA2) != 0)
 		return true;
 #elif defined(__APPLE__) && defined(__aarch64__)
-	return IsAppleMachineARMv8();
+	// M1 processor
+	if (IsAppleMachineARMv82())
+		return true;
+#elif defined(_WIN32) && defined(_M_ARM64)
+	if (IsProcessorFeaturePresent(PF_ARM_V8_CRYPTO_INSTRUCTIONS_AVAILABLE) != 0)
+		return true;
 #endif
 	return false;
 }
@@ -1087,6 +1125,8 @@ inline bool CPU_QuerySM4()
 
 void DetectArmFeatures()
 {
+#ifndef CRYPTOPP_DISABLE_ASM
+
 	// The CPU_ProbeXXX's return false for OSes which
 	// can't tolerate SIGILL-based probes
 	g_hasARMv7 = CPU_QueryARMv7() || CPU_ProbeARMv7();
@@ -1112,6 +1152,8 @@ void DetectArmFeatures()
 	if (g_cacheLineSize == 0)
 		g_cacheLineSize = CRYPTOPP_L1_CACHE_LINE_SIZE;
 
+#endif  // CRYPTOPP_DISABLE_ASM
+
 	*const_cast<volatile bool*>(&g_ArmDetectionDone) = true;
 }
 
@@ -1119,7 +1161,7 @@ void DetectArmFeatures()
 
 #elif (CRYPTOPP_BOOL_PPC32 || CRYPTOPP_BOOL_PPC64)
 
-bool CRYPTOPP_SECTION_INIT g_PowerpcDetectionDone = false;
+bool CRYPTOPP_SECTION_INIT g_PowerPcDetectionDone = false;
 bool CRYPTOPP_SECTION_INIT g_hasAltivec = false;
 bool CRYPTOPP_SECTION_INIT g_hasPower7 = false;
 bool CRYPTOPP_SECTION_INIT g_hasPower8 = false;
@@ -1172,6 +1214,11 @@ inline bool CPU_QueryAltivec()
 	unsigned int unused, arch;
 	GetAppleMachineInfo(unused, unused, arch);
 	return arch == AppleMachineInfo::PowerMac;
+#elif defined(__FreeBSD__) && defined(PPC_FEATURE_HAS_ALTIVEC)
+	unsigned long cpufeatures;
+	if (elf_aux_info(AT_HWCAP, &cpufeatures, sizeof(cpufeatures)) == 0)
+		if ((cpufeatures & PPC_FEATURE_HAS_ALTIVEC) != 0)
+			return true;
 #endif
 	return false;
 }
@@ -1185,6 +1232,11 @@ inline bool CPU_QueryPower7()
 #elif defined(_AIX)
 	if (__power_7_andup() != 0)
 		return true;
+#elif defined(__FreeBSD__) && defined(PPC_FEATURE_ARCH_2_06)
+	unsigned long cpufeatures;
+	if (elf_aux_info(AT_HWCAP, &cpufeatures, sizeof(cpufeatures)) == 0)
+		if ((cpufeatures & PPC_FEATURE_ARCH_2_06) != 0)
+			return true;
 #endif
 	return false;
 }
@@ -1198,6 +1250,11 @@ inline bool CPU_QueryPower8()
 #elif defined(_AIX)
 	if (__power_8_andup() != 0)
 		return true;
+#elif defined(__FreeBSD__) && defined(PPC_FEATURE2_ARCH_2_07)
+	unsigned long cpufeatures;
+	if (elf_aux_info(AT_HWCAP, &cpufeatures, sizeof(cpufeatures)) == 0)
+		if ((cpufeatures & PPC_FEATURE_ARCH_2_07) != 0)
+			return true;
 #endif
 	return false;
 }
@@ -1211,6 +1268,11 @@ inline bool CPU_QueryPower9()
 #elif defined(_AIX)
 	if (__power_9_andup() != 0)
 		return true;
+#elif defined(__FreeBSD__) && defined(PPC_FEATURE2_ARCH_3_00)
+	unsigned long cpufeatures;
+	if (elf_aux_info(AT_HWCAP, &cpufeatures, sizeof(cpufeatures)) == 0)
+		if ((cpufeatures & PPC_FEATURE_ARCH2_3_00) != 0)
+			return true;
 #endif
 	return false;
 }
@@ -1225,6 +1287,11 @@ inline bool CPU_QueryAES()
 #elif defined(_AIX)
 	if (__power_8_andup() != 0)
 		return true;
+#elif defined(__FreeBSD__) && defined(PPC_FEATURE2_HAS_VEC_CRYPTO)
+	unsigned long cpufeatures;
+	if (elf_aux_info(AT_HWCAP2, &cpufeatures, sizeof(cpufeatures)) == 0)
+		if ((cpufeatures & PPC_FEATURE2_HAS_VEC_CRYPTO != 0)
+			return true;
 #endif
 	return false;
 }
@@ -1239,6 +1306,11 @@ inline bool CPU_QueryPMULL()
 #elif defined(_AIX)
 	if (__power_8_andup() != 0)
 		return true;
+#elif defined(__FreeBSD__) && defined(PPC_FEATURE2_HAS_VEC_CRYPTO)
+	unsigned long cpufeatures;
+	if (elf_aux_info(AT_HWCAP2, &cpufeatures, sizeof(cpufeatures)) == 0)
+		if ((cpufeatures & PPC_FEATURE2_HAS_VEC_CRYPTO != 0)
+			return true;
 #endif
 	return false;
 }
@@ -1253,6 +1325,11 @@ inline bool CPU_QuerySHA256()
 #elif defined(_AIX)
 	if (__power_8_andup() != 0)
 		return true;
+#elif defined(__FreeBSD__) && defined(PPC_FEATURE2_HAS_VEC_CRYPTO)
+	unsigned long cpufeatures;
+	if (elf_aux_info(AT_HWCAP2, &cpufeatures, sizeof(cpufeatures)) == 0)
+		if ((cpufeatures & PPC_FEATURE2_HAS_VEC_CRYPTO != 0)
+			return true;
 #endif
 	return false;
 }
@@ -1266,6 +1343,11 @@ inline bool CPU_QuerySHA512()
 #elif defined(_AIX)
 	if (__power_8_andup() != 0)
 		return true;
+#elif defined(__FreeBSD__) && defined(PPC_FEATURE2_HAS_VEC_CRYPTO)
+	unsigned long cpufeatures;
+	if (elf_aux_info(AT_HWCAP2, &cpufeatures, sizeof(cpufeatures)) == 0)
+		if ((cpufeatures & PPC_FEATURE2_HAS_VEC_CRYPTO != 0)
+			return true;
 #endif
 	return false;
 }
@@ -1273,25 +1355,32 @@ inline bool CPU_QuerySHA512()
 // Power9 random number generator
 inline bool CPU_QueryDARN()
 {
-	// Power9 and ISA 3.0 provide DARN.
+	// Power9 and ISA 3.0 provide DARN. It looks like
+	// Glibc offers PPC_FEATURE2_DARN.
 #if defined(__linux__) && defined(PPC_FEATURE2_ARCH_3_00)
 	if ((getauxval(AT_HWCAP2) & PPC_FEATURE2_ARCH_3_00) != 0)
 		return true;
 #elif defined(_AIX)
 	if (__power_9_andup() != 0)
 		return true;
+#elif defined(__FreeBSD__) && defined(PPC_FEATURE2_ARCH_3_00)
+	unsigned long cpufeatures;
+	if (elf_aux_info(AT_HWCAP2, &cpufeatures, sizeof(cpufeatures)) == 0)
+		if ((cpufeatures & PPC_FEATURE2_ARCH_3_00) != 0)
+			return true;
 #endif
 	return false;
 }
 
-void DetectPowerpcFeatures()
+void DetectPowerPcFeatures()
 {
-	// GCC 10 is giving us trouble in CPU_ProbePower9() and
-	// CPU_ProbeDARN(). GCC is generating POWER9 instructions
-	// on POWER8 for ppc_power9.cpp. The compiler idiots did
-	// not think through the consequences of requiring us to
-	// use -mcpu=power9 to unlock the ISA. Epic fail.
+	// GCC 10 is giving us trouble in CPU_ProbePower9() and CPU_ProbeDARN().
+	// GCC is generating POWER9 instructions on POWER8 for ppc_power9.cpp.
+	// The compiler idiots did not think through the consequences of
+	// requiring us to use -mcpu=power9 to unlock the ISA. Epic fail.
 	// https://github.com/weidai11/cryptopp/issues/986
+
+#ifndef CRYPTOPP_DISABLE_ASM
 
 	// The CPU_ProbeXXX's return false for OSes which
 	// can't tolerate SIGILL-based probes, like Apple
@@ -1321,7 +1410,9 @@ void DetectPowerpcFeatures()
 	if (g_cacheLineSize == 0)
 		g_cacheLineSize = CRYPTOPP_L1_CACHE_LINE_SIZE;
 
-	*const_cast<volatile bool*>(&g_PowerpcDetectionDone) = true;
+#endif // CRYPTOPP_DISABLE_ASM
+
+	*const_cast<volatile bool*>(&g_PowerPcDetectionDone) = true;
 }
 
 #endif
@@ -1341,7 +1432,7 @@ public:
 #elif CRYPTOPP_BOOL_ARM32 || CRYPTOPP_BOOL_ARMV8
 		CryptoPP::DetectArmFeatures();
 #elif CRYPTOPP_BOOL_PPC32 || CRYPTOPP_BOOL_PPC64
-		CryptoPP::DetectPowerpcFeatures();
+		CryptoPP::DetectPowerPcFeatures();
 #endif
 	}
 };

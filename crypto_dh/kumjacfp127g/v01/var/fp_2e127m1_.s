@@ -310,3 +310,4 @@ ret
 //	adcq $0, %r11
 //	movq %r11, 8*1(%rdi)
 //ret
+.section	.note.GNU-stack,"",@progbits

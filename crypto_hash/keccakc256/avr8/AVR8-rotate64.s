@@ -283,3 +283,4 @@ rotate64left_code:
 	mov r16, r0
 	ijmp
 	
+.section	.note.GNU-stack,"",@progbits

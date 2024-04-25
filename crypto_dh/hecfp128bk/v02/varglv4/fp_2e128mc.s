@@ -254,3 +254,4 @@ fp_sqr_2e128mc_x8664:
 ret
 
 
+.section	.note.GNU-stack,"",@progbits

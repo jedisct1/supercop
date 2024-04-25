@@ -728,3 +728,4 @@ round_cst:
 .size	drygascon128_f_v6m, .-drygascon128_f_v6m
 
 
+.section	.note.GNU-stack,"",@progbits

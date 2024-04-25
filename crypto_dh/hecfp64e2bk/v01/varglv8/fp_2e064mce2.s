@@ -167,3 +167,4 @@ fp_mul_2e064mce2_x8664:
 	popq %r13
 ret
 
+.section	.note.GNU-stack,"",@progbits

@@ -1104,3 +1104,4 @@ Skein_512_Unroll_Cnt:
 	bx lr
 #endif
 #endif /* 512 */
+.section	.note.GNU-stack,"",@progbits

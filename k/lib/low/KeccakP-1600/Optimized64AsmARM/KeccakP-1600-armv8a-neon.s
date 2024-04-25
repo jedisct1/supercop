@@ -535,3 +535,4 @@ KeccakP1600_Permute_RoundLoop:
 KeccakP1600_Permute_Exit:
     StoreState
     ret
+.section	.note.GNU-stack,"",@progbits

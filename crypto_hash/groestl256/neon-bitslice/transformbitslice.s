@@ -96,3 +96,4 @@ vstm r0, {d0-d8}
 add sp,sp,#0
 vpop {q4,q5,q6,q7}
 bx lr
+.section	.note.GNU-stack,"",@progbits

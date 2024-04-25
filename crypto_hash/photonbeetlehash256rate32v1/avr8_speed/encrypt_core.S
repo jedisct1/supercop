@@ -732,3 +732,4 @@ gen_digest:
 ret
 
 #endif
+.section	.note.GNU-stack,"",@progbits

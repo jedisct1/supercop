@@ -437,3 +437,4 @@ KeccakP400_Permute_RoundConstants:
         .short          0       @ terminator
 
 
+.section	.note.GNU-stack,"",@progbits

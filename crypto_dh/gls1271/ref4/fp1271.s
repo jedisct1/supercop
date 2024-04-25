@@ -295,3 +295,4 @@ modneg:
   shrq $1,8(%rdi)
 
   ret
+.section	.note.GNU-stack,"",@progbits

@@ -573,3 +573,4 @@ fp_inv_2e061m1_x8664_asm:
 	popq %r13
 	popq %r14
 ret
+.section	.note.GNU-stack,"",@progbits

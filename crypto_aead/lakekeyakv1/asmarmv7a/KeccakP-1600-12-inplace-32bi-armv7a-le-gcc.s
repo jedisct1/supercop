@@ -1100,3 +1100,4 @@ KeccakP1600_12_SnP_FBWL_UnwrapLane_Loop2:
 	pop		{r4-r12,pc}
 
 
+.section	.note.GNU-stack,"",@progbits

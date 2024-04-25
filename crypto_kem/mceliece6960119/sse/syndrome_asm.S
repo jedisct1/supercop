@@ -1313,3 +1313,4 @@ movb   %sil,0(%rdi)
 # qhasm: return
 add %r11,%rsp
 ret
+.section	.note.GNU-stack,"",@progbits

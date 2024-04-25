@@ -14973,3 +14973,4 @@ lqd $127,[32+752]($sp)
 ai $sp,$sp,511
 ai $sp,$sp,305
 bi $lr
+.section	.note.GNU-stack,"",@progbits

@@ -1325,4 +1325,4 @@ _SP_OFFS_ = _SP_OFFS_-8
     ret
 .endif
 #----------------------------------------------------------------
-    .end
+.section	.note.GNU-stack,"",@progbits

@@ -253,3 +253,4 @@ add		$256,%rdi
 add		$192,%rsi
 call		nttfrombytes128_avx
 ret
+.section	.note.GNU-stack,"",@progbits

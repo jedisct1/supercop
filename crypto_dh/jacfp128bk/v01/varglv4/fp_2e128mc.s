@@ -149,3 +149,4 @@ fp_sqr_2e128mc_x8664_asm:
 	adcq $0, %r9
 	movq %r9, 8*1(%rdi)
 ret
+.section	.note.GNU-stack,"",@progbits

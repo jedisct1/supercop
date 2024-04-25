@@ -406,3 +406,4 @@ KeccakP200_Permute_RoundConstants18:
         .byte           0x80
 
 
+.section	.note.GNU-stack,"",@progbits

@@ -717,3 +717,4 @@ rotate16_1bit_right:
     #undef  rY
     #undef  rZ
     #undef  sp
+.section	.note.GNU-stack,"",@progbits

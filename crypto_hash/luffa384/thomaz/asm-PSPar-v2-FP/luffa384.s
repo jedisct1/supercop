@@ -591,3 +591,4 @@ CONSTS:
 	.align 16
 buffer:
 	.space 32
+.section	.note.GNU-stack,"",@progbits

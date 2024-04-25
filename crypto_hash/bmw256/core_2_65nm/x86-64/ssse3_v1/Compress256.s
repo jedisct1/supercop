@@ -1165,4 +1165,4 @@ _Compress256:
 .LEFDE1:
 */
 	.ident    "GCC: (Ubuntu 4.3.3-5ubuntu4) 4.3.3"
-#	.section  .note.GNU-stack,"",@progbits
+.section  .note.GNU-stack,"",@progbits

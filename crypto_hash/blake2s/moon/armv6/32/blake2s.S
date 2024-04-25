@@ -1624,3 +1624,4 @@ ldmfd sp!, {r4-r12, r14}
 bx lr
 FN_END blake2s_blocks_armv6
 
+.section	.note.GNU-stack,"",@progbits

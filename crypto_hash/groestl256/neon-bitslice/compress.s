@@ -382,3 +382,4 @@ add sp,sp,#0
 pop {r4-r11}
 vpop {q4,q5,q6,q7}
 bx lr
+.section	.note.GNU-stack,"",@progbits

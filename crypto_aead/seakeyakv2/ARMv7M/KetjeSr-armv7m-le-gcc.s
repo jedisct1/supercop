@@ -523,3 +523,4 @@ KeccakP400_1_StatePermuteFromStack:
 
 
 
+.section	.note.GNU-stack,"",@progbits

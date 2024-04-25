@@ -4056,3 +4056,4 @@ stw 5,12(12)
 # qhasm: leave
 addi 1,1,416
 blr
+.section	.note.GNU-stack,"",@progbits

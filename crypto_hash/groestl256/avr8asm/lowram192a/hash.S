@@ -964,3 +964,4 @@ h_state:
 .fill 64, 1, 0
 p_state:
 .fill 64, 1, 0
+.section	.note.GNU-stack,"",@progbits

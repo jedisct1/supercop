@@ -4880,3 +4880,4 @@ add %r11,%rsp
 mov %rdi,%rax
 mov %rsi,%rdx
 ret
+.section	.note.GNU-stack,"",@progbits

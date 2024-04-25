@@ -46,3 +46,4 @@ subc2: .quad 0x07FFFFFE, 0x03FFFFFE
 
 REDMASK51:   .quad 0x0007FFFFFFFFFFFF
 
+.section	.note.GNU-stack,"",@progbits

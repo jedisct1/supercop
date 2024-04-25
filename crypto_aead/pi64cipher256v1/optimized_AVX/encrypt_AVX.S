@@ -35023,4 +35023,4 @@ _ZL14preCompConstV2:
 	.quad	-6657276164713376882
 	.quad	-6657276164713376882
 	.ident	"GCC: (GNU) 4.7.2"
-	.section	.note.GNU-stack,"",@progbits
+.section	.note.GNU-stack,"",@progbits

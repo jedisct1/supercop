@@ -2747,3 +2747,4 @@ lqd $83,[32+48]($sp)
 # qhasm: leave
 ai $sp,$sp,96
 bi $lr
+.section	.note.GNU-stack,"",@progbits

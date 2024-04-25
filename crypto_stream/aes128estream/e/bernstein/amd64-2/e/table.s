@@ -525,3 +525,4 @@ aes_table3:
 .long 0x6dd6bbbb
 .long 0x2c3a1600
 .long 0x2c3a1616
+.section	.note.GNU-stack,"",@progbits

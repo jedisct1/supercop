@@ -1597,3 +1597,4 @@ KeccakP1600_12_SnP_FBWL_Unwrap_DataOutUnaligned:
 	b		KeccakP1600_12_SnP_FBWL_Unwrap_NextLane
 
 
+.section	.note.GNU-stack,"",@progbits

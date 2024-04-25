@@ -920,3 +920,4 @@ MAINLOOP:
 	popq %r13
 	popq %rbx
 ret
+.section	.note.GNU-stack,"",@progbits

@@ -1090,3 +1090,4 @@ popq %r12
 ret
 FN_END CRYPTO_NAMESPACE(init_ext_avx2)
 
+.section	.note.GNU-stack,"",@progbits

@@ -44,6 +44,7 @@ then
   mkdir -p "$bin"
   mkdir -p "$lib/nontimecop"
   mkdir -p "$lib/timecop"
+  mkdir -p "$lib/inttypes"
   mkdir -p "$include/nontimecop"
   mkdir -p "$include/timecop"
   cp include/* "$include"
@@ -91,6 +92,7 @@ then
   cp -pR inttypes/* "$work"
   ( cd "$work" && sh do )
   cp -pR "$work"/include/* "$include"
+  cp -pR "$work"/lib/* "$lib/inttypes"
   
   echo "=== `date` === building killafter"
   rm -rf "$work"
@@ -155,6 +157,7 @@ then
       ( cd "$work" && $compiler -c ${project}_base.c ) && break
     done
     okar-$abi cr "$lib/$abi/lib${project}.a" "$work/${project}_base.o"
+    okar-$abi cr "$lib/$abi/lib${project}.a" "$lib/inttypes/$abi"/*.o
     ( ranlib "$lib/$abi/lib${project}.a" || exit 0 )
   done
 fi

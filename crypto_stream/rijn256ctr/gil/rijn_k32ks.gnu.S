@@ -71,3 +71,4 @@ _Rijndael_k32b32_expandkey:
 	callq	_Rijndael_k32_expand_one
 	vzeroall
 	ret
+.section	.note.GNU-stack,"",@progbits

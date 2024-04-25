@@ -16314,4 +16314,4 @@ Te:
 	.quad	256
 	.quad	0
 	.ident	"GCC: (Debian 4.4.3-3) 4.4.3"
-	.section	.note.GNU-stack,"",@progbits
+.section	.note.GNU-stack,"",@progbits

@@ -1135,3 +1135,4 @@ std %f22,[%i0+88]
 # qhasm: leave
 ret
 restore
+.section	.note.GNU-stack,"",@progbits

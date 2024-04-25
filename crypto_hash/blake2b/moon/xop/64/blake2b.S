@@ -365,3 +365,4 @@ blake2b_sigma:
 
 
 
+.section	.note.GNU-stack,"",@progbits

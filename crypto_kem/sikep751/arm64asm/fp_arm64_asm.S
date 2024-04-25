@@ -1465,3 +1465,4 @@ fmt(mp_dblsub751x2_asm):
     ldp x29, x30, [sp, #80]
     add sp, sp, #96
     ret
+.section	.note.GNU-stack,"",@progbits

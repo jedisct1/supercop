@@ -2009,3 +2009,4 @@ BLAKE3_BLOCK_LEN:
 	.long  64, 64, 64, 64
 CMP_MSB_MASK:
 	.long  0x80000000, 0x80000000, 0x80000000, 0x80000000
+.section	.note.GNU-stack,"",@progbits

@@ -2393,3 +2393,4 @@ corel:
 bufferl:
     .quad 0x0
 
+.section	.note.GNU-stack,"",@progbits

@@ -6603,3 +6603,4 @@ vmovdqa %ymm2, 32(%rdi)
 vmovdqa %ymm3, 64(%rdi)
 vmovdqa %ymm4, 96(%rdi)
 ret
+.section	.note.GNU-stack,"",@progbits

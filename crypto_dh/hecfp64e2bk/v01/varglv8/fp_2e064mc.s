@@ -76,3 +76,4 @@ fp_sqr_2e064mc_x8664_asm:
 	addq %r11, %r10
 	movq %r10, 8*0(%rdi)
 ret
+.section	.note.GNU-stack,"",@progbits

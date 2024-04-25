@@ -142,3 +142,4 @@ faddp %st(0),%st(1)
 fstpl 72(%ecx)
 add %eax,%esp
 ret
+.section	.note.GNU-stack,"",@progbits

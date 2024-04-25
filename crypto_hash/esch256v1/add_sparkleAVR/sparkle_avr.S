@@ -589,4 +589,5 @@ MAINLOOP:
     RJMP MAINLOOP          ; if not then jump back to start of loop
     EPILOGUE               ; pop callee-saved registers
     RET
-.end func
+.endfunc
+.section	.note.GNU-stack,"",@progbits

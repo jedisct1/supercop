@@ -4314,3 +4314,4 @@ vpxor %ymm3, %ymm2, %ymm2
 vmovdqa %ymm1, 0(%rdi)
 vmovdqa %ymm2, 32(%rdi)
 ret
+.section	.note.GNU-stack,"",@progbits

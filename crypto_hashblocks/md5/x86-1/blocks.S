@@ -3107,3 +3107,4 @@ movl 16(%esp),%ebp
 # qhasm: leave
 add %ecx,%esp
 ret
+.section	.note.GNU-stack,"",@progbits

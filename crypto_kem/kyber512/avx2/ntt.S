@@ -187,3 +187,4 @@ levels1t6	0
 levels1t6	1
 
 ret
+.section	.note.GNU-stack,"",@progbits

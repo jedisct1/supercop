@@ -452,3 +452,4 @@ KeccakP400_Permute_Done:
 
 
 
+.section	.note.GNU-stack,"",@progbits

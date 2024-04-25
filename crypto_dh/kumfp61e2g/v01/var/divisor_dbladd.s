@@ -1132,3 +1132,4 @@ kum_fp_dbladd_2e061m1e2_g_x8664_asm:
 	popq %r12
 	popq %rbx
 ret
+.section	.note.GNU-stack,"",@progbits

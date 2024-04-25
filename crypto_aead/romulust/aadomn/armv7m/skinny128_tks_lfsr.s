@@ -185,3 +185,4 @@ tks_lfsr_3:
 		bne 	loop_3
 	pop 	{r0-r12, r14}
 	bx 		lr
+.section	.note.GNU-stack,"",@progbits

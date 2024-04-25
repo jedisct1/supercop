@@ -94,4 +94,4 @@ CRYPTO_NAMESPACE(keypair):
 .LFE10:
 	.size	CRYPTO_NAMESPACE(keypair), .-CRYPTO_NAMESPACE(keypair)
 	.ident	"GCC: (GNU) 9.2.1 20190827 (Red Hat 9.2.1-1)"
-	.section	.note.GNU-stack,"",@progbits
+.section	.note.GNU-stack,"",@progbits

@@ -287,3 +287,4 @@ skinny128_384_plus_notk2:
 	double_round_notk2
 	str 	q0, [x0] 		// store the 128-bit output block
 	ret
+.section	.note.GNU-stack,"",@progbits

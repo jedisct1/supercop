@@ -1063,3 +1063,4 @@ std %f10,[%i0+176]
 # qhasm: leave
 ret
 restore
+.section	.note.GNU-stack,"",@progbits

@@ -427,3 +427,4 @@ crypto_hash_xorLastBitOfRate:
   @
   .align 8
 
+.section	.note.GNU-stack,"",@progbits

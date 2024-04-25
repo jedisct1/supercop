@@ -3383,3 +3383,4 @@ vpxor %ymm3, %ymm4, %ymm3
 vmovdqa %ymm3, 0(%rdi)
 mov %r8, %rsp
 ret
+.section	.note.GNU-stack,"",@progbits

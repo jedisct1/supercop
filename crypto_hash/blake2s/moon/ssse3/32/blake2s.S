@@ -649,3 +649,4 @@ blake2s_constants_ssse3:
 
 
 
+.section	.note.GNU-stack,"",@progbits

@@ -1015,4 +1015,4 @@ CRYPTO_NAMESPACE(rq_recip3):
 	.value	-4591
 	.value	-4591
 	.ident	"GCC: (GNU) 9.2.1 20190827 (Red Hat 9.2.1-1)"
-	.section	.note.GNU-stack,"",@progbits
+.section	.note.GNU-stack,"",@progbits

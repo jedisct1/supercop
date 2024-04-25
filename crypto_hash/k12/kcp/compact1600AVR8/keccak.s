@@ -722,3 +722,4 @@ Keccak_Done:
     #undef  rY
     #undef  rZ
     #undef  sp
+.section	.note.GNU-stack,"",@progbits

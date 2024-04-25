@@ -1448,3 +1448,4 @@ hec_fp_add_2e127m1_g2i_jac_x8664_asm:
 	popq %rbp
 	popq %r12
 ret
+.section	.note.GNU-stack,"",@progbits

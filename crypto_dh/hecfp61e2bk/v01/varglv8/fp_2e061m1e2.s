@@ -141,3 +141,4 @@ fp_mul_2e061m1e2_x8664_asm:
 	popq %r12
 	popq %r13
 ret
+.section	.note.GNU-stack,"",@progbits

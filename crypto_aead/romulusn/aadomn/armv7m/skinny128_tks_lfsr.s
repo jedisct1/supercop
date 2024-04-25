@@ -127,3 +127,4 @@ tks_lfsr_23:
 		bne 	loop_2_3
 	pop 	{r0-r12, r14}
 	bx 		lr
+.section	.note.GNU-stack,"",@progbits

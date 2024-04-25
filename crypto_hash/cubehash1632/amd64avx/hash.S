@@ -901,3 +901,4 @@ add %r11,%rsp
 xor %rax,%rax
 xor %rdx,%rdx
 ret
+.section	.note.GNU-stack,"",@progbits

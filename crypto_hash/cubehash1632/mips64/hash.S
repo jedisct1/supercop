@@ -3395,4 +3395,4 @@ or $3,$5,$0
 daddiu $sp,$sp,320
 j $31
 nop
-.end CRYPTO_NAMESPACETOP
+.section	.note.GNU-stack,"",@progbits

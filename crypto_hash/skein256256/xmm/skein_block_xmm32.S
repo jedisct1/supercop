@@ -1109,4 +1109,4 @@ C_label Skein_1024_Unroll_Cnt
 #
 .endif # _USE_ASM_ & 1024
 #----------------------------------------------------------------
-    .end
+.section	.note.GNU-stack,"",@progbits

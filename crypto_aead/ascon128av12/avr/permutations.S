@@ -698,4 +698,4 @@ P:
 .size P, .-P
 
 
-.end
+.section	.note.GNU-stack,"",@progbits

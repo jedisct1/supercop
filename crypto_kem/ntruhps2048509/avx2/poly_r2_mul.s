@@ -283,3 +283,4 @@ vpand low253(%rip), %ymm5, %ymm5
 vmovdqa %ymm2, 0(%rdi)
 vmovdqa %ymm5, 32(%rdi)
 ret
+.section	.note.GNU-stack,"",@progbits

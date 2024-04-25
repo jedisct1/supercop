@@ -871,3 +871,4 @@ popq %rbp
 xor %rax,%rax
 ret
 FN_END CRYPTO_NAMESPACETOP
+.section	.note.GNU-stack,"",@progbits

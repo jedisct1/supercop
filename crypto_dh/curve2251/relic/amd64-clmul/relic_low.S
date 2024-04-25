@@ -2,3 +2,4 @@
 #include "src/low/relic_fb_itr_low.s"
 #include "src/low/relic_fb_mul_low.s"
 #include "src/low/relic_fb_sqr_low.s"
+.section	.note.GNU-stack,"",@progbits

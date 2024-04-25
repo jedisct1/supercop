@@ -118,3 +118,4 @@ vmovdqa %ymm1, 1600(%rdi)
 vpaddw 1632(%rdi), %ymm0, %ymm1
 vmovdqa %ymm1, 1632(%rdi)
 ret
+.section	.note.GNU-stack,"",@progbits

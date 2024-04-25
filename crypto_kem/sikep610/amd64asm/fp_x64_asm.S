@@ -1310,3 +1310,4 @@ fmt(mp_dblsub610x2_asm):
   pop    r13
   pop    r12
   ret
+.section	.note.GNU-stack,"",@progbits

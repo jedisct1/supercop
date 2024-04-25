@@ -414,3 +414,4 @@ inner_loop_isw_macc_128:
     BX      LR
 
 // end isw_macc_128
+.section	.note.GNU-stack,"",@progbits

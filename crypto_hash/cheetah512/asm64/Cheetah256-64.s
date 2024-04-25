@@ -3503,3 +3503,4 @@ const4:
     .quad 0xca82c97d00000000
 const5:
     .quad 0xfa5947f000000000
+.section	.note.GNU-stack,"",@progbits

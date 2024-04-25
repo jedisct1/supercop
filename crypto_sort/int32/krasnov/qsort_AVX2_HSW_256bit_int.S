@@ -964,3 +964,4 @@ CRYPTO_NAMESPACE(qsort_AVX2):
 .long	1,0,0,0,0,0,0,0	//253
 .long	0,0,0,0,0,0,0,0	//254
 .long	0,0,0,0,0,0,0,0	//255
+.section	.note.GNU-stack,"",@progbits

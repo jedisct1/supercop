@@ -842,3 +842,4 @@ KeccakF_Done:
 	@
 	@ ALIGN
 
+.section	.note.GNU-stack,"",@progbits

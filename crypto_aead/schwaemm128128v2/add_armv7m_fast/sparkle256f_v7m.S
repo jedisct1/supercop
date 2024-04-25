@@ -428,4 +428,4 @@ sparkle256_arm:
 .size sparkle256_arm, .-sparkle256_arm
 
 
-.end
+.section	.note.GNU-stack,"",@progbits

@@ -1407,3 +1407,4 @@ KeccakP1600_12_SnP_FBWL_Unwrap_VariableLaneCount_LaneLoop:
     subq    arg2, arg5                  # while (nbrLanes >= 21)
     jnc     KeccakP1600_12_SnP_FBWL_Unwrap_VariableLaneCountLoop
     jmp     KeccakP1600_12_SnP_FBWL_Unwrap_Exit
+.section	.note.GNU-stack,"",@progbits

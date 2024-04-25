@@ -78,3 +78,4 @@ vmovdqa %ymm1, 960(%rdi)
 vpaddw 992(%rdi), %ymm0, %ymm1
 vmovdqa %ymm1, 992(%rdi)
 ret
+.section	.note.GNU-stack,"",@progbits

@@ -191,3 +191,4 @@ intt_levels0t5	1
 intt_level6	0
 intt_level6	1
 ret
+.section	.note.GNU-stack,"",@progbits

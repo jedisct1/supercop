@@ -1019,3 +1019,4 @@ KeccakP1600_12_SnP_FBWL_Unwrap_Exit:
 	pop		{r4-r12,pc}
 
 
+.section	.note.GNU-stack,"",@progbits

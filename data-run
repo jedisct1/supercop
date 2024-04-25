@@ -158,7 +158,7 @@ do
   
       if [ "$t1" = cryptopp ]
       then
-        echo "cryptopp 8.5.0" >&8
+        echo "cryptopp 8.9.0" >&8
       fi
   
       if [ "$t1" = openssl ]
@@ -402,6 +402,7 @@ do
         ( cd "$top/$target/work" && $compiler -c ${project}_base.c ) && break
       done
       okar-$abi cr "$top/$abi/lib/lib${project}.a" "$top/$target/work/${project}_base.o"
+      okar-$abi cr "$top/$abi/lib/lib${project}.a" "$top/inttypes/lib/$abi"/*.o
       ( ranlib "$top/$abi/lib/lib${project}.a" || exit 0 )
     fi
   

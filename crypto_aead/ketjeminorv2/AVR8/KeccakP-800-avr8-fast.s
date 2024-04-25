@@ -918,3 +918,4 @@ rotate32_3byte_left:
     #undef  rY
     #undef  rZ
     #undef  sp
+.section	.note.GNU-stack,"",@progbits

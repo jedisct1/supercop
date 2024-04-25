@@ -645,3 +645,4 @@ Keccak_Done:
 	#undef	rX				
 	#undef	rY				
 	#undef	rZ				
+.section	.note.GNU-stack,"",@progbits

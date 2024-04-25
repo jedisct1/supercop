@@ -193,3 +193,4 @@ movl %edx,28(%ecx)
 movl 0(%esp),%ebp
 add %eax,%esp
 ret
+.section	.note.GNU-stack,"",@progbits

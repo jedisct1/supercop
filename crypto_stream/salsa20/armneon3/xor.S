@@ -2229,3 +2229,4 @@ ldr r0,=0
 # qhasm: return result
 add sp,sp,#256
 bx lr
+.section	.note.GNU-stack,"",@progbits

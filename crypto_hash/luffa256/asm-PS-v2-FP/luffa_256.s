@@ -464,3 +464,4 @@ buffer:
 	.space 32
 buffer2:
 	.space 96
+.section	.note.GNU-stack,"",@progbits

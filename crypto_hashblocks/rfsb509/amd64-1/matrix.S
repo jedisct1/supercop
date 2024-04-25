@@ -16386,3 +16386,4 @@ CRYPTO_NAMESPACE(matrix):
 .byte	-1
 .byte	41
 .byte	19
+.section	.note.GNU-stack,"",@progbits

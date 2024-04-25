@@ -99,3 +99,4 @@ fp_mul_2e127m1_x8664:
 	adcq $0, %r9
 	movq %r9, 8*1(%rdi)
 ret
+.section	.note.GNU-stack,"",@progbits

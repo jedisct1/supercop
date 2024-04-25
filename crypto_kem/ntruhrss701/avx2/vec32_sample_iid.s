@@ -1040,3 +1040,4 @@ movw $0, 1402(%rdi)
 movw $0, 1404(%rdi)
 movw $0, 1406(%rdi)
 ret
+.section	.note.GNU-stack,"",@progbits

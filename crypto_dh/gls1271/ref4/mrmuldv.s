@@ -72,3 +72,4 @@ muldvd2:
 
         ret
 
+.section	.note.GNU-stack,"",@progbits

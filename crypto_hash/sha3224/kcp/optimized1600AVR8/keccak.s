@@ -1110,3 +1110,4 @@ rotate64_7byte_left:
     #undef  rY
     #undef  rZ
     #undef  sp
+.section	.note.GNU-stack,"",@progbits

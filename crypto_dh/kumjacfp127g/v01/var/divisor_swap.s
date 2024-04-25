@@ -48,3 +48,4 @@ kum_fp_swap_2e127m1_g_ym_x8664_asm:
 	xorq %r10, 8*22(%rdi)
 	xorq %r11, 8*23(%rdi)
 ret
+.section	.note.GNU-stack,"",@progbits

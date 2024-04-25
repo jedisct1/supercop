@@ -3418,4 +3418,4 @@ or $3,$5,$0
 addiu $sp,$sp,192
 j $31
 nop
-.end crypto_hash_cubehash1632_mips32
+.section	.note.GNU-stack,"",@progbits

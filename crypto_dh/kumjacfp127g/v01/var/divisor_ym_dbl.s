@@ -459,3 +459,4 @@ kum_fp_dbl_2e127m1_g_ym_x8664_asm:
 	popq %r13
 	popq %rbx
 ret
+.section	.note.GNU-stack,"",@progbits

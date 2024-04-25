@@ -501,3 +501,4 @@ KeccakP800_Permute_OddRoundEntry:
     pop     {r4-r12,pc}
 
 
+.section	.note.GNU-stack,"",@progbits

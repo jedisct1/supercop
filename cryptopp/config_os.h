@@ -27,9 +27,9 @@
 // It is OK to remove the hard stop below, but you are on your own.
 // After building the library be sure to run self tests described
 // https://www.cryptopp.com/wiki/Release_Process#Self_Tests
-// Some relevant bug reports can be found at:
-// * Clang: http://github.com/weidai11/cryptopp/issues/147
-#if (defined(_MSC_VER) && defined(__clang__) && !(defined( __clang_analyzer__)))
+// The problems with Clang pretending to be other compilers is
+// discussed at http://github.com/weidai11/cryptopp/issues/147.
+#if (defined(_MSC_VER) && defined(__clang__))
 # error: "Unsupported configuration"
 #endif
 
@@ -49,14 +49,14 @@
 #endif
 
 // Microsoft compilers
-#if defined(_MSC_VER) || defined(__fastcall)
+#if defined(CRYPTOPP_MSC_VERSION) || defined(__fastcall)
 	#define CRYPTOPP_FASTCALL __fastcall
 #else
 	#define CRYPTOPP_FASTCALL
 #endif
 
 // Microsoft compilers
-#if defined(_MSC_VER)
+#if defined(CRYPTOPP_MSC_VERSION)
 	#define CRYPTOPP_NO_VTABLE __declspec(novtable)
 #else
 	#define CRYPTOPP_NO_VTABLE

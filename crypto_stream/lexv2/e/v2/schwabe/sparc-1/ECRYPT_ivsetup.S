@@ -4250,3 +4250,4 @@ stw %i3,[%i0+68]
 # qhasm: leave
 ret
 restore
+.section	.note.GNU-stack,"",@progbits

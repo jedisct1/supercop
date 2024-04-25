@@ -215,3 +215,4 @@ rc:     .byte   0xEF, 0xE0, 0xD9, 0xD6, 0xBA, 0xB5, 0x8C, 0x83
 .global __do_copy_data
 .global __do_clear_bss
 
+.section	.note.GNU-stack,"",@progbits

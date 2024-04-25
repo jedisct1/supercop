@@ -4990,3 +4990,4 @@ s127s:
     .quad 0x7f
 s128s:
     .quad 0x80
+.section	.note.GNU-stack,"",@progbits

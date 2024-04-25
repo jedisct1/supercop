@@ -85,3 +85,4 @@ muldvd2:
         popl    %ebp
         ret
 
+.section	.note.GNU-stack,"",@progbits

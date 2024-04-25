@@ -1465,4 +1465,4 @@ popl %edi
 	jmp	.L101
 	.size	comba_redc, .-comba_redc
 	.ident	"GCC: (GNU) 4.1.2 20060928 (prerelease) (Ubuntu 4.1.1-13ubuntu5)"
-	.section	.note.GNU-stack,"",@progbits
+.section	.note.GNU-stack,"",@progbits

@@ -527,3 +527,4 @@ KeccakP800_Permute_Done:
     pop     { r4 - r6, pc }
 
 
+.section	.note.GNU-stack,"",@progbits

@@ -1943,3 +1943,4 @@ std %f2,[%i0+88]
 # qhasm: leave
 ret
 restore
+.section	.note.GNU-stack,"",@progbits

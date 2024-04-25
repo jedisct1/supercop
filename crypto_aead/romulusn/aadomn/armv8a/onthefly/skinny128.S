@@ -176,3 +176,4 @@ skinny128_384_plus:
 	double_round
 	str 	q0, [x0] 		// store the 128-bit output block
 	ret
+.section	.note.GNU-stack,"",@progbits

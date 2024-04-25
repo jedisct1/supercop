@@ -521,3 +521,4 @@ ascon_core:
 .LCreturn:
     l32i a0, a1, S_lr
     abi_return
+.section	.note.GNU-stack,"",@progbits

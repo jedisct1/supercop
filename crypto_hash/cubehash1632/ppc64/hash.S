@@ -2664,3 +2664,4 @@ ld 31,232(1)
 # qhasm: leave
 addi 1,1,400
 blr
+.section	.note.GNU-stack,"",@progbits

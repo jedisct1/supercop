@@ -25,6 +25,8 @@
 #define ALIGN16  __attribute__((aligned(16)))
 #define ALIGN32  __attribute__((aligned(32)))
 #define ALIGN64  __attribute__((aligned(64)))
+#undef _bswap64
+#undef _bswap
 #define _bswap64(a) __builtin_bswap64(a)
 #define _bswap(a) __builtin_bswap32(a)
 #endif
@@ -94,7 +96,7 @@ static inline void aesni_key256_expand(const unsigned char* key, __m512i rkeys[1
 }
 
 /** single, by-the-book AES encryption with AES-NI */
-static inline void aesni_encrypt1(unsigned char *out, unsigned char *n, __m512i rkeys[16]) {
+static inline void aesni_encrypt1(unsigned char *out, unsigned char *n, __m512i rkeys[15]) {
   __m128i nv = _mm_load_si128((const __m128i *)n);
   int i;
   __m128i temp = _mm_xor_si128(nv, _mm512_extracti64x2_epi64(rkeys[0],0));
@@ -130,7 +132,7 @@ static inline void aesni_encrypt1(unsigned char *out, unsigned char *n, __m512i 
 
 /* Step 5: store result */
 #define STOREx(a)                                       \
-  _mm_store_si128((__m128i*)(out+(a*16)), temp##a)
+  _mm_storeu_si128((__m128i*)(out+(a*16)), temp##a)
 
 /* all the MAKE* macros are for automatic explicit unrolling */
 #define MAKE1(X)                                \
@@ -196,7 +198,7 @@ static inline void aesni_encrypt1(unsigned char *out, unsigned char *n, __m512i 
 
 /* Step 5: store result */
 #define VSTOREx(a)                                       \
-  _mm512_store_si512((__m512i*)(out+(a*64)), vtemp##a)
+  _mm512_storeu_si512((__m512i*)(out+(a*64)), vtemp##a)
 
 static inline void inc(unsigned char *n) {
   (*(unsigned int*)&n[12]) = _bswap(1+(_bswap((*(unsigned int*)&n[12]))));
@@ -258,7 +260,7 @@ FUNC(12, MAKE12)
 
 /** vector, by-the-book AES encryption with VAES (256 bits) */
 static inline void aesni_encryptv2(unsigned char *out, unsigned char *n, __m256i rkeys[16]) {
-  __m256i nv = _mm256_load_si256((const __m128i *)n);
+  __m256i nv = _mm256_load_si256((const __m256i *)n);
   int i;
   __m256i temp = _mm256_xor_si256(nv, rkeys[0]);
 #pragma unroll(13)
@@ -270,7 +272,7 @@ static inline void aesni_encryptv2(unsigned char *out, unsigned char *n, __m256i
 }
 /** vector, by-the-book AES encryption with VAES (512 bits) */
 static inline void aesni_encryptv4(unsigned char *out, unsigned char *n, __m512i rkeys[16]) {
-  __m512i nv = _mm512_load_si512((const __m128i *)n);
+  __m512i nv = _mm512_load_si512((const __m512i *)n);
   int i;
   __m512i temp = _mm512_xor_si512(nv, rkeys[0]);
 #pragma unroll(13)
@@ -792,11 +794,11 @@ static inline __m128i reduce16v4(__m512i H0, __m512i H1, __m512i H2, __m512i H3,
 #endif
 
 #define XORx(a)                                         \
-  __m128i in##a = _mm_load_si128((__m128i*)(in+a*16));  \
+  __m128i in##a = _mm_loadu_si128((__m128i*)(in+a*16));  \
   temp##a = _mm_xor_si128(temp##a, in##a)
 
 #define VXORx(a)                                         \
-  __m512i vin##a = _mm512_load_si512((__m512i*)(in+a*64));  \
+  __m512i vin##a = _mm512_loadu_si512((__m512i*)(in+a*64));  \
   vtemp##a = _mm512_xor_si512(vtemp##a, vin##a)
 
 /* unused ; can be used with the MAKEN() macro, but the reduce4()

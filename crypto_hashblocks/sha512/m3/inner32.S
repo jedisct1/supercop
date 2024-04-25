@@ -6783,3 +6783,4 @@ add r0,r1,#128
 add.w sp,sp,#288
 pop {r4,r5,r6,r7,r8,r9,r10,r11,r14}
 bx lr
+.section	.note.GNU-stack,"",@progbits

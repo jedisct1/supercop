@@ -1874,4 +1874,4 @@ CRYPTO_NAMESPACE(r3_recip):
 	.quad	72340172838076673
 	.quad	72340172838076673
 	.ident	"GCC: (GNU) 9.2.1 20190827 (Red Hat 9.2.1-1)"
-	.section	.note.GNU-stack,"",@progbits
+.section	.note.GNU-stack,"",@progbits

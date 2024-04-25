@@ -976,3 +976,4 @@ bitslice \t5, \t2, \t7, \t3, \t6, \t4, \t1, \t0, \b0
 .endm
 
 .endif
+.section	.note.GNU-stack,"",@progbits

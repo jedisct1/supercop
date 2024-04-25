@@ -1243,3 +1243,4 @@ vldm sp!, {q4-q7}
 bx lr
 FN_END blake2b_blocks_neon
 
+.section	.note.GNU-stack,"",@progbits

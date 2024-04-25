@@ -513,3 +513,4 @@ movq   %rcx,200(%rdi)
 # qhasm: return
 add %r11,%rsp
 ret
+.section	.note.GNU-stack,"",@progbits

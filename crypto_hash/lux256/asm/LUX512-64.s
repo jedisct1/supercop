@@ -3565,3 +3565,4 @@ core6:
 core7:
     .quad 0x0
 
+.section	.note.GNU-stack,"",@progbits

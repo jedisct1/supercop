@@ -422,3 +422,4 @@ vmovapd   %ymm2,128(%rdi)
 add %r11,%rsp
 # bytes: 1 uops: 1
 ret
+.section	.note.GNU-stack,"",@progbits

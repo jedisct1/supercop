@@ -726,3 +726,4 @@ TESTMSG2:
 	.align	32
 buffer:
 	.space	128
+.section	.note.GNU-stack,"",@progbits

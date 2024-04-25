@@ -220,3 +220,4 @@ vst1.8 d2,[r1,: 64]
 
 # qhasm: returnnostack
 bx lr
+.section	.note.GNU-stack,"",@progbits

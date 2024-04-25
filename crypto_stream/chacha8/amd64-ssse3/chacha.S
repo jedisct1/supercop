@@ -1532,3 +1532,4 @@ mov %rsi,%rdx
 ret
 
 
+.section	.note.GNU-stack,"",@progbits

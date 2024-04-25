@@ -838,3 +838,4 @@ vpand %ymm15, %ymm1, %ymm14
 vpxor %ymm14, %ymm0, %ymm1
 vmovdqa %ymm1, 992(%rdi)
 ret
+.section	.note.GNU-stack,"",@progbits

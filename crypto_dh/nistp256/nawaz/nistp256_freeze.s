@@ -1188,3 +1188,4 @@ stb %i1,[%i0+28]
 # qhasm: leave
 ret
 restore
+.section	.note.GNU-stack,"",@progbits

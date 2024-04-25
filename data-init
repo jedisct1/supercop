@@ -152,6 +152,7 @@ okabi \
 | while read abi
 do
   cp -p "$top/inttypes/include/$abi"/* "$top/$abi/include/"
+  # $top/inttypes/lib/$abi/* is integrated later into base
 done
 
 echo "=== `date` === building cpucycles"

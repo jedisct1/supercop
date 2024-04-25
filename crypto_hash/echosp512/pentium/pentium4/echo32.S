@@ -17084,4 +17084,4 @@ Te:
 	.long	0
 	.long	0
 	.ident	"GCC: (Debian 4.4.3-7) 4.4.3"
-	.section	.note.GNU-stack,"",@progbits
+.section	.note.GNU-stack,"",@progbits

@@ -122,3 +122,4 @@ fp_mul_2e127m1_x8664_asm:
 
 	pop %rbx
 ret
+.section	.note.GNU-stack,"",@progbits

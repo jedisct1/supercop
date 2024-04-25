@@ -1971,3 +1971,4 @@ popl %ebp
 ret
 FN_END blake2b_blocks_sse2
 
+.section	.note.GNU-stack,"",@progbits

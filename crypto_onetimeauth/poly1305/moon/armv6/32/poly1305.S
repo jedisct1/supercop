@@ -340,3 +340,4 @@ ldmfd sp!, {r4-r8, lr}
 bx lr
 FN_END poly1305_auth_armv6
 
+.section	.note.GNU-stack,"",@progbits

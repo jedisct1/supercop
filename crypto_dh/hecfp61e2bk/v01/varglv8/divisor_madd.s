@@ -1646,3 +1646,4 @@ hec_fp_madd_2e061m1e2_g2i_x8664_asm:
 	popq %rbx
 	popq %r12
 ret
+.section	.note.GNU-stack,"",@progbits

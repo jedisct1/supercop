@@ -3480,3 +3480,4 @@ fp_inv_2e127m1_x8664_asm:
 	movq %rsi, 8(%rcx)
 	popq %r12
 ret
+.section	.note.GNU-stack,"",@progbits

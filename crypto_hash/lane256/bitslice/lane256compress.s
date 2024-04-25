@@ -1216,3 +1216,4 @@ LLC46:	.int 0x8480c048, 0x48cc0800, 0x808888cc, 0x88c8c408
 LLC47:	.int 0x80c04844, 0xcc080088, 0x8888cc08, 0x8c0040c
 
 
+.section	.note.GNU-stack,"",@progbits

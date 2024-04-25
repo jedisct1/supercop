@@ -2212,3 +2212,4 @@ L21:
 	lmw r30,-8(r1)
 	blr
 	.subsections_via_symbols
+.section	.note.GNU-stack,"",@progbits

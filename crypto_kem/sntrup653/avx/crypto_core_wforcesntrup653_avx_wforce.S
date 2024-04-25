@@ -108,4 +108,4 @@ CRYPTO_NAMESPACE(crypto_core_wforcesntrup653):
 	.quad	72340172838076673
 	.quad	72340172838076673
 	.ident	"GCC: (GNU) 10.3.1 20210422 (Red Hat 10.3.1-1)"
-	.section	.note.GNU-stack,"",@progbits
+.section	.note.GNU-stack,"",@progbits

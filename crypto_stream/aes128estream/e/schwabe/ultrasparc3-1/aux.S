@@ -14828,3 +14828,4 @@ CRYPTO_NAMESPACE(ECRYPT_ivsetup):
 .LLC0:
 	.asciz	"long unsigned int"
 	.ident	"GCC: (GNU) 3.3.2"
+.section	.note.GNU-stack,"",@progbits

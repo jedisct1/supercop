@@ -246,3 +246,4 @@ skinny128_384_plus:
 	vpop 	{d8-d12}
 	pop 	{r1-r4}
 	bx 		lr
+.section	.note.GNU-stack,"",@progbits

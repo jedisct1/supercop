@@ -3073,3 +3073,4 @@ movl 80(%esp),%ebp
 # leave
 add %eax,%esp
 ret
+.section	.note.GNU-stack,"",@progbits

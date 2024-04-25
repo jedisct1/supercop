@@ -37,3 +37,4 @@ CRYPTO_NAMESPACE(EC2D2):       .quad 0x198E80F2EEF3D130
 CRYPTO_NAMESPACE(EC2D3):       .quad 0xA406D9DC56DFFCE7
 
 CRYPTO_NAMESPACE(38):         .quad 38
+.section	.note.GNU-stack,"",@progbits

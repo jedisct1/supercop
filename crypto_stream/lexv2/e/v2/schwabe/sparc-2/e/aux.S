@@ -1159,3 +1159,4 @@ CRYPTO_NAMESPACE(ECRYPT_keysetup):
 	nop
 	.size	CRYPTO_NAMESPACE(ECRYPT_keysetup), .-CRYPTO_NAMESPACE(ECRYPT_keysetup)
 	.ident	"GCC: (GNU) 3.4.5"
+.section	.note.GNU-stack,"",@progbits

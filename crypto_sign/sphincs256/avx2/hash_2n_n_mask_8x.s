@@ -9966,3 +9966,4 @@ vmovupd   %ymm0,0(%rdi,%rsi)
 # qhasm: return
 add %r11,%rsp
 ret
+.section	.note.GNU-stack,"",@progbits

@@ -623,3 +623,4 @@ chain4:
 .space	32
 tmp:
 .space	32
+.section	.note.GNU-stack,"",@progbits

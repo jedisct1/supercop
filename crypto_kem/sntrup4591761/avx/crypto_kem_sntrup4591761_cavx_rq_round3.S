@@ -43,4 +43,4 @@ CRYPTO_NAMESPACE(rq_round3):
 	.value	10923
 	.value	10923
 	.ident	"GCC: (GNU) 9.2.1 20190827 (Red Hat 9.2.1-1)"
-	.section	.note.GNU-stack,"",@progbits
+.section	.note.GNU-stack,"",@progbits

@@ -1339,3 +1339,4 @@ Xoodoo_Done:
     pop     r3
     pop     r2
     ret
+.section	.note.GNU-stack,"",@progbits

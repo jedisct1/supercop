@@ -45,4 +45,4 @@ CRYPTO_NAMESPACE(crypto_verify_1039):
 .LFE5342:
 	.size	CRYPTO_NAMESPACE(crypto_verify_1039), .-CRYPTO_NAMESPACE(crypto_verify_1039)
 	.ident	"GCC: (GNU) 10.3.1 20210422 (Red Hat 10.3.1-1)"
-	.section	.note.GNU-stack,"",@progbits
+.section	.note.GNU-stack,"",@progbits

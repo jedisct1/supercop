@@ -640,3 +640,4 @@ KeccakP200_Permute_Done:
     #undef  rX
     #undef  rY
     #undef  rZ
+.section	.note.GNU-stack,"",@progbits

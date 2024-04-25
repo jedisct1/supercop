@@ -312,3 +312,4 @@ MMSB:
   .word 0x80808080    
             
 
+.section	.note.GNU-stack,"",@progbits

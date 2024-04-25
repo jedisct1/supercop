@@ -932,3 +932,4 @@ tk_schedule_1:
 	str.w 	r12, [r0], #16 				//ror and masks to match fixslicing ---
 	pop 	{r0-r12, lr}
 	bx 		lr
+.section	.note.GNU-stack,"",@progbits

@@ -685,3 +685,4 @@ roundLoop:
 	@
 	@ ALIGN
 
+.section	.note.GNU-stack,"",@progbits

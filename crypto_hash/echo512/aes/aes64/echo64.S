@@ -1699,4 +1699,4 @@ Hash:
 	.quad	512
 	.quad	0
 	.ident	"GCC: (Ubuntu 4.4.3-4ubuntu5) 4.4.3"
-	.section	.note.GNU-stack,"",@progbits
+.section	.note.GNU-stack,"",@progbits

@@ -113,3 +113,4 @@ _Rijndael_k32b32_encrypt_x4:
 
 	vzeroall
 	ret
+.section	.note.GNU-stack,"",@progbits

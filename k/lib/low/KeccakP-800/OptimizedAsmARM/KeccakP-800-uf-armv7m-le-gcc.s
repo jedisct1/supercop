@@ -549,3 +549,4 @@ KeccakP800_Permute_1:
     pop     {r4-r12,pc}
 
 
+.section	.note.GNU-stack,"",@progbits

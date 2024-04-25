@@ -360,3 +360,4 @@ Xoodyak_DecryptFullBlocks_Loop:
     .align  8
 
 
+.section	.note.GNU-stack,"",@progbits

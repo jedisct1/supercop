@@ -1114,3 +1114,4 @@ vpand %ymm15, %ymm1, %ymm14
 vpxor %ymm14, %ymm0, %ymm1
 vmovdqa %ymm1, 1376(%rdi)
 ret
+.section	.note.GNU-stack,"",@progbits

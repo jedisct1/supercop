@@ -719,3 +719,4 @@ Xoofff_ExpandFastLoop_Loop:
     pop     {r1-r12,pc}
 
 
+.section	.note.GNU-stack,"",@progbits

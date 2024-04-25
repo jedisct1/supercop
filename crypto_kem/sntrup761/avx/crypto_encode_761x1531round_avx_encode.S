@@ -446,4 +446,4 @@ CRYPTO_NAMESPACE(crypto_encode_761x1531round):
 	.long	1526
 	.long	1526
 	.ident	"GCC: (GNU) 10.3.1 20210422 (Red Hat 10.3.1-1)"
-	.section	.note.GNU-stack,"",@progbits
+.section	.note.GNU-stack,"",@progbits

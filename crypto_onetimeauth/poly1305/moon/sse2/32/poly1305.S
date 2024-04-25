@@ -1166,3 +1166,4 @@ movl 4(%esp), %eax
 jmp poly1305_init_ext_sse2_9
 FN_END poly1305_init_ext_sse2
 
+.section	.note.GNU-stack,"",@progbits

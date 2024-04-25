@@ -470,3 +470,4 @@ KeccakP200_1_StatePermuteAsm:
 
 
 
+.section	.note.GNU-stack,"",@progbits

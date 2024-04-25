@@ -1139,4 +1139,4 @@ CRYPTO_NAMESPACE(aes_big_constants):
 	.long	975967766
 	.long	370555436
 	.ident	"GCC: (GNU) 4.1.2 (Ubuntu 4.1.2-0ubuntu4)"
-	.section	.note.GNU-stack,"",@progbits
+.section	.note.GNU-stack,"",@progbits

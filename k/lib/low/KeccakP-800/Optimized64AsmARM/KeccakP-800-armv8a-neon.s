@@ -427,3 +427,4 @@ KeccakP800_Permute_Exit:
     StoreState
     ret
 
+.section	.note.GNU-stack,"",@progbits

@@ -1488,3 +1488,4 @@ KeccakP1600_12_SnP_FBWL_Unwrap_LoopLessThan16Lanes:
 	b		KeccakP1600_12_SnP_FBWL_Unwrap_Done
 
 
+.section	.note.GNU-stack,"",@progbits

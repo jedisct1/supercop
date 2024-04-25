@@ -5447,3 +5447,4 @@ pop %r14
 pop %r13
 pop %r12
 ret
+.section	.note.GNU-stack,"",@progbits

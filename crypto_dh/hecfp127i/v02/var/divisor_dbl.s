@@ -1345,3 +1345,4 @@ hec_fp_dbl_2e127m1_g2i_x8664_asm:
 	movq %rsi, 72(%rcx)
 	popq %r12
 ret
+.section	.note.GNU-stack,"",@progbits

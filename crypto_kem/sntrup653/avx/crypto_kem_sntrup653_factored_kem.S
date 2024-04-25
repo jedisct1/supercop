@@ -906,4 +906,4 @@ CRYPTO_NAMESPACE(dec):
 	.long	1073741823
 	.long	1073741823
 	.ident	"GCC: (GNU) 10.3.1 20210422 (Red Hat 10.3.1-1)"
-	.section	.note.GNU-stack,"",@progbits
+.section	.note.GNU-stack,"",@progbits

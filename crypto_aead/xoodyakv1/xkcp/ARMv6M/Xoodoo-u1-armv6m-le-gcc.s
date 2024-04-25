@@ -1090,3 +1090,4 @@ Xoofff_ExpandFastLoop_Done:
     .align  4
 
 
+.section	.note.GNU-stack,"",@progbits

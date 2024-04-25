@@ -2407,3 +2407,4 @@ nop
 # qhasm: leave
 ret
 restore
+.section	.note.GNU-stack,"",@progbits

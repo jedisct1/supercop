@@ -1957,3 +1957,4 @@ vst1.8 {d4-d5},[r0,: 128]!
 # qhasm: return
 add sp,sp,#0
 bx lr
+.section	.note.GNU-stack,"",@progbits

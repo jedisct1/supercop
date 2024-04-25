@@ -357,3 +357,4 @@ movq 0(%rsp),%r11
 add %r11,%rsp
 # bytes: 1 uops: 1
 ret
+.section	.note.GNU-stack,"",@progbits

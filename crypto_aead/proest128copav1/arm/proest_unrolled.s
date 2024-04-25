@@ -2375,3 +2375,4 @@ ldm r1, {r4, r5, r6, r7, r8, r9, r10, r11, r14}
 # qhasm: return
 add sp,sp,#0
 bx lr
+.section	.note.GNU-stack,"",@progbits

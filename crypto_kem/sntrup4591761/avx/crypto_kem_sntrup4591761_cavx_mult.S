@@ -2868,4 +2868,4 @@ CRYPTO_NAMESPACE(r3_mult):
 	.value	255
 	.value	255
 	.ident	"GCC: (GNU) 9.2.1 20190827 (Red Hat 9.2.1-1)"
-	.section	.note.GNU-stack,"",@progbits
+.section	.note.GNU-stack,"",@progbits

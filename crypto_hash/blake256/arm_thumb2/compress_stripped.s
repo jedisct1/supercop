@@ -2266,3 +2266,4 @@ ldr r14,[sp,#164]
 ._end:
 add sp,sp,#256
 bx lr
+.section	.note.GNU-stack,"",@progbits

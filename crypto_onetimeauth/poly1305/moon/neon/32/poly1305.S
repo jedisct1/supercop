@@ -697,3 +697,4 @@ mov sp, r8
 ldmfd sp!, {r4-r8, lr}
 bx lr
 FN_END poly1305_auth_neon
+.section	.note.GNU-stack,"",@progbits

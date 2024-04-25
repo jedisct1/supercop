@@ -575,3 +575,4 @@ drygascon128_g0_v7m:
 
     pop    {r4, r5, r6, r7, r8, r9, r10, r11, r12, pc}
 .size	drygascon128_g0_v7m, .-drygascon128_g0_v7m
+.section	.note.GNU-stack,"",@progbits

@@ -331,3 +331,4 @@ add %r11,%rsp
 # block pos: 192 193 uops: 1
 # bytes: 1 uops: 1
 ret
+.section	.note.GNU-stack,"",@progbits

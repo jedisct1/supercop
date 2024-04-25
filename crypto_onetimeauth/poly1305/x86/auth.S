@@ -2777,3 +2777,4 @@ movl 16(%esp),%ebp
 add %eax,%esp
 xor %eax,%eax
 ret
+.section	.note.GNU-stack,"",@progbits

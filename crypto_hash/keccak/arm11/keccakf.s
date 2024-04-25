@@ -11978,3 +11978,4 @@ ldr r14,[sp,#32]
 # qhasm: return
 add sp,sp,#896
 bx lr
+.section	.note.GNU-stack,"",@progbits

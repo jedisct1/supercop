@@ -10891,3 +10891,4 @@ vmovq %xmm7, 1262(%rdi)
 mov %r8, %rsp
 pop %r12
 ret
+.section	.note.GNU-stack,"",@progbits

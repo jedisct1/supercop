@@ -135,3 +135,4 @@ pop %r13
 pop %r14
 pop %r15
 ret
+.section	.note.GNU-stack,"",@progbits

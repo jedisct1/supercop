@@ -4740,3 +4740,4 @@ ja ._loopi512
 # qhasm: return
 add %r11,%rsp
 ret
+.section	.note.GNU-stack,"",@progbits

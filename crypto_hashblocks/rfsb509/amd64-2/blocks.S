@@ -8903,3 +8903,4 @@ lea  48(%rdx),%rax
 # qhasm: leave
 add %r11,%rsp
 ret
+.section	.note.GNU-stack,"",@progbits

@@ -1077,7 +1077,6 @@ vstm r0, {q0-q3}
 pop {r4-r8,lr}
 bx lr
 
-.end
-
 /* vim: ft=gas :
 */
+.section	.note.GNU-stack,"",@progbits

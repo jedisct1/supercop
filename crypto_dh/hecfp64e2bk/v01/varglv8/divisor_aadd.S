@@ -2245,3 +2245,4 @@ hec_fp_aadd_2e064mce2_g2i_x8664_asm:
 	popq %rbx
 	popq %r12
 ret
+.section	.note.GNU-stack,"",@progbits

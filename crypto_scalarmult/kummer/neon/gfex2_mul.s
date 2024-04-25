@@ -467,3 +467,4 @@ vst1.8 {d10-d11},[r0]!
 mov sp,r12
 vpop {q4,q5,q6,q7}
 bx lr
+.section	.note.GNU-stack,"",@progbits

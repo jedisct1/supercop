@@ -173,3 +173,4 @@ pointwise32acc	6
 pointwise32acc	7
 
 ret
+.section	.note.GNU-stack,"",@progbits

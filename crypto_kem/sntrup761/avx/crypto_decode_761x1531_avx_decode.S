@@ -657,4 +657,4 @@ CRYPTO_NAMESPACE(crypto_decode_761x1531): # @CRYPTO_NAMESPACE(crypto_decode_761x
 	.cfi_endproc
                                         # -- End function
 	.ident	"clang version 10.0.1 (Fedora 10.0.1-3.fc32)"
-	.section	".note.GNU-stack","",@progbits
+.section	".note.GNU-stack","",@progbits

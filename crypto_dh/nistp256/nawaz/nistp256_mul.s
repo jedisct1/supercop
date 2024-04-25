@@ -1990,3 +1990,4 @@ std %f2,[%i0+168]
 # qhasm: leave
 ret
 restore
+.section	.note.GNU-stack,"",@progbits

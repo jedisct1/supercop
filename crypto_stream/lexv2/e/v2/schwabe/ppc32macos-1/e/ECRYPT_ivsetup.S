@@ -696,3 +696,4 @@ lwz r29,64(r1)
 lwz r30,68(r1)
 addi r1,r1,384
 blr
+.section	.note.GNU-stack,"",@progbits

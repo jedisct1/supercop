@@ -2407,3 +2407,4 @@ stwa %o3,[%i0] 0x88
 # qhasm: leave
 ret
 restore
+.section	.note.GNU-stack,"",@progbits

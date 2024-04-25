@@ -223,3 +223,4 @@ mul2Function:     @r6 must contain mmsb and r5 is the input and output register
               bx lr
 
 
+.section	.note.GNU-stack,"",@progbits

@@ -933,3 +933,4 @@ lazo4:
   jl         lazo4
   ret
 
+.section	.note.GNU-stack,"",@progbits

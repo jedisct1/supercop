@@ -500,3 +500,4 @@ ldmfd sp!, {r4-r6, lr}
 bx lr
 FN_END CRYPTO_NAMESPACE(xchacha)
 
+.section	.note.GNU-stack,"",@progbits

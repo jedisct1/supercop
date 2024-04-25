@@ -486,3 +486,4 @@ ascon_core:
     lw s11, 28(sp)
     addi sp, sp, 80
     jalr zero, 0(ra)
+.section	.note.GNU-stack,"",@progbits

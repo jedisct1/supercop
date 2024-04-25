@@ -1300,4 +1300,4 @@
 	.type     .LC66,@object
 	.size     .LC66,16
 	.data
-	.section  .note.GNU-stack, ""
+.section  .note.GNU-stack, ""

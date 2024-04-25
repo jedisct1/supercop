@@ -83,3 +83,4 @@ CRYPTO_NAMESPACE(hoffset3):
 CRYPTO_NAMESPACE(rounding):
 .byte 0x7f
 .byte 0x13
+.section	.note.GNU-stack,"",@progbits

@@ -4925,4 +4925,4 @@ qdata_7681:
 	.value	-3182
 	.value	-3182
 	.ident	"GCC: (Debian 7.4.0-6) 7.4.0"
-	.section	.note.GNU-stack,"",@progbits
+.section	.note.GNU-stack,"",@progbits

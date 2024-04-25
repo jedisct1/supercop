@@ -117,3 +117,4 @@ xorLanesLoop:
 	brne	xorLanesLoop
 	movw	r24, r26
 	ret
+.section	.note.GNU-stack,"",@progbits

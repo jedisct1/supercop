@@ -1112,3 +1112,4 @@ stqd $4,16($3)
 # qhasm: leave
 ai $sp,$sp,32
 bi $lr
+.section	.note.GNU-stack,"",@progbits

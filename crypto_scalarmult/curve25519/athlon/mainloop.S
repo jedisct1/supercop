@@ -3988,3 +3988,4 @@ movl 172(%ecx),%edi
 movl 176(%ecx),%ebp
 add %eax,%esp
 ret
+.section	.note.GNU-stack,"",@progbits

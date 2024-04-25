@@ -238,3 +238,4 @@ tk_schedule_23:
 	eor 	v3.16b, v3.16b, v1.16b
 	st1 	{v3.d}[1], [x0]
 	ret
+.section	.note.GNU-stack,"",@progbits

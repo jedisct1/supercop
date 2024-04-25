@@ -793,3 +793,4 @@ KeccakF1600_FastLoop_Absorb_LoopLessThan16Lanes:
 
  .endif
 
+.section	.note.GNU-stack,"",@progbits

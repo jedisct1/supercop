@@ -745,3 +745,4 @@ Lz3:
 	popl    %ebp
 	ret
 	.size   CRYPTO_NAMESPACETOP, .-CRYPTO_NAMESPACETOP
+.section	.note.GNU-stack,"",@progbits

@@ -109,3 +109,4 @@ types_cond_save:
 .endr
 	ret
 
+.section	.note.GNU-stack,"",@progbits

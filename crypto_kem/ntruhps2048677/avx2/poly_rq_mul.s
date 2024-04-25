@@ -8008,3 +8008,4 @@ vmovq %xmm4, 1102(%rdi)
 mov %r8, %rsp
 pop %r12
 ret
+.section	.note.GNU-stack,"",@progbits

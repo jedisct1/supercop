@@ -785,3 +785,4 @@ lwz r30,68(r1)
 .label.donothing:
 addi r1,r1,464
 blr
+.section	.note.GNU-stack,"",@progbits

@@ -277,3 +277,4 @@ blake2s_constants:
 
 
 
+.section	.note.GNU-stack,"",@progbits

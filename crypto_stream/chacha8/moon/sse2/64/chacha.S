@@ -733,3 +733,4 @@ popq %rbp
 ret
 FN_END CRYPTO_NAMESPACE(xchacha)
 
+.section	.note.GNU-stack,"",@progbits

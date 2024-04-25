@@ -296,3 +296,4 @@ fstpl 64(%ecx)
 fstpl 72(%ecx)
 add %eax,%esp
 ret
+.section	.note.GNU-stack,"",@progbits

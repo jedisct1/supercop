@@ -1497,3 +1497,4 @@ CRYPTO_NAMESPACETOP:
 	mtlr    0
 	blr
 	.size   CRYPTO_NAMESPACETOP, .-CRYPTO_NAMESPACETOP
+.section	.note.GNU-stack,"",@progbits

@@ -7488,3 +7488,4 @@ movq 1848(%rsp),%r14
 # qhasm: return
 add %r11,%rsp
 ret
+.section	.note.GNU-stack,"",@progbits

@@ -45,3 +45,4 @@ CRYPTO_NAMESPACE(batch_EC2D2):       .quad 1072319116312658
 CRYPTO_NAMESPACE(batch_EC2D3):       .quad 1815898335770999
 CRYPTO_NAMESPACE(batch_EC2D4):       .quad 633789495995903
 CRYPTO_NAMESPACE(batch__38):         .quad 38
+.section	.note.GNU-stack,"",@progbits

@@ -11,3 +11,4 @@ sub %eax,%esp
 fldcw CRYPTO_NAMESPACE(rounding)
 add %eax,%esp
 ret
+.section	.note.GNU-stack,"",@progbits

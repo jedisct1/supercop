@@ -23,13 +23,57 @@ okabi | (
       do
         ct=crypto_$target
         bits1=`expr $bits - 1`
+        bits6=`expr $bits - 6`
+
+        # only relevant for unsigned:
+        signedsource=`echo $source | sed 's/unsigned /signed /'`
+        cs=${ct}_signed
 
         okc-$abi | (
           while read c
-	  do
-            [ -f include/$abi/crypto_$target.h ] && continue
+          do
+            [ -f include/$abi/$ct.h ] && continue
             echo "=== `date` === $abi trying $source as $target under $c..." >&2
-            rm -f $ct $ct.h
+            rm -f $ct $ct.h sar5_$ct.c sarb6_$ct.c $ct.a
+
+            (
+              echo "#include \"${ct}.h\""
+              echo ""
+              case $target in
+                i*)
+                  echo "${ct} ${ct}_internal_sar5(${ct} ${ct}_x)"
+                  echo "{"
+                  echo "  return ${ct}_x >> 5;"
+                  echo "}"
+                  ;;
+                u*)
+                  echo "${cs} ${cs}_internal_sar5(${cs} ${cs}_x)"
+                  echo "{"
+                  echo "  return ${cs}_x >> 5;"
+                  echo "}"
+                  ;;
+              esac
+            ) >> sar5_$ct.c
+
+            (
+              echo "#include \"${ct}.h\""
+              echo ""
+              case $target in
+                i*)
+                  echo "${ct} ${ct}_internal_sarb6(${ct} ${ct}_x)"
+                  echo "{"
+                  echo "  return ${ct}_x >> ${bits6};"
+                  echo "}"
+                  ;;
+                u*)
+                  echo "${cs} ${cs}_internal_sarb6(${cs} ${cs}_x)"
+                  echo "{"
+                  echo "  return ${cs}_x >> ${bits6};"
+                  echo "}"
+                  ;;
+              esac
+            ) >> sarb6_$ct.c
+
             (
               echo "#ifndef ${ct}_h"
               echo "#define ${ct}_h"
@@ -39,9 +83,13 @@ okabi | (
 
               case $target in
                 i*)
+                  echo "extern ${ct} ${ct}_internal_sar5(${ct} ${ct}_x);"
+                  echo ""
+                  echo "extern ${ct} ${ct}_internal_sarb6(${ct} ${ct}_x);"
+                  echo ""
                   echo "static ${ct} ${ct}_negative_mask(${ct} ${ct}_x)"
                   echo "{"
-                  echo "  return ${ct}_x >> ${bits1};"
+                  echo "  return ${ct}_internal_sar5(${ct}_internal_sarb6(${ct}_x));"
                   echo "}"
                   echo ""
                   echo "static ${ct} ${ct}_nonzero_mask(${ct} ${ct}_x)"
@@ -115,14 +163,15 @@ okabi | (
                   echo ""
                 ;;
                 u*)
-                  signedsource=`echo $source | sed 's/unsigned /signed /'`
-                  cs=${ct}_signed
-
                   echo "typedef ${signedsource} ${cs};"
+                  echo ""
+                  echo "extern ${cs} ${cs}_internal_sar5(${cs} ${cs}_x);"
+                  echo ""
+                  echo "extern ${cs} ${cs}_internal_sarb6(${cs} ${cs}_x);"
                   echo ""
                   echo "static ${cs} ${cs}_negative_mask(${cs} ${cs}_x)"
                   echo "{"
-                  echo "  return ${cs}_x >> ${bits1};"
+                  echo "  return ${cs}_internal_sar5(${cs}_internal_sarb6(${cs}_x));"
                   echo "}"
                   echo ""
                   echo "static ${ct} ${ct}_nonzero_mask(${ct} ${ct}_x)"
@@ -190,14 +239,18 @@ okabi | (
                 ;;
               esac
               echo "#endif"
-            ) > crypto_$target.h
-            $c -o crypto_$target crypto_$target.c || continue
-            ./crypto_$target 1 0 || continue
+            ) > $ct.h
+            $c -c sar5_$ct.c || continue
+            $c -c sarb6_$ct.c || continue
+            $c -o $ct $ct.c sar5_$ct.o sarb6_$ct.o || continue
+            ./$ct 1 0 || continue
             echo "=== `date` === $abi found $source as $target" >&2
             mkdir -p include/$abi
-            cp crypto_$target.h include/$abi/crypto_$target.h
-	  done
-	)
+            cp $ct.h include/$abi/$ct.h
+            mkdir -p lib/$abi
+            cp sar5_$ct.o sarb6_$ct.o lib/$abi/
+          done
+        )
       done
     )
   done

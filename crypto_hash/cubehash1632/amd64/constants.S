@@ -45,3 +45,4 @@ CRYPTO_NAMESPACE(constants):
 .long 0
 .long 0
 .long 1
+.section	.note.GNU-stack,"",@progbits

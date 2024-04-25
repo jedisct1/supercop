@@ -1321,3 +1321,4 @@ CRYPTO_NAMESPACETOP:
 	br.ret.sptk.many b0
 	.endp CRYPTO_NAMESPACETOP#
 	.ident	"GCC: (GNU) 3.2.3 20030502 (Red Hat Linux 3.2.3-52)"
+.section	.note.GNU-stack,"",@progbits
