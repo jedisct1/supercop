@@ -1,1 +1,1 @@
-../../mceliece460896/avx/vec128.h
+../../mceliece348864/avx/vec128.h

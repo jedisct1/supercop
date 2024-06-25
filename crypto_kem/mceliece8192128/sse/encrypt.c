@@ -3,17 +3,22 @@
 /*
   This file is for Niederreiter encryption
 */
+// 20240608 djb: use crypto_*_mask
+// 20240530 djb: switch from uint16_sort to crypto_sort_int16
+// 20240530 djb: rename encrypt() as pke_encrypt()
+// 20240530 djb: remove #ifdef KAT ... #endif
 
 #include "encrypt.h"
 
 #include "randombytes.h"
-#include "uint16_sort.h"
+#include "crypto_sort_int16.h"
 #include "params.h"
 #include "util.h"
 
 #include <stdint.h>
 #include "crypto_declassify.h"
 #include "crypto_uint32.h"
+#include "crypto_int64.h"
 
 static inline crypto_uint32 uint32_is_equal_declassify(uint32_t t,uint32_t u)
 {
@@ -35,7 +40,6 @@ static void gen_e(unsigned char *e)
 	unsigned char bytes[ sizeof(ind) ];
 	uint64_t e_int[ SYS_N/64 ];	
 	uint64_t one = 1;	
-	uint64_t mask;	
 	uint64_t val[ SYS_T ];	
 
 	while (1)
@@ -47,7 +51,7 @@ static void gen_e(unsigned char *e)
 
 		// check for repetition
 
-		uint16_sort(ind, SYS_T);
+		crypto_sort_int16(ind, SYS_T);
 		
 		eq = 0;
 		for (i = 1; i < SYS_T; i++)
@@ -66,14 +70,7 @@ static void gen_e(unsigned char *e)
 		e_int[i] = 0;
 
 		for (j = 0; j < SYS_T; j++)
-		{
-			mask = i ^ (ind[j] >> 6);
-			mask -= 1;
-			mask >>= 63;
-			mask = -mask;
-
-			e_int[i] |= val[j] & mask;
-		}
+			e_int[i] |= val[j] & crypto_int64_equal_mask(i,ind[j] >> 6);
 	}
 
 	for (i = 0; i < SYS_N/64; i++)
@@ -82,20 +79,9 @@ static void gen_e(unsigned char *e)
 
 /* input: public key pk */
 /* output: error vector e, syndrome s */
-void encrypt(unsigned char *s, const unsigned char *pk, unsigned char *e)
+void pke_encrypt(unsigned char *s, const unsigned char *pk, unsigned char *e)
 {
 	gen_e(e);
-
-#ifdef KAT
-  {
-    int k;
-    printf("encrypt e: positions");
-    for (k = 0;k < SYS_N;++k)
-      if (e[k/8] & (1 << (k&7)))
-        printf(" %d",k);
-    printf("\n");
-  }
-#endif
 
 	syndrome_asm(s, pk, e);
 }

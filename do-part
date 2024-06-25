@@ -445,6 +445,8 @@ do
             | while read incl
             do
               case "$incl" in
+                crypto_asm_hidden)
+                  ;;
                 crypto_*_*)
                   [ -f "$securitymodelsdir/$abi/constbranchindex/$incl" ] || rm -f "$work/all-subroutines-allow-constbranchindex"
                   [ -f "$securitymodelsdir/$abi/timingleaks/$incl" ] && touch "$work/some-subroutine-allows-timingleaks" || :
@@ -618,6 +620,9 @@ do
                     -D'_CRYPTO_NAMESPACETOP=_'"$opi" \
                     -D'CRYPTO_NAMESPACE(name)='"$opi"'_##name' \
                     -D'_CRYPTO_NAMESPACE(name)=_'"$opi"'_##name' \
+                    -D'CRYPTO_SHARED_NAMESPACE(name)='"$opi"'_##name' \
+                    -D'_CRYPTO_SHARED_NAMESPACE(name)=_'"$opi"'_##name' \
+                    -D'CRYPTO_ALIGN(n)=__attribute__((aligned(n)))' \
                     $includes \
                     -c "$f" >../errors 2>&1 || ok=0
                   ( if [ `wc -l < ../errors` -lt 25 ]

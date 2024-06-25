@@ -1,6 +1,7 @@
 /*
   This file is for public-key generation
 */
+// 20240530 djb: switch from uint64_sort to crypto_sort_int64
 
 #include <stdint.h>
 #include <stdio.h>
@@ -8,7 +9,7 @@
 #include <string.h>
 
 #include "controlbits.h"
-#include "uint64_sort.h"
+#include "crypto_sort_int64.h"
 #include "pk_gen.h"
 #include "params.h"
 #include "benes.h"
@@ -63,7 +64,7 @@ int pk_gen(unsigned char * pk, unsigned char * sk, uint32_t * perm, int16_t * pi
 		buf[i] |= i;
 	}
 
-	uint64_sort(buf, 1 << GFBITS);
+	crypto_sort_int64(buf, 1 << GFBITS);
 
 	for (i = 1; i < (1 << GFBITS); i++)
 		if (uint64_is_equal_declassify(buf[i-1] >> 31,buf[i] >> 31))

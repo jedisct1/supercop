@@ -5,9 +5,24 @@
   For the implementation strategy, see
   https://eprint.iacr.org/2017/793.pdf
 */
+// 20240508 djb: include vec256_gf.h
+// 20221230 djb: split these arrays into separate .c files
+// 20221230 djb: rename powers array as fft_powers
+// 20221230 djb: rename consts array as fft_consts
+// 20221230 djb: rename s array as fft_scalars
+// 20221230 djb: add linker lines
+
+// linker define fft
+// linker use vec_mul_asm
+// linker use vec256_mul_asm
+// linker use fft_scalars fft_consts fft_powers
 
 #include "fft.h"
+#include "fft_scalars.h"
+#include "fft_consts.h"
+#include "fft_powers.h"
 
+#include "vec256_gf.h"
 #include "vec.h"
 
 /* input: in, polynomial in bitsliced form */
@@ -25,11 +40,6 @@ static void radix_conversions(uint64_t *in)
 		{0xFFFF000000000000, 0x0000FFFF00000000}
 	};
 
-	const uint64_t s[5][GFBITS] = 
-	{
-#include "scalars.data"
-	};
-	
 	//
 
 	for (j = 0; j <= 4; j++)
@@ -41,7 +51,7 @@ static void radix_conversions(uint64_t *in)
 				in[i] ^= (in[i] & mask[k][1]) >> (1 << k);
 			}
 
-		vec_mul(in, in, s[j]); // scaling
+		vec_mul(in, in, fft_scalars[j]); // scaling
 	}
 }
 
@@ -52,11 +62,6 @@ static void butterflies(vec256 out[][ GFBITS ], uint64_t *in)
 	int i, j, k, s, b;
 
 	uint64_t t0, t1, t2, t3;
-
-	const vec256 consts[ 17 ][ GFBITS ] =
-	{
-#include "consts.data"
-	};
 
 	uint64_t consts_ptr = 0;
 
@@ -99,7 +104,7 @@ static void butterflies(vec256 out[][ GFBITS ], uint64_t *in)
 
 	for (i = 0; i < 16; i+=2)
 	{
-		vec256_mul(tmp256, out[i+1], consts[ 0 ]);
+		vec256_mul(tmp256, out[i+1], fft_consts[ 0 ]);
 
 		for (b = 0; b < GFBITS; b++) out[i+0][b] ^= tmp256[b];
 		for (b = 0; b < GFBITS; b++) out[i+1][b] ^= out[i+0][b];
@@ -110,7 +115,7 @@ static void butterflies(vec256 out[][ GFBITS ], uint64_t *in)
 		for (b = 0; b < GFBITS; b++) x[b] = vec256_unpack_low_2x(out[i+0][b], out[i+1][b]);
 		for (b = 0; b < GFBITS; b++) y[b] = vec256_unpack_high_2x(out[i+0][b], out[i+1][b]);
 
-		vec256_mul(tmp256, y, consts[ 1 ]);
+		vec256_mul(tmp256, y, fft_consts[ 1 ]);
 
 		for (b = 0; b < GFBITS; b++) x[b] ^= tmp256[b];
 		for (b = 0; b < GFBITS; b++) y[b] ^= x[b];
@@ -129,7 +134,7 @@ static void butterflies(vec256 out[][ GFBITS ], uint64_t *in)
 		{
 			for (k = j; k < j+s; k++)
 			{
-				vec256_mul(tmp256, out[k+s], consts[ consts_ptr + (k-j) ]);
+				vec256_mul(tmp256, out[k+s], fft_consts[ consts_ptr + (k-j) ]);
 
 				for (b = 0; b < GFBITS; b++) out[k][b] ^= tmp256[b];
 				for (b = 0; b < GFBITS; b++) out[k+s][b] ^= out[k][b];
@@ -141,14 +146,9 @@ static void butterflies(vec256 out[][ GFBITS ], uint64_t *in)
 
 	// adding the part contributed by x^64
 
-	vec256 powers[16][GFBITS] = 
-	{
-#include "powers.data"
-	};
-
 	for (i = 0; i < 16; i++)
 	for (b = 0; b < GFBITS; b++) 
-		out[i][b] = vec256_xor(out[i][b], powers[i][b]);
+		out[i][b] = vec256_xor(out[i][b], fft_powers[i][b]);
 }
 
 void fft(vec256 out[][ GFBITS ], uint64_t *in)

@@ -5,10 +5,12 @@
   For the implementation strategy, see
   https://eprint.iacr.org/2017/793.pdf
 */
+// 20240530 djb: include vec128_gf.h
 
 #include "fft_tr.h"
 
 #include "transpose.h"
+#include "vec128_gf.h"
 #include "vec128.h"
 #include "vec.h"
 

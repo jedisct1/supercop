@@ -13,8 +13,6 @@ Vadim Lyubashevsky, John M. Schanck, Peter Schwabe & Damien stehle
 #include "SABER_params.h"
 #include <immintrin.h>
 
-uint64_t clock_mul, clock_matrix, clock_secret,count_mul;
-
 
 typedef struct
 {

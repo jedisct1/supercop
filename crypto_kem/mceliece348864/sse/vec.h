@@ -1,3 +1,5 @@
+// 20240508 djb: switch to vec_mul_gf_using_64
+
 #ifndef VEC_H
 #define VEC_H
 #define vec_GF_mul CRYPTO_NAMESPACE(vec_GF_mul)
@@ -25,7 +27,7 @@ static inline void vec_add(vec *h, vec *f, vec *g)
 		h[b] = f[b] ^ g[b];
 }
 
-static inline void vec_mul_gf(vec out[ GFBITS ], vec v[ GFBITS ], gf a)
+static inline void vec_mul_gf_using_64(vec out[ GFBITS ], vec v[ GFBITS ], gf a)
 {
 	int i;
 

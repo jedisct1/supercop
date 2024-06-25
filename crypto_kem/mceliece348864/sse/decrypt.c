@@ -1,9 +1,12 @@
 /*
   This file is for Niederreiter decryption
 */
+// 20240530 djb: include vec128_gf.h
+// 20240530 djb: remove #ifdef KAT ... #endif
 
 #include "decrypt.h"
 
+#include "vec128_gf.h"
 #include "params.h"
 #include "fft_tr.h"
 #include "benes.h"
@@ -196,17 +199,6 @@ int decrypt(unsigned char *e, const unsigned char *sk, const unsigned char *s)
 	postprocess(e, error);
 
 	check_weight = weight_check(e, error);
-
-#ifdef KAT
-  {
-    int k;
-    printf("decrypt e: positions");
-    for (k = 0;k < SYS_N;++k)
-      if (e[k/8] & (1 << (k&7)))
-        printf(" %d",k);
-    printf("\n");
-  }
-#endif
 
 	return 1 - (check_synd & check_weight);
 }

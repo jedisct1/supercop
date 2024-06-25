@@ -1,0 +1,54 @@
+#!/bin/sh
+
+hash=../../crypto_hash
+
+for bytes in 32 64
+do
+  bits=`expr $bytes '*' 8`
+
+  (
+    echo ref no_arch src
+    echo neon arm src/neon
+    echo sse2 x86_x64 src/sse2
+    echo ssse3 x86_x64 src/ssse3
+    echo xop x86_x64 src/xop
+    echo avx2 x86_x64 src/avx2
+  ) |
+  while read t arch dir
+  do
+    target=$hash/lsh$bits/$t
+    mkdir -p $target
+    echo "#define CRYPTO_BYTES $bytes" > $target/api.h
+    [ "$arch" = arm ] && ( echo arm; echo armeabi; echo aarch64 ) > $target/architectures
+    [ "$arch" = x86_x64 ] && ( echo x86; echo amd64 ) > $target/architectures
+    touch $target/goal-constbranch
+    touch $target/goal-constindex
+    cp source/c/$arch/include/lsh*.h $target
+    cp source/c/$arch/src/lsh_local.h $target
+    # cp source/c/$arch/src/lsh.c $target
+    cp source/c/$arch/$dir/lsh${bits}*.c $target/lsh-impl.c
+    cp source/c/$arch/$dir/lsh${bits}*.h $target/lsh-impl.h
+
+    sed -i 's_#include "../_#include "_' $target/*
+    sed -i 's_#include "../_#include "_' $target/*
+    sed -i 's_#include "include/_#include "_' $target/*
+    sed -i "s/lsh${bits}_${t}_/lsh${bits}_/g" $target/*
+    sed -i "s/lsh${bits}_${t}\./lsh${bits}./g" $target/*
+    sed -i 's/#include "lsh'${bits}'.h"/#include "lsh-impl.h"/' $target/*
+    sed -i 's/#include "cpu_info.h"//' $target/*
+
+    (
+      /bin/echo '#include "crypto_hash.h"'
+      /bin/echo '#include "lsh.h"'
+      /bin/echo '#include "lsh-impl.h"'
+      /bin/echo ''
+      /bin/echo 'int crypto_hash('
+      /bin/echo '  unsigned char *out,'
+      /bin/echo '  const unsigned char *in,'
+      /bin/echo '  unsigned long long inlen)'
+      /bin/echo '{'
+      /bin/echo "  return lsh${bits}_digest(LSH_TYPE_$bits,in,8*inlen,out);"
+      /bin/echo '}'
+    ) > $target/wrapper.c
+  done
+done

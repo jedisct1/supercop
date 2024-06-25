@@ -1,3 +1,9 @@
+// 20240508 djb: switch to vec_mul_gf_using_64
+// 20221230 djb: add linker line
+
+// linker define vec_GF_mul
+// linker use vec_mul_asm
+
 #include "vec.h"
 
 /* input: v, an element in GF(2^m)[y]/(y^64+y^3+y+z) in bitsliced form */
@@ -27,7 +33,7 @@ void vec_GF_mul(vec out[ GFBITS ], vec v[ GFBITS ], gf a[ SYS_T ])
 			buf[j][0] <<= 1;
 		}
 
-		vec_mul_gf(prod, v, a[i]);
+		vec_mul_gf_using_64(prod, v, a[i]);
 
 		for (j = 0; j < GFBITS; j++) 
 			buf[j][0] ^= prod[j];
@@ -38,7 +44,7 @@ void vec_GF_mul(vec out[ GFBITS ], vec v[ GFBITS ], gf a[ SYS_T ])
 	for (i = 0; i < GFBITS; i++) 
 		prod[i] = buf[i][1] & (allone << 3);
 
-	vec_mul_gf(tmp, prod, 2);
+	vec_mul_gf_using_64(tmp, prod, 2);
 
 	for (i = 0; i < GFBITS; i++) 
 	{
@@ -54,7 +60,7 @@ void vec_GF_mul(vec out[ GFBITS ], vec v[ GFBITS ], gf a[ SYS_T ])
 	for (i = 0; i < GFBITS; i++) 
 		prod[i] = buf[i][1] & 0x7;
 
-	vec_mul_gf(tmp, prod, 2);
+	vec_mul_gf_using_64(tmp, prod, 2);
 
 	for (i = 0; i < GFBITS; i++) 
 	{

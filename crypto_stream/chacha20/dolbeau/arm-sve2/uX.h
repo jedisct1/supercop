@@ -9,10 +9,10 @@ This does a variable number of blocks, depending on the SVE vector size.
 
 /* SVE2 added XAR, which does the XOR and Rotate (right) in one go */
 #define VEC4_QUARTERROUND(a,b,c,d)					\
-  x_##a = svadd_u32_z(svptrue_b32(), x_##a, x_##b); x_##d = svxar_n_u32(x_##d, x_##a, 16); \
-  x_##c = svadd_u32_z(svptrue_b32(), x_##c, x_##d); x_##b = svxar_n_u32(x_##b, x_##c, 20); \
-  x_##a = svadd_u32_z(svptrue_b32(), x_##a, x_##b); x_##d = svxar_n_u32(x_##d, x_##a, 24); \
-  x_##c = svadd_u32_z(svptrue_b32(), x_##c, x_##d); x_##b = svxar_n_u32(x_##b, x_##c, 25)
+  x_##a = svadd_u32_x(svptrue_b32(), x_##a, x_##b); x_##d = svxar_n_u32(x_##d, x_##a, 16); \
+  x_##c = svadd_u32_x(svptrue_b32(), x_##c, x_##d); x_##b = svxar_n_u32(x_##b, x_##c, 20); \
+  x_##a = svadd_u32_x(svptrue_b32(), x_##a, x_##b); x_##d = svxar_n_u32(x_##d, x_##a, 24); \
+  x_##c = svadd_u32_x(svptrue_b32(), x_##c, x_##d); x_##b = svxar_n_u32(x_##b, x_##c, 25)
 
   if (!bytes) return;
 uint64_t vc = svcntb(); /* how many bytes in a vector */
@@ -88,7 +88,7 @@ if (bytes>=16*vc) {
 
     /* svindex() makes it easy to build the input counter */
     const svuint64_t addv13 = svindex_u64(0, 1);
-    const svuint64_t addv12 = svadd_n_u64_z(svptrue_b64(), addv13, vc/8);
+    const svuint64_t addv12 = svadd_n_u64_x(svptrue_b64(), addv13, vc/8);
     svuint64_t t12, t13;
     in12 = x[12];
     in13 = x[13];
@@ -96,8 +96,8 @@ if (bytes>=16*vc) {
     t12 = svdup_n_u64(in1213);
     t13 = svdup_n_u64(in1213);
 
-    x_12 = svreinterpret_u32_u64(svadd_u64_z(svptrue_b64(), addv12, t12));
-    x_13 = svreinterpret_u32_u64(svadd_u64_z(svptrue_b64(), addv13, t13));
+    x_12 = svreinterpret_u32_u64(svadd_u64_x(svptrue_b64(), addv12, t12));
+    x_13 = svreinterpret_u32_u64(svadd_u64_x(svptrue_b64(), addv13, t13));
 
     svuint32_t t = x_12;
     x_12 = svuzp1_u32(x_13, x_12);
@@ -127,10 +127,10 @@ if (bytes>=16*vc) {
     {                                                                   \
       svuint32_t t00, t01, t10, t11;                                    \
       svuint64_t t0, t1, t2, t3;                                        \
-      x_##a = svadd_u32_z(svptrue_b32(), x_##a, orig##a);                                \
-      x_##b = svadd_u32_z(svptrue_b32(), x_##b, orig##b);                                \
-      x_##c = svadd_u32_z(svptrue_b32(), x_##c, orig##c);                                \
-      x_##d = svadd_u32_z(svptrue_b32(), x_##d, orig##d);                                \
+      x_##a = svadd_u32_x(svptrue_b32(), x_##a, orig##a);                                \
+      x_##b = svadd_u32_x(svptrue_b32(), x_##b, orig##b);                                \
+      x_##c = svadd_u32_x(svptrue_b32(), x_##c, orig##c);                                \
+      x_##d = svadd_u32_x(svptrue_b32(), x_##d, orig##d);                                \
       t00 = svtrn1_u32(x_##a,x_##b);\
       t01 = svtrn2_u32(x_##a,x_##b);\
       t10 = svtrn1_u32(x_##c,x_##d);\
@@ -139,13 +139,13 @@ if (bytes>=16*vc) {
       x_##b = svreinterpret_u32_u64(svtrn1_u64(svreinterpret_u64_u32(t01), svreinterpret_u64_u32(t11)));\
       x_##c = svreinterpret_u32_u64(svtrn2_u64(svreinterpret_u64_u32(t00), svreinterpret_u64_u32(t10)));\
       x_##d = svreinterpret_u32_u64(svtrn2_u64(svreinterpret_u64_u32(t01), svreinterpret_u64_u32(t11)));\
-      t0 = sveor_u64_z(svptrue_b64(), svreinterpret_u64_u32(x_##a), svld1_gather_s64offset_u64(svptrue_b64(), (uint64_t*)(m+0), gvv));             \
+      t0 = sveor_u64_x(svptrue_b64(), svreinterpret_u64_u32(x_##a), svld1_gather_s64offset_u64(svptrue_b64(), (uint64_t*)(m+0), gvv));             \
       svst1_scatter_s64offset_u64(svptrue_b64(), (uint64_t*)(out+0), gvv, t0);\
-      t1 = sveor_u64_z(svptrue_b64(), svreinterpret_u64_u32(x_##b), svld1_gather_s64offset_u64(svptrue_b64(), (uint64_t*)(m+64), gvv));             \
+      t1 = sveor_u64_x(svptrue_b64(), svreinterpret_u64_u32(x_##b), svld1_gather_s64offset_u64(svptrue_b64(), (uint64_t*)(m+64), gvv));             \
       svst1_scatter_s64offset_u64(svptrue_b64(), (uint64_t*)(out+64), gvv, t1);\
-      t2 = sveor_u64_z(svptrue_b64(), svreinterpret_u64_u32(x_##c), svld1_gather_s64offset_u64(svptrue_b64(), (uint64_t*)(m+128), gvv));             \
+      t2 = sveor_u64_x(svptrue_b64(), svreinterpret_u64_u32(x_##c), svld1_gather_s64offset_u64(svptrue_b64(), (uint64_t*)(m+128), gvv));             \
       svst1_scatter_s64offset_u64(svptrue_b64(), (uint64_t*)(out+128), gvv, t2);\
-      t3 = sveor_u64_z(svptrue_b64(), svreinterpret_u64_u32(x_##d), svld1_gather_s64offset_u64(svptrue_b64(), (uint64_t*)(m+192), gvv));             \
+      t3 = sveor_u64_x(svptrue_b64(), svreinterpret_u64_u32(x_##d), svld1_gather_s64offset_u64(svptrue_b64(), (uint64_t*)(m+192), gvv));             \
       svst1_scatter_s64offset_u64(svptrue_b64(), (uint64_t*)(out+192), gvv, t3);\
     }
     
@@ -156,9 +156,9 @@ if (bytes>=16*vc) {
      * So need to be a bit careful to construct the vector of gather/scatter indices
      */
     gvvl = svindex_s64(0, 1);
-    gvvl = svlsl_n_s64_z(svptrue_b64(), gvvl, 8);
+    gvvl = svlsl_n_s64_x(svptrue_b64(), gvvl, 8);
     gvvl = svzip1(gvvl, gvvl);
-    gvv = svadd_s64_z(svptrue_b64(), gvvl, svdupq_n_s64(0,8));
+    gvv = svadd_s64_x(svptrue_b64(), gvvl, svdupq_n_s64(0,8));
 
     ONEQUAD(0,1,2,3);
     m+=16;

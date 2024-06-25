@@ -3,7 +3,7 @@
 #include "randombytes.h"
 #include "sizes.h"
 
-__inline int u8rnd() { char c; randombytes(&c,1); return 255 & (int) c; }
+int u8rnd() { char c; randombytes(&c,1); return 255 & (int) c; }
 
 // coefficient binomial median bino[t-1] = binomial(t,t/2) avec t/2
 // arrondi inférieurement

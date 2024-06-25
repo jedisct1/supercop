@@ -1,6 +1,7 @@
 /*
   This file is for functions for field arithmetic
 */
+// 20221231 djb: const for GF_mul
 
 #ifndef GF_H
 #define GF_H
@@ -21,7 +22,7 @@ gf gf_mul(gf, gf);
 gf gf_frac(gf, gf);
 gf gf_inv(gf);
 
-void GF_mul(gf *, gf *, gf *);
+void GF_mul(gf *, const gf *, const gf *);
 
 #endif
 

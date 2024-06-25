@@ -141,6 +141,11 @@ do
         fi
       done < "$top/$target/dep"
 
+      if [ "$t1" = cryptoint ]
+      then
+        cat inttypes/version >&8
+      fi
+
       if [ "$t1" = gmp ]
       then
         echo "gmp 6.2.1" >&8
@@ -208,11 +213,12 @@ do
         (
           cd "$top/$target/work"
           libs=`"oklibs-$abi"`
-          libs="$top/$abi/lib/cpucycles.o $libs"
+          libs="$top/$abi/lib/nontimecop/cpucycles.o $libs"
           libs="$top/$abi/lib/kernelrandombytes.o $libs"
           if $compiler -D'COMPILER="'"$compiler"'"' \
             -DLOOPS=1 \
             -I. -I"$top/$abi/include" \
+            -I"$top/$abi/include-nontimecop" \
             -o measure measure.$language measure-anything.$language \
             $libs
           then
@@ -388,6 +394,7 @@ do
           && cp *.h "$top/$abi/include/cryptopp/"
         ) && break
       done
+      exit 0
     fi
   
     if [ "$t1" = base ]
@@ -402,8 +409,16 @@ do
         ( cd "$top/$target/work" && $compiler -c ${project}_base.c ) && break
       done
       okar-$abi cr "$top/$abi/lib/lib${project}.a" "$top/$target/work/${project}_base.o"
-      okar-$abi cr "$top/$abi/lib/lib${project}.a" "$top/inttypes/lib/$abi"/*.o
       ( ranlib "$top/$abi/lib/lib${project}.a" || exit 0 )
+      exit 0
+    fi
+
+    if [ "$t1" = cryptoint ]
+    then
+      rm -f "$top/$abi/lib/libcryptoint.a"
+      okar-$abi cr "$top/$abi/lib/libcryptoint.a" "$top/inttypes/lib/$abi"/*.o
+      ( ranlib "$top/$abi/lib/lib${project}.a" || exit 0 )
+      exit 0
     fi
   
     if [ "$t1" = try ]
@@ -461,6 +476,8 @@ do
           | while read incl
           do
             case "$incl" in
+              crypto_asm_hidden)
+                ;;
               crypto_*_*)
                 [ -f "$top/$abi/security/constbranchindex/$incl" ] || rm -f "$work/all-subroutines-allow-constbranchindex"
                 [ -f "$top/$abi/security/timingleaks/$incl" ] && touch "$work/some-subroutine-allows-timingleaks"
@@ -500,12 +517,16 @@ do
         libs=`"oklibs-$abi"`
         rslibs=`"oklibs-$abi" | tr ' ' '\012' | sed 's/-l//' | tr '\012' ' '`
 
-        libs="$top/$abi/lib/cpucycles.o $libs"
+        libs="$top/$abi/lib/nontimecop/cpucycles.o $libs"
         rslibs="cpucycles $rslibs"
 
         libs="$top/$abi/lib/kernelrandombytes.o $libs"
         rslibs="kernelrandombytes $rslibs"
 
+        if grep '^cryptoint ' "$top/$abi/implementation/$implementationdir/sources" >/dev/null
+        then
+          [ -f "$top/$abi/lib/libcryptoint.a" ] && libs="$top/$abi/lib/libcryptoint.a $libs" && rslibs="cryptoint $rslibs"
+        fi
         if grep '^gmp ' "$top/$abi/implementation/$implementationdir/sources" >/dev/null
         then
           [ -f "$top/$abi/lib/libgmp.a" ] && libs="$top/$abi/lib/libgmp.a $libs" && rslibs="gmp $rslibs"
@@ -543,6 +564,8 @@ do
           measurelibs="$top/$abi/lib/fastrandombytes.o $measurelibs"
           rsmeasurelibs="fastrandombytes $rslibs"
         fi
+
+        timecoptrylibs=`echo $trylibs | sed s_lib/nontimecop/cpucycles_lib/timecop/cpucycles_`
   
         mkdir -p "$top/$target/work"
         cp -LpR "$implementationdir"/* "$top/$target/work"
@@ -556,6 +579,25 @@ do
         cp -p "$o/measure.c" "$top/$target/work/measure.$language"
         cp -p "try-anything.c" "$top/$target/work/try-anything.$language"
         cp -p "measure-anything.c" "$top/$target/work/measure-anything.$language"
+
+        wanttimecop=''
+
+        TIMECOP=10
+        [ "$o" = "crypto_core" ] && TIMECOP=1
+        [ "$o" = "crypto_kem" ] && TIMECOP=1
+
+        if [ "$security" = "constbranchindex" ]
+        then
+          wanttimecop=yes
+          ( echo '#define TIMECOP'
+            echo "#define TIMECOP_LOOPS $TIMECOP"
+            echo '#include "try.'"$language"'"'
+          ) > "$top/$target/work/try-timecop.$language"
+          ( echo '#define TIMECOP'
+            echo "#define TIMECOP_LOOPS $TIMECOP"
+            echo '#include "try-anything.'"$language"'"'
+          ) > "$top/$target/work/try-anything-timecop.$language"
+        fi
 
         ( echo '#define SMALL'
           echo '#include "try.'"$language"'"'
@@ -644,6 +686,9 @@ do
                   -D'_CRYPTO_NAMESPACETOP=_'"$opi" \
                   -D'CRYPTO_NAMESPACE(name)='"$opi"'_##name' \
                   -D'_CRYPTO_NAMESPACE(name)=_'"$opi"'_##name' \
+                  -D'CRYPTO_SHARED_NAMESPACE(name)='"$opi"'_##name' \
+                  -D'_CRYPTO_SHARED_NAMESPACE(name)=_'"$opi"'_##name' \
+                  -D'CRYPTO_ALIGN(n)=__attribute__((aligned(n)))' \
                   -I. \
                   -I"$top/$abi/include" \
                   -I"$top/$abi/include/$security" \
@@ -664,10 +709,12 @@ do
             ( ranlib "lib$op.a" || : )
           fi
 
-          includes="-I. -I$top/$abi/include -I$top/$abi/include/$security"
+          includes="-I. -I$top/$abi/include -I$top/$abi/include/nontimecop -I$top/$abi/include/$security"
+          timecopincludes="-I. -I$top/$abi/include -I$top/$abi/include/timecop -I$top/$abi/include/$security"
 
           if [ "$rust" ]
           then
+            # XXX: still have to integrate TIMECOP here
             supercop-build-rs "$op" "$top/$abi/lib" > build.rs
             mkdir -p src/bin
             supercop-bin-rs "$o" "$op" "$opi" try-anything try-small $rstrylibs > src/bin/try-small.rs
@@ -701,6 +748,8 @@ do
             [ -f OK ] || exit 0
           fi
   
+          # ===== try-small, and checksumsmall
+
           if [ ! "$rust" ]
           then
             (
@@ -741,6 +790,8 @@ do
           && [ "x$expectedchecksumsmall" != "x$checksumsmall" ] \
           && echo "$version $shorthostname $abi $startdate $o $p/$security try $checksumsmall fails $cycles $checksumcycles $cyclespersecond $impl $compilerword" >&5 \
           && exit 0
+
+          # ===== try, and checksumbig
 
           if [ ! "$rust" ]
           then
@@ -788,6 +839,50 @@ do
           [ "x$expectedchecksumsmall" = x ] && checksumok=unknown
           [ "x$expectedchecksumbig" = x ] && checksumok=unknown
           echo "$version $shorthostname $abi $startdate $o $p/$security try $checksumsmall/$checksumbig $checksumok $cycles $checksumcycles $cyclespersecond $impl $compilerword" >&5
+
+          # ===== try-timecop (_not_ stopping if this fails)
+
+          if [ $wanttimecop ]
+          then
+            if [ ! "$rust" ]
+            then
+              (
+                killafter 300 \
+                $compiler -DSUPERCOP \
+                  $timecopincludes \
+                  -o try-timecop try-timecop.$language try-anything-timecop.$language \
+                  "lib$op.a" $timecoptrylibs 2>&1
+              ) | awk -v PREFIX="$version $shorthostname $abi $startdate $o $p/$security fromcompiler $implementationdir $compilerword try.$language" '
+                {
+                  if (NR > 25) { print PREFIX,"..."; exit }
+                  print PREFIX,$0
+                }
+              ' >&5
+            fi
+
+            if sh -c "killafter 3600 valgrind -q --max-stackframe=16777216 --error-exitcode=99 --track-origins=yes ./try-timecop $version $abi $implementationdir $compilerword"' || exit $?' >../outputs 2>../errors
+            then
+              echo "$version $shorthostname $abi $startdate $o $p/$security timecop_pass $implementationdir $compilerword $TIMECOP $?" >&5
+              word=timecop_output
+            else
+              exitcode=$?
+              if [ "$exitcode" = "99" ] && grep -q "client request" ../outputs ../errors
+              then
+                word=timecop_fail
+              else
+                word=timecop_error
+              fi
+              echo "$version $shorthostname $abi $startdate $o $p/$security $word $implementationdir $compilerword error $exitcode" >&5
+            fi
+            cat ../outputs ../errors \
+            | while read err
+            do
+              echo "$version $shorthostname $abi $startdate $o $p/$security $word $implementationdir $compilerword $err" >&5
+            done
+            rm ../outputs ../errors
+          fi
+
+          # ===== if tests passed, collect measurements
   
           if [ ! "$rust" ]
           then
@@ -854,10 +949,10 @@ do
       mkdir -p "$top/$target/work"
       cp fastrandombytes/* "$top/$target/work"
 
-      include="-I. -I$top/$abi/include -I$top/$abi/include/constbranchindex"
+      include="-I. -I$top/$abi/include -I$top/$abi/include/nontimecop -I$top/$abi/include/constbranchindex"
 
       libs=`"oklibs-$abi"`
-      libs="$top/$abi/lib/cpucycles.o $libs"
+      libs="$top/$abi/lib/nontimecop/cpucycles.o $libs"
       libs="$top/$abi/lib/kernelrandombytes.o $libs"
       [ -f "$top/$abi/lib/libcryptopp.a" ] && libs="$top/$abi/lib/libcryptopp.a $libs"
       [ -f "$top/$abi/lib/lib${project}.a" ] && libs="$top/$abi/lib/lib${project}.a $libs"
@@ -896,17 +991,21 @@ do
           sleep 1
         done
 
+        cp "$top/$abi/lib/lib${project}.a" "$top/$abi/lib/new-lib${project}.a"
+
         (
-          okar-$abi t "$top/$abi/lib/lib${project}.a" > "$top/$abi/lib/lib${project}.index"
-          grep '^'${op}_ "$top/$abi/lib/lib${project}.index" \
+          okar-$abi t "$top/$abi/lib/new-lib${project}.a" > "$top/$abi/lib/new-lib${project}.index"
+          grep '^'${op}_ "$top/$abi/lib/new-lib${project}.index" \
           | while read existing
           do
-            okar-$abi d "$top/$abi/lib/lib${project}.a" "$existing"
+            okar-$abi d "$top/$abi/lib/new-lib${project}.a" "$existing"
           done
-          rm -f "$top/$abi/lib/lib${project}.index"
+          rm -f "$top/$abi/lib/new-lib${project}.index"
         ) \
-        && ( ranlib "$top/$abi/lib/lib${project}.a" || exit 0 ) \
+        && ( ranlib "$top/$abi/lib/new-lib${project}.a" || exit 0 ) \
         || :
+
+        mv "$top/$abi/lib/new-lib${project}.a" "$top/$abi/lib/lib${project}.a"
 
         mv "$top/$abi/lib/LOCKED" "$top/$abi/lib/LOCK"
 
@@ -924,8 +1023,12 @@ do
               sleep 1
             done
 
-            okar-$abi cr "$top/$abi/lib/lib${project}.a" "$top/$abi/$source/compiled"/*.o
-            ( ranlib "$top/$abi/lib/lib${project}.a" || exit 0 )
+            cp "$top/$abi/lib/lib${project}.a" "$top/$abi/lib/new-lib${project}.a"
+
+            okar-$abi cr "$top/$abi/lib/new-lib${project}.a" "$top/$abi/$source/compiled"/*.o
+            ( ranlib "$top/$abi/lib/new-lib${project}.a" || exit 0 )
+
+            mv "$top/$abi/lib/new-lib${project}.a" "$top/$abi/lib/lib${project}.a"
 
             mv "$top/$abi/lib/LOCKED" "$top/$abi/lib/LOCK"
 

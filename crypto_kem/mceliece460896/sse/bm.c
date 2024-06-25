@@ -9,36 +9,17 @@
   For the implementation strategy, see
   https://eprint.iacr.org/2017/793.pdf
 */
+// 20240608 djb: use crypto_*_mask functions
+// 20240530 djb: include vec128_gf.h
 
 #include "bm.h"
 
+#include "vec128_gf.h"
 #include "gf.h"
+#include "crypto_uint64.h"
 
 extern gf vec_reduce_asm(vec128 *);
 extern void update_asm(vec128 *, gf);
-
-static inline uint16_t mask_nonzero(gf a)
-{
-	uint32_t ret = a;
-
-	ret -= 1;
-	ret >>= 31;
-	ret -= 1;
-
-	return ret;
-}
-
-static inline uint16_t mask_leq(uint16_t a, uint16_t b)
-{
-	uint32_t a_tmp = a;
-	uint32_t b_tmp = b;
-	uint32_t ret = b_tmp - a_tmp; 
-
-	ret >>= 31;
-	ret -= 1;
-
-	return ret;
-}
 
 static inline void vec128_cmov(vec128 *out, vec128 *in, uint16_t mask)
 {
@@ -181,7 +162,7 @@ void bm(vec128 *out, vec128 in[][ GFBITS ])
 		vec128_mul(prod, C, (vec128 *) interval);
 		d = vec_reduce_asm(prod);
 
-		mask = mask_nonzero(d) & mask_leq(L*2, N);
+		mask = crypto_uint64_nonzero_mask(d) & crypto_uint64_leq_mask(L*2, N);
 
 		for (i = 0; i < GFBITS; i++) 
 		{

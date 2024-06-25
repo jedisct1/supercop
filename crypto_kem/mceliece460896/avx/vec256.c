@@ -1,9 +1,15 @@
+// 20240508 djb: include vec256_gf.h
+// 20221230 djb: add linker line
+
+// linker define vec256_sq vec256_inv
+// linker use vec256_mul_asm
+
 /*
   This file is for functions related to 256-bit vectors
   including functions for bitsliced field operations
 */
 
-#include "vec256.h"
+#include "vec256_gf.h"
 
 /* bitsliced field squarings */
 void vec256_sq(vec256 * out, vec256 * in)

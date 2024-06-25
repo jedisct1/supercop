@@ -1,5 +1,13 @@
-#define vec256_maa_asm CRYPTO_NAMESPACE(vec256_maa_asm)
-#define _vec256_maa_asm _CRYPTO_NAMESPACE(vec256_maa_asm)
+// 20240504 djb: add note.GNU-stack
+// 20221231 djb: port hidden to macos; tnx thom wiggers
+// 20221230 djb: add linker line
+
+// linker define vec256_maa_asm
+
+#include "crypto_asm_hidden.h"
+
+#define vec256_maa_asm CRYPTO_SHARED_NAMESPACE(vec256_maa_asm)
+#define _vec256_maa_asm _CRYPTO_SHARED_NAMESPACE(vec256_maa_asm)
 
 # qhasm: int64 input_0
 
@@ -115,8 +123,8 @@
 
 # qhasm: enter vec256_maa_asm
 .p2align 5
-.hidden _vec256_maa_asm
-.hidden vec256_maa_asm
+ASM_HIDDEN _vec256_maa_asm
+ASM_HIDDEN vec256_maa_asm
 .global _vec256_maa_asm
 .global vec256_maa_asm
 _vec256_maa_asm:

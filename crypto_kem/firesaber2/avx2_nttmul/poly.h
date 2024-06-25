@@ -13,10 +13,6 @@ Vadim Lyubashevsky, John M. Schanck, Peter Schwabe & Damien stehle
 #include "polmul_params.h"
 #include "SABER_params.h"
 
-uint64_t clock_mul, clock_matrix, clock_secret, count_mul;
-
-uint64_t clock_mv_vv_mul;
-
 uint64_t count_enc;
 
 typedef struct

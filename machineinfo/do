@@ -68,6 +68,9 @@ rustc --version || :
 echo "=== `date` === cargo --version"
 cargo --version || :
 
+echo "=== `date` === valgrind --version"
+valgrind --version || :
+
 # MacOS
 echo "=== `date` === sw_vers"
 sw_vers || :

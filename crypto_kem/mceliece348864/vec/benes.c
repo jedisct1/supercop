@@ -4,6 +4,9 @@
   For the implementation strategy, see
   https://eprint.iacr.org/2017/793.pdf
 */
+// 20221230 djb: add linker lines
+
+// linker define benes
 
 #include "util.h"
 #include "transpose.h"

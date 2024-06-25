@@ -9,8 +9,8 @@ typedef unsigned short gf_t;
 #define gf_card() (1 << gf_extd())
 #define gf_ord() ((1 << gf_extd()) - 1)
 
-gf_t gf_log[1 << gf_extd()];
-gf_t gf_exp[1 << gf_extd()];
+extern gf_t gf_log[1 << gf_extd()];
+extern gf_t gf_exp[1 << gf_extd()];
 
 
 #define gf_unit() 1

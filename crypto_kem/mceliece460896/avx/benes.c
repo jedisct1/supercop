@@ -4,6 +4,11 @@
   For the implementation strategy, see
   https://eprint.iacr.org/2017/793.pdf
 */
+// 20221231 djb: remove unused counter increment; tnx thom wiggers
+// 20221230 djb: add linker lines
+
+// linker define load_bits benes
+// linker use transpose_64x128_sp_asm
 
 #include "benes.h"
 
@@ -295,7 +300,7 @@ void benes(vec128 * r, vec128 b[][32], int rev)
 	layer_3(r, b_ptr); b_ptr += inc;
 	layer_2(r, b_ptr); b_ptr += inc;
 	layer_1(r, b_ptr); b_ptr += inc;
-	layer_0(r, b_ptr); b_ptr += inc;
+	layer_0(r, b_ptr);
 
 	transpose_64x128_sp( r );
 }

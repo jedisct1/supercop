@@ -1,6 +1,10 @@
 /*
   This file is for functions for field arithmetic
 */
+// 20221231 djb: const for GF_mul
+// 20221230 djb: add linker line
+
+// linker define gf_iszero gf_add gf_mul gf_inv gf_frac GF_mul
 
 #include "gf.h"
 
@@ -113,7 +117,7 @@ gf gf_frac(gf den, gf num)
 
 /* input: in0, in1 in GF((2^m)^t)*/
 /* output: out = in0*in1 */
-void GF_mul(gf *out, gf *in0, gf *in1)
+void GF_mul(gf *out, const gf *in0, const gf *in1)
 {
 	int i, j;
 

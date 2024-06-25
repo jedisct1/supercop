@@ -5,8 +5,20 @@
   For the implementation strategy, see
   https://eprint.iacr.org/2017/793.pdf
 */
+// 20221230 djb: split these arrays into separate .c files
+// 20221230 djb: rename powers array as fft_powers
+// 20221230 djb: rename consts array as fft_consts
+// 20221230 djb: rename s array as fft_scalars_2x
+// 20221230 djb: add linker lines
+
+// linker define fft
+// linker use vec_mul
+// linker use fft_scalars_2x fft_consts fft_powers
 
 #include "fft.h"
+#include "fft_scalars_2x.h"
+#include "fft_consts.h"
+#include "fft_powers.h"
 
 #include "transpose.h"
 
@@ -27,11 +39,6 @@ static void radix_conversions(vec in[][GFBITS])
 		{0xFFFF000000000000, 0x0000FFFF00000000}
 	};
 
-	const vec s[5][2][GFBITS] = 
-	{
-#include "scalars_2x.data"
-	};
-	
 	for (j = 0; j <= 5; j++)
 	{
 		for (i = 0; i < GFBITS; i++)
@@ -51,8 +58,8 @@ static void radix_conversions(vec in[][GFBITS])
 
 		if (j < 5)
 		{
-			vec_mul(in[0], in[0], s[j][0]);
-			vec_mul(in[1], in[1], s[j][1]);
+			vec_mul(in[0], in[0], fft_scalars_2x[j][0]);
+			vec_mul(in[1], in[1], fft_scalars_2x[j][1]);
 		}
 	}
 }
@@ -68,16 +75,6 @@ static void butterflies(vec out[][ GFBITS ], vec in[][ GFBITS ])
 	vec buf[128];
 
 	uint64_t consts_ptr = 2;
-
-	const vec consts[ 128 ][ GFBITS ] =
-	{
-#include "consts.data"
-	};
-
-	const vec powers[ 128 ][ GFBITS ] =
-	{
-#include "powers.data"
-	};
 
 	const unsigned char reversal[128] = 
 	{ 
@@ -199,7 +196,7 @@ static void butterflies(vec out[][ GFBITS ], vec in[][ GFBITS ])
 		for (j = 0; j < 128; j += 2*s)
 		for (k = j; k < j+s; k++)
 		{
-			vec_mul(tmp, out[k+s], consts[ consts_ptr + (k-j) ]);
+			vec_mul(tmp, out[k+s], fft_consts[ consts_ptr + (k-j) ]);
 
 			for (b = 0; b < GFBITS; b++) out[k  ][b] ^= tmp[b];
 			for (b = 0; b < GFBITS; b++) out[k+s][b] ^= out[k][b];
@@ -212,7 +209,7 @@ static void butterflies(vec out[][ GFBITS ], vec in[][ GFBITS ])
 	
 	for (i = 0; i < 128; i++)
 	for (b = 0; b < GFBITS; b++) 
-		out[i][b] ^= powers[i][b];
+		out[i][b] ^= fft_powers[i][b];
 }
 
 /* input: in, polynomial in bitsliced form */

@@ -1,3 +1,5 @@
 20200809 titan0 amd64 20200809 crypto_sort uint32/constbranchindex timecop_pass crypto_sort/uint32/useint32 gcc_-march=native_-mtune=native_-O3_-g_-fwrapv_-fPIC_-fPIE 1 0
 20200809 titan0 x86 20200809 crypto_sort uint32/constbranchindex timecop_pass crypto_sort/uint32/useint32 gcc_-m32_-march=core2_-mtune=core2_-O3_-g_-fwrapv_-fPIC_-fPIE 1 0
 20200809 novenablue armeabi 20200809 crypto_sort uint32/constbranchindex timecop_pass crypto_sort/uint32/useint32 clang_-mcpu=native_-O3_-g_-fwrapv_-fPIC_-fPIE 1 0
+20240425 titan0 amd64 20240530 crypto_sort uint32/constbranchindex timecop_pass crypto_sort/uint32/useint32 gcc_-march=native_-mtune=native_-O3_-fomit-frame-pointer_-fwrapv_-fPIC_-fPIE 10 0
+20240425 titan0 amd64 20240530 crypto_sort uint32/constbranchindex timecop_output crypto_sort/uint32/useint32 gcc_-march=native_-mtune=native_-O3_-fomit-frame-pointer_-fwrapv_-fPIC_-fPIE 2b448dfed35f53c64410bb0980a6cd944818a230ce9fde966adc38662df4c311 3362764 693295980 3500000000 crypto_sort/uint32/useint32

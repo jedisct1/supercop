@@ -1,11 +1,17 @@
 /*
   This file is for public-key generation
 */
+// 20240508 djb: switch to crypto_sort_int64
+// 20221231 djb: more 0 initialization to clarify data flow; tnx thom wiggers
+// 20221230 djb: add linker lines
+
+// linker define pk_gen
+// linker use fft vec_inv vec_mul
 
 #include "pk_gen.h"
 
 #include "controlbits.h"
-#include "uint64_sort.h"
+#include "crypto_sort_int64.h"
 #include "transpose.h"
 #include "params.h"
 #include "benes.h"
@@ -52,6 +58,8 @@ static void to_bitslicing_2x(vec out0[][GFBITS], vec out1[][GFBITS], const uint6
 
 	for (i = 0; i < 128; i++)
 	{
+		for (j = 0;j < GFBITS;++j) out0[i][j] = out1[i][j] = 0;
+
 		for (j = GFBITS-1; j >= 0; j--)
 		for (r = 63; r >= 0; r--)
 		{
@@ -125,7 +133,7 @@ int pk_gen(unsigned char * pk, const unsigned char * irr, uint32_t * perm, int16
 		list[i] |= ((uint64_t) perm[i]) << 31;
 	}
 
-	uint64_sort(list, 1 << GFBITS);
+	crypto_sort_int64(list, 1 << GFBITS);
 
 	for (i = 1; i < (1 << GFBITS); i++)
 		if (uint64_is_equal_declassify(list[i-1] >> 31,list[i] >> 31))

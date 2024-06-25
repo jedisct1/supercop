@@ -1,1 +1,1 @@
-../../mceliece6688128/avx/encrypt.c
+../../mceliece348864/avx/encrypt.c

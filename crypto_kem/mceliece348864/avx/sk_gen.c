@@ -1,6 +1,14 @@
 /*
   This file is for secret-key generation
 */
+// 20240508 djb: switch to vec_mul_gf_using_64
+// 20221230 djb: add linker lines
+
+// linker define genpoly_gen
+// linker use gf_mul gf_inv
+// linker use vec_GF_mul
+// linker use vec_mul_asm
+// linker use transpose_64x64_asm
 
 #include "sk_gen.h"
 
@@ -126,7 +134,7 @@ int genpoly_gen(gf *out, gf *f)
 		//
 
 		inv = gf_inv(t);
-		vec_mul_gf(mat[i], mat[i], inv);
+		vec_mul_gf_using_64(mat[i], mat[i], inv);
 
 		out[i] = gf_mul(out[i], inv);
 
@@ -136,7 +144,7 @@ int genpoly_gen(gf *out, gf *f)
 			{
 				t = extract_gf(mat[j], i);
 
-				vec_mul_gf(v, mat[i], t);
+				vec_mul_gf_using_64(v, mat[i], t);
 				vec_add(mat[j], mat[j], v);
 
 				out[j] ^= gf_mul(out[i], t);

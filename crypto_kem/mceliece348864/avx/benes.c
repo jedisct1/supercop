@@ -4,6 +4,11 @@
   For the implementation strategy, see
   https://eprint.iacr.org/2017/793.pdf
 */
+// 20221231 djb: remove unused counter increment; tnx thom wiggers
+// 20221230 djb: add linker lines
+
+// linker define load_bits benes
+// linker use transpose_64x64_asm
 
 #include "util.h"
 #include "transpose.h"
@@ -258,7 +263,7 @@ void benes(uint64_t * r, uint64_t cond[][32], int rev)
 	layer_3(bs, cond[ block ]); block += inc;
 	layer_2(bs, cond[ block ]); block += inc;
 	layer_1(bs, cond[ block ]); block += inc;
-	layer_0(bs, cond[ block ]); block += inc;
+	layer_0(bs, cond[ block ]);
 
 	transpose_64x64(bs);
 }

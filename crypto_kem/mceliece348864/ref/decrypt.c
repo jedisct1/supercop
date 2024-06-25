@@ -1,6 +1,7 @@
 /*
   This file is for Niederreiter decryption
 */
+// 20240530 djb: remove #ifdef KAT ... #endif
 
 #include <stdio.h>
 #include "decrypt.h"
@@ -64,17 +65,6 @@ int decrypt(unsigned char *e, const unsigned char *sk, const unsigned char *c)
 
 	}
 
-#ifdef KAT
-  {
-    int k;
-    printf("decrypt e: positions");
-    for (k = 0;k < SYS_N;++k)
-      if (e[k/8] & (1 << (k&7)))
-        printf(" %d",k);
-    printf("\n");
-  }
-#endif
-	
 	synd(s_cmp, g, L, e);
 
 	//

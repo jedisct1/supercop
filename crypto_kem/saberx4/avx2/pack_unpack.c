@@ -1,10 +1,7 @@
 #include "pack_unpack.h"
-//#include "SABER_indcpa.h"
+#include "SABER_indcpa.h"
 #include <immintrin.h>
 #include <tmmintrin.h>
-
-extern __m256i avx_epi64_01, avx_epi64_03, avx_epi64_07, avx_epi64_0f, avx_epi64_1f, avx_epi64_3f, avx_epi64_7f, avx_epi64_ff;
-extern __m256i avx_epi32_01, avx_epi32_03, avx_epi32_07, avx_epi32_0f, avx_epi32_1f, avx_epi32_3f, avx_epi32_7f, avx_epi32_ff;
 
 void avx_load_16bit_8bit(const float * cfbs0, const float * cfbs1, 
 					const float * cfbs2, const float * cfbs3, 
@@ -428,7 +425,6 @@ void SABER_pack_4bitX4(uint8_t *bytes0, uint8_t *bytes1, uint8_t *bytes2, uint8_
 	}
 	
 	__m256i avx_bytes[128];
-	__m256i avx_epi64_0f = _mm256_set1_epi64x(0x0f);
 	for(j=0;j<SABER_N/2;++j)
 	{
 		offset_data=2*j;
@@ -689,13 +685,6 @@ void POLVECp2BSX4(uint8_t *bytes0, uint8_t *bytes1, uint8_t *bytes2, uint8_t *by
 
 void old_POLVECp2BSX4(uint8_t *bytes0, uint8_t *bytes1, uint8_t *bytes2, uint8_t *bytes3, 
 				uint16_t data0[SABER_K][SABER_N], uint16_t data1[SABER_K][SABER_N], uint16_t data2[SABER_K][SABER_N], uint16_t data3[SABER_K][SABER_N]){
-	
-	__m256i avx_epi64_03, avx_epi64_0f, avx_epi64_3f, avx_epi64_ff;
-	avx_epi64_03 = _mm256_set1_epi64x(0x03);
-	avx_epi64_0f = _mm256_set1_epi64x(0x0f);
-	avx_epi64_3f = _mm256_set1_epi64x(0x3f);
-	avx_epi64_ff = _mm256_set1_epi64x(0xff);
-	
 	__m256i avx_data[SABER_K*SABER_N];
 	uint32_t k,n,m = 0;
 	for(k=0;k<SABER_K;++k){
@@ -860,7 +849,6 @@ void POLVECq2BSX4(uint8_t *bytes0, uint8_t *bytes1, uint8_t *bytes2, uint8_t *by
 	/*--------------------------------------------------------*/
 	/*---------------------Do the shifts----------------------*/
 	/*--------------------------------------------------------*/
-	// clock_S11 = cpucycles();
 	
 	uint32_t i,j;
 	uint32_t offset_data=0,offset_byte=0,offset_byte1=0;	
@@ -920,16 +908,6 @@ void POLVECq2BSX4(uint8_t *bytes0, uint8_t *bytes1, uint8_t *bytes2, uint8_t *by
 void old_POLVECq2BSX4(uint8_t *bytes0, uint8_t *bytes1, uint8_t *bytes2, uint8_t *bytes3, 
 				uint16_t data0[SABER_K][SABER_N], uint16_t data1[SABER_K][SABER_N], 
 				uint16_t data2[SABER_K][SABER_N], uint16_t data3[SABER_K][SABER_N]){
-	
-	__m256i avx_epi64_01, avx_epi64_03, avx_epi64_07, avx_epi64_0f, avx_epi64_1f, avx_epi64_3f, avx_epi64_7f, avx_epi64_ff;
-	avx_epi64_01 = _mm256_set1_epi64x(0x01);
-	avx_epi64_03 = _mm256_set1_epi64x(0x03);
-	avx_epi64_07 = _mm256_set1_epi64x(0x07);
-	avx_epi64_0f = _mm256_set1_epi64x(0x0f);
-	avx_epi64_1f = _mm256_set1_epi64x(0x1f);
-	avx_epi64_3f = _mm256_set1_epi64x(0x3f);
-	avx_epi64_7f = _mm256_set1_epi64x(0x7f);
-	avx_epi64_ff = _mm256_set1_epi64x(0xff);
 	
 	__m256i avx_data[SABER_K*SABER_N];
 	uint32_t k,n,m = 0;
@@ -1109,12 +1087,6 @@ void BS2POLVECpX4(const unsigned char *bs0, const unsigned char *bs1, const unsi
 void old_BS2POLVECpX4(const unsigned char *bytes0, const unsigned char *bytes1, const unsigned char *bytes2, const unsigned char *bytes3, 
 __m256i data0[SABER_K][SABER_N/16], __m256i data1[SABER_K][SABER_N/16], __m256i data2[SABER_K][SABER_N/16], __m256i data3[SABER_K][SABER_N/16]){
 
-	__m256i avx_epi64_03, avx_epi64_0f, avx_epi64_3f, avx_epi64_ff;
-	avx_epi64_03 = _mm256_set1_epi64x(0x03);
-	avx_epi64_0f = _mm256_set1_epi64x(0x0f);
-	avx_epi64_3f = _mm256_set1_epi64x(0x3f);
-	avx_epi64_ff = _mm256_set1_epi64x(0xff);
-	
 	uint32_t para = (SABER_K-1)*(SABER_N*10)/8+5*(SABER_N/4);
 	
 	__m256i avx_bytes[para];
@@ -1379,17 +1351,6 @@ void SABER_pack13bit(uint8_t *bytes, uint16_t data[SABER_K][SABER_N]){
 }
 
 void SABER_pack13bitX4(uint8_t *bytes0, uint8_t *bytes1, uint8_t *bytes2, uint8_t *bytes3, uint16_t data0[SABER_K][SABER_N], uint16_t data1[SABER_K][SABER_N], uint16_t data2[SABER_K][SABER_N], uint16_t data3[SABER_K][SABER_N]){
-	__m256i avx_epi64_01, avx_epi64_03, avx_epi64_07, avx_epi64_0f, avx_epi64_1f, avx_epi64_3f, avx_epi64_7f, avx_epi64_ff;
-	
-	avx_epi64_01 = _mm256_set1_epi64x(0x01);
-	avx_epi64_03 = _mm256_set1_epi64x(0x03);
-	avx_epi64_07 = _mm256_set1_epi64x(0x07);
-	avx_epi64_0f = _mm256_set1_epi64x(0x0f);
-	avx_epi64_1f = _mm256_set1_epi64x(0x1f);
-	avx_epi64_3f = _mm256_set1_epi64x(0x3f);
-	avx_epi64_7f = _mm256_set1_epi64x(0x7f);
-	avx_epi64_ff = _mm256_set1_epi64x(0xff);
-	
 	uint32_t i,j,m;
 	uint32_t offset_data=0,offset_byte=0,offset_byte1=0;	
 	

@@ -1,4 +1,10 @@
-#include "vec128.h"
+// 20240508 djb: include vec128_gf.h
+// 20221230 djb: add linker line
+
+// linker define vec128_mul_GF
+// linker use vec128_mul_asm
+
+#include "vec128_gf.h"
 
 /* input: v, an element in GF(2^m)[y]/(y^128+y^7+y^2+y+1) in bitsliced form */
 /* input: a, an element in GF(2^m)[y]/(y^128+y^7+y^2+y+1) as an array of coefficients */

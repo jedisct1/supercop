@@ -1,0 +1,2 @@
+20240425 titan0 amd64 20240621 crypto_sign haetae5/constbranchindex timecop_pass crypto_sign/haetae5/avx2 gcc_-march=native_-mtune=native_-O3_-fomit-frame-pointer_-fwrapv_-fPIC_-fPIE 1 0
+20240425 titan0 amd64 20240621 crypto_sign haetae5/constbranchindex timecop_output crypto_sign/haetae5/avx2 gcc_-march=native_-mtune=native_-O3_-fomit-frame-pointer_-fwrapv_-fPIC_-fPIE 27f47ce93eb2a5c8da5169e3f9ce1ff4afbacd7b6628915801bd03bbdabe19ac 368225168 4536489548 3500000000 crypto_sign/haetae5/avx2

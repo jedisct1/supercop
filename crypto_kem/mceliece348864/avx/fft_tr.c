@@ -5,8 +5,24 @@
   For the implementation strategy, see
   https://eprint.iacr.org/2017/793.pdf
 */
+// 20240508 djb: include vec128_gf.h, vec256_gf.h
+// 20221230 djb: split these arrays into separate .c files
+// 20221230 djb: rename consts array as fft_consts
+// 20221230 djb: rename s array as fft_scalars_2x
+// 20221230 djb: add linker lines
 
+// linker define fft_tr
+// linker use vec_mul_asm
+// linker use vec128_mul_asm
+// linker use vec256_mul_asm
+// linker use transpose_64x256_sp_asm
+// linker use fft_scalars_2x fft_consts
+
+#include "vec128_gf.h"
+#include "vec256_gf.h"
 #include "fft_tr.h"
+#include "fft_scalars_2x.h"
+#include "fft_consts.h"
 
 #include "transpose.h"
 #include "vec.h"
@@ -31,11 +47,6 @@ static void radix_conversions_tr(vec128 in[ GFBITS ])
 		vec128_set2x(0x0000FFFF00000000, 0x0000FFFF00000000)
 	};
 
-	const vec128 s[5][GFBITS] = 
-	{
-#include "scalars_2x.data"
-	};
-	
 	uint64_t v0, v1;
 
 	//
@@ -43,7 +54,7 @@ static void radix_conversions_tr(vec128 in[ GFBITS ])
 	for (j = 5; j >= 0; j--)
 	{
 
-		if (j < 5) vec128_mul(in, in, s[j]);
+		if (j < 5) vec128_mul(in, in, fft_scalars_2x[j]);
 
 		for (i = 0; i < GFBITS; i++)
 		for (k = j; k <= 4; k++)
@@ -78,11 +89,6 @@ static void butterflies_tr(vec128 out[ GFBITS ], vec256 in[][ GFBITS ])
 	vec256 x[ GFBITS ], y[ GFBITS ];
 	vec256 tmp256[ GFBITS ];
 
-	const vec256 consts[ 17 ][ GFBITS ] =
-	{
-#include "consts.data"
-	};
-
 	uint64_t consts_ptr = 17;
 
 	const unsigned char reversal[64] = 
@@ -111,7 +117,7 @@ static void butterflies_tr(vec128 out[ GFBITS ], vec256 in[][ GFBITS ])
 			for (k = j; k < j+s; k++)
 			{
 				for (b = 0; b < GFBITS; b++) in[k][b] ^= in[k+s][b];
-				vec256_mul(tmp256, in[k], consts[ consts_ptr + (k-j) ]);
+				vec256_mul(tmp256, in[k], fft_consts[ consts_ptr + (k-j) ]);
 				for (b = 0; b < GFBITS; b++) in[k+s][b] ^= tmp256[b];
 			}
 		}
@@ -123,7 +129,7 @@ static void butterflies_tr(vec128 out[ GFBITS ], vec256 in[][ GFBITS ])
 		for (b = 0; b < GFBITS; b++) y[b] = vec256_unpack_high(in[i+0][b], in[i+1][b]);
 
 		for (b = 0; b < GFBITS; b++) x[b] ^= y[b];
-		vec256_mul(tmp256, x, consts[ 1 ]);
+		vec256_mul(tmp256, x, fft_consts[ 1 ]);
 		for (b = 0; b < GFBITS; b++) y[b] ^= tmp256[b];
 
 		for (b = 0; b < GFBITS; b++) in[i+0][b] = vec256_unpack_low_2x(x[b], y[b]);
@@ -133,7 +139,7 @@ static void butterflies_tr(vec128 out[ GFBITS ], vec256 in[][ GFBITS ])
 	for (i = 0; i < 16; i+=2)
 	{
 		for (b = 0; b < GFBITS; b++) in[i+0][b] ^= in[i+1][b];
-		vec256_mul(tmp256, in[i+0], consts[ 0 ]);
+		vec256_mul(tmp256, in[i+0], fft_consts[ 0 ]);
 		for (b = 0; b < GFBITS; b++) in[i+1][b] ^= tmp256[b];
 	}
 

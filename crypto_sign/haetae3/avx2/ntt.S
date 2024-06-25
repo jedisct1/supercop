@@ -1,0 +1,1 @@
+../../haetae2/avx2/ntt.S

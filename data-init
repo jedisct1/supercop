@@ -49,10 +49,16 @@ okabi \
 do
   mkdir -p "$top/$abi"
   mkdir -p "$top/$abi/bin"
-  mkdir -p "$top/$abi/security/constbranchindex"
-  mkdir -p "$top/$abi/security/timingleaks"
+  mkdir -p "$top/$abi/lib"
+  mkdir -p "$top/$abi/lib/timecop"
+  mkdir -p "$top/$abi/lib/nontimecop"
+  mkdir -p "$top/$abi/include/timecop"
+  mkdir -p "$top/$abi/include/nontimecop"
   mkdir -p "$top/$abi/include/constbranchindex"
   mkdir -p "$top/$abi/include/timingleaks"
+  mkdir -p "$top/$abi/security/constbranchindex"
+  mkdir -p "$top/$abi/security/timingleaks"
+
   echo "=== `date` === cleaning up BUILD in $abi"
   find "$top/$abi" -name BUILD | xargs rm -f
   echo "=== `date` === cleaning up LOCKED in $abi"
@@ -60,7 +66,6 @@ do
   echo "=== `date` === cleaning up LOCK in $abi"
   find "$top/$abi" -name LOCK | xargs rm -f
 
-  mkdir -p "$top/$abi/lib"
   touch "$top/$abi/lib/LOCK"
 
   mkdir -p "$top/$abi/base"
@@ -80,6 +85,12 @@ do
   touch "$top/$abi/openssl/LOCK"
   : > "$top/$abi/openssl/dep"
   echo "$abi/openssl" >&6
+
+  mkdir -p "$top/$abi/cryptoint"
+  touch "$top/$abi/cryptoint/BUILD"
+  touch "$top/$abi/cryptoint/LOCK"
+  : > "$top/$abi/cryptoint/dep"
+  echo "$abi/cryptoint" >&6
 
   mkdir -p "$top/$abi/gmp"
   touch "$top/$abi/gmp/BUILD"
@@ -152,7 +163,7 @@ okabi \
 | while read abi
 do
   cp -p "$top/inttypes/include/$abi"/* "$top/$abi/include/"
-  # $top/inttypes/lib/$abi/* is integrated later into base
+  # $top/inttypes/lib/$abi/* is integrated later into libcryptoint
 done
 
 echo "=== `date` === building cpucycles"
@@ -163,8 +174,20 @@ cp -pR cpucycles/* "$top/cpucycles"
 okabi \
 | while read abi
 do
-  cp -p "$top/cpucycles/include/$abi"/* "$top/$abi/include/"
-  cp -p "$top/cpucycles/lib/$abi"/* "$top/$abi/lib/"
+  cp -p "$top/cpucycles/include/$abi"/* "$top/$abi/include/nontimecop/"
+  cp -p "$top/cpucycles/lib/$abi"/* "$top/$abi/lib/nontimecop/"
+done
+
+echo "=== `date` === building cpucycles for TIMECOP"
+rm -rf "$top/cpucycles"
+mkdir -p "$top/cpucycles"
+cp -pR cpucycles/* "$top/cpucycles"
+( cd "$top/cpucycles" && env CPUCYCLESWRAPPER="killafter 300 valgrind" sh do )
+okabi \
+| while read abi
+do
+  cp -p "$top/cpucycles/include/$abi"/* "$top/$abi/include/timecop/"
+  cp -p "$top/cpucycles/lib/$abi"/* "$top/$abi/lib/timecop/"
 done
 
 echo "=== `date` === building kernelrandombytes"
@@ -243,7 +266,7 @@ do
         (
           cat "$o/try.c"
           cat "$o/measure.c"
-          cat "try-anything.c"
+          # cat "try-anything.c" # gives false positives for cryptoint
           cat "measure-anything.c"
           find "$implementationdir" -follow -type f \
           | grep -E '\.h$|\.c$|\.s$|\.S$|\.cc$|\.cpp$' \
@@ -274,6 +297,11 @@ do
               ;;
             libkeccak.a.headers/*)
               echo keccak
+              ;;
+            crypto_asm_hidden)
+              ;;
+            crypto_int*|crypto_uint*)
+              echo cryptoint
               ;;
             crypto_*_*)
               op=`echo "$incl" | sed 's/_\(.*\)_/_\1\//'`

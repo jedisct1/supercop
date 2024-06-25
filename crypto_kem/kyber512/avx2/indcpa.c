@@ -12,6 +12,7 @@
 #include "rejsample.h"
 #include "symmetric.h"
 #include "randombytes.h"
+#include "crypto_declassify.h"
 
 /*************************************************
 * Name:        pack_pk
@@ -188,6 +189,7 @@ void gen_matrix(polyvec *a, const uint8_t seed[32], int transposed)
         nonce = (i << 8) | j;
 
       state.n = _mm_loadl_epi64((__m128i *)&nonce);
+      crypto_declassify(&state, sizeof state);
       aes256ctr_squeezeblocks(buf.coeffs, REJ_UNIFORM_AVX_NBLOCKS, &state);
       buflen = REJ_UNIFORM_AVX_NBLOCKS*AES256CTR_BLOCKBYTES;
       ctr = rej_uniform_avx(a[i].vec[j].coeffs, buf.coeffs);
@@ -242,6 +244,7 @@ void gen_matrix(polyvec *a, const uint8_t seed[32], int transposed)
   }
 
   shake128x4_absorb_once(&state, buf[0].coeffs, buf[1].coeffs, buf[2].coeffs, buf[3].coeffs, 34);
+  crypto_declassify(&state, sizeof state);
   shake128x4_squeezeblocks(buf[0].coeffs, buf[1].coeffs, buf[2].coeffs, buf[3].coeffs, REJ_UNIFORM_AVX_NBLOCKS, &state);
 
   ctr0 = rej_uniform_avx(a[0].vec[0].coeffs, buf[0].coeffs);
@@ -300,6 +303,7 @@ void gen_matrix(polyvec *a, const uint8_t seed[32], int transposed)
   }
 
   shake128x4_absorb_once(&state, buf[0].coeffs, buf[1].coeffs, buf[2].coeffs, buf[3].coeffs, 34);
+  crypto_declassify(&state, sizeof state);
   shake128x4_squeezeblocks(buf[0].coeffs, buf[1].coeffs, buf[2].coeffs, buf[3].coeffs, REJ_UNIFORM_AVX_NBLOCKS, &state);
 
   ctr0 = rej_uniform_avx(a[0].vec[0].coeffs, buf[0].coeffs);
@@ -349,6 +353,7 @@ void gen_matrix(polyvec *a, const uint8_t seed[32], int transposed)
   }
 
   shake128x4_absorb_once(&state, buf[0].coeffs, buf[1].coeffs, buf[2].coeffs, buf[3].coeffs, 34);
+  crypto_declassify(&state, sizeof state);
   shake128x4_squeezeblocks(buf[0].coeffs, buf[1].coeffs, buf[2].coeffs, buf[3].coeffs, REJ_UNIFORM_AVX_NBLOCKS, &state);
 
   ctr0 = rej_uniform_avx(a[1].vec[1].coeffs, buf[0].coeffs);
@@ -375,6 +380,7 @@ void gen_matrix(polyvec *a, const uint8_t seed[32], int transposed)
   buf[0].coeffs[32] = 2;
   buf[0].coeffs[33] = 2;
   shake128_absorb_once(&state1x, buf[0].coeffs, 34);
+  crypto_declassify(&state1x, sizeof state1x);
   shake128_squeezeblocks(buf[0].coeffs, REJ_UNIFORM_AVX_NBLOCKS, &state1x);
   ctr0 = rej_uniform_avx(a[2].vec[2].coeffs, buf[0].coeffs);
   while(ctr0 < KYBER_N) {
@@ -421,6 +427,7 @@ void gen_matrix(polyvec *a, const uint8_t seed[32], int transposed)
     }
 
     shake128x4_absorb_once(&state, buf[0].coeffs, buf[1].coeffs, buf[2].coeffs, buf[3].coeffs, 34);
+    crypto_declassify(&state, sizeof state);
     shake128x4_squeezeblocks(buf[0].coeffs, buf[1].coeffs, buf[2].coeffs, buf[3].coeffs, REJ_UNIFORM_AVX_NBLOCKS, &state);
 
     ctr0 = rej_uniform_avx(a[i].vec[0].coeffs, buf[0].coeffs);

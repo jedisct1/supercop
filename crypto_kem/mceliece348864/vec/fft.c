@@ -5,8 +5,20 @@
   For the implementation strategy, see
   https://eprint.iacr.org/2017/793.pdf
 */
+// 20221230 djb: split these arrays into separate .c files
+// 20221230 djb: rename powers array as fft_powers
+// 20221230 djb: rename consts array as fft_consts
+// 20221230 djb: rename s array as fft_scalars
+// 20221230 djb: add linker lines
+
+// linker define fft
+// linker use vec_mul
+// linker use fft_scalars fft_consts fft_powers
 
 #include "fft.h"
+#include "fft_scalars.h"
+#include "fft_consts.h"
+#include "fft_powers.h"
 #include "vec.h"
 
 /* input: in, polynomial in bitsliced form */
@@ -24,11 +36,6 @@ static void radix_conversions(uint64_t *in)
 		{0xFFFF000000000000, 0x0000FFFF00000000}
 	};
 
-	const uint64_t s[5][GFBITS] = 
-	{
-#include "scalars.data"
-	};
-	
 	//
 
 	for (j = 0; j <= 4; j++)
@@ -40,7 +47,7 @@ static void radix_conversions(uint64_t *in)
 				in[i] ^= (in[i] & mask[k][1]) >> (1 << k);
 			}
 
-		vec_mul(in, in, s[j]); // scaling
+		vec_mul(in, in, fft_scalars[j]); // scaling
 	}
 }
 
@@ -51,16 +58,6 @@ static void butterflies(uint64_t out[][ GFBITS ], uint64_t *in)
 	int i, j, k, s, b;
 
 	uint64_t tmp[ GFBITS ];
-	uint64_t consts[ 63 ][ GFBITS ] =
-	{
-#include "consts.data"
-	};
-
-	const vec powers[ 64 ][ GFBITS ] =
-	{
-#include "powers.data"
-	};
-
 	uint64_t consts_ptr = 0;
 
 	const unsigned char reversal[64] = 
@@ -94,7 +91,7 @@ static void butterflies(uint64_t out[][ GFBITS ], uint64_t *in)
 		{
 			for (k = j; k < j+s; k++)
 			{
-				vec_mul(tmp, out[k+s], consts[ consts_ptr + (k-j) ]);
+				vec_mul(tmp, out[k+s], fft_consts[ consts_ptr + (k-j) ]);
 
 				for (b = 0; b < GFBITS; b++) out[k][b] ^= tmp[b];
 				for (b = 0; b < GFBITS; b++) out[k+s][b] ^= out[k][b];
@@ -110,7 +107,7 @@ static void butterflies(uint64_t out[][ GFBITS ], uint64_t *in)
 	
 	for (i = 0; i < 64; i++)
 	for (b = 0; b < GFBITS; b++) 
-		out[i][b] ^= powers[i][b];
+		out[i][b] ^= fft_powers[i][b];
 	
 }
 

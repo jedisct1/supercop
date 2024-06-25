@@ -301,16 +301,9 @@ void indcpa_kem_enc(unsigned char *message_received, unsigned char *noiseseed, c
 		seed[i]=pk[ SABER_POLYVECCOMPRESSEDBYTES + i]; 
 	}
 
-	//count_enc++;
-	//CLOCK1=cpucycles();
 	GenMatrix(a, seed);
-	//CLOCK2=cpucycles();
-	//clock_matrix=clock_matrix+(CLOCK2-CLOCK1);
 				
-	//CLOCK1=cpucycles();
 	GenSecret(skpv1,noiseseed);
-	//CLOCK2=cpucycles();
-	//clock_secret=clock_secret+(CLOCK2-CLOCK1);
 
 
 	// ----------- Load skpv1 into avx vectors ---------- 
@@ -330,13 +323,10 @@ void indcpa_kem_enc(unsigned char *message_received, unsigned char *noiseseed, c
  	 }
 	//-----------------matrix-vector multiplication and rounding
 
-	//CLOCK1=cpucycles();
 	for(j=0;j<NUM_POLY;j++){
 		TC_eval(sk_avx[j], b_bucket[j]);
 	}
 	matrix_vector_mul(a_avx, b_bucket, res_avx, 0);// Matrix-vector multiplication; Matrix in normal order
-	//CLOCK2=cpucycles();
-	//clock_mv_vv_mul= clock_mv_vv_mul + (CLOCK2-CLOCK1);
 	
 	// Now truncation
 
@@ -379,10 +369,7 @@ void indcpa_kem_enc(unsigned char *message_received, unsigned char *noiseseed, c
 
 	// vector-vector scalar multiplication with mod p
 
-	//CLOCK1=cpucycles();
 	vector_vector_mul(pkcl_avx, b_bucket, vprime_avx);
-	//CLOCK2=cpucycles();
-	//clock_mv_vv_mul= clock_mv_vv_mul + (CLOCK2-CLOCK1);
 
 
 
@@ -490,8 +477,6 @@ void indcpa_kem_dec(const unsigned char *sk, const unsigned char *ciphertext, un
 
 
 	// InnerProduct(b', s, mod p)
-	CLOCK1=cpucycles();
-	count_mul++;
 
 	for(j=0;j<NUM_POLY;j++){
 		TC_eval(sksv_avx[j], b_bucket[j]);
@@ -499,8 +484,6 @@ void indcpa_kem_dec(const unsigned char *sk, const unsigned char *ciphertext, un
 
 	vector_vector_mul(pksv_avx, b_bucket, v_avx);
 
-	CLOCK2=cpucycles();
-	clock_mul=clock_mul+(CLOCK2-CLOCK1);
 
 
 	for(i=0; i<SABER_N/16; i++){

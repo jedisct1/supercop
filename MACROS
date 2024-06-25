@@ -18,6 +18,8 @@ crypto_core_CONSTBYTES
 crypto_hashblocks
 crypto_hashblocks_STATEBYTES
 crypto_hashblocks_BLOCKBYTES
+crypto_xof
+crypto_xof_NOOVERLAP
 crypto_hash
 crypto_hash_BYTES
 crypto_stream

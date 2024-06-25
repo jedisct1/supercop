@@ -1,11 +1,12 @@
 /*
   This file is for loading/storing data in a little-endian fashion
 */
+// 20240508 djb: include vec128_gf.h
 
 #ifndef UTIL_H
 #define UTIL_H
 
-#include "vec128.h"
+#include "vec128_gf.h"
 
 #include <stdint.h>
 

@@ -5,8 +5,18 @@
   For the implementation strategy, see
   https://eprint.iacr.org/2017/793.pdf
 */
+// 20221230 djb: split these arrays into separate .c files
+// 20221230 djb: rename consts array as fft_consts
+// 20221230 djb: rename s array as fft_scalars_2x
+// 20221230 djb: add linker lines
+
+// linker define fft_tr
+// linker use vec_mul
+// linker use fft_scalars_2x fft_consts
 
 #include "fft_tr.h"
+#include "fft_scalars_2x.h"
+#include "fft_consts.h"
 
 #include "vec.h"
 #include "transpose.h"
@@ -29,19 +39,14 @@ static inline void radix_conversions_tr(uint64_t in[][ GFBITS ])
 		{0xFFFFFFFF00000000, 0x00000000FFFFFFFF}
 	};
 
-	const uint64_t s[5][2][GFBITS] = 
-	{
-#include "scalars_2x.data"
-	};
-	
 	//
 
 	for (j = 5; j >= 0; j--)
 	{
 		if (j < 5)
 		{
-			vec_mul(in[0], in[0], s[j][0]); // scaling
-			vec_mul(in[1], in[1], s[j][1]); // scaling
+			vec_mul(in[0], in[0], fft_scalars_2x[j][0]); // scaling
+			vec_mul(in[1], in[1], fft_scalars_2x[j][1]); // scaling
 		}
 
 		for (i = 0; i < GFBITS; i++)
@@ -70,11 +75,6 @@ static inline void butterflies_tr(uint64_t out[][ GFBITS ], uint64_t in[][ GFBIT
 	uint64_t pre[6][ GFBITS ];
 	uint64_t buf[64];
 
-	const uint64_t consts[ 63 ][ GFBITS ] =
-	{
-#include "consts.data"
-	};
-
 	uint64_t consts_ptr = 63;
 
 	const unsigned char reversal[64] = 
@@ -102,7 +102,7 @@ static inline void butterflies_tr(uint64_t out[][ GFBITS ], uint64_t in[][ GFBIT
 		for (k = j; k < j+s; k++)
 		{
 			vec_add(in[k], in[k], in[k+s]);
-			vec_mul(tmp, in[k], consts[ consts_ptr + (k-j) ]);
+			vec_mul(tmp, in[k], fft_consts[ consts_ptr + (k-j) ]);
 			vec_add(in[k+s], in[k+s], tmp);
 		}
 	}

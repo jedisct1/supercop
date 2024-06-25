@@ -1,3 +1,7 @@
+// 20221230 djb: add linker line
+
+// linker define vec_mul vec_sq vec_inv
+
 #include "vec.h"
 
 #include "params.h"

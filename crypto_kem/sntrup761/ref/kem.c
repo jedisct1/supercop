@@ -16,32 +16,7 @@
 #include "crypto_sort_uint32.h"
 #include "Encode.h"
 #include "Decode.h"
-
-/* ----- masks */
-
-#ifndef LPR
-
-/* return -1 if x!=0; else return 0 */
-static int int16_nonzero_mask(int16 x)
-{
-  uint16 u = x; /* 0, else 1...65535 */
-  uint32 v = u; /* 0, else 1...65535 */
-  v = -v; /* 0, else 2^32-65535...2^32-1 */
-  v >>= 31; /* 0, else 1 */
-  return -v; /* 0, else -1 */
-}
-
-#endif
-
-/* return -1 if x<0; otherwise return 0 */
-static int int16_negative_mask(int16 x)
-{
-  uint16 u = x;
-  u >>= 15;
-  return -(int) u;
-  /* alternative with gcc -fwrapv: */
-  /* x>>15 compiles to CPU's arithmetic right shift */
-}
+#include "crypto_int16.h"
 
 /* ----- arithmetic mod 3 */
 
@@ -112,7 +87,7 @@ static int Weightw_mask(small *r)
   int i;
 
   for (i = 0;i < p;++i) weight += r[i]&1;
-  return int16_nonzero_mask(weight-w);
+  return crypto_int16_nonzero_mask(weight-w);
 }
 
 /* R3_fromR(R_fromRq(r)) */
@@ -170,7 +145,7 @@ static int R3_recip(small *out,const small *in)
     v[0] = 0;
     
     sign = -g[0]*f[0];
-    swap = int16_negative_mask(-delta) & int16_nonzero_mask(g[0]);
+    swap = crypto_int16_negative_mask(-delta) & crypto_int16_nonzero_mask(g[0]);
     delta ^= swap&(delta^-delta);
     delta += 1;
     
@@ -189,7 +164,7 @@ static int R3_recip(small *out,const small *in)
   sign = f[0];
   for (i = 0;i < p;++i) out[i] = sign*v[p-1-i];
   
-  return int16_nonzero_mask(delta);
+  return crypto_int16_nonzero_mask(delta);
 } 
 
 #endif
@@ -256,7 +231,7 @@ static int Rq_recip3(Fq *out,const small *in)
     for (i = p;i > 0;--i) v[i] = v[i-1];
     v[0] = 0;
 
-    swap = int16_negative_mask(-delta) & int16_nonzero_mask(g[0]);
+    swap = crypto_int16_negative_mask(-delta) & crypto_int16_nonzero_mask(g[0]);
     delta ^= swap&(delta^-delta);
     delta += 1;
 
@@ -277,7 +252,7 @@ static int Rq_recip3(Fq *out,const small *in)
   scale = Fq_recip(f[0]);
   for (i = 0;i < p;++i) out[i] = Fq_freeze(scale*(int32)v[p-1-i]);
 
-  return int16_nonzero_mask(delta);
+  return crypto_int16_nonzero_mask(delta);
 }
 
 #endif
@@ -443,7 +418,7 @@ static void Decrypt(int8 *r,const Fq *B,const int8 *T,const small *a)
 
   Rq_mult_small(aB,B,a);
   for (i = 0;i < I;++i)
-    r[i] = -int16_negative_mask(Fq_freeze(Right(T[i])-aB[i]+4*w+1));
+    r[i] = -crypto_int16_negative_mask(Fq_freeze(Right(T[i])-aB[i]+4*w+1));
 }
     
 #endif

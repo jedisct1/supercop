@@ -4,6 +4,8 @@
 #include "crypto_sort_uint32.h"
 #include "crypto_hash_sha512.h"
 #include "crypto_declassify.h"
+#include "crypto_int16.h"
+#include "crypto_int32.h"
 
 #define p 857
 #define q 5167
@@ -28,14 +30,10 @@ static Fq Fq_freeze(int32_t x) {
   return x - q * ((q28 * x + 0x8000000) >> 28);
 }
 
-static int int16_nonzero_mask(int16_t x) { return -((-(uint32_t)(uint16_t)x) >> 31); }
-
-static int int16_negative_mask(int16_t x) { return x >> 15; }
-
 static int Weightw_mask(small *r) {
   int i, weight = 0;
   for (i = 0; i < p; ++i) weight += r[i] & 1;
-  return int16_nonzero_mask(weight - w);
+  return crypto_int16_nonzero_mask(weight - w);
 }
 
 static void uint32_divmod_uint14(uint32_t *Q, uint16_t *r, uint32_t x, uint16_t m) {
@@ -48,7 +46,7 @@ static void uint32_divmod_uint14(uint32_t *Q, uint16_t *r, uint32_t x, uint16_t 
   *Q += qpart;
   x -= m;
   *Q += 1;
-  mask = -(x >> 31);
+  mask = crypto_int32_negative_mask(x);
   x += mask & (uint32_t)m;
   *Q += mask;
   *r = x;
@@ -170,7 +168,7 @@ static int R3_recip(small *out, const small *in) {
     for (i = p; i > 0; --i) v[i] = v[i - 1];
     v[0] = 0;
     sign = -g[0] * f[0];
-    swap = int16_negative_mask(-delta) & int16_nonzero_mask(g[0]);
+    swap = crypto_int16_negative_mask(-delta) & crypto_int16_nonzero_mask(g[0]);
     delta ^= swap & (delta ^ -delta);
     delta += 1;
     for (i = 0; i < p + 1; ++i) {
@@ -188,7 +186,7 @@ static int R3_recip(small *out, const small *in) {
   }
   sign = f[0];
   for (i = 0; i < p; ++i) out[i] = sign * v[p - 1 - i];
-  return int16_nonzero_mask(delta);
+  return crypto_int16_nonzero_mask(delta);
 }
 
 static void Rq_mult_small(Fq *h, const Fq *f, const small *g) {
@@ -232,7 +230,7 @@ static int Rq_recip3(Fq *out, const small *in) {
   for (loop = 0; loop < 2 * p - 1; ++loop) {
     for (i = p; i > 0; --i) v[i] = v[i - 1];
     v[0] = 0;
-    swap = int16_negative_mask(-delta) & int16_nonzero_mask(g[0]);
+    swap = crypto_int16_negative_mask(-delta) & crypto_int16_nonzero_mask(g[0]);
     delta ^= swap & (delta ^ -delta);
     delta += 1;
     for (i = 0; i < p + 1; ++i) {
@@ -252,7 +250,7 @@ static int Rq_recip3(Fq *out, const small *in) {
   }
   scale = Fq_recip(f[0]);
   for (i = 0; i < p; ++i) out[i] = Fq_freeze(scale * (int32_t)v[p - 1 - i]);
-  return int16_nonzero_mask(delta);
+  return crypto_int16_nonzero_mask(delta);
 }
 
 static void Round(Fq *out, const Fq *a) {

@@ -1,6 +1,9 @@
 /*
   This file is for Niederreiter encryption
 */
+// 20240608 djb: switch to crypto_*int16_equal_mask
+// 20240530 djb: rename encrypt() as pke_encrypt()
+// 20240530 djb: remove #ifdef KAT ... #endif
 
 #include "encrypt.h"
 
@@ -32,18 +35,6 @@ static inline crypto_uint32 uint32_is_equal_declassify(uint32_t t,uint32_t u)
   return mask;
 }
 
-static inline unsigned char same_mask(uint16_t x, uint16_t y)
-{
-	uint32_t mask;
-
-	mask = x ^ y;
-	mask -= 1;
-	mask >>= 31;
-	mask = -mask;
-
-	return mask & 0xFF;
-}
-
 /* output: e, an error vector of weight t */
 static void gen_e(unsigned char *e)
 {
@@ -56,7 +47,6 @@ static void gen_e(unsigned char *e)
 	} buf;
 
 	uint16_t ind[ SYS_T ];
-	unsigned char mask;	
 	unsigned char val[ SYS_T ];	
 
 	while (1)
@@ -96,11 +86,7 @@ static void gen_e(unsigned char *e)
 		e[i] = 0;
 
 		for (j = 0; j < SYS_T; j++)
-		{
-			mask = same_mask(i, (ind[j] >> 3));
-
-			e[i] |= val[j] & mask;
-		}
+			e[i] |= val[j] & crypto_uint16_equal_mask(i, (ind[j] >> 3));
 	}
 }
 
@@ -144,20 +130,9 @@ static void syndrome(unsigned char *s, const unsigned char *pk, unsigned char *e
 	}
 }
 
-void encrypt(unsigned char *s, const unsigned char *pk, unsigned char *e)
+void pke_encrypt(unsigned char *s, const unsigned char *pk, unsigned char *e)
 {
 	gen_e(e);
-
-#ifdef KAT
-  {
-    int k;
-    printf("encrypt e: positions");
-    for (k = 0;k < SYS_N;++k)
-      if (e[k/8] & (1 << (k&7)))
-        printf(" %d",k);
-    printf("\n");
-  }
-#endif
 
 	syndrome(s, pk, e);
 }

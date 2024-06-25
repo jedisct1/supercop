@@ -1,36 +1,40 @@
 /*
   This file is for Niederreiter encryption
 */
+// 20240508 djb: using crypto_sort_int16()
+// 20240507 djb: using crypto_uint64_load()
+// 20240504 djb: negifcollision
+// 20240504 djb: use crypto_xof_bitwrite16
+// 20240503 djb: remove #ifdef KAT ... #endif
+// 20230102 djb: rename encrypt() as pke_encrypt()
+// 20221231 djb: move encrypt.h last for macos portability; tnx thom wiggers
+// 20221230 djb: add linker line
 
-#include "encrypt.h"
+// linker define pke_encrypt
 
 #include "randombytes.h"
-#include "uint16_sort.h"
+#include "crypto_sort_int16.h"
 #include "params.h"
 #include "util.h"
 
 #include <stdint.h>
 #include "crypto_declassify.h"
-#include "crypto_uint32.h"
+#include "crypto_int16.h"
+#include "crypto_uint16.h"
+#include "crypto_uint64.h"
+#include "crypto_xof_bitwrite16.h"
 
-static inline crypto_uint32 uint32_is_equal_declassify(uint32_t t,uint32_t u)
-{
-  crypto_uint32 mask = crypto_uint32_equal_mask(t,u);
-  crypto_declassify(&mask,sizeof mask);
-  return mask;
-}
+#include "encrypt.h"
 
 /* output: e, an error vector of weight t */
 static void gen_e(unsigned char *e)
 {
-	int i, j, eq;
+	int i, j;
 
 	uint16_t ind[ SYS_T ];
+	crypto_int16 negifcollision;
+	unsigned char indbytes[ SYS_T*2 ];
 	unsigned char bytes[ sizeof(ind) ];
-	uint64_t e_int[ SYS_N/64 ];	
-	uint64_t one = 1;	
-	uint64_t mask;	
-	uint64_t val[ SYS_T ];	
 
 	while (1)
 	{
@@ -41,47 +45,34 @@ static void gen_e(unsigned char *e)
 
 		// check for repetition
 
-		uint16_sort(ind, SYS_T);
+		crypto_sort_int16(ind, SYS_T);
 		
-		eq = 0;
+		negifcollision = 0;
 		for (i = 1; i < SYS_T; i++)
-			if (uint32_is_equal_declassify(ind[i-1],ind[i]))
-				eq = 1;
+			negifcollision |= (ind[i-1]^ind[i])-1;
 
-		if (eq == 0)
+		negifcollision = crypto_int16_negative_mask(negifcollision);
+		crypto_declassify(&negifcollision,sizeof negifcollision);
+
+		if (!negifcollision)
 			break;
 	}
 
 	for (j = 0; j < SYS_T; j++)
-		val[j] = one << (ind[j] & 63);
+		crypto_uint16_store(indbytes+2*j,ind[j]);
 
-	for (i = 0; i < SYS_N/64; i++) 
-	{
-		e_int[i] = 0;
-
-		for (j = 0; j < SYS_T; j++)
-		{
-			mask = i ^ (ind[j] >> 6);
-			mask -= 1;
-			mask >>= 63;
-			mask = -mask;
-
-			e_int[i] |= val[j] & mask;
-		}
-	}
-
-	for (i = 0; i < SYS_N/64; i++)
-		store8(e + i*8, e_int[i]);
+	crypto_xof_bitwrite16(e,SYS_N/8,indbytes,2*SYS_T);
 }
 
 /* input: public key pk, error vector e */
 /* output: syndrome s */
 static void syndrome(unsigned char *s, const unsigned char *pk, unsigned char *e)
 {
-	uint64_t b;
+	crypto_uint64 b;
 
-	const uint64_t *pk_ptr; 
-	const uint64_t *e_ptr = ((uint64_t *) (e + SYND_BYTES));
+	const unsigned char *pk_ptr;
+	const unsigned char *e_ptr = e + SYND_BYTES;
+	crypto_uint64 eword[PK_NCOLS/64];
 
 	int i, j;
 
@@ -90,13 +81,16 @@ static void syndrome(unsigned char *s, const unsigned char *pk, unsigned char *e
 	for (i = 0; i < SYND_BYTES; i++)
 		s[i] = e[i];
 
+	for (j = 0;j < PK_NCOLS/64;++j)
+		eword[j] = crypto_uint64_load(e_ptr+8*j);
+
 	for (i = 0; i < PK_NROWS; i++)	
 	{
-		pk_ptr = ((uint64_t *) (pk + PK_ROW_BYTES * i));
+		pk_ptr = pk + PK_ROW_BYTES * i;
 	
 		b = 0;
 		for (j = 0; j < PK_NCOLS/64; j++)
-			b ^= pk_ptr[j] & e_ptr[j];
+			b ^= crypto_uint64_load(pk_ptr+8*j) & eword[j];
 
 		b ^= b >> 32;
 		b ^= b >> 16;
@@ -112,21 +106,9 @@ static void syndrome(unsigned char *s, const unsigned char *pk, unsigned char *e
 
 /* input: public key pk */
 /* output: error vector e, syndrome s */
-void encrypt(unsigned char *s, const unsigned char *pk, unsigned char *e)
+void pke_encrypt(unsigned char *s, const unsigned char *pk, unsigned char *e)
 {
 	gen_e(e);
-
-#ifdef KAT
-  {
-    int k;
-    printf("encrypt e: positions");
-    for (k = 0;k < SYS_N;++k)
-      if (e[k/8] & (1 << (k&7)))
-        printf(" %d",k);
-    printf("\n");
-  }
-#endif
-
 	syndrome(s, pk, e);
 }
 

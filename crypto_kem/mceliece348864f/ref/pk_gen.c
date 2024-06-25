@@ -1,6 +1,9 @@
 /*
   This file is for public-key generation
 */
+// 20240611 djb: using crypto_uint64_bottomzeros_num
+// 20240608 djb: using crypto_*_mask
+// 20240530 djb: switch from uint64_sort to crypto_sort_int64
 
 #include <stdint.h>
 #include <stdio.h>
@@ -8,13 +11,15 @@
 #include <string.h>
 
 #include "controlbits.h"
-#include "uint64_sort.h"
+#include "crypto_sort_int64.h"
 #include "pk_gen.h"
 #include "params.h"
 #include "benes.h"
 #include "root.h"
 #include "util.h"
 #include "crypto_declassify.h"
+#include "crypto_uint8.h"
+#include "crypto_uint16.h"
 #include "crypto_uint64.h"
 
 static crypto_uint64 uint64_is_equal_declassify(uint64_t t,uint64_t u)
@@ -31,39 +36,10 @@ static crypto_uint64 uint64_is_zero_declassify(uint64_t t)
   return mask;
 }
 
-#define min(a, b) ((a < b) ? a : b)
-
-/* return number of trailing zeros of the non-zero input in */
-static inline int ctz(uint64_t in)
-{
-	int i, b, m = 0, r = 0;
-
-	for (i = 0; i < 64; i++)
-	{
-		b = (in >> i) & 1;
-		m |= b;
-		r += (m^1) & (b^1);
-	}
-
-	return r;
-}
-
-static inline uint64_t same_mask(uint16_t x, uint16_t y)
-{
-        uint64_t mask;
-
-        mask = x ^ y;
-        mask -= 1;
-        mask >>= 63;
-        mask = -mask;
-
-        return mask;
-}
-
 static int mov_columns(uint8_t mat[][ SYS_N/8 ], int16_t * pi, uint64_t * pivots)
 {
 	int i, j, k, s, block_idx, row;
-	uint64_t buf[64], ctz_list[32], t, d, mask, one = 1; 
+	uint64_t buf[64], ctz_list[32], t, d, one = 1; 
   
 	row = PK_NROWS - 32;
 	block_idx = row/8;
@@ -86,11 +62,11 @@ static int mov_columns(uint8_t mat[][ SYS_N/8 ], int16_t * pi, uint64_t * pivots
 
 		if (uint64_is_zero_declassify(t)) return -1; // return if buf is not full rank
 
-		ctz_list[i] = s = ctz(t);
+		ctz_list[i] = s = crypto_uint64_bottomzeros_num(t);
 		*pivots |= one << ctz_list[i];
 
-		for (j = i+1; j < 32; j++) { mask = (buf[i] >> s) & 1; mask -= 1;    buf[i] ^= buf[j] & mask; }
-		for (j = i+1; j < 32; j++) { mask = (buf[j] >> s) & 1; mask = -mask; buf[j] ^= buf[i] & mask; }
+		for (j = i+1; j < 32; j++) buf[i] ^= buf[j] & ~crypto_uint64_bitmod_mask(buf[i],s);
+		for (j = i+1; j < 32; j++) buf[j] ^= buf[i] & crypto_uint64_bitmod_mask(buf[j],s);
 	}
    
 	// updating permutation
@@ -99,7 +75,7 @@ static int mov_columns(uint8_t mat[][ SYS_N/8 ], int16_t * pi, uint64_t * pivots
 	for (k = j+1; k < 64; k++)
 	{
 			d = pi[ row + j ] ^ pi[ row + k ];
-			d &= same_mask(k, ctz_list[j]);
+			d &= crypto_uint16_equal_mask(k, ctz_list[j]);
 			pi[ row + j ] ^= d;
 			pi[ row + k ] ^= d;
 	}
@@ -156,7 +132,7 @@ int pk_gen(unsigned char * pk, unsigned char * sk, uint32_t * perm, int16_t * pi
 		buf[i] |= i;
 	}
 
-	uint64_sort(buf, 1 << GFBITS);
+	crypto_sort_int64(buf, 1 << GFBITS);
 
 	for (i = 1; i < (1 << GFBITS); i++)
 		if (uint64_is_equal_declassify(buf[i-1] >> 31,buf[i] >> 31))
@@ -216,10 +192,7 @@ int pk_gen(unsigned char * pk, unsigned char * sk, uint32_t * perm, int16_t * pi
 
 		for (k = row + 1; k < PK_NROWS; k++)
 		{
-			mask = mat[ row ][ i ] ^ mat[ k ][ i ];
-			mask >>= j;
-			mask &= 1;
-			mask = -mask;
+			mask = crypto_uint8_bitmod_mask(mat[ row ][ i ] ^ mat[ k ][ i ], j);
 
 			for (c = 0; c < SYS_N/8; c++)
 				mat[ row ][ c ] ^= mat[ k ][ c ] & mask;
@@ -234,9 +207,7 @@ int pk_gen(unsigned char * pk, unsigned char * sk, uint32_t * perm, int16_t * pi
 		{
 			if (k != row)
 			{
-				mask = mat[ k ][ i ] >> j;
-				mask &= 1;
-				mask = -mask;
+				mask = crypto_uint8_bitmod_mask(mat[ k ][ i ], j);
 
 				for (c = 0; c < SYS_N/8; c++)
 					mat[ k ][ c ] ^= mat[ row ][ c ] & mask;

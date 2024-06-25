@@ -1,6 +1,7 @@
 /*
   This file is for loading/storing data in a little-endian fashion
 */
+// 20240508 djb: remove unused bitrev
 
 #ifndef UTIL_H
 #define UTIL_H
@@ -92,16 +93,6 @@ static inline uint64_t load8(const unsigned char * in)
 	}
 
 	return ret;
-}
-
-static inline gf bitrev(gf a)
-{
-	a = ((a & 0x00FF) << 8) | ((a & 0xFF00) >> 8);
-	a = ((a & 0x0F0F) << 4) | ((a & 0xF0F0) >> 4);
-	a = ((a & 0x3333) << 2) | ((a & 0xCCCC) >> 2);
-	a = ((a & 0x5555) << 1) | ((a & 0xAAAA) >> 1);
-	
-	return a >> 4;
 }
 
 static inline vec128 load16(const unsigned char * in)

@@ -1,6 +1,10 @@
 /*
   This file is for secret-key generation
 */
+// 20221230 djb: add linker lines
+
+// linker define genpoly_gen
+// linker use gf_iszero gf_mul gf_inv GF_mul
 
 #include "sk_gen.h"
 

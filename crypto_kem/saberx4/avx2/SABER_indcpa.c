@@ -12,85 +12,12 @@
 #include <unistd.h>
 
 
-#define h1 4 //2^(EQ-EP-1)
 
-#define h2 ( (1<<(SABER_EP-2)) - (1<<(SABER_EP-SABER_ET-1)) + (1<<(SABER_EQ-SABER_EP-1)) )
-
-
-
-uint64_t mask_ar[4]={0xFFFFFFFFUL,0xFFFFFFFFUL,0xFFFFFFFFUL,0xFFFFFFFFUL};
-__m256i mask_load;
-__m256i floor_round;
-__m256i H1_avx;	
-__m256i H2_avx;
-
-/*--------------------------------------------------------------------------------------
-	Andodo Add funtions & defintions
-----------------------------------------------------------------------------------------*/
-// __m256i avx_epi64_01, avx_epi64_03, avx_epi64_07, avx_epi64_0f, avx_epi64_1f, avx_epi64_3f, avx_epi64_7f, avx_epi64_ff;
-// __m256i avx_epi32_01, avx_epi32_03, avx_epi32_07, avx_epi32_0f, avx_epi32_1f, avx_epi32_3f, avx_epi32_7f, avx_epi32_ff;
-
-
-void init_aux_avx(){
-	avx_epi64_01 = _mm256_set1_epi64x(0x01);
-	avx_epi64_03 = _mm256_set1_epi64x(0x03);
-	avx_epi64_07 = _mm256_set1_epi64x(0x07);
-	avx_epi64_0f = _mm256_set1_epi64x(0x0f);
-	avx_epi64_1f = _mm256_set1_epi64x(0x1f);
-	avx_epi64_3f = _mm256_set1_epi64x(0x3f);
-	avx_epi64_7f = _mm256_set1_epi64x(0x7f);
-	avx_epi64_ff = _mm256_set1_epi64x(0xff);
-
-	avx_epi32_01 = _mm256_set1_epi32(0x01);
-	avx_epi32_03 = _mm256_set1_epi32(0x03);
-	avx_epi32_07 = _mm256_set1_epi32(0x07);
-	avx_epi32_0f = _mm256_set1_epi32(0x0f);
-	avx_epi32_1f = _mm256_set1_epi32(0x1f);
-	avx_epi32_3f = _mm256_set1_epi32(0x3f);
-	avx_epi32_7f = _mm256_set1_epi32(0x7f);
-	avx_epi32_ff = _mm256_set1_epi32(0xff);
-}
 /*--------------------------------------------------------------------------------------
 	Andodo Add funtions & defintions
 ----------------------------------------------------------------------------------------*/
 
 void POL2MSG(uint16_t *message_dec_unpacked, unsigned char *message_dec);
-
-/*--------------------------------------------------------------------------------------
-	This routine loads the constant values for Toom-Cook multiplication 
-----------------------------------------------------------------------------------------*/
-void load_values(){
-	init_aux_avx();
-	int64_t i;
-
-	int64_t inv3=43691;
-	int64_t inv9=36409;
-	int64_t inv15=61167;
-
-	int64_t int45=45;
-	int64_t int30=30;
-	int64_t int0=0;
-
-
-	int16_t inv3_avx_load[16],inv9_avx_load[16],inv15_avx_load[16],int45_avx_load[16],int30_avx_load[16],int0_avx_load[16];
-
-	for(i=0;i<16;i++){
-		inv3_avx_load[i]=inv3;
-		inv9_avx_load[i]=inv9;
-		inv15_avx_load[i]=inv15;
-		int45_avx_load[i]=int45;
-		int30_avx_load[i]=int30;
-		int0_avx_load[i]=int0;
-	}
-
-	inv3_avx = _mm256_loadu_si256 ((__m256i const *) (&inv3_avx_load));
-	inv9_avx = _mm256_loadu_si256 ((__m256i const *) (&inv9_avx_load));
-	inv15_avx = _mm256_loadu_si256 ((__m256i const *) (&inv15_avx_load));
-	int45_avx = _mm256_loadu_si256 ((__m256i const *) (&int45_avx_load));
-	int30_avx = _mm256_loadu_si256 ((__m256i const *) (&int30_avx_load));
-	int0_avx = _mm256_loadu_si256 ((__m256i const *) (&int0_avx_load));
-	mask = _mm256_loadu_si256 ((__m256i const *)mask_ar);	
-}
 
 
 
@@ -130,7 +57,6 @@ void BS2POLq4x(unsigned char * bs0, unsigned char * bs1, unsigned char * bs2, un
 	// int flag=1;
 	// int flag0=1;
 	// int flag1=1;
-	//clock_S10 = cpucycles();
 
 	const float * cfbs0 = (const float *)bs0;
 	const float * cfbs1 = (const float *)bs1;
@@ -200,14 +126,11 @@ void BS2POLq4x(unsigned char * bs0, unsigned char * bs1, unsigned char * bs2, un
 		p++;
 	}
 
-	//clock_E10 = cpucycles();
-	//clock_T10 += clock_E10 - clock_S10;
 	
 
 	/*--------------------------------------------------------*/
 	/*---------------------Do the shifts----------------------*/
 	/*--------------------------------------------------------*/
-	//clock_S11 = cpucycles();
 	
 	uint32_t j;
 	uint32_t offset_data=0,offset_byte=0;
@@ -237,8 +160,6 @@ void BS2POLq4x(unsigned char * bs0, unsigned char * bs1, unsigned char * bs2, un
 		avx_data[offset_data + 7] = _mm256_or_si256(_mm256_and_si256(_mm256_srli_epi32(avx_bytes[offset_byte+11],3),avx_epi32_1f),
 									_mm256_slli_epi32(_mm256_and_si256(avx_bytes[offset_byte+12],avx_epi32_ff),5));
 	}
-	//clock_E11 = cpucycles();
-	//clock_T11 += clock_E11 - clock_S11;
 	
 	
 	/*--------------------------------------------------------*/
@@ -251,7 +172,6 @@ void BS2POLq4x(unsigned char * bs0, unsigned char * bs1, unsigned char * bs2, un
 	__m128i ph4,ph5,ph6,ph7;
 
 	
-	//clock_S12 = cpucycles();
 	
 	int offset0 = 0;
 	int k;
@@ -469,13 +389,6 @@ void indcpa_kem_keypair(unsigned char *pk0, unsigned char *sk0,
 	__m256i res0_avx[SABER_K][SABER_N/16], res1_avx[SABER_K][SABER_N/16], res2_avx[SABER_K][SABER_N/16], res3_avx[SABER_K][SABER_N/16];
 	  
 
-	mask_ar[0]=~(0UL); mask_ar[1]=~(0UL); mask_ar[2]=~(0UL); mask_ar[3]=~(0UL);
-	mask_load = _mm256_loadu_si256 ((__m256i const *)mask_ar);
-
-	floor_round=_mm256_set1_epi16(4);
-
-	H1_avx=_mm256_set1_epi16(h1);
-
 
 	__m256i b0_bucket[NUM_POLY][SCHB_N*4];
 	__m256i b1_bucket[NUM_POLY][SCHB_N*4];
@@ -484,8 +397,6 @@ void indcpa_kem_keypair(unsigned char *pk0, unsigned char *sk0,
 
 
 	//--------------AVX declaration ends------------------
-
-	load_values();
 
 
 	shake128x4(seed_arr[0], seed_arr[1], seed_arr[2], seed_arr[3], SABER_SEEDBYTES, 
@@ -627,14 +538,7 @@ void indcpa_kem_enc(
 
 
 		
-	mask_ar[0]=~(0UL);mask_ar[1]=~(0UL);mask_ar[2]=~(0UL);mask_ar[3]=~(0UL);
-	mask_load = _mm256_loadu_si256 ((__m256i const *)mask_ar);
-
 	mod_p=_mm256_set1_epi16(SABER_P-1);
-
-	floor_round=_mm256_set1_epi16(4);
-
-	H1_avx=_mm256_set1_epi16(h1);
 
 	__m256i b0_bucket[NUM_POLY][SCHB_N*4];
 	__m256i b1_bucket[NUM_POLY][SCHB_N*4];
@@ -643,7 +547,6 @@ void indcpa_kem_enc(
 
  
 	//--------------AVX declaration ends------------------
-	load_values();
       
 	//SABER_SEEDBYTES=32
 	for(i=0;i<SABER_SEEDBYTES;i++){ // Load the seedbytes in the client seed from PK.
@@ -852,11 +755,6 @@ void indcpa_kem_dec(
 	__m256i sksv0_avx[SABER_K][SABER_N/16], sksv1_avx[SABER_K][SABER_N/16], sksv2_avx[SABER_K][SABER_N/16], sksv3_avx[SABER_K][SABER_N/16];
 	__m256i pksv0_avx[SABER_K][SABER_N/16], pksv1_avx[SABER_K][SABER_N/16], pksv2_avx[SABER_K][SABER_N/16], pksv3_avx[SABER_K][SABER_N/16];
 	  
-	mask_ar[0]=~(0UL);mask_ar[1]=~(0UL);mask_ar[2]=~(0UL);mask_ar[3]=~(0UL);
-	mask_load = _mm256_loadu_si256 ((__m256i const *)mask_ar);
-
-
-	H2_avx=_mm256_set1_epi16(h2);
 
 	__m256i b0_bucket[NUM_POLY][SCHB_N*4];
 	__m256i b1_bucket[NUM_POLY][SCHB_N*4];
@@ -864,8 +762,6 @@ void indcpa_kem_dec(
 	__m256i b3_bucket[NUM_POLY][SCHB_N*4];
 
 	//--------------AVX declaration ends------------------
-	
- 	load_values();
 	
 		//-------unpack the public_key
 		//sksv is the secret-key

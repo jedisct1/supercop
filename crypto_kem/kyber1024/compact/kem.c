@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <libkeccak.a.headers/SimpleFIPS202.h>
+#include "crypto_uint64.h"
 #include "crypto_kem.h"
 #include "randombytes.h"
 #include "crypto_declassify.h"
@@ -418,7 +419,7 @@ static int verify(const uint8_t *a, const uint8_t *b, size_t len) {
   size_t i;
   uint8_t r = 0;
   for (i = 0; i < len; i++) r |= a[i] ^ b[i];
-  return (-(uint64_t)r) >> 63;
+  return -crypto_uint64_nonzero_mask(r);
 }
 
 static void cmov(uint8_t *r, const uint8_t *x, size_t len, uint8_t b) {

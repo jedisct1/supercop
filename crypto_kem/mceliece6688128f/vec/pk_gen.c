@@ -1,16 +1,26 @@
 /*
   This file is for public-key generation
 */
+// 20240611 djb: using crypto_uint64_bottomzeros_num
+// 20240608 djb: using crypto_*_mask
+// 20240508 djb: switch to crypto_sort_int64
+// 20221231 djb: remove unused min definition
+// 20221231 djb: more 0 initialization to clarify data flow; tnx thom wiggers
+// 20221230 djb: add linker lines
+
+// linker define pk_gen
+// linker use fft vec_inv vec_mul
 
 #include "pk_gen.h"
 
 #include "controlbits.h"
-#include "uint64_sort.h"
+#include "crypto_sort_int64.h"
 #include "params.h"
 #include "benes.h"
 #include "util.h"
 #include "fft.h"
 #include "crypto_declassify.h"
+#include "crypto_uint16.h"
 #include "crypto_uint64.h"
 
 static crypto_uint64 uint64_is_equal_declassify(uint64_t t,uint64_t u)
@@ -28,8 +38,6 @@ static crypto_uint64 uint64_is_zero_declassify(uint64_t t)
 }
 
 #include <stdint.h>
-
-#define min(a, b) ((a < b) ? a : b)
 
 static void de_bitslicing(uint64_t * out, const vec in[][GFBITS])
 {
@@ -53,6 +61,8 @@ static void to_bitslicing_2x(vec out0[][GFBITS], vec out1[][GFBITS], const uint6
 
 	for (i = 0; i < 128; i++)
 	{
+		for (j = 0;j < GFBITS;++j) out0[i][j] = out1[i][j] = 0;
+
 		for (j = GFBITS-1; j >= 0; j--)
 		for (r = 63; r >= 0; r--)
 		{
@@ -69,37 +79,10 @@ static void to_bitslicing_2x(vec out0[][GFBITS], vec out1[][GFBITS], const uint6
 	}
 }
 
-/* return number of trailing zeros of in */
-static inline int ctz(uint64_t in)
-{
-	int i, b, m = 0, r = 0;
-
-	for (i = 0; i < 64; i++)
-	{
-		b = (in >> i) & 1;
-		m |= b;
-		r += (m^1) & (b^1);
-	}
-
-	return r;
-}
-
-static inline uint64_t same_mask(uint16_t x, uint16_t y)
-{
-        uint64_t mask;
-
-        mask = x ^ y;
-        mask -= 1;
-        mask >>= 63;
-        mask = -mask;
-
-        return mask;
-}
-
 static int mov_columns(uint64_t mat[][ (SYS_N + 63) / 64 ], int16_t * pi, uint64_t * pivots)
 {
 	int i, j, k, s, block_idx, row;
-	uint64_t buf[64], ctz_list[32], t, d, mask, one = 1; 
+	uint64_t buf[64], ctz_list[32], t, d, one = 1; 
        
 	row = PK_NROWS - 32;
 	block_idx = row/64;
@@ -123,11 +106,11 @@ static int mov_columns(uint64_t mat[][ (SYS_N + 63) / 64 ], int16_t * pi, uint64
 
 		if (uint64_is_zero_declassify(t)) return -1; // return if buf is not full rank
 
-		ctz_list[i] = s = ctz(t);
+		ctz_list[i] = s = crypto_uint64_bottomzeros_num(t);
 		*pivots |= one << ctz_list[i];
 
-		for (j = i+1; j < 32; j++) { mask = (buf[i] >> s) & 1; mask -= 1;    buf[i] ^= buf[j] & mask; }
-		for (j = i+1; j < 32; j++) { mask = (buf[j] >> s) & 1; mask = -mask; buf[j] ^= buf[i] & mask; }
+		for (j = i+1; j < 32; j++) buf[i] ^= buf[j] & ~crypto_uint64_bitmod_mask(buf[i],s);
+		for (j = i+1; j < 32; j++) buf[j] ^= buf[i] & crypto_uint64_bitmod_mask(buf[j],s);
 	}
    
 	// updating permutation
@@ -136,7 +119,7 @@ static int mov_columns(uint64_t mat[][ (SYS_N + 63) / 64 ], int16_t * pi, uint64
 	for (k = j+1; k < 64; k++)
 	{
 			d = pi[ row + j ] ^ pi[ row + k ];
-			d &= same_mask(k, ctz_list[j]);
+			d &= crypto_uint16_equal_mask(k, ctz_list[j]);
 			pi[ row + j ] ^= d;
 			pi[ row + k ] ^= d;
 	}
@@ -218,7 +201,7 @@ int pk_gen(unsigned char * pk, const unsigned char * irr, uint32_t * perm, int16
 		list[i] |= ((uint64_t) perm[i]) << 31;
 	}
 
-	uint64_sort(list, 1 << GFBITS);
+	crypto_sort_int64(list, 1 << GFBITS);
 
 	for (i = 1; i < (1 << GFBITS); i++)
 		if (uint64_is_equal_declassify(list[i-1] >> 31,list[i] >> 31))
@@ -257,9 +240,7 @@ int pk_gen(unsigned char * pk, const unsigned char * irr, uint32_t * perm, int16
 
 		for (k = row + 1; k < PK_NROWS; k++)
 		{
-			mask = mat[ row ][ i ] >> j;
-			mask &= 1;
-			mask -= 1;
+			mask = ~crypto_uint64_bitmod_mask(mat[ row ][ i ], j);
 
 			for (c = 0; c < nblocks_H; c++)
 				mat[ row ][ c ] ^= mat[ k ][ c ] & mask;
@@ -272,9 +253,7 @@ int pk_gen(unsigned char * pk, const unsigned char * irr, uint32_t * perm, int16
 
 		for (k = 0; k < row; k++)
 		{
-			mask = mat[ k ][ i ] >> j;
-			mask &= 1;
-			mask = -mask;
+			mask = crypto_uint64_bitmod_mask(mat[ k ][ i ], j);
 
 			for (c = 0; c < nblocks_H; c++)
 				mat[ k ][ c ] ^= mat[ row ][ c ] & mask;
@@ -282,9 +261,7 @@ int pk_gen(unsigned char * pk, const unsigned char * irr, uint32_t * perm, int16
 
 		for (k = row+1; k < PK_NROWS; k++)
 		{
-			mask = mat[ k ][ i ] >> j;
-			mask &= 1;
-			mask = -mask;
+			mask = crypto_uint64_bitmod_mask(mat[ k ][ i ], j);
 
 			for (c = 0; c < nblocks_H; c++)
 				mat[ k ][ c ] ^= mat[ row ][ c ] & mask;

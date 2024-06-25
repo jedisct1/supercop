@@ -1,0 +1,2 @@
+20240425 titan0 amd64 20240621 crypto_kem ntruplus864/constbranchindex timecop_pass crypto_kem/ntruplus864/avx2 gcc_-march=native_-mtune=native_-O3_-fomit-frame-pointer_-fwrapv_-fPIC_-f IE 1 0
+20240425 titan0 amd64 20240621 crypto_kem ntruplus864/constbranchindex timecop_output crypto_kem/ntruplus864/avx2 gcc_-march=native_-mtune=native_-O3_-fomit-frame-pointer_-fwrapv_-fPIC_ fPIE 5c6fde75426b148bb10f4c49ce7f61f2d12760ca0338fe7a82c7fcda3c413d17 8326464 1819921896 3500000000 crypto_kem/ntruplus864/avx2

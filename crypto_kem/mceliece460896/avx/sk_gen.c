@@ -1,6 +1,13 @@
 /*
   This file is for secret-key generation
 */
+// 20221230 djb: add linker lines
+
+// linker define genpoly_gen
+// linker use gf_mul gf_inv
+// linker use vec128_mul_GF
+// linker use vec128_mul_asm
+// linker use transpose_64x64_asm
 
 #include "sk_gen.h"
 

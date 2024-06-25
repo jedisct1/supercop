@@ -2,7 +2,9 @@
   This file is for functions related to 128-bit vectors
   including functions for bitsliced field operations
 */
+// 20240530 djb: include vec128_gf.h
 
+#include "vec128_gf.h"
 #include "vec128.h"
 
 /* bitsliced field squarings */

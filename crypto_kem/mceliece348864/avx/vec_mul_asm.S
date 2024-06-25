@@ -1,5 +1,13 @@
-#define vec_mul_asm CRYPTO_NAMESPACE(vec_mul_asm)
-#define _vec_mul_asm _CRYPTO_NAMESPACE(vec_mul_asm)
+// 20240504 djb: add note.GNU-stack
+// 20221231 djb: port hidden to macos; tnx thom wiggers
+// 20221230 djb: add linker line
+
+// linker define vec_mul_asm
+
+#include "crypto_asm_hidden.h"
+
+#define vec_mul_asm CRYPTO_SHARED_NAMESPACE(vec_mul_asm)
+#define _vec_mul_asm _CRYPTO_SHARED_NAMESPACE(vec_mul_asm)
 
 # qhasm: int64 input_0
 
@@ -189,8 +197,8 @@
 
 # qhasm: enter vec_mul_asm
 .p2align 5
-.hidden _vec_mul_asm
-.hidden vec_mul_asm
+ASM_HIDDEN _vec_mul_asm
+ASM_HIDDEN vec_mul_asm
 .global _vec_mul_asm
 .global vec_mul_asm
 _vec_mul_asm:

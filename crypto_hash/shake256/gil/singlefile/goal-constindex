@@ -1,3 +1,5 @@
 20200809 titan0 amd64 20200809 crypto_hash shake256/constbranchindex timecop_pass crypto_hash/shake256/gil/singlefile gcc_-march=native_-mtune=native_-O3_-g_-fwrapv_-fPIC_-fPIE 1 0
 20200809 titan0 x86 20200809 crypto_hash shake256/constbranchindex timecop_pass crypto_hash/shake256/gil/singlefile gcc_-m32_-march=core2_-mtune=core2_-O3_-g_-fwrapv_-fPIC_-fPIE 1 0
 20200809 novenablue armeabi 20200809 crypto_hash shake256/constbranchindex timecop_pass crypto_hash/shake256/gil/singlefile clang_-mcpu=native_-O3_-g_-fwrapv_-fPIC_-fPIE 1 0
+20240425 titan0 amd64 20240530 crypto_hash shake256/constbranchindex timecop_pass crypto_hash/shake256/gil/singlefile gcc_-march=native_-mtune=native_-O3_-fomit-frame-pointer_-fwrapv_-fPIC_-fPIE 10 0
+20240425 titan0 amd64 20240530 crypto_hash shake256/constbranchindex timecop_output crypto_hash/shake256/gil/singlefile gcc_-march=native_-mtune=native_-O3_-fomit-frame-pointer_-fwrapv_-fPIC_-fPIE 75a9e81b3f5df67ea41109189d3333b4ce46f45439ff99e2db439f95d383ad6e 1944768 209227340 3500000000 crypto_hash/shake256/gil/singlefile

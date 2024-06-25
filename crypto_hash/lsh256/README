@@ -1,0 +1,6 @@
+The avx2, neon, ref, sse2, ssse3, and xop implementations (for both
+lsh256 and lsh512) are derived from the official LSH code from
+
+   https://seed.kisa.or.kr/kisa/Board/22/detailView.do
+
+via the ./integrate script (run in the top directory of the LSH code).

@@ -5,8 +5,18 @@
   For the implementation strategy, see
   https://eprint.iacr.org/2017/793.pdf
 */
+// 20221230 djb: split these arrays into separate .c files
+// 20221230 djb: rename consts array as fft_consts
+// 20221230 djb: rename s array as fft_scalars_4x
+// 20221230 djb: add linker lines
+
+// linker define fft_tr
+// linker use vec_mul
+// linker use fft_scalars_4x fft_consts
 
 #include "fft_tr.h"
+#include "fft_scalars_4x.h"
+#include "fft_consts.h"
 
 #include "transpose.h"
 
@@ -26,21 +36,16 @@ static void radix_conversions_tr(vec in[][ GFBITS ])
 		{0xFFFFFFFF00000000, 0x00000000FFFFFFFF}
 	};
 
-	const vec s[6][4][GFBITS] = 
-	{
-#include "scalars_4x.data"
-	};
-	
 	//
 
 	for (j = 6; j >= 0; j--)
 	{
 		if (j < 6)
 		{
-			vec_mul(in[0], in[0], s[j][0]); // scaling
-			vec_mul(in[1], in[1], s[j][1]); // scaling
-			vec_mul(in[2], in[2], s[j][2]); // scaling
-			vec_mul(in[3], in[3], s[j][3]); // scaling
+			vec_mul(in[0], in[0], fft_scalars_4x[j][0]); // scaling
+			vec_mul(in[1], in[1], fft_scalars_4x[j][1]); // scaling
+			vec_mul(in[2], in[2], fft_scalars_4x[j][2]); // scaling
+			vec_mul(in[3], in[3], fft_scalars_4x[j][3]); // scaling
 		}
 
 		for (k = j; k <= 4; k++)
@@ -79,11 +84,6 @@ static void butterflies_tr(vec out[][ GFBITS ], vec in[][ GFBITS ])
 	vec pre[6][2][ GFBITS ];
 	vec buf[2][64];
 
-	const vec consts[ 128 ][ GFBITS ] =
-	{
-#include "consts.data"
-	};
-
 	uint64_t consts_ptr = 128;
 
 	const unsigned char reversal[128] = 
@@ -120,7 +120,7 @@ static void butterflies_tr(vec out[][ GFBITS ], vec in[][ GFBITS ])
 		{
 			for (b = 0; b < GFBITS; b++) in[k][b] ^= in[k+s][b];
 
-			vec_mul(tmp, in[k], consts[ consts_ptr + (k-j) ]);
+			vec_mul(tmp, in[k], fft_consts[ consts_ptr + (k-j) ]);
 
 			for (b = 0; b < GFBITS; b++) in[k+s][b] ^= tmp[b];
 		}

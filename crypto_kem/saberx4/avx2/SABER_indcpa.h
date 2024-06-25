@@ -2,15 +2,7 @@
 #define INDCPA_H
 
 #include <immintrin.h>
-#include"cpucycles.h"
 #include"poly.h"
-uint64_t clock_S, clock_E;
-uint64_t clock_BS2POLVEC_S, clock_BS2POLVEC_E;
-uint64_t clock_inBS2POLq, clock_outBS2POLq; 
-uint64_t clock_before_temp_loop,clock_after_temp_loop,clock_before_shift,clock_after_shift,clock_after_store,clock_before_store;
-uint64_t clock_bs2polqS, clock_bs2polqE, clock_bs2polq;
-
-uint64_t clock_samp, clock_arith, clock_load;
 
 //void indcpa_keypair(unsigned char *pk, unsigned char *sk);
 void indcpa_keypair(unsigned char *pk0, unsigned char *sk0,
@@ -55,12 +47,40 @@ void indcpa_kem_dec(
 					const unsigned char *sk2, const unsigned char *ciphertext2, unsigned char *message2_dec,
 					const unsigned char *sk3, const unsigned char *ciphertext3, unsigned char *message3_dec);
 
-uint64_t clock1,clock2;
+#define mask_load (_mm256_set1_epi64x(~(0UL)))
 
-__m256i mask,inv3_avx,inv9_avx,inv15_avx,int45_avx,int30_avx,int0_avx;
+#define avx_epi64_01 (_mm256_set1_epi64x(0x01))
+#define avx_epi64_03 (_mm256_set1_epi64x(0x03))
+#define avx_epi64_07 (_mm256_set1_epi64x(0x07))
+#define avx_epi64_0f (_mm256_set1_epi64x(0x0f))
+#define avx_epi64_1f (_mm256_set1_epi64x(0x1f))
+#define avx_epi64_3f (_mm256_set1_epi64x(0x3f))
+#define avx_epi64_7f (_mm256_set1_epi64x(0x7f))
+#define avx_epi64_ff (_mm256_set1_epi64x(0xff))
 
-__m256i avx_epi64_01, avx_epi64_03, avx_epi64_07, avx_epi64_0f, avx_epi64_1f, avx_epi64_3f, avx_epi64_7f, avx_epi64_ff;
-__m256i avx_epi32_01, avx_epi32_03, avx_epi32_07, avx_epi32_0f, avx_epi32_1f, avx_epi32_3f, avx_epi32_7f, avx_epi32_ff;
+#define avx_epi32_01 (_mm256_set1_epi32(0x01))
+#define avx_epi32_03 (_mm256_set1_epi32(0x03))
+#define avx_epi32_07 (_mm256_set1_epi32(0x07))
+#define avx_epi32_0f (_mm256_set1_epi32(0x0f))
+#define avx_epi32_1f (_mm256_set1_epi32(0x1f))
+#define avx_epi32_3f (_mm256_set1_epi32(0x3f))
+#define avx_epi32_7f (_mm256_set1_epi32(0x7f))
+#define avx_epi32_ff (_mm256_set1_epi32(0xff))
+
+#define inv3_avx (_mm256_set1_epi16(43691-65536))
+#define inv9_avx (_mm256_set1_epi16(36409-65536))
+#define inv15_avx (_mm256_set1_epi16(61167-65536))
+#define int45_avx (_mm256_set1_epi16(45))
+#define int30_avx (_mm256_set1_epi16(30))
+#define int0_avx (_mm256_set1_epi16(0))
+
+#define h1 4 //2^(EQ-EP-1)
+
+#define h2 ( (1<<(SABER_EP-2)) - (1<<(SABER_EP-SABER_ET-1)) + (1<<(SABER_EQ-SABER_EP-1)) )
+
+#define H1_avx (_mm256_set1_epi16(h1))
+
+#define floor_round (_mm256_set1_epi16(4))
 
 #endif
 

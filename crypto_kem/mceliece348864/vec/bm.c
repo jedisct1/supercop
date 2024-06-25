@@ -5,37 +5,21 @@
   For the implementation strategy, see
   https://eprint.iacr.org/2017/793.pdf
 */
+// 20240503 djb: use crypto_*_mask functions
+// 20221230 djb: add linker lines
+
+// linker define bm
+// linker use vec_mul
+// linker use gf_inv
 
 #include "bm.h"
 
 #include "util.h"
 #include "gf.h"
+#include "crypto_uint64.h"
 
 #include <stdint.h>
 #include <assert.h>
-
-static inline uint64_t mask_nonzero(gf a)
-{
-	uint64_t ret = a;
-
-	ret -= 1;
-	ret >>= 63;
-	ret -= 1;
-
-	return ret;
-}
-
-static inline uint64_t mask_leq(uint16_t a, uint16_t b)
-{
-	uint64_t a_tmp = a;
-	uint64_t b_tmp = b;
-	uint64_t ret = b_tmp - a_tmp; 
-
-	ret >>= 63;
-	ret -= 1;
-
-	return ret;
-}
 
 static inline void vec_cmov(vec * out, vec * in, uint16_t mask)
 {
@@ -221,7 +205,7 @@ void bm(vec *out, vec in[][ GFBITS ])
 
 		// 3 cases
 
-		mask = mask_nonzero(d) & mask_leq(L*2, N);
+		mask = crypto_uint64_nonzero_mask(d) & crypto_uint64_leq_mask(L*2, N);
 
 		for (i = 0; i < GFBITS; i++) 
 		{

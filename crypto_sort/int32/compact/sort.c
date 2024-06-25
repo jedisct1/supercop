@@ -1,12 +1,7 @@
 #include <stdint.h>
 #include "crypto_sort.h"
-
-static void int32_minmax(int32_t *a, int32_t *b) {
-  int32_t ab = *b ^ *a, c = *b - *a;
-  c = ((((c ^ *b) & ab) ^ c) >> 31) & ab;
-  *a ^= c;
-  *b ^= c;
-}
+#include "crypto_int32.h"
+#define int32_minmax crypto_int32_minmax
 
 void crypto_sort(void *array, long long n) {
   long long top = 1, p, q, r, i;

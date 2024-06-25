@@ -1,8 +1,11 @@
+// 20240508 djb: switch to vec_mul_gf_using_64
+// 20221230 djb: changed * to [...] for vec_GF_mul declaration
+
 #ifndef VEC_H
 #define VEC_H
 #define vec_GF_mul CRYPTO_NAMESPACE(vec_GF_mul)
-#define vec_mul_asm CRYPTO_NAMESPACE(vec_mul_asm)
-#define vec_mul_sp_asm CRYPTO_NAMESPACE(vec_mul_sp_asm)
+#define vec_mul_asm CRYPTO_SHARED_NAMESPACE(vec_mul_asm)
+#define vec_mul_sp_asm CRYPTO_SHARED_NAMESPACE(vec_mul_sp_asm)
 
 #include "params.h"
 #include "gf.h"
@@ -33,7 +36,7 @@ static inline void vec_add(vec *h, vec *f, vec *g)
 		h[b] = f[b] ^ g[b];
 }
 
-static inline void vec_mul_gf(vec out[ GFBITS ], vec v[ GFBITS ], gf a)
+static inline void vec_mul_gf_using_64(vec out[ GFBITS ], vec v[ GFBITS ], gf a)
 {
 	int i;
 
@@ -45,7 +48,7 @@ static inline void vec_mul_gf(vec out[ GFBITS ], vec v[ GFBITS ], gf a)
 	vec_mul_asm(out, v, bits);
 }
 
-void vec_GF_mul(vec [], vec [], gf []);
+void vec_GF_mul(vec [GFBITS], vec [GFBITS], gf [SYS_T]);
 
 #endif
 

@@ -5,7 +5,7 @@
 #ifndef UTIL_H
 #define UTIL_H
 
-#include "vec128.h"
+#include "vec128_gf.h"
 
 #include <stdint.h>
 

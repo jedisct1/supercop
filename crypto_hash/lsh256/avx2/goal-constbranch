@@ -1,0 +1,2 @@
+20240425 titan0 amd64 20240501 crypto_hash lsh256/constbranchindex timecop_pass crypto_hash/lsh256/avx2 gcc_-march=native_-mtune=native_-O3_-fomit-frame-pointer_-fwrapv_-fPIC_-fPIE 10 0
+20240425 titan0 amd64 20240501 crypto_hash lsh256/constbranchindex timecop_output crypto_hash/lsh256/avx2 gcc_-march=native_-mtune=native_-O3_-fomit-frame-pointer_-fwrapv_-fPIC_-fPIE df451c5d0db49bcafe4004bcbb99b93ab5eb208821081f43c432e56088327701 1449444 168057664 3500000000 crypto_hash/lsh256/avx2

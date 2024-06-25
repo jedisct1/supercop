@@ -12,10 +12,6 @@ Vadim Lyubashevsky, John M. Schanck, Peter Schwabe & Damien stehle
 #include <stdint.h>
 #include "SABER_params.h"
 
-uint64_t clock_mul, clock_matrix, clock_secret,count_mul;
-
-uint64_t clock_matrix_vec, matrix_vec_count;
-
 typedef struct
 {
   uint16_t coeffs[SABER_N];

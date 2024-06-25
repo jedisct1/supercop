@@ -1,5 +1,13 @@
-#define update_asm CRYPTO_NAMESPACE(update_asm)
-#define _update_asm _CRYPTO_NAMESPACE(update_asm)
+// 20240504 djb: add note.GNU-stack
+// 20221231 djb: port hidden to macos; tnx thom wiggers
+// 20221230 djb: add linker line
+
+// linker define update_asm
+
+#include "crypto_asm_hidden.h"
+
+#define update_asm CRYPTO_SHARED_NAMESPACE(update_asm)
+#define _update_asm _CRYPTO_SHARED_NAMESPACE(update_asm)
 
 # qhasm: int64 input_0
 
@@ -37,8 +45,8 @@
 
 # qhasm: enter update_asm
 .p2align 5
-.hidden _update_asm
-.hidden update_asm
+ASM_HIDDEN _update_asm
+ASM_HIDDEN update_asm
 .global _update_asm
 .global update_asm
 _update_asm:

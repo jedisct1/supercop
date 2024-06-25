@@ -1,12 +1,21 @@
 /*
   This file is for public-key generation
 */
+// 20240508 djb: switch to crypto_sort_int32
+// 20240508 djb: switch to crypto_sort_int64
+// 20230105 tony: use merge exchange in sort_rows(); fewer lines for minmax_rows()
+// 20221231 djb: more 0 initialization to clarify data flow; tnx thom wiggers
+// 20221230 djb: add linker lines
+// 20221230 djb: move nBlocks_I to macro
+
+// linker define pk_gen
+// linker use fft vec256_inv vec256_mul_asm
 
 #include "pk_gen.h"
 
 #include "controlbits.h"
-#include "uint64_sort.h"
-#include "int32_sort.h"
+#include "crypto_sort_int64.h"
+#include "crypto_sort_int32.h"
 #include "params.h"
 #include "util.h"
 #include "fft.h"
@@ -29,6 +38,7 @@ static crypto_uint64 uint64_is_zero_declassify(uint64_t t)
 
 #include <stdint.h>
 
+#define nBlocks_I ((PK_NROWS + 255) / 256)
 #define par_width 7
 
 /* set m to 11...1 if the i-th bit of x is 0 and the i-th bit of y is 1 */
@@ -80,9 +90,7 @@ static inline void minmax_rows(uint16_t *x, vec256 (*mat)[par_width], int i0, in
 	uint16_t m;
 	vec256 mm;
 
-	m = x[i1] - x[i0];
-	m >>= 15;
-	m = -m;
+	m = x[i1] - x[i0]; m >>= 15; m = -m;
 	mm = vec256_set1_16b(m);
 
 	uint16_cswap(&x[i0], &x[i1], m);
@@ -91,34 +99,26 @@ static inline void minmax_rows(uint16_t *x, vec256 (*mat)[par_width], int i0, in
 		vec256_cswap(&mat[i0][i], &mat[i1][i], mm);
 }
 
-/* merge first half of x[0],x[step],...,x[(2*n-1)*step] with second half */
-/* requires n to be a power of 2 */
-static void merge_rows(int n, int bound, uint16_t *x, vec256 (*mat)[par_width], int off, int step)
+static void sort_rows(int n, uint16_t *x, vec256 (*mat)[par_width])
 {
-	int i;
+	int t = 1;
 
-	if (n == 1) 
+	while ((1 << t)*2 < n) t++;
+
+	for (int j = t-1; j >= 0; j--)
 	{
-		if(off + step < bound)
-			minmax_rows(x, mat, off, off + step);
-	}
-	else 
-	{
-		merge_rows(n/2, bound, x, mat, off, step * 2);
-		merge_rows(n/2, bound, x, mat, off + step, step * 2);
+		int p = 1 << j, q = 1 << (t-1), r = 0, d = p;
 
-		for (i = 1; i < 2*n-1 && off + (i+1) * step < bound; i += 2)
-			minmax_rows(x, mat, off + i*step, off + (i+1)*step);
-	}
-}
+		while (1)
+		{
+			for (int i = 0; i < n-d; i++)
+				if ((i & p) == r)
+					minmax_rows(x, mat, i, i+d);
 
-/* permute the rows of mat by sorting x */
-static void sort_rows(int n, int bound, uint16_t *x, vec256 (*mat)[par_width], int off)
-{
-	if (n <= 1) return;
-	sort_rows(n/2, bound, x, mat, off);
-	sort_rows(n/2, bound, x, mat, off + n/2);
-	merge_rows(n/2, bound, x, mat, off, 1);
+			if (q != p) { d = q - p; q = q / 2; r = p; }
+			else break;
+		}
+	}
 }
 
 /* extract numbers represented in bitsliced form */
@@ -165,6 +165,8 @@ static void to_bitslicing_2x(vec256 out0[][GFBITS], vec256 out1[][GFBITS], const
 	int i, j, k, r;
 	uint64_t u[2][4];
 
+	for (j = 0;j < 2;++j) for (k = 0;k < 4;++k) u[j][k] = 0;
+
 	for (i = 0; i < 32; i++)
 	for (j = GFBITS-1; j >= 0; j--)
 	{
@@ -197,7 +199,7 @@ static void composeinv(int n, uint16_t y[n], uint16_t x[n], uint16_t pi[n])
     t[i] |= x[i];
   }
 
-  int32_sort(t,n);
+  crypto_sort_int32(t,n);
 
   for (i = 0;i < n;++i)
     y[i] = t[i] & 0xFFFF;
@@ -210,8 +212,6 @@ static void composeinv(int n, uint16_t y[n], uint16_t x[n], uint16_t pi[n])
 /* return: 0 if pk is successfully generated, -1 otherwise */
 int pk_gen(unsigned char * pk, const unsigned char * irr, uint32_t * perm, int16_t * pi)
 {
-	const int nBlocks_I = (PK_NROWS + 255) / 256;
-
 	int i, j, k, b;
 	int row, c;
 	
@@ -276,7 +276,7 @@ int pk_gen(unsigned char * pk, const unsigned char * irr, uint32_t * perm, int16
 		list[i] |= ((uint64_t) perm[i]) << 31;
 	}
 
-	uint64_sort(list, 1 << GFBITS);
+	crypto_sort_int64(list, 1 << GFBITS);
 
 	for (i = 1; i < (1 << GFBITS); i++)
 		if (uint64_is_equal_declassify(list[i-1] >> 31,list[i] >> 31))
@@ -364,7 +364,7 @@ int pk_gen(unsigned char * pk, const unsigned char * irr, uint32_t * perm, int16
 		for (i = 0; i < PK_NROWS; i++)
 			ind[i] = ind_inv[i];
 
-		sort_rows((1 << GFBITS)/4, PK_NROWS, ind, par.v, 0);
+		sort_rows(PK_NROWS, ind, par.v);
  
 		// apply L
    

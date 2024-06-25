@@ -1,7 +1,7 @@
-#define update_asm CRYPTO_NAMESPACE(update_asm)
-#define _update_asm _CRYPTO_NAMESPACE(update_asm)
-#define vec_reduce_asm CRYPTO_NAMESPACE(vec_reduce_asm)
-#define _vec_reduce_asm _CRYPTO_NAMESPACE(vec_reduce_asm)
+#define update_asm CRYPTO_SHARED_NAMESPACE(update_asm)
+#define _update_asm _CRYPTO_SHARED_NAMESPACE(update_asm)
+#define vec_reduce_asm CRYPTO_SHARED_NAMESPACE(vec_reduce_asm)
+#define _vec_reduce_asm _CRYPTO_SHARED_NAMESPACE(vec_reduce_asm)
 /*
   This file is for implementating the inversion-free Berlekamp-Massey algorithm
   see https://ieeexplore.ieee.org/document/87857
@@ -9,42 +9,31 @@
   For the implementation strategy, see
   https://eprint.iacr.org/2017/793.pdf
 */
+// 20240530 djb: CRYPTO_ALIGN instead of ALIGN
+// 20240508 djb: include vec128_gf.h
+// 20240503 djb: use crypto_*_mask functions
+// 20221231 djb: ALIGN(32) for some arrays; tnx thom wiggers
+// 20221230 djb: add linker lines
+
+// linker define bm
+// linker use update_asm vec_reduce_asm
+// linker use vec_mul_sp_asm
+// linker use vec128_mul_asm
+// linker use gf_inv
 
 #include "bm.h"
 
-#include "vec128.h"
+#include "vec128_gf.h"
 #include "util.h"
 #include "vec.h"
 #include "gf.h"
+#include "crypto_uint64.h"
 
 #include <stdint.h>
 #include <assert.h>
 
 extern void update_asm(void *, gf, int);
 extern gf vec_reduce_asm(uint64_t *);
-
-static inline uint64_t mask_nonzero(gf a)
-{
-	uint64_t ret = a;
-
-	ret -= 1;
-	ret >>= 63;
-	ret -= 1;
-
-	return ret;
-}
-
-static inline uint64_t mask_leq(uint16_t a, uint16_t b)
-{
-	uint64_t a_tmp = a;
-	uint64_t b_tmp = b;
-	uint64_t ret = b_tmp - a_tmp; 
-
-	ret >>= 63;
-	ret -= 1;
-
-	return ret;
-}
 
 static inline void vec_cmov(uint64_t out[][2], uint64_t mask)
 {
@@ -144,9 +133,9 @@ void bm(uint64_t out[ GFBITS ], vec128 in[ GFBITS ])
 	uint64_t prod[ GFBITS ];
 	uint64_t in_tmp[ GFBITS ];
 
-	uint64_t db[ GFBITS ][ 2 ];
-	uint64_t BC_tmp[ GFBITS ][ 2 ];
-	uint64_t BC[ GFBITS ][ 2 ];
+	CRYPTO_ALIGN(32) uint64_t db[ GFBITS ][ 2 ];
+	CRYPTO_ALIGN(32) uint64_t BC_tmp[ GFBITS ][ 2 ];
+	CRYPTO_ALIGN(32) uint64_t BC[ GFBITS ][ 2 ];
 
 	uint64_t mask, t;
 
@@ -188,7 +177,7 @@ void bm(uint64_t out[ GFBITS ], vec128 in[ GFBITS ])
 
 		// 3 cases
 
-		mask = mask_nonzero(d) & mask_leq(L*2, N);
+		mask = crypto_uint64_nonzero_mask(d) & crypto_uint64_leq_mask(L*2, N);
 
 		for (i = 0; i < GFBITS; i++) 
 		{

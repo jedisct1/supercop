@@ -4,6 +4,7 @@ crypto_encode
 crypto_sort
 crypto_core
 crypto_hashblocks
+crypto_xof
 crypto_hash
 crypto_stream
 crypto_onetimeauth

@@ -1,21 +1,23 @@
 #ifndef OPERATIONS_H
 #define OPERATIONS_H
 
-#include "crypto_kem.h"
+#define operation_keypair CRYPTO_NAMESPACE(operation_keypair)
+#define operation_enc CRYPTO_NAMESPACE(operation_enc)
+#define operation_dec CRYPTO_NAMESPACE(operation_dec)
 
-int crypto_kem_enc(
+int operation_enc(
        unsigned char *c,
        unsigned char *key,
        const unsigned char *pk
 );
 
-int crypto_kem_dec(
+int operation_dec(
        unsigned char *key,
        const unsigned char *c,
        const unsigned char *sk
 );
 
-int crypto_kem_keypair
+void operation_keypair
 (
        unsigned char *pk,
        unsigned char *sk 

@@ -2,10 +2,15 @@
 /* See David Nassimi, Sartaj Sahni "Parallel algorithms to set up the Benes permutationnetwork" */
 /* See also https://cr.yp.to/papers/controlbits-20200923.pdf */
 
+// 20240508 djb: switch to crypto_sort_int32
+// 20221230 djb: add linker line
+
+// linker define controlbitsfrompermutation
+
 #include <string.h>
 #include "crypto_declassify.h"
 #include "controlbits.h"
-#include "int32_sort.h"
+#include "crypto_sort_int32.h"
 typedef int16_t int16;
 typedef int32_t int32;
 #include "crypto_int32.h"
@@ -33,7 +38,7 @@ static void cbrecursion(unsigned char *out,long long pos,long long step,const in
   }
 
   for (x = 0;x < n;++x) A[x] = ((pi[x]^1)<<16)|pi[x^1];
-  int32_sort(A,n); /* A = (id<<16)+pibar */
+  crypto_sort_int32(A,n); /* A = (id<<16)+pibar */
 
   for (x = 0;x < n;++x) {
     int32 Ax = A[x];
@@ -44,10 +49,10 @@ static void cbrecursion(unsigned char *out,long long pos,long long step,const in
   /* B = (p<<16)+c */
 
   for (x = 0;x < n;++x) A[x] = (A[x]<<16)|x; /* A = (pibar<<16)+id */
-  int32_sort(A,n); /* A = (id<<16)+pibar^-1 */
+  crypto_sort_int32(A,n); /* A = (id<<16)+pibar^-1 */
 
   for (x = 0;x < n;++x) A[x] = (A[x]<<16)+(B[x]>>16); /* A = (pibar^(-1)<<16)+pibar */
-  int32_sort(A,n); /* A = (id<<16)+pibar^2 */
+  crypto_sort_int32(A,n); /* A = (id<<16)+pibar^2 */
 
   if (w <= 10) {
     for (x = 0;x < n;++x) B[x] = ((A[x]&0xffff)<<10)|(B[x]&0x3ff);
@@ -56,10 +61,10 @@ static void cbrecursion(unsigned char *out,long long pos,long long step,const in
       /* B = (p<<10)+c */
 
       for (x = 0;x < n;++x) A[x] = ((B[x]&~0x3ff)<<6)|x; /* A = (p<<16)+id */
-      int32_sort(A,n); /* A = (id<<16)+p^{-1} */
+      crypto_sort_int32(A,n); /* A = (id<<16)+p^{-1} */
 
       for (x = 0;x < n;++x) A[x] = (A[x]<<20)|B[x]; /* A = (p^{-1}<<20)+(p<<10)+c */
-      int32_sort(A,n); /* A = (id<<20)+(pp<<10)+cp */
+      crypto_sort_int32(A,n); /* A = (id<<20)+(pp<<10)+cp */
 
       for (x = 0;x < n;++x) {
         int32 ppcpx = A[x]&0xfffff;
@@ -75,7 +80,7 @@ static void cbrecursion(unsigned char *out,long long pos,long long step,const in
       /* B = (p<<16)+c */
 
       for (x = 0;x < n;++x) A[x] = (B[x]&~0xffff)|x;
-      int32_sort(A,n); /* A = (id<<16)+p^(-1) */
+      crypto_sort_int32(A,n); /* A = (id<<16)+p^(-1) */
 
       for (x = 0;x < n;++x) A[x] = (A[x]<<16)|(B[x]&0xffff);
       /* A = p^(-1)<<16+c */
@@ -83,12 +88,12 @@ static void cbrecursion(unsigned char *out,long long pos,long long step,const in
       if (i < w-2) {
         for (x = 0;x < n;++x) B[x] = (A[x]&~0xffff)|(B[x]>>16);
         /* B = (p^(-1)<<16)+p */
-        int32_sort(B,n); /* B = (id<<16)+p^(-2) */
+        crypto_sort_int32(B,n); /* B = (id<<16)+p^(-2) */
         for (x = 0;x < n;++x) B[x] = (B[x]<<16)|(A[x]&0xffff);
         /* B = (p^(-2)<<16)+c */
       }
   
-      int32_sort(A,n);
+      crypto_sort_int32(A,n);
       /* A = id<<16+cp */
       for (x = 0;x < n;++x) {
         int32 cpx = (B[x]&~0xffff)|(A[x]&0xffff);
@@ -99,7 +104,7 @@ static void cbrecursion(unsigned char *out,long long pos,long long step,const in
   }
 
   for (x = 0;x < n;++x) A[x] = (((int32)pi[x])<<16)+x;
-  int32_sort(A,n); /* A = (id<<16)+pi^(-1) */
+  crypto_sort_int32(A,n); /* A = (id<<16)+pi^(-1) */
 
   for (j = 0;j < n/2;++j) {
     long long x = 2*j;
@@ -115,7 +120,7 @@ static void cbrecursion(unsigned char *out,long long pos,long long step,const in
   }
   /* B = (pi^(-1)<<16)+F */
 
-  int32_sort(B,n); /* B = (id<<16)+F(pi) */
+  crypto_sort_int32(B,n); /* B = (id<<16)+F(pi) */
 
   pos += (2*w-3)*step*(n/2);
 
@@ -133,7 +138,7 @@ static void cbrecursion(unsigned char *out,long long pos,long long step,const in
   }
   /* A = (L<<16)+F(pi) */
 
-  int32_sort(A,n); /* A = (id<<16)+F(pi(L)) = (id<<16)+M */
+  crypto_sort_int32(A,n); /* A = (id<<16)+F(pi(L)) = (id<<16)+M */
 
   pos -= (2*w-2)*step*(n/2);
 

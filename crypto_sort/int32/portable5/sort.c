@@ -1,8 +1,7 @@
 #include "crypto_sort.h"
 #include "crypto_int32.h"
 #define int32 crypto_int32
-
-#include "int32_minmax.inc"
+#define int32_MINMAX(a,b) crypto_int32_minmax(&a,&b)
 
 /* assume 2 <= n <= 0x40000000 */
 static void crypto_sort_smallindices(int32 *x,int32 n)

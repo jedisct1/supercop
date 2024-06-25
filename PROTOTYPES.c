@@ -4,6 +4,7 @@ extern void crypto_encode(unsigned char *,const void *);
 extern void crypto_sort(void *,long long);
 extern int crypto_core(unsigned char *,const unsigned char *,const unsigned char *,const unsigned char *);
 extern int crypto_hashblocks(unsigned char *,const unsigned char *,unsigned long long);
+extern int crypto_xof(unsigned char *,long long,const unsigned char *,long long);
 extern int crypto_hash(unsigned char *,const unsigned char *,unsigned long long);
 extern int crypto_stream(unsigned char *,unsigned long long,const unsigned char *,const unsigned char *);
 extern int crypto_stream_xor(unsigned char *,const unsigned char *,unsigned long long,const unsigned char *,const unsigned char *);

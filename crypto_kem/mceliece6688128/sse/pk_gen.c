@@ -1,12 +1,15 @@
 /*
   This file is for public-key generation
 */
+// 20240530 djb: include vec128_gf.h
+// 20240530 djb: switch from *int*_sort to crypto_sort_int*
 
 #include "pk_gen.h"
 
+#include "vec128_gf.h"
 #include "controlbits.h"
-#include "uint64_sort.h"
-#include "int32_sort.h"
+#include "crypto_sort_int64.h"
+#include "crypto_sort_int32.h"
 #include "params.h"
 #include "util.h"
 #include "fft.h"
@@ -185,7 +188,7 @@ static void composeinv(int n, uint16_t y[n], uint16_t x[n], uint16_t pi[n])
     t[i] |= x[i];
   }
 
-  int32_sort(t,n);
+  crypto_sort_int32(t,n);
 
   for (i = 0;i < n;++i)
     y[i] = t[i] & 0xFFFF;
@@ -264,7 +267,7 @@ int pk_gen(unsigned char * pk, const unsigned char * irr, uint32_t * perm, int16
 		list[i] |= ((uint64_t) perm[i]) << 31;
 	}
 
-	uint64_sort(list, 1 << GFBITS);
+	crypto_sort_int64(list, 1 << GFBITS);
 
 	for (i = 1; i < (1 << GFBITS); i++)
 		if (uint64_is_equal_declassify(list[i-1] >> 31,list[i] >> 31))

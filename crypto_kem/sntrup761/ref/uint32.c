@@ -1,5 +1,6 @@
 #include "uint32.h"
 #include "uint64.h"
+#include "crypto_int32.h"
 
 /*
 CPU division instruction typically takes time depending on x.
@@ -46,7 +47,7 @@ void uint32_divmod_uint14(uint32 *q,uint16 *r,uint32 x,uint16 m)
   /* x <= m */
 
   x -= m; *q += 1;
-  mask = -(x>>31);
+  mask = crypto_int32_negative_mask(x);
   x += mask&(uint32)m; *q += mask;
   /* x < m */
 

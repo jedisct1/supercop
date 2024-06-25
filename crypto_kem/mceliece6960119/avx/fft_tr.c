@@ -5,8 +5,24 @@
   For the implementation strategy, see
   https://eprint.iacr.org/2017/793.pdf
 */
+// 20240508 djb: include vec{128,256}_gf.h
+// 20221230 djb: split these arrays into separate .c files
+// 20221230 djb: rename consts array as fft_consts
+// 20221230 djb: rename s array as fft_scalars_4x
+// 20221230 djb: add linker lines
 
+// linker define fft_tr
+// linker use vec128_mul_asm
+// linker use vec256_mul_asm
+// linker use vec256_ama_asm
+// linker use transpose_64x256_sp_asm
+// linker use fft_scalars_4x fft_consts
+
+#include "vec128_gf.h"
+#include "vec256_gf.h"
 #include "fft_tr.h"
+#include "fft_scalars_4x.h"
+#include "fft_consts.h"
 
 #include "transpose.h"
 
@@ -34,18 +50,13 @@ static void radix_conversions_tr(vec256 *in)
 		 vec256_set4x(0x00000000FFFFFFFF, 0x00000000FFFFFFFF, 0x00000000FFFFFFFF, 0x00000000FFFFFFFF)}
 	};
 
-	const vec256 s[6][GFBITS] = 
-	{
-#include "scalars_4x.data"
-	};
-	
 	//
 
 	for (j = 6; j >= 0; j--)
 	{
 		if (j < 6)
 		{
-			vec256_mul(in, in, s[j]); // scaling
+			vec256_mul(in, in, fft_scalars_4x[j]); // scaling
 		}
 
 		for (k = j; k <= 4; k++)
@@ -113,11 +124,6 @@ static void butterflies_tr(vec256 *out, vec256 in[][ GFBITS ])
 		vec256 V[64];
 	} buf;
 
-	const vec256 consts[ 33 ][ GFBITS ] =
-	{
-#include "consts.data"
-	};
-
 	uint64_t v[4];
 	uint64_t consts_ptr = 33;
 
@@ -145,7 +151,7 @@ static void butterflies_tr(vec256 *out, vec256 in[][ GFBITS ])
 		for (j = 0; j < 32; j += 2*s)
 		for (k = j; k < j+s; k++)
 		{
-			vec256_ama_asm(in[k], in[k+s], consts[ consts_ptr + (k-j) ]);
+			vec256_ama_asm(in[k], in[k+s], fft_consts[ consts_ptr + (k-j) ]);
 		}
 
 	}
@@ -155,7 +161,7 @@ static void butterflies_tr(vec256 *out, vec256 in[][ GFBITS ])
 		for (b = 0; b < GFBITS; b++) t0[b] = vec256_unpack_low(in[k][b], in[k+1][b]);
 		for (b = 0; b < GFBITS; b++) t1[b] = vec256_unpack_high(in[k][b], in[k+1][b]);
 
-		vec256_ama_asm(t0, t1, consts[1]);
+		vec256_ama_asm(t0, t1, fft_consts[1]);
 
 		for (b = 0; b < GFBITS; b++) in[k][b] = vec256_unpack_low(t0[b], t1[b]);
 		for (b = 0; b < GFBITS; b++) in[k+1][b] = vec256_unpack_high(t0[b], t1[b]);
@@ -163,7 +169,7 @@ static void butterflies_tr(vec256 *out, vec256 in[][ GFBITS ])
 		for (b = 0; b < GFBITS; b++) t0[b] = vec256_unpack_low_2x(in[k][b], in[k+1][b]);
 		for (b = 0; b < GFBITS; b++) t1[b] = vec256_unpack_high_2x(in[k][b], in[k+1][b]);
 
-		vec256_ama_asm(t0, t1, consts[0]);
+		vec256_ama_asm(t0, t1, fft_consts[0]);
 
 		for (b = 0; b < GFBITS; b++) in[k+0][b] = vec256_unpack_low_2x(t0[b], t1[b]);
 		for (b = 0; b < GFBITS; b++) in[k+1][b] = vec256_unpack_high_2x(t0[b], t1[b]);

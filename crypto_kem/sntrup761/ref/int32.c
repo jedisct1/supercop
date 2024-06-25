@@ -1,5 +1,6 @@
 #include "int32.h"
 #include "uint32.h"
+#include "crypto_int16.h"
 
 void int32_divmod_uint14(int32 *q,uint16 *r,int32 x,uint16 m)
 {
@@ -10,7 +11,7 @@ void int32_divmod_uint14(int32 *q,uint16 *r,int32 x,uint16 m)
   uint32_divmod_uint14(&uq,&ur,0x80000000+(uint32)x,m);
   uint32_divmod_uint14(&uq2,&ur2,0x80000000,m);
   ur -= ur2; uq -= uq2;
-  mask = -(uint32)(ur>>15);
+  mask = (int32)crypto_int16_negative_mask(ur);
   ur += mask&m; uq += mask;
   *r = ur; *q = uq;
 }

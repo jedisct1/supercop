@@ -5,11 +5,25 @@
   For the implementation strategy, see
   https://eprint.iacr.org/2017/793.pdf
 */
+// 20240508 djb: include vec{128,256}_gf.h
+// 20221230 djb: split these arrays into separate .c files
+// 20221230 djb: rename consts array as fft_consts
+// 20221230 djb: rename s array as fft_scalars_2x
+// 20221230 djb: add linker lines
+
+// linker define fft
+// linker use vec128_mul_asm
+// linker use vec256_maa_asm
+// linker use transpose_64x256_sp_asm
+// linker use fft_scalars_2x fft_consts
 
 #include "fft.h"
+#include "fft_scalars_2x.h"
+#include "fft_consts.h"
 
 #include "transpose.h"
-#include "vec256.h"
+#include "vec128_gf.h"
+#include "vec256_gf.h"
 
 #include <stdint.h>
 
@@ -35,11 +49,6 @@ static void radix_conversions(vec128 *in)
 		 vec128_set2x(0x0000FFFF00000000, 0x0000FFFF00000000)}
 	};
 
-	const vec128 s[5][GFBITS] = 
-	{
-#include "scalars_2x.data"
-	};
-	
 	//
 
 	for (j = 0; j <= 5; j++)
@@ -66,7 +75,7 @@ static void radix_conversions(vec128 *in)
 		}
 
 		if (j < 5)
-			vec128_mul(in, in, s[j]); // scaling
+			vec128_mul(in, in, fft_scalars_2x[j]); // scaling
 	}
 }
 
@@ -92,11 +101,6 @@ static void butterflies(vec256 out[][ GFBITS ], vec128 *in)
 	} buf;
 
 	uint64_t v0, v1;
-
-	const vec256 consts[ 33 ][ GFBITS ] =
-	{
-#include "consts.data"
-	};
 
 	uint64_t consts_ptr = 2;
 
@@ -201,7 +205,7 @@ static void butterflies(vec256 out[][ GFBITS ], vec128 *in)
 		for (b = 0; b < GFBITS; b++) tmp0[b] = vec256_unpack_low (out[k][b], out[k+1][b]);
 		for (b = 0; b < GFBITS; b++) tmp1[b] = vec256_unpack_high (out[k][b], out[k+1][b]); 
 
-		vec256_maa_asm(tmp0, tmp1, consts[1]);
+		vec256_maa_asm(tmp0, tmp1, fft_consts[1]);
 
 		for (b = 0; b < GFBITS; b++) out[k][b] = vec256_unpack_low (tmp0[b], tmp1[b]);
 		for (b = 0; b < GFBITS; b++) out[k+1][b] = vec256_unpack_high (tmp0[b], tmp1[b]);
@@ -214,7 +218,7 @@ static void butterflies(vec256 out[][ GFBITS ], vec128 *in)
 		for (j = 0; j < 32; j += 2*s)
 		for (k = j; k < j+s; k++)
 		{
-			vec256_maa_asm(out[k], out[k+s], consts[ consts_ptr + (k-j) ]);
+			vec256_maa_asm(out[k], out[k+s], fft_consts[ consts_ptr + (k-j) ]);
 		}
 
 		consts_ptr += (1 << i);

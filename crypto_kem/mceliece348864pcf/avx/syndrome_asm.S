@@ -1,1 +1,0 @@
-../../mceliece348864/avx/syndrome_asm.S

@@ -1,5 +1,13 @@
-#define vec_reduce_asm CRYPTO_NAMESPACE(vec_reduce_asm)
-#define _vec_reduce_asm _CRYPTO_NAMESPACE(vec_reduce_asm)
+// 20240504 djb: add note.GNU-stack
+// 20221231 djb: port hidden to macos; tnx thom wiggers
+// 20221230 djb: add linker line
+
+// linker define vec_reduce_asm
+
+#include "crypto_asm_hidden.h"
+
+#define vec_reduce_asm CRYPTO_SHARED_NAMESPACE(vec_reduce_asm)
+#define _vec_reduce_asm _CRYPTO_SHARED_NAMESPACE(vec_reduce_asm)
 
 # qhasm: int64 input_0
 
@@ -41,8 +49,8 @@
 
 # qhasm: enter vec_reduce_asm
 .p2align 5
-.hidden _vec_reduce_asm
-.hidden vec_reduce_asm
+ASM_HIDDEN _vec_reduce_asm
+ASM_HIDDEN vec_reduce_asm
 .global _vec_reduce_asm
 .global vec_reduce_asm
 _vec_reduce_asm:

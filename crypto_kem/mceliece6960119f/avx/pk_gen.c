@@ -1,16 +1,28 @@
 /*
   This file is for public-key generation
 */
+// 20240611 djb: using crypto_uint64_bottomzeros_num
+// 20240608 djb: using crypto_*_mask
+// 20240508 djb: switch to crypto_sort_int32
+// 20240508 djb: switch to crypto_sort_int64
+// 20230105 tony: use merge exchange in sort_rows(); fewer lines for minmax_rows()
+// 20221231 djb: remove unused min definition
+// 20221231 djb: more 0 initialization to clarify data flow; tnx thom wiggers
+// 20221230 djb: add linker lines
+
+// linker define pk_gen
+// linker use fft vec256_inv vec256_mul_asm
 
 #include "pk_gen.h"
 
 #include "controlbits.h"
-#include "uint64_sort.h"
-#include "int32_sort.h"
+#include "crypto_sort_int64.h"
+#include "crypto_sort_int32.h"
 #include "params.h"
 #include "util.h"
 #include "fft.h"
 #include "crypto_declassify.h"
+#include "crypto_int16.h"
 #include "crypto_uint64.h"
 
 static crypto_uint64 uint64_is_equal_declassify(uint64_t t,uint64_t u)
@@ -29,54 +41,20 @@ static crypto_uint64 uint64_is_zero_declassify(uint64_t t)
 
 #include <stdint.h>
 
-#define min(a, b) ((a < b) ? a : b)
-
 #define nBlocks_I ((PK_NROWS + 255) / 256)
 #define par_width 11
-
-/* return number of trailing zeros of in */
-static inline int ctz(uint64_t in)
-{
-	int i, b, m = 0, r = 0;
-
-	for (i = 0; i < 64; i++)
-	{
-		b = (in >> i) & 1;
-		m |= b;
-		r += (m^1) & (b^1);
-	}
-
-	return r;
-}
-
-/* return 11...1 if x = y; return 00...0 otherwise */
-static inline uint16_t same_mask(int16_t x, int16_t y)
-{
-	uint16_t mask;
-
-	mask = x ^ y;
-	mask -= 1;
-	mask >>= 15;
-	mask = -mask;
-
-	return mask;
-}
 
 /* set m to 11...1 if the i-th bit of x is 0 and the i-th bit of y is 1 */
 /* set m to 00...0 otherwise */
 static inline void extract_01_masks(uint16_t *m, uint64_t *x, uint64_t *y, int i)
 {
-	*m = (((~x[ i>>6 ]) & y[ i>>6 ]) >> (i&63)) & 1;
-	*m = -(*m);
+	*m = crypto_uint64_bitmod_mask(y[ i>>6 ] & ~x[ i>>6 ], i);
 }
 
 /* return a 128-bit vector of which each bits is set to the i-th bit of v */
 static inline vec256 extract_mask256(uint64_t v[], int i)
 {
-	uint32_t mask;
-
-	mask = (v[ i>>6 ] >> (i&63)) & 1;
-	mask = -mask;
+	uint32_t mask = crypto_uint64_bitmod_mask(v [i>>6], i);
 
 	return vec256_set1_32b(mask);
 }
@@ -122,9 +100,7 @@ static inline void minmax_rows(uint16_t *x, vec256 (*mat)[par_width], int i0, in
 	uint16_t m;
 	vec256 mm;
 
-	m = x[i1] - x[i0];
-	m >>= 15;
-	m = -m;
+	m = x[i1] - x[i0]; m >>= 15; m = -m;
 	mm = vec256_set1_16b(m);
 
 	uint16_cswap(&x[i0], &x[i1], m);
@@ -133,36 +109,27 @@ static inline void minmax_rows(uint16_t *x, vec256 (*mat)[par_width], int i0, in
 		vec256_cswap(&mat[i0][i], &mat[i1][i], mm);
 }
 
-/* merge first half of x[0],x[step],...,x[(2*n-1)*step] with second half */
-/* requires n to be a power of 2 */
-static void merge_rows(int n, int bound, uint16_t *x, vec256 (*mat)[par_width], int off, int step)
+static void sort_rows(int n, uint16_t *x, vec256 (*mat)[par_width])
 {
-	int i;
+	int t = 1;
 
-	if (n == 1) 
-	{
-		if(off + step < bound)
-			minmax_rows(x, mat, off, off + step);
-	}
-	else 
-	{
-		merge_rows(n/2, bound, x, mat, off, step * 2);
-		merge_rows(n/2, bound, x, mat, off + step, step * 2);
+	while ((1 << t)*2 < n) t++;
 
-		for (i = 1; i < 2*n-1 && off + (i+1) * step < bound; i += 2)
-			minmax_rows(x, mat, off + i*step, off + (i+1)*step);
+	for (int j = t-1; j >= 0; j--)
+	{
+		int p = 1 << j, q = 1 << (t-1), r = 0, d = p;
+
+		while (1)
+		{
+			for (int i = 0; i < n-d; i++)
+				if ((i & p) == r)
+					minmax_rows(x, mat, i, i+d);
+
+			if (q != p) { d = q - p; q = q / 2; r = p; }
+			else break;
+		}
 	}
 }
-
-/* permute the rows of mat by sorting x */
-static void sort_rows(int n, int bound, uint16_t *x, vec256 (*mat)[par_width], int off)
-{
-	if (n <= 1) return;
-	sort_rows(n/2, bound, x, mat, off);
-	sort_rows(n/2, bound, x, mat, off + n/2);
-	merge_rows(n/2, bound, x, mat, off, 1);
-}
-
 
 /* extract numbers represented in bitsliced form */
 static void de_bitslicing(uint64_t * out, const vec256 in[][GFBITS])
@@ -208,6 +175,8 @@ static void to_bitslicing_2x(vec256 out0[][GFBITS], vec256 out1[][GFBITS], const
 	int i, j, k, r;
 	uint64_t u[2][4];
 
+	for (j = 0;j < 2;++j) for (k = 0;k < 4;++k) u[j][k] = 0;
+
 	for (i = 0; i < 32; i++)
 	for (j = GFBITS-1; j >= 0; j--)
 	{
@@ -232,7 +201,7 @@ static void to_bitslicing_2x(vec256 out0[][GFBITS], vec256 out1[][GFBITS], const
 static int mov_columns(uint64_t mat[][ nBlocks_I * 4 ], int16_t * pi, uint64_t * pivots)
 {
 	int i, j, pivot_col[32];
-	uint64_t buf[32], t, d, mask, allone = -1, one = 1; 
+	uint64_t buf[32], t, d, allone = -1, one = 1; 
        
 	int row = PK_NROWS - 32;
 	int block_idx = row/64;
@@ -257,18 +226,18 @@ static int mov_columns(uint64_t mat[][ nBlocks_I * 4 ], int16_t * pi, uint64_t *
 
 		if (uint64_is_zero_declassify(t)) return -1; // return if buf is not full rank
 
-		pivot_col[i] = ctz(t);
+		pivot_col[i] = crypto_uint64_bottomzeros_num(t);
 		*pivots |= one << pivot_col[i];
 
-		for (j = i+1; j < 32; j++) { mask = (buf[i] >> pivot_col[i]) & 1; mask -= 1;    buf[i] ^= buf[j] & mask; }
-		for (j = i+1; j < 32; j++) { mask = (buf[j] >> pivot_col[i]) & 1; mask = -mask; buf[j] ^= buf[i] & mask; }
+		for (j = i+1; j < 32; j++) buf[i] ^= buf[j] & ~crypto_uint64_bitmod_mask(buf[i],pivot_col[i]);
+		for (j = i+1; j < 32; j++) buf[j] ^= buf[i] & crypto_uint64_bitmod_mask(buf[j],pivot_col[i]);
 	}
    
 	// updating permutation
   
 	for (i = 0;   i < 32; i++)
 	for (j = i+1; j < 64; j++)
-		int16_cswap(&pi[ row + i ], &pi[ row + j ], same_mask(j, pivot_col[i]));
+		int16_cswap(&pi[ row + i ], &pi[ row + j ], crypto_int16_equal_mask(j, pivot_col[i]));
    
 	// moving columns of mat according to the column indices of pivots
 
@@ -308,7 +277,7 @@ static void composeinv(int n, uint16_t y[n], uint16_t x[n], uint16_t pi[n])
     t[i] |= x[i];
   }
 
-  int32_sort(t,n);
+  crypto_sort_int32(t,n);
 
   for (i = 0;i < n;++i)
     y[i] = t[i] & 0xFFFF;
@@ -391,7 +360,7 @@ int pk_gen(unsigned char * pk, const unsigned char * irr, uint32_t * perm, int16
 		list[i] |= ((uint64_t) perm[i]) << 31;
 	}
 
-	uint64_sort(list, 1 << GFBITS);
+	crypto_sort_int64(list, 1 << GFBITS);
 
 	for (i = 1; i < (1 << GFBITS); i++)
 		if (uint64_is_equal_declassify(list[i-1] >> 31,list[i] >> 31))
@@ -485,7 +454,7 @@ int pk_gen(unsigned char * pk, const unsigned char * irr, uint32_t * perm, int16
 		for (i = 0; i < PK_NROWS; i++)
 			ind[i] = ind_inv[i];
 
-		sort_rows((1 << GFBITS)/4, PK_NROWS, ind, par.v, 0);
+		sort_rows(PK_NROWS, ind, par.v);
 
 		// apply L
 

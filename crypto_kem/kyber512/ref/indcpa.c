@@ -7,6 +7,7 @@
 #include "ntt.h"
 #include "symmetric.h"
 #include "randombytes.h"
+#include "crypto_declassify.h"
 
 /*************************************************
 * Name:        pack_pk
@@ -175,6 +176,7 @@ void gen_matrix(polyvec *a, const uint8_t seed[KYBER_SYMBYTES], int transposed)
       else
         xof_absorb(&state, seed, j, i);
 
+      crypto_declassify(&state, sizeof state);
       xof_squeezeblocks(buf, GEN_MATRIX_NBLOCKS, &state);
       buflen = GEN_MATRIX_NBLOCKS*XOF_BLOCKBYTES;
       ctr = rej_uniform(a[i].vec[j].coeffs, KYBER_N, buf, buflen);
