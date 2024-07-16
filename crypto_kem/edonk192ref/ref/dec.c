@@ -19,8 +19,6 @@ extern void gmp_import(mpz_t,const unsigned char *,unsigned long long);
 
 #include "field.h"
 
-Kfield K;
-
 
 #include "EdonK192.h"
 #include "crypto_kem.h"
@@ -101,7 +99,6 @@ static void randomOrthogonalBinMatrix(mpz_t BinMatrix[], int n, struct PoolOfRan
 
 int crypto_kem_keypair(unsigned char *pk, unsigned char *sk)
 {
-    Kfield K;
     Kelt a, b, c, d, aabb;
     Kelt randomConstant[BinarySpan];
     int i, j, ii, flag, filledRows, filledOccupied;

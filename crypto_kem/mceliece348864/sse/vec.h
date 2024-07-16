@@ -1,3 +1,4 @@
+// 20240715 djb: array lengths in vec_GF_mul prototype
 // 20240508 djb: switch to vec_mul_gf_using_64
 
 #ifndef VEC_H
@@ -39,7 +40,7 @@ static inline void vec_mul_gf_using_64(vec out[ GFBITS ], vec v[ GFBITS ], gf a)
 	vec_mul(out, v, bits);
 }
 
-void vec_GF_mul(vec [], vec [], gf []);
+void vec_GF_mul(vec [GFBITS], vec [GFBITS], gf [SYS_T]);
 
 #endif
 

@@ -1,6 +1,7 @@
 /*
   This file is for public-key generation
 */
+// 20240715 djb: more use of crypto_*_mask
 // 20240611 djb: using crypto_uint64_bottomzeros_num
 // 20240608 djb: using crypto_*_mask
 // 20240508 djb: switch to crypto_sort_int64
@@ -136,7 +137,7 @@ static int mov_columns(uint64_t mat[][ ((SYS_N + 63) / 64) ], int16_t * pi, uint
 		{
 			d  = t >> j;
 			d ^= t >> ctz_list[j];
-			d &= 1;
+			d = -crypto_uint64_bottombit_mask(d);
         
 			t ^= d << ctz_list[j];
 			t ^= d << j;
@@ -258,7 +259,8 @@ int pk_gen(unsigned char * pk, const unsigned char * irr, uint32_t * perm, int16
 				mat[ row ][ c ] ^= mat[ k ][ c ] & mask;
 		}
 
-                if ( uint64_is_zero_declassify((mat[ row ][ i ] >> j) & 1) ) // return if not systematic
+		mask = crypto_uint64_bitmod_mask(mat[ row ][ i ], j);
+                if ( uint64_is_zero_declassify(mask) ) // return if not systematic
 		{
 			return -1;
 		}

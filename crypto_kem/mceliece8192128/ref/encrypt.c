@@ -1,6 +1,7 @@
 /*
   This file is for Niederreiter encryption
 */
+// 20240715 djb: remove unused mask variable
 // 20240608 djb: switch to crypto_*int16_equal_mask
 // 20240530 djb: rename encrypt() as pke_encrypt()
 // 20240530 djb: remove #ifdef KAT ... #endif
@@ -35,7 +36,6 @@ static void gen_e(unsigned char *e)
 
 	uint16_t ind[ SYS_T ];
 	unsigned char bytes[ sizeof(ind) ];
-	unsigned char mask;	
 	unsigned char val[ SYS_T ];	
 
 	while (1)

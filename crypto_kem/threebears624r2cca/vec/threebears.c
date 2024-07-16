@@ -5,6 +5,7 @@
 #include "params.h"
 #include "ring.h"
 #include "threebears.h"
+#include "crypto_uint32.h"
 
 #define FEC_BYTES ((FEC_BITS+7)/8)
 #define ENC_BITS  (ENC_SEED_BYTES*8 + FEC_BITS)
@@ -385,7 +386,7 @@ void decapsulate(
         unsigned char cc = (rlimb0 & 0xF) | rlimb1<<4;
         wrong |= cc^lpr[i/2];
     }
-    ok &= ((int)wrong - 1) >> 8;
+    ok &= crypto_uint32_zero_mask(wrong);
     
     /* Derive the shared secret, assuming correct */
     hash_output(ctx,shared_secret,SHARED_SECRET_BYTES);

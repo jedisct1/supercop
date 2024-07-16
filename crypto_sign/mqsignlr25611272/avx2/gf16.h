@@ -2,6 +2,7 @@
 #define _GF16_H_
 
 #include <stdint.h>
+#include "crypto_uint32.h"
 
 // gf4 := gf2[x]/x^2+x+1
 static inline uint8_t gf4_mul_2(uint8_t a) {
@@ -16,7 +17,7 @@ static inline uint8_t gf4_mul_3(uint8_t a) {
 }
 
 static inline uint8_t gf4_mul(uint8_t a, uint8_t b) {
-	uint8_t r = a * (b & 1);
+	uint8_t r = a & crypto_uint32_bottombit_mask(b);
 	return r ^ (gf4_mul_2(a) * (b >> 1));
 }
 
@@ -43,8 +44,8 @@ static inline uint32_t gf4v_mul_3_u32(uint32_t a) {
 }
 
 static inline uint32_t gf4v_mul_u32(uint32_t a, uint8_t b) {
-	uint32_t bit0_b = ((uint32_t)0) - ((uint32_t)(b & 1));
-	uint32_t bit1_b = ((uint32_t)0) - ((uint32_t)((b >> 1) & 1));
+	uint32_t bit0_b = crypto_uint32_bottombit_mask(b);
+	uint32_t bit1_b = crypto_uint32_bottombit_mask(b >> 1);
 	return (a & bit0_b) ^ (bit1_b & gf4v_mul_2_u32(a));
 }
 

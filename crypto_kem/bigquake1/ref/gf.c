@@ -3,6 +3,10 @@
 #include "gf.h"
 #include "randombytes.h"
 
+int gf_extension_degree, gf_cardinality, gf_multiplicative_order;
+gfindex_t * gf_log;
+gfelt_t * gf_exp;
+
 // binary primitive polynomials of degree up to 31
 static unsigned prim_poly[MAX_EXT_DEG + 1] = {
     01,		        /* extension degree 0 (!) never used */

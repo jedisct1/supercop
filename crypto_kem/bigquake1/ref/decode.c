@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "goppa.h"
+#include "crypto_sort_int32.h"
 
 /* computes (and store in f) the polynomial f(z)=1/(z-b) mod g(z),
 	 note that g(b)f(z)=(g(z)-g(b))/(z-b) */
@@ -33,27 +34,6 @@ void poly_syndrome_patterson(poly_t f, gf_t b, poly_t g) {
 		}
 	}
 
-}
-
-int partition(int * tableau, int gauche, int droite, int pivot) {
-    int i, temp;
-    for (i = gauche; i < droite; i++) {
-        if (tableau[i] <= pivot) {
-            temp = tableau[i];
-            tableau[i] = tableau[gauche];
-            tableau[gauche] = temp;
-            ++gauche;
-        }
-	}
-    return gauche;
-}
-
-void quickSort(int * tableau, int gauche, int droite, int min, int max) {
-  if (gauche < droite - 1) {
-    int milieu = partition(tableau, gauche, droite, (max + min) / 2);
-    quickSort(tableau, gauche, milieu, min, (max + min) / 2);
-    quickSort(tableau, milieu, droite, (max + min) / 2, max);
-  }
 }
 
 poly_t goppa_keyequation_patterson(poly_t R, goppa_t gamma) {
@@ -276,7 +256,7 @@ int goppa_locate_error(poly_t sigma, int * e, goppa_t gamma) {
 	free(roots);
 
   // we want the error pattern sorted in increasing order
-	quickSort(e, 0, d, 0, gamma->length);
+	crypto_sort_int32(e,d); // XXX: assuming int is int32
   return d;
 }
 

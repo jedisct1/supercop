@@ -1,6 +1,7 @@
 /*
   This file is for public-key generation
 */
+// 20240715 djb: use crypto_uint8_bitmod_mask
 // 20240530 djb: switch from uint64_sort to crypto_sort_int64
 
 #include <stdint.h>
@@ -16,6 +17,7 @@
 #include "root.h"
 #include "util.h"
 #include "crypto_declassify.h"
+#include "crypto_uint8.h"
 #include "crypto_uint64.h"
 
 static crypto_uint64 uint64_is_equal_declassify(uint64_t t,uint64_t u)
@@ -116,16 +118,14 @@ int pk_gen(unsigned char * pk, unsigned char * sk, uint32_t * perm, int16_t * pi
 
 		for (k = row + 1; k < PK_NROWS; k++)
 		{
-			mask = mat[ row ][ i ] ^ mat[ k ][ i ];
-			mask >>= j;
-			mask &= 1;
-			mask = -mask;
+			mask = crypto_uint8_bitmod_mask(mat[ row ][ i ] ^ mat[ k ][ i ], j);
 
 			for (c = 0; c < SYS_N/8; c++)
 				mat[ row ][ c ] ^= mat[ k ][ c ] & mask;
 		}
 
-                if ( uint64_is_zero_declassify((mat[ row ][ i ] >> j) & 1) ) // return if not systematic
+                mask = crypto_uint8_bitmod_mask(mat[ row ][ i ], j);
+                if ( uint64_is_zero_declassify(mask) ) // return if not systematic
 		{
 			return -1;
 		}
@@ -134,9 +134,7 @@ int pk_gen(unsigned char * pk, unsigned char * sk, uint32_t * perm, int16_t * pi
 		{
 			if (k != row)
 			{
-				mask = mat[ k ][ i ] >> j;
-				mask &= 1;
-				mask = -mask;
+				mask = crypto_uint8_bitmod_mask(mat[ k ][ i ], j);
 
 				for (c = 0; c < SYS_N/8; c++)
 					mat[ k ][ c ] ^= mat[ row ][ c ] & mask;

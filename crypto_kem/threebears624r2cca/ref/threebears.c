@@ -5,6 +5,7 @@
 #include "params.h"
 #include "ring.h"
 #include "threebears.h"
+#include "crypto_uint32.h"
 
 #define FEC_BYTES ((FEC_BITS+7)/8)
 #define ENC_BITS  (ENC_SEED_BYTES*8 + FEC_BITS)
@@ -213,7 +214,7 @@ void decapsulate(
     for (unsigned i=0; i<CAPSULE_BYTES; i++) {
         ret |= capsule[i] ^ capsule2[i];
     }
-    unsigned ok = ((int)ret - 1) >> 8;
+    crypto_uint32 ok = crypto_uint32_zero_mask(ret);
 
     /* Calculate PRF key */
     uint8_t sep = 0xFF;

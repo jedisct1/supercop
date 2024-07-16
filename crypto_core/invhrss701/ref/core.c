@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include "crypto_core.h"
+#include "crypto_uint16.h"
 
 #define NTRU_N 701
 #define NTRU_N_PADDED 704
@@ -139,7 +140,7 @@ int crypto_core(unsigned char *rbytes,const unsigned char *abytes,const unsigned
       temp_r->coeffs[j] = r.coeffs[(j + (1 << i)) % NTRU_N];
     }
     cmov((unsigned char *)&(r.coeffs),
-         (unsigned char *)&(temp_r->coeffs), sizeof(uint16_t) * NTRU_N, k & 1);
+         (unsigned char *)&(temp_r->coeffs), sizeof(uint16_t) * NTRU_N, -crypto_uint16_bottombit_mask(k));
     k >>= 1;
   }
 

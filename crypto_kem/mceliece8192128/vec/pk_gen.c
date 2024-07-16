@@ -1,6 +1,7 @@
 /*
   This file is for public-key generation
 */
+// 20240715 djb: more use of crypto_*_mask
 // 20240508 djb: switch to crypto_sort_int64
 // 20221231 djb: more 0 initialization to clarify data flow; tnx thom wiggers
 // 20221230 djb: add linker lines
@@ -178,9 +179,7 @@ int pk_gen(unsigned char * pk, const unsigned char * irr, uint32_t * perm, int16
 
 		for (k = row + 1; k < PK_NROWS; k++)
 		{
-			mask = mat[ row ][ i ] >> j;
-			mask &= 1;
-			mask -= 1;
+			mask = ~crypto_uint64_bitmod_mask(mat[ row ][ i ], j);
 
 			for (c = 0; c < PK_NROWS / 64; c++)
 			{
@@ -189,16 +188,15 @@ int pk_gen(unsigned char * pk, const unsigned char * irr, uint32_t * perm, int16
 			}
 		}
 
-                if ( uint64_is_zero_declassify((mat[ row ][ i ] >> j) & 1) ) // return if not systematic
+		mask = crypto_uint64_bitmod_mask(mat[ row ][ i ], j);
+                if ( uint64_is_zero_declassify(mask) ) // return if not systematic
 		{
 			return -1;
 		}
 
 		for (k = row+1; k < PK_NROWS; k++)
 		{
-			mask = mat[ k ][ i ] >> j;
-			mask &= 1;
-			mask = -mask;
+			mask = crypto_uint64_bitmod_mask(mat[ k ][ i ], j);
 
 			for (c = 0; c < PK_NROWS / 64; c++)
 			{
@@ -218,9 +216,7 @@ int pk_gen(unsigned char * pk, const unsigned char * irr, uint32_t * perm, int16
 		for (k = 0; k < row; k++)
 		{
 			{
-				mask = mat[ k ][ i ] >> j;
-				mask &= 1;
-				mask = -mask;
+				mask = crypto_uint64_bitmod_mask(mat[ k ][ i ], j);
 
 				for (c = 0; c < PK_NROWS / 64; c++)
 					ops[ k ][ c ] ^= ops[ row ][ c ] & mask;
@@ -254,9 +250,7 @@ int pk_gen(unsigned char * pk, const unsigned char * irr, uint32_t * perm, int16
 		for (c = 0; c < PK_NROWS / 64; c++)
 		for (d = 0; d < 64; d++)
 		{
-			mask = ops[ row ][ c ] >> d;
-			mask &= 1;
-			mask = -mask;
+			mask = crypto_uint64_bitmod_mask(ops[ row ][ c ], d);
 
 			for (k = 0; k < PK_NCOLS/64; k++)
 				one_row[ k ] ^= mat[ c*64 + d ][ k + PK_NROWS/64 ] & mask;

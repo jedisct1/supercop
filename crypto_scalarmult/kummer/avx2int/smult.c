@@ -383,7 +383,7 @@ int crypto_scalarmult(unsigned char *q, const unsigned char *n, const unsigned c
   j=2;
   for(i=31;i>=0;i--) {
     for(;j>=0;j--) {
-      bit = (n[i]>>j) & 1;
+      bit = -crypto_int32_bitmod_mask(n[i],j);
       swap = bit ^ prevbit;
       prevbit = bit;
 

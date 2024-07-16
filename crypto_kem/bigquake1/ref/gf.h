@@ -8,9 +8,9 @@
 
 typedef uint32_t gfelt_t;
 typedef uint32_t gfindex_t;
-int gf_extension_degree, gf_cardinality, gf_multiplicative_order;
-gfindex_t * gf_log;
-gfelt_t * gf_exp;
+extern int gf_extension_degree, gf_cardinality, gf_multiplicative_order;
+extern gfindex_t * gf_log;
+extern gfelt_t * gf_exp;
 
 typedef gfelt_t gf_t[1];
 

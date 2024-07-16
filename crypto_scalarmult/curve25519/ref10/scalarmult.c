@@ -1,5 +1,6 @@
 #include "crypto_scalarmult.h"
 #include "fe.h"
+#include "crypto_int8.h"
 
 int crypto_scalarmult(unsigned char *q,
   const unsigned char *n,
@@ -30,8 +31,7 @@ int crypto_scalarmult(unsigned char *q,
 
   swap = 0;
   for (pos = 254;pos >= 0;--pos) {
-    b = e[pos / 8] >> (pos & 7);
-    b &= 1;
+    b = -crypto_int8_bitmod_mask(e[pos / 8],pos);
     swap ^= b;
     fe_cswap(x2,x3,swap);
     fe_cswap(z2,z3,swap);

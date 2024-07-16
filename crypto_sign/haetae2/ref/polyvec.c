@@ -6,6 +6,7 @@
 #include "params.h"
 #include "poly.h"
 #include "polyvec.h"
+#include "crypto_int32.h"
 
 /**************************************************************/
 /************ Vectors of polynomials of length K **************/
@@ -453,18 +454,6 @@ void polyvecm_ntt(polyvecm *x) {
     }
 }
 
-static inline void minmax(int32_t *x, int32_t *y) // taken from djbsort
-{
-    int32_t a = *x;
-    int32_t b = *y;
-    int32_t ab = b ^ a;
-    int32_t c = b - a;
-    c ^= ab & (c ^ b);
-    c >>= 31;
-    c &= ab;
-    *x = a ^ c;
-    *y = b ^ c;
-}
 static inline void minmaxmask(int32_t *x, int32_t *y,
                               int32_t *mask) // adapted from djbsort
 {
@@ -475,14 +464,12 @@ static inline void minmaxmask(int32_t *x, int32_t *y,
     // mask = -1, swap not performed -> mask = -1
     int32_t a = *x;
     int32_t b = *y;
-    int32_t ab = (b ^ a) & *mask;
-    int32_t c = b - a;
-    c ^= ab & (c ^ b);
-    c >>= 31;
-    *mask &= ~c;
-    c &= ab;
-    *x = a ^ c;
-    *y = b ^ c;
+    int32_t oldmask = *mask;
+    int32_t swap = oldmask & crypto_int32_smaller_mask(b,a);
+    int32_t ab = swap & (a ^ b);
+    *mask = oldmask ^ swap;
+    *x = a ^ ab;
+    *y = b ^ ab;
 }
 
 int64_t polyvecmk_sqsing_value(const polyvecm *s1, const polyveck *s2) {
@@ -524,7 +511,7 @@ int64_t polyvecmk_sqsing_value(const polyvecm *s1, const polyveck *s2) {
     min = bestm[0];
     for (size_t i = 1; i < N / TAU + 1; i++) {
         int32_t tmp = bestm[i];
-        minmax(&min, &tmp);
+        crypto_int32_minmax(&min, &tmp);
     }
     // multiply all but the minimum by N mod TAU
     for (size_t i = 0; i < N / TAU + 1; i++) {

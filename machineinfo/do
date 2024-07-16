@@ -70,6 +70,8 @@ cargo --version || :
 
 echo "=== `date` === valgrind --version"
 valgrind --version || :
+echo "=== `date` === valgrind --help-dyn-options"
+valgrind --help-dyn-options || :
 
 # MacOS
 echo "=== `date` === sw_vers"

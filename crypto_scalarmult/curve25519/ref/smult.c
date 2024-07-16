@@ -4,9 +4,12 @@ Matthew Dempsky
 Public domain.
 Derived from public domain code by D. J. Bernstein.
 20140216 tweak: Mask top bit of point input.
+20240714 djb: remove unsigned int i in mainloop
+20240714 djb: use crypto_uint32_bitmod_mask
 */
 
 #include "crypto_scalarmult.h"
+#include "crypto_uint32.h"
 
 static void add(unsigned int out[32],const unsigned int a[32],const unsigned int b[32])
 {
@@ -55,7 +58,7 @@ static void freeze(unsigned int a[32])
 
   for (j = 0;j < 32;++j) aorig[j] = a[j];
   add(a,a,minusp);
-  negative = -((a[31] >> 7) & 1);
+  negative = crypto_uint32_bitmod_mask(a[31],7);
   for (j = 0;j < 32;++j) a[j] ^= negative & (aorig[j] ^ a[j]);
 }
 
@@ -138,7 +141,6 @@ static void mainloop(unsigned int work[64],const unsigned char e[32])
   unsigned int s[32];
   unsigned int t[32];
   unsigned int u[32];
-  unsigned int i;
   unsigned int j;
   unsigned int b;
   int pos;
@@ -151,8 +153,7 @@ static void mainloop(unsigned int work[64],const unsigned char e[32])
   for (j = 1;j < 64;++j) xzm[j] = 0;
 
   for (pos = 254;pos >= 0;--pos) {
-    b = e[pos / 8] >> (pos & 7);
-    b &= 1;
+    b = -crypto_uint32_bitmod_mask(e[pos / 8],pos & 7);
     select(xzmb,xzm1b,xzm,xzm1,b);
     add(a0,xzmb,xzmb + 32);
     sub(a0 + 32,xzmb,xzmb + 32);
