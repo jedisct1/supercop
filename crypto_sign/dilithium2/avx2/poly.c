@@ -1,3 +1,4 @@
+// 20240806 djb: some automated conversion to cryptoint
 #include <stdint.h>
 #include <immintrin.h>
 #include <string.h>
@@ -9,6 +10,7 @@
 #include "rejsample.h"
 #include "consts.h"
 #include "symmetric.h"
+#include "crypto_int64.h"
 #ifndef DILITHIUM_USE_AES
 #include "fips202x4.h"
 #endif
@@ -716,7 +718,7 @@ void poly_challenge(poly * restrict c, const uint8_t seed[SEEDBYTES]) {
     } while(b > i);
 
     c->coeffs[i] = c->coeffs[b];
-    c->coeffs[b] = 1 - 2*(signs & 1);
+    c->coeffs[b] = 1 - 2*(crypto_int64_bottombit_01(signs));
     signs >>= 1;
   }
 }

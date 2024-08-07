@@ -22,8 +22,8 @@ int crypto_core(unsigned char *outbytes,const unsigned char *inbytes,const unsig
     Fq x = f[i];
     x *= 3; /* (-3q+3)/2 ... (3q-3)/2 */
     x -= (q+1)/2; /* -2q+1 ... q-2 */
-    x += q&(x>>15); /* -q+1 ... q-1 */
-    x += q&(x>>15); /* 0 ... q-1 */
+    x += q&crypto_int16_negative_mask(x); /* -q+1 ... q-1 */
+    x += q&crypto_int16_negative_mask(x); /* 0 ... q-1 */
     x -= (q-1)/2; /* -(q-1)/2 ... (q-1)/2 */
     f[i] = x;
   }

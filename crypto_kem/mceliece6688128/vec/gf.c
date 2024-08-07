@@ -1,14 +1,14 @@
 /*
   this file is for functions for field arithmetic
 */
+// 20240805 djb: more cryptoint usage
 // 20221231 djb: const for GF_mul
 // 20221230 djb: add linker line
 
 // linker define gf_iszero gf_mul gf_inv gf_frac GF_mul
 
 #include "gf.h"
-
-#include <stdio.h>
+#include "crypto_int64.h"
 
 /* field multiplication */
 gf gf_mul(gf in0, gf in1)
@@ -23,7 +23,7 @@ gf gf_mul(gf in0, gf in1)
 	t0 = in0;
 	t1 = in1;
 
-	tmp = t0 * (t1 & 1);
+	tmp = t0 * (crypto_int64_bottombit_01(t1));
 
 	for (i = 1; i < GFBITS; i++)
 		tmp ^= (t0 * (t1 & (1 << i)));

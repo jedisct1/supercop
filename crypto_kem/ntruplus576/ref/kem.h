@@ -1,1 +1,1 @@
-../../ntruplus1152/opt/kem.h
+../../ntruplus1152/ref/kem.h

@@ -1,3 +1,4 @@
+// 20240806 djb: some automated conversion to cryptoint
 /// @file gf16_u64.h
 /// @brief Inlined functions for implementing GF arithmetics for uint64 arch.
 ///
@@ -9,6 +10,7 @@
 
 
 #include "gf16.h"
+#include "crypto_int64.h"
 
 
 
@@ -37,8 +39,8 @@ static inline uint64_t gf4v_mul_3_u64( uint64_t a )
 
 static inline uint64_t gf4v_mul_u64( uint64_t a , unsigned char b )
 {
-	uint64_t bit0_b = ((uint64_t)0)-((uint64_t)(b&1));
-	uint64_t bit1_b = ((uint64_t)0)-((uint64_t)((b>>1)&1));
+	uint64_t bit0_b = ((uint64_t)0)-((uint64_t)(crypto_int64_bottombit_01(b)));
+	uint64_t bit1_b = ((uint64_t)0)-((uint64_t)(crypto_int64_bitmod_01(b,1)));
 	return (a&bit0_b)^(bit1_b&gf4v_mul_2_u64(a));
 }
 

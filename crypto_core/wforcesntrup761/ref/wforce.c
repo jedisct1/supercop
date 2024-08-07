@@ -1,9 +1,11 @@
+// 20240806 djb: some automated conversion to cryptoint
 /* 20240607 djb: switching over to crypto_int16_nonzero_mask */
 
 #include "crypto_core.h"
 
 #include "crypto_int8.h"
 #include "crypto_int16.h"
+#include "crypto_int64.h"
 #define int8 crypto_int8
 #define int16 crypto_int16
 
@@ -17,7 +19,7 @@ static int Weightw_mask(const small *r)
   int weight = 0;
   int i;
 
-  for (i = 0;i < p;++i) weight += r[i]&1;
+  for (i = 0;i < p;++i) weight += crypto_int64_bottombit_01(r[i]);
   return crypto_int16_nonzero_mask(weight-w);
 }
 

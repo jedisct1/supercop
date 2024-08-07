@@ -1,3 +1,4 @@
+// 20240806 djb: some automated conversion to cryptoint
 #include "polyfix.h"
 #include "decompose.h"
 #include "math.h"
@@ -6,6 +7,7 @@
 #include "reduce.h"
 #include "symmetric.h"
 #include <stdint.h>
+#include "crypto_int64.h"
 #include "crypto_uint64.h"
 #include "crypto_declassify.h"
 
@@ -335,8 +337,8 @@ for (j = 0; j < N; j++)
       __m256 vec;
       int32_t arr[8];
     } signs_avx = {.arr = {
-      -(int32_t)(signs[i]&1), -(int32_t)((signs[i]>>1)&1),  -(int32_t)((signs[i]>>2)&1),  -(int32_t)((signs[i]>>3)&1), 
-        -(int32_t)((signs[i]>>4)&1),  -(int32_t)((signs[i]>>5)&1),  -(int32_t)((signs[i]>>6)&1),  -(int32_t)((signs[i]>>7)&1)
+      -(int32_t)(crypto_int64_bottombit_01(signs[i])), -(int32_t)(crypto_int64_bitmod_01(signs[i],1)),  -(int32_t)(crypto_int64_bitmod_01(signs[i],2)),  -(int32_t)(crypto_int64_bitmod_01(signs[i],3)), 
+        -(int32_t)(crypto_int64_bitmod_01(signs[i],4)),  -(int32_t)(crypto_int64_bitmod_01(signs[i],5)),  -(int32_t)(crypto_int64_bitmod_01(signs[i],6)),  -(int32_t)(crypto_int64_bitmod_01(signs[i],7))
     }};
     __mr13(tmp, smp, isv, &samples[i*8 + 0]);
     tmp[6] = tmp[0];
@@ -427,7 +429,7 @@ uint16_t polyfixveclk_sample_hyperball(polyfixvecl *y1, polyfixveck *y2, uint8_t
         // divide sqsum by 2 and approximate inverse square root
         sqsum.limb48[0] += 1; // rounding
         sqsum.limb48[0] >>= 1;
-        sqsum.limb48[0] += (sqsum.limb48[1] & 1) << 47;
+        sqsum.limb48[0] += (crypto_int64_bottombit_01(sqsum.limb48[1])) << 47;
         sqsum.limb48[1] >>= 1;
         sqsum.limb48[1] += sqsum.limb48[0] >> 48;
         sqsum.limb48[0] &= (1ULL << 48) - 1;

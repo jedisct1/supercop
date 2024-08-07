@@ -1,1 +1,1 @@
-../../ntruplus1152/opt/sha2.h
+../../ntruplus1152/ref/sha2.h

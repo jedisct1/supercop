@@ -1,3 +1,4 @@
+// 20240806 djb: some automated conversion to cryptoint
 #include <stdlib.h> /* for abort() in case of OpenSSL failures */
 #include "params.h"
 
@@ -16,7 +17,9 @@
 #include "crypto_sort_uint32.h"
 #include "Encode.h"
 #include "Decode.h"
+#include "crypto_int8.h"
 #include "crypto_int16.h"
+#include "crypto_int64.h"
 
 /* ----- arithmetic mod 3 */
 
@@ -86,7 +89,7 @@ static int Weightw_mask(small *r)
   int weight = 0;
   int i;
 
-  for (i = 0;i < p;++i) weight += r[i]&1;
+  for (i = 0;i < p;++i) weight += crypto_int64_bottombit_01(r[i]);
   return crypto_int16_nonzero_mask(weight-w);
 }
 
@@ -704,7 +707,7 @@ static void Inputs_random(Inputs r)
   int i;
 
   randombytes(s,sizeof s);
-  for (i = 0;i < I;++i) r[i] = 1&(s[i>>3]>>(i&7));
+  for (i = 0;i < I;++i) r[i] = crypto_int8_bitmod_01(s[i>>3],i);
 }
 
 /* pk,sk = ZKeyGen() */
@@ -831,7 +834,7 @@ static int Ciphertexts_diff_mask(const unsigned char *c,const unsigned char *c2)
   int len = Ciphertexts_bytes+Confirm_bytes;
 
   while (len-- > 0) differentbits |= (*c++)^(*c2++);
-  return (1&((differentbits-1)>>8))-1;
+  return (crypto_int64_bitmod_01((differentbits-1),8))-1;
 }
 
 /* k = Decap(c,sk) */

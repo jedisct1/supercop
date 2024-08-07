@@ -1,1 +1,0 @@
-../../ntruplus1152/opt/symmetric.c

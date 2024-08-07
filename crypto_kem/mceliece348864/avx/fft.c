@@ -5,6 +5,7 @@
   For the implementation strategy, see
   https://eprint.iacr.org/2017/793.pdf
 */
+// 20240805 djb: more use of cryptoint
 // 20240508 djb: include vec256_gf.h
 // 20221230 djb: split these arrays into separate .c files
 // 20221230 djb: rename powers array as fft_powers
@@ -24,6 +25,7 @@
 
 #include "vec256_gf.h"
 #include "vec.h"
+#include "crypto_int64.h"
 
 /* input: in, polynomial in bitsliced form */
 /* output: in, result of applying the radix conversions on in */
@@ -85,17 +87,17 @@ static void butterflies(vec256 out[][ GFBITS ], uint64_t *in)
 	for (j = 0; j < 64; j+=8)
 	for (i = 0; i < GFBITS; i++)
 	{
-			t0 = (in[i] >> reversal[j+0]) & 1; t0 = -t0;
-			t1 = (in[i] >> reversal[j+2]) & 1; t1 = -t1;
-			t2 = (in[i] >> reversal[j+4]) & 1; t2 = -t2;
-			t3 = (in[i] >> reversal[j+6]) & 1; t3 = -t3;
+			t0 = crypto_int64_bitmod_mask(in[i], reversal[j+0]);
+			t1 = crypto_int64_bitmod_mask(in[i], reversal[j+2]);
+			t2 = crypto_int64_bitmod_mask(in[i], reversal[j+4]);
+			t3 = crypto_int64_bitmod_mask(in[i], reversal[j+6]);
 
 			out[j/4+0][i] = vec256_set4x(t0, t1, t2, t3);
 
-			t0 = (in[i] >> reversal[j+1]) & 1; t0 = -t0;
-			t1 = (in[i] >> reversal[j+3]) & 1; t1 = -t1;
-			t2 = (in[i] >> reversal[j+5]) & 1; t2 = -t2;
-			t3 = (in[i] >> reversal[j+7]) & 1; t3 = -t3;
+			t0 = crypto_int64_bitmod_mask(in[i], reversal[j+1]);
+			t1 = crypto_int64_bitmod_mask(in[i], reversal[j+3]);
+			t2 = crypto_int64_bitmod_mask(in[i], reversal[j+5]);
+			t3 = crypto_int64_bitmod_mask(in[i], reversal[j+7]);
 
 			out[j/4+1][i] = vec256_set4x(t0, t1, t2, t3);
 	}

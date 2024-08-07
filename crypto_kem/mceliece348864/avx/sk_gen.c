@@ -1,6 +1,7 @@
 /*
   This file is for secret-key generation
 */
+// 20240805 djb: more use of cryptoint
 // 20240508 djb: switch to vec_mul_gf_using_64
 // 20221230 djb: add linker lines
 
@@ -21,6 +22,7 @@
 #include "gf.h"
 #include "crypto_declassify.h"
 #include "crypto_uint16.h"
+#include "crypto_int64.h"
 
 static inline crypto_uint16 gf_is_zero_declassify(gf t)
 {
@@ -41,7 +43,7 @@ static inline gf extract_gf(vec v[GFBITS], int idx)
 	for (i = GFBITS-1; i >= 0; i--)
 	{
 		ret <<= 1;
-		ret |= (v[i] >> idx) & 1;
+		ret |= crypto_int64_bitmod_01(v[i], idx);
 	}
 
 	return ret;
@@ -57,7 +59,7 @@ static inline vec extract_bit(vec v[GFBITS], int idx)
 	for (i = GFBITS-1; i >= 0; i--)
 		ret |= v[i];
 
-	return (ret >> idx) & 1;
+	return crypto_int64_bitmod_01(ret, idx);
 }
 
 /* input: f, element in GF((2^m)^t) */
@@ -81,7 +83,7 @@ int genpoly_gen(gf *out, gf *f)
 	for (i = SYS_T-1; i >= 0; i--)
 	{
 		v[j] <<= 1;
-		v[j] |= (f[i] >> j) & 1;
+		v[j] |= crypto_int64_bitmod_01(f[i], j);
 	}
 	
 	for (i = 0; i < GFBITS; i++)

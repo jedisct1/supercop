@@ -1,0 +1,2 @@
+20240716 titan0 amd64 20240807 crypto_kem sntrup4591761/constbranchindex timecop_pass crypto_kem/sntrup4591761/cavx gcc_-march=native_-mtune=native_-O3_-fomit-frame-pointer_-fwrapv_-fPIC_-fPIE 1 0
+20240716 titan0 amd64 20240807 crypto_kem sntrup4591761/constbranchindex timecop_output crypto_kem/sntrup4591761/cavx gcc_-march=native_-mtune=native_-O3_-fomit-frame-pointer_-fwrapv_-fPIC_-fPIE 2a13514be590076fee6e8ab84cc1a5479374f81c862994e025e9d41afb34c702 73376148 2286476736 3500000000 crypto_kem/sntrup4591761/cavx

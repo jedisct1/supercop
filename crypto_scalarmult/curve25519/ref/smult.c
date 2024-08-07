@@ -1,3 +1,4 @@
+// 20240806 djb: some automated conversion to cryptoint
 /*
 version 20081011
 Matthew Dempsky
@@ -10,6 +11,7 @@ Derived from public domain code by D. J. Bernstein.
 
 #include "crypto_scalarmult.h"
 #include "crypto_uint32.h"
+#include "crypto_int64.h"
 
 static void add(unsigned int out[32],const unsigned int a[32],const unsigned int b[32])
 {
@@ -101,7 +103,7 @@ static void square(unsigned int out[32],const unsigned int a[32])
     for (j = 0;j < i - j;++j) u += a[j] * a[i - j];
     for (j = i + 1;j < i + 32 - j;++j) u += 38 * a[j] * a[i + 32 - j];
     u *= 2;
-    if ((i & 1) == 0) {
+    if ((crypto_int64_bottombit_01(i)) == 0) {
       u += a[i / 2] * a[i / 2];
       u += 38 * a[i / 2 + 16] * a[i / 2 + 16];
     }

@@ -6,13 +6,7 @@
 
 #define _MQRR
 
-#if defined(_MQRR_REF)||defined(_MQRR)||defined(_MQSR)
 #define PUBMAP_QUAD
-#elif defined(_MQRR_CIRCA)
-#define PUBMAP_QUAD_LIN
-#else
-#define PUBMAP_QUAD_LIN_CONST
-#endif
 
 #define _MQS256_148_96
 
@@ -67,7 +61,7 @@ error: has to define a parameter.
 #define _PUB_M_BYTE  (_PUB_M)
 #define _HALF_O (_O/2)
 
-#define TERMS_QUAD_POLY(N) (((N)*(N+1)/2)+N+1)
+#define TERMS_QUAD_POLY(N) ((N)*(N+1)/2)
 #define IDX_XSQ(i,n_var) (((2*(n_var)+1-i)*(i)/2)+n_var)
 /// xi <= xj
 #define IDX_QTERMS_REVLEX(xi,xj) ((xj)*(xj+1)/2 + (xi))

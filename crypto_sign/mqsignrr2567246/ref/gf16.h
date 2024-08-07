@@ -1,1 +1,1 @@
-../../mqsignlr25611272/avx2/gf16.h
+../../mqsignlr25611272/ref/gf16.h

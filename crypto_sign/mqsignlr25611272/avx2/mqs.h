@@ -14,7 +14,7 @@ extern  "C" {
 
 #define mqlr_pubmap mpkc_pub_map_gf256
 
-int mqlr_sign(uint8_t* signature, const sk_mqlr* sk, const uint8_t* sk_seed, const uint8_t* m, const uint32_t mlen, const uint8_t* ss);
+int mqlr_sign(uint8_t* signature, const sk_mqlr* sk, const uint8_t* m, const uint32_t mlen);
 
 int mqlr_verify(const uint8_t* m, const uint32_t mlen, const uint8_t* signature, const uint8_t* pk);
 

@@ -10,17 +10,7 @@
 /// xi <= xj
 #define IDX_QTERMS_REVLEX(xi,xj) ((xj)*(xj+1)/2 + (xi))
 
-#ifdef _BLAS_AVX2_
-
-#include "mpkc_avx2.h"
-
-#define mpkc_pub_map_gf256       mpkc_pub_map_gf256_avx2
-
-#else
-
 #define mpkc_pub_map_gf256       _mpkc_pub_map_gf256
-
-#endif
 
 #ifdef  __cplusplus
 extern  "C" {
@@ -42,15 +32,6 @@ void _mpkc_pub_map_gf256( uint8_t * z , const uint8_t * pk_mat , const uint8_t *
 		}
 		gf256v_madd(r, tmp, w[i], _PUB_M_BYTE);
 	}
-
-	const uint8_t* linear_mat = pk_mat + (_PUB_M)* N_TRIANGLE_TERMS(_PUB_N);
-	for (unsigned i = 0; i < n_var; i++) {
-		gf256v_madd(r, linear_mat, w[i], _PUB_M_BYTE);
-		linear_mat += _PUB_M_BYTE;
-	}
-
-	const uint8_t* constant = pk_mat + (_PUB_M)* N_TRIANGLE_TERMS(_PUB_N) + _PUB_M * _PUB_N;
-	gf256v_add(r, constant, _PUB_M_BYTE);
 
 	memcpy(z, r, _PUB_M_BYTE);
 }

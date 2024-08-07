@@ -5,6 +5,7 @@
   For the implementation strategy, see
   https://eprint.iacr.org/2017/793.pdf
 */
+// 20240805 djb: more use of cryptoint
 // 20240503 djb: use crypto_*_mask functions
 // 20221230 djb: add linker lines
 
@@ -19,7 +20,7 @@
 #include "crypto_uint64.h"
 
 #include <stdint.h>
-#include <assert.h>
+#include "crypto_int64.h"
 
 static inline void vec_cmov(vec * out, vec * in, uint16_t mask)
 {
@@ -130,7 +131,7 @@ static inline gf vec_reduce(vec *in)
 		tmp ^= tmp >> 1;
 	
 		ret <<= 1;
-		ret |= tmp & 1;
+		ret |= crypto_int64_bottombit_01(tmp);
 	}
 
 	return ret;
@@ -143,7 +144,7 @@ static void update(vec *in, const gf e)
 
 	for (i = 0; i < GFBITS; i++)
 	{
-		tmp = (e >> i) & 1;
+		tmp = crypto_int64_bitmod_01(e, i);
 
 		in[i] = (in[i] >> 1) | (tmp << 63);
 	}
@@ -209,8 +210,8 @@ void bm(vec *out, vec in[][ GFBITS ])
 
 		for (i = 0; i < GFBITS; i++) 
 		{
-			d_vec[i] = vec_setbits((d >> i) & 1);
-			b_vec[i] = vec_setbits((b >> i) & 1);
+			d_vec[i] = vec_setbits(crypto_int64_bitmod_01(d, i));
+			b_vec[i] = vec_setbits(crypto_int64_bitmod_01(b, i));
 		}
 		
 		vec_mul(B_tmp, d_vec, B);
@@ -231,7 +232,7 @@ void bm(vec *out, vec in[][ GFBITS ])
 	c0 = gf_inv(c0);
 
 	for (i = 0; i < GFBITS; i++) 
-		out[i] = vec_setbits((c0 >> i) & 1);
+		out[i] = vec_setbits(crypto_int64_bitmod_01(c0, i));
 
 	vec_mul(out, out, C);
 }

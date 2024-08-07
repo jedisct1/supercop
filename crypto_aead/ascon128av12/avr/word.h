@@ -1,3 +1,4 @@
+// 20240806 djb: some automated conversion to cryptoint
 #ifndef WORD_H_
 #define WORD_H_
 
@@ -6,6 +7,7 @@
 
 #include "bendian.h"
 #include "forceinline.h"
+#include "crypto_int64.h"
 
 typedef union {
   uint64_t x;
@@ -56,7 +58,7 @@ forceinline int NOTZERO(uint64_t a, uint64_t b) {
   result |= result >> 32;
   result |= result >> 16;
   result |= result >> 8;
-  return ((((int)(result & 0xff) - 1) >> 8) & 1) - 1;
+  return (crypto_int64_bitmod_01(((int)(result & 0xff) - 1),8)) - 1;
 }
 
 forceinline uint64_t PAD(int i) { return 0x80ull << (56 - 8 * i); }

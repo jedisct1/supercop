@@ -1,3 +1,4 @@
+// 20240806 djb: some automated conversion to cryptoint
 #include "sign.h"
 #include "packing.h"
 #include "params.h"
@@ -29,7 +30,7 @@
 
 int crypto_sign_keypair(unsigned char *pk, unsigned char *sk) {
     unsigned char seedbuf[2 * SEEDBYTES + CRHBYTES] = {0};
-    uint16_t nonce = 0;
+    uint16_t counter = 0;
     const unsigned char *rhoprime, *sigma, *key;
     polyvecm A[K], s1, s1hat;
     polyveck b, s2;
@@ -66,8 +67,8 @@ int crypto_sign_keypair(unsigned char *pk, unsigned char *sk) {
 
 reject:
     // Sample secret vectors s1 and s2
-    polyvecmk_uniform_eta(&s1, &s2, sigma, nonce);
-    nonce += M + K;
+    polyvecmk_uniform_eta(&s1, &s2, sigma, counter);
+    counter += M + K;
 
     // b = a + A0 * s1 + s2 mod q
     s1hat = s1;
@@ -95,8 +96,8 @@ reject:
      **********************************************/
 reject:
     // Sample secret vectors s1 and s2
-    polyvecmk_uniform_eta(&s1, &s2, sigma, nonce);
-    nonce += M + K;
+    polyvecmk_uniform_eta(&s1, &s2, sigma, counter);
+    counter += M + K;
     int64_t squared_singular_value = polyvecmk_sqsing_value(&s1, &s2);
     rejectmask = crypto_int64_smaller_mask(GAMMA * GAMMA * N,squared_singular_value);
     crypto_declassify(&rejectmask,sizeof rejectmask);
@@ -141,7 +142,7 @@ int crypto_sign_signature(unsigned char *sig, unsigned long long *siglen, const 
 
     unsigned char buf[POLYVECK_HIGHBITS_PACKEDBYTES + POLYC_PACKEDBYTES] = {0};
     unsigned char seedbuf[CRHBYTES] = {0}, key[SEEDBYTES] = {0};
-    unsigned char mu[SEEDBYTES] = {0};
+    unsigned char mu[CRHBYTES] = {0};
     unsigned char b = 0;                  // one bit
     uint16_t counter = 0;
     uint64_t reject1, reject2;
@@ -165,8 +166,8 @@ int crypto_sign_signature(unsigned char *sig, unsigned long long *siglen, const 
     unpack_sk(A1, &s1, &s2, key, sk);
 
     xof256_absorbe_twice(&state, sk, crypto_PUBLICKEYBYTES, m, mlen);
-    xof256_squeeze(mu, SEEDBYTES, &state);
-    xof256_absorbe_twice(&state, key, SEEDBYTES, mu, SEEDBYTES);
+    xof256_squeeze(mu, CRHBYTES, &state);
+    xof256_absorbe_twice(&state, key, SEEDBYTES, mu, CRHBYTES);
     xof256_squeeze(seedbuf, CRHBYTES, &state);
 
     polyvecm_ntt(&s1);
@@ -221,8 +222,8 @@ reject:
     polyveck_invntt_tomont(&cs2);
 
     // z = y + (-1)^b cs = z1 + z2
-    polyvecl_cneg(&cs1, b & 1);
-    polyveck_cneg(&cs2, b & 1);
+    polyvecl_cneg(&cs1, crypto_int64_bottombit_01(b));
+    polyveck_cneg(&cs2, crypto_int64_bottombit_01(b));
     polyfixvecl_add(&z1, &y1, &cs1);
     polyfixveck_add(&z2, &y2, &cs2);
 

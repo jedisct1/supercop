@@ -1,3 +1,4 @@
+// 20240806 djb: some automated conversion to cryptoint
 /// @file gf16.h
 /// @brief Library for arithmetics in GF(16) and GF(256)
 ///
@@ -7,6 +8,7 @@
 
 #include <stdint.h>
 #include "crypto_uint32.h"
+#include "crypto_int64.h"
 
 // gf4 := gf2[x]/x^2+x+1
 static inline uint8_t gf4_mul_2(uint8_t a) {
@@ -80,7 +82,7 @@ static inline uint8_t gf16_is_nonzero(uint8_t a) {
     unsigned a4 = a & 0xf;
     unsigned r = ((unsigned) 0) - a4;
     r >>= 4;
-    return r & 1;
+    return crypto_int64_bottombit_01(r);
 }
 
 // gf16 := gf4[y]/y^2+y+x
@@ -212,7 +214,7 @@ static inline uint8_t gf256_is_nonzero(uint8_t a) {
     unsigned a8 = a;
     unsigned r = ((unsigned) 0) - a8;
     r >>= 8;
-    return r & 1;
+    return crypto_int64_bottombit_01(r);
 }
 
 // gf256 := gf16[X]/X^2+X+xy

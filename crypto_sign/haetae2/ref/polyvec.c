@@ -454,23 +454,7 @@ void polyvecm_ntt(polyvecm *x) {
     }
 }
 
-static inline void minmaxmask(int32_t *x, int32_t *y,
-                              int32_t *mask) // adapted from djbsort
-{
-    // If mask is -1, we perform the operation, else we do basically nothing.
-    // mask truth table:
-    // mask = 0 -> mask = 0, no swap is performed
-    // mask = -1, swap performed -> mask = 0
-    // mask = -1, swap not performed -> mask = -1
-    int32_t a = *x;
-    int32_t b = *y;
-    int32_t oldmask = *mask;
-    int32_t swap = oldmask & crypto_int32_smaller_mask(b,a);
-    int32_t ab = swap & (a ^ b);
-    *mask = oldmask ^ swap;
-    *x = a ^ ab;
-    *y = b ^ ab;
-}
+#define minmax crypto_int32_minmax
 
 int64_t polyvecmk_sqsing_value(const polyvecm *s1, const polyveck *s2) {
     int32_t res = 0;
@@ -478,22 +462,21 @@ int64_t polyvecmk_sqsing_value(const polyvecm *s1, const polyveck *s2) {
     int32_t sum[N] = {0}, bestm[N / TAU + 1] = {0}, min = 0;
 
     for (size_t i = 0; i < M; ++i) {
-        fft_bitrev(input, &s1->vec[i]);
+        fft_init_and_bitrev(input, &s1->vec[i]);
         fft(input);
-
         // cumulative sum
         for (size_t j = 0; j < N; j++) {
-            sum[j] += complex_fp_sqabs(input[2 * j + 1]);
+            sum[j] += complex_fp_sqabs(input[j]);
         }
     }
 
     for (size_t i = 0; i < K; ++i) {
-        fft_bitrev(input, &s2->vec[i]);
+        fft_init_and_bitrev(input, &s2->vec[i]);
         fft(input);
 
         // cumulative sum
         for (size_t j = 0; j < N; j++) {
-            sum[j] += complex_fp_sqabs(input[2 * j + 1]);
+            sum[j] += complex_fp_sqabs(input[j]);
         }
     }
 
@@ -502,16 +485,15 @@ int64_t polyvecmk_sqsing_value(const polyvecm *s1, const polyveck *s2) {
         bestm[i] = sum[i];
     }
     for (size_t i = N / TAU + 1; i < N; i++) {
-        int32_t mask = -1;
         for (size_t j = 0; j < N / TAU + 1; j++) {
-            minmaxmask(&sum[i], &bestm[j], &mask);
+            minmax(&sum[i], &bestm[j]);
         }
     }
     // find minimum in bestm
     min = bestm[0];
     for (size_t i = 1; i < N / TAU + 1; i++) {
         int32_t tmp = bestm[i];
-        crypto_int32_minmax(&min, &tmp);
+        minmax(&min, &tmp);
     }
     // multiply all but the minimum by N mod TAU
     for (size_t i = 0; i < N / TAU + 1; i++) {

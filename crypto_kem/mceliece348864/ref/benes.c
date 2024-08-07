@@ -1,3 +1,4 @@
+// 20240806 djb: some automated conversion to cryptoint
 /*
   This file is for Benes network related functions
 
@@ -9,6 +10,8 @@
 #include "transpose.h"
 #include "params.h"
 #include "benes.h"
+#include "crypto_int8.h"
+#include "crypto_int64.h"
 
 /* one layer of the benes network */
 static void layer(uint64_t * data, uint64_t * bits, int lgs)
@@ -126,7 +129,7 @@ void support_gen(gf * s, const unsigned char *c)
 		a = bitrev((gf) i);
 
 		for (j = 0; j < GFBITS; j++)
-			L[j][ i/8 ] |= ((a >> j) & 1) << (i%8);
+			L[j][ i/8 ] |= (crypto_int64_bitmod_01(a,j)) << (i%8);
 	}
 			
 	for (j = 0; j < GFBITS; j++)
@@ -138,7 +141,7 @@ void support_gen(gf * s, const unsigned char *c)
 		for (j = GFBITS-1; j >= 0; j--)
 		{
 			s[i] <<= 1;
-			s[i] |= (L[j][i/8] >> (i%8)) & 1;
+			s[i] |= crypto_int8_bitmod_01(L[j][i/8],i);
 		}
 	}
 }

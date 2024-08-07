@@ -8,6 +8,7 @@
 #include "params.h"
 #include "poly.h"
 #include "polyvec.h"
+#include "crypto_int32.h"
 
 /**************************************************************/
 /************ Vectors of polynomials of length K **************/
@@ -631,71 +632,44 @@ void polyvecm_ntt(polyvecm *x) {
     }
 }
 
-static inline void minmax(int32_t *x, int32_t *y) // taken from djbsort
-{
-    int32_t a = *x;
-    int32_t b = *y;
-    int32_t ab = b ^ a;
-    int32_t c = b - a;
-    c ^= ab & (c ^ b);
-    c >>= 31;
-    c &= ab;
-    *x = a ^ c;
-    *y = b ^ c;
-}
-static inline void minmaxmask(int32_t *x, int32_t *y,
-                              int32_t *mask) // adapted from djbsort
-{
-    // If mask is -1, we perform the operation, else we do basically nothing.
-    // mask truth table:
-    // mask = 0 -> mask = 0, no swap is performed
-    // mask = -1, swap performed -> mask = 0
-    // mask = -1, swap not performed -> mask = -1
-    int32_t a = *x;
-    int32_t b = *y;
-    int32_t ab = (b ^ a) & *mask;
-    int32_t c = b - a;
-    c ^= ab & (c ^ b);
-    c >>= 31;
-    *mask &= ~c;
-    c &= ab;
-    *x = a ^ c;
-    *y = b ^ c;
-}
+#define minmax crypto_int32_minmax
 
 int64_t polyvecmk_sqsing_value(const polyvecm *s1, const polyveck *s2) {
     int32_t res = 0;
-    complex_fp32_16 input[FFT_N] = {0};
-    int32_t sum[N] = {0}, bestm[N / TAU + 1] = {0}, min = 0;
+    poly_complex_fp32_16 input = {0};
+    int32_t bestm[N / TAU + 1] = {0}, min = 0;
+    union {
+        __m256i vec[N/8];
+        int32_t coeffs[N];
+    } sum = {.coeffs={0}};
 
     for (size_t i = 0; i < M; ++i) {
-        fft_bitrev(input, &s1->vec[i]);
-        fft(input);
+        fft_init_and_bitrev(&input, &s1->vec[i]);
+        fft(&input);
 
         // cumulative sum
-        for (size_t j = 0; j < N; j++) {
-            sum[j] += complex_fp_sqabs(input[2 * j + 1]);
+        for (size_t j = 0; j < N/8; j++) {
+            complex_fp_sqabs_add(&sum.vec[j], &input.real.vec[j], &input.imag.vec[j]);
         }
     }
 
     for (size_t i = 0; i < K; ++i) {
-        fft_bitrev(input, &s2->vec[i]);
-        fft(input);
+        fft_init_and_bitrev(&input, &s2->vec[i]);
+        fft(&input);
 
         // cumulative sum
-        for (size_t j = 0; j < N; j++) {
-            sum[j] += complex_fp_sqabs(input[2 * j + 1]);
+        for (size_t j = 0; j < N/8; j++) {
+            complex_fp_sqabs_add(&sum.vec[j], &input.real.vec[j], &input.imag.vec[j]);
         }
     }
 
     // compute max m
     for (size_t i = 0; i < N / TAU + 1; ++i) {
-        bestm[i] = sum[i];
+        bestm[i] = sum.coeffs[i];
     }
     for (size_t i = N / TAU + 1; i < N; i++) {
-        int32_t mask = -1;
         for (size_t j = 0; j < N / TAU + 1; j++) {
-            minmaxmask(&sum[i], &bestm[j], &mask);
+            minmax(&sum.coeffs[i], &bestm[j]);
         }
     }
     // find minimum in bestm
@@ -716,6 +690,5 @@ int64_t polyvecmk_sqsing_value(const polyvecm *s1, const polyveck *s2) {
         bestm[i] *= fac;
         res += bestm[i];
     }
-
     return (res + (1 << 5)) >> 6; // return rounded, squared value
 }

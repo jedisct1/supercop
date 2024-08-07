@@ -1,3 +1,5 @@
+// 20240806 djb: some automated conversion to cryptoint
+#include "crypto_int64.h"
 /*
  *  This file is part of the optimized implementation of the Picnic signature scheme.
  *  See the accompanying documentation for complete details.
@@ -21,7 +23,7 @@ lowmc_partial_round_t const* round = LOWMC_INSTANCE.rounds;
     for (unsigned int k = 0; k < reduced_shares; ++k) {
       const word nl = CONST_BLOCK(nl_part[k], i >> 3)->w64[(i & 0x7) >> 1];
       BLOCK(y[k], 0)->w64[(LOWMC_N) / (sizeof(word) * 8) - 1] ^=
-        (i & 1) ? (nl & WORD_C(0xFFFFFFFF00000000)) : (nl << 32);
+        (crypto_int64_bottombit_01(i)) ? (nl & WORD_C(0xFFFFFFFF00000000)) : (nl << 32);
     }
     MPC_LOOP_CONST(MUL_Z, x, y, round->z_matrix, reduced_shares);
 
@@ -44,7 +46,7 @@ lowmc_partial_round_t const* round = LOWMC_INSTANCE.rounds;
   for (unsigned int k = 0; k < reduced_shares; ++k) {
     const word nl = CONST_BLOCK(nl_part[k], i >> 3)->w64[(i & 0x7) >> 1];
     BLOCK(y[k], 0)->w64[(LOWMC_N) / (sizeof(word) * 8) - 1] ^=
-      (i & 1) ? (nl & WORD_C(0xFFFFFFFF00000000)) : (nl << 32);
+      (crypto_int64_bottombit_01(i)) ? (nl & WORD_C(0xFFFFFFFF00000000)) : (nl << 32);
   }
   MPC_LOOP_CONST(MUL, x, y, LOWMC_INSTANCE.zr_matrix, reduced_shares);
 #if defined(RECOVER_FROM_STATE)

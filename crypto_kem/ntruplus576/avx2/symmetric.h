@@ -1,1 +1,1 @@
-../../ntruplus1152/opt/symmetric.h
+../../ntruplus1152/ref/symmetric.h

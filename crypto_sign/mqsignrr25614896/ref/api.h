@@ -1,1 +1,1 @@
-../../mqsignrr25611272/ref/api.h
+../../mqsignlr25611272/ref/api.h

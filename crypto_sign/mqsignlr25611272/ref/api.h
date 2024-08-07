@@ -17,13 +17,12 @@ extern  "C" {
 #endif
 
 int
-seeded_sign_keypair(unsigned char *pk, unsigned char *sk, unsigned char *sk_seed);
+crypto_sign_keypair(unsigned char *pk, unsigned char *sk);
 
 int
-seeded_sign(unsigned char *sm, unsigned long long *smlen, 
+crypto_sign(unsigned char *sm, unsigned long long *smlen, 
             const unsigned char *m, unsigned long long mlen,
-            const unsigned char *sk, const uint8_t* sk_seed,
-            const uint8_t *ss);
+            const unsigned char *sk);
 
 int
 crypto_sign_open(unsigned char *m, unsigned long long *mlen,
@@ -34,4 +33,4 @@ crypto_sign_open(unsigned char *m, unsigned long long *mlen,
 }
 #endif
 
-#endif 
+#endif

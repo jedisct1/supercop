@@ -1,5 +1,7 @@
+// 20240806 djb: some automated conversion to cryptoint
 #include "poly_r2_inv.h"
 #include "poly.h"
+#include "crypto_int64.h"
 
 // TODO this costs 1764 cycles.. (implementing as S3_to_bytes results in 2108)
 // This can be implemented nicely in assembly using pdep / pext functions
@@ -11,7 +13,7 @@ void poly_R2_tobytes(unsigned char *out, const poly *a)
       out[i*8+k] = 0;
       for (j = 0; j < 8; j++) {
         if ((i*8+k)*8 + j < NTRU_N) {
-          out[i*8+k] |= (a->coeffs[(i*8+k)*8 + j] & 1) << j;
+          out[i*8+k] |= (crypto_int64_bottombit_01(a->coeffs[(i*8+k)*8 + j])) << j;
         }
       }
     }
@@ -25,7 +27,7 @@ void poly_R2_frombytes(poly *a, const unsigned char *in)
     for (k = 0; k < 8; k++) {
       for (j = 0; j < 8; j++) {
         if ((i*8+k)*8 + j < NTRU_N) {
-          a->coeffs[(i*8+k)*8 + j] = (in[i*8+k] >> j) & 1;
+          a->coeffs[(i*8+k)*8 + j] = crypto_int64_bitmod_01(in[i*8+k],j);
         }
       }
     }

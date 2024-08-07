@@ -18,7 +18,7 @@
 #define RNG_BAD_OUTBUF  -2
 #define RNG_BAD_REQ_LEN -3
 
-//#define _SUPERCOP_
+//#define SUPERCOP
 
 
 typedef struct {
@@ -58,7 +58,7 @@ randombytes_init(unsigned char *entropy_input,
                  unsigned char *personalization_string,
                  int security_strength);
 
-#if defined(_SUPERCOP_)
+#if defined(SUPERCOP)
 #include "randombytes.h"
 #else
 int

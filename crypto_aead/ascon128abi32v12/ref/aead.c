@@ -1,9 +1,11 @@
+// 20240806 djb: some automated conversion to cryptoint
 #include "api.h"
 #include "ascon.h"
 #include "crypto_aead.h"
 #include "permutations.h"
 #include "printstate.h"
 #include "word.h"
+#include "crypto_int64.h"
 
 int crypto_aead_encrypt(unsigned char* c, unsigned long long* clen,
                         const unsigned char* m, unsigned long long mlen,
@@ -213,7 +215,7 @@ int crypto_aead_decrypt(unsigned char* m, unsigned long long* mlen,
   int i;
   int result = 0;
   for (i = 0; i < CRYPTO_ABYTES; ++i) result |= c[i] ^ t[i];
-  result = (((result - 1) >> 8) & 1) - 1;
+  result = (crypto_int64_bitmod_01((result - 1),8)) - 1;
 
   return result;
 }

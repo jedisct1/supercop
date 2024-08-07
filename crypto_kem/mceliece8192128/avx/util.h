@@ -1,6 +1,7 @@
 /*
   This file is for loading/storing data in a little-endian fashion
 */
+// 20240805 djb: more use of cryptoint
 // 20240508 djb: include vec128_gf.h
 
 #ifndef UTIL_H
@@ -9,6 +10,7 @@
 #include "vec128_gf.h"
 
 #include <stdint.h>
+#include "crypto_int64.h"
 
 static inline void store_gf(unsigned char *dest, uint16_t a)
 {
@@ -54,8 +56,8 @@ static inline void irr_load(vec128 * out, const unsigned char * in)
 		{
 			v0 <<= 1;
 			v1 <<= 1;
-			v0 |= (irr[j] >> i) & 1;
-			v1 |= (irr[j+64] >> i) & 1;
+			v0 |= crypto_int64_bitmod_01(irr[j], i);
+			v1 |= crypto_int64_bitmod_01(irr[j+64], i);
 		}
 
 		out[i] = vec128_set2x(v0, v1);

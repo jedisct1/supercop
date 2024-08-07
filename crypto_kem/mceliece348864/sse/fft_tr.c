@@ -1,3 +1,4 @@
+// 20240806 djb: some automated conversion to cryptoint
 /*
   This file is for transpose of the Gao-Mateer FFT
   Functions with names ending with _tr are (roughly) the transpose of the corresponding functions in fft.c
@@ -13,6 +14,7 @@
 #include "vec128_gf.h"
 #include "vec128.h"
 #include "vec.h"
+#include "crypto_int64.h"
 
 #include <stdint.h>
 
@@ -226,13 +228,13 @@ static void butterflies_tr(vec128 out[ GFBITS ], vec128 in[][ GFBITS ])
 
 	//
 
-	for (j = 0; j < GFBITS; j++) { t[j] = (beta[0] >> j) & 1; t[j] = -t[j]; }
+	for (j = 0; j < GFBITS; j++) { t[j] = crypto_int64_bitmod_01(beta[0],j); t[j] = -t[j]; }
 
 	vec_mul(out64[1], pre[0], t);
 
 	for (i = 1; i < 6; i++)
 	{
-		for (j = 0; j < GFBITS; j++) { t[j] = (beta[i] >> j) & 1; t[j] = -t[j]; }
+		for (j = 0; j < GFBITS; j++) { t[j] = crypto_int64_bitmod_01(beta[i],j); t[j] = -t[j]; }
 
 		vec_mul(t, pre[i], t);
 		vec_add(out64[1], out64[1], t);

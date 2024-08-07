@@ -1,3 +1,4 @@
+// 20240806 djb: some automated conversion to cryptoint
 #define update_asm CRYPTO_NAMESPACE(update_asm)
 #define _update_asm _CRYPTO_NAMESPACE(update_asm)
 #define vec_reduce_asm CRYPTO_NAMESPACE(vec_reduce_asm)
@@ -16,6 +17,7 @@
 
 #include "vec128_gf.h"
 #include "gf.h"
+#include "crypto_int64.h"
 #include "crypto_uint64.h"
 
 extern gf vec_reduce_asm(vec128 *);
@@ -168,8 +170,8 @@ void bm(vec128 *out, vec128 in[][ GFBITS ])
 
 		for (i = 0; i < GFBITS; i++) 
 		{
-			dd[i] = vec128_setbits((d >> i) & 1);
-			bb[i] = vec128_setbits((b >> i) & 1);
+			dd[i] = vec128_setbits(crypto_int64_bitmod_01(d,i));
+			bb[i] = vec128_setbits(crypto_int64_bitmod_01(b,i));
 		}
 		
 		vec128_mul(B_tmp, dd, B);
@@ -189,7 +191,7 @@ void bm(vec128 *out, vec128 in[][ GFBITS ])
 	c0 = gf_inv(c0);
 
 	for (i = 0; i < GFBITS; i++) 
-		out[i] = vec128_setbits((c0 >> i) & 1);
+		out[i] = vec128_setbits(crypto_int64_bitmod_01(c0,i));
 
 	vec128_mul(out, out, C);
 }

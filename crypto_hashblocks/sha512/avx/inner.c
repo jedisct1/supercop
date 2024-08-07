@@ -76,9 +76,9 @@ int inner(unsigned char *statebytes,const unsigned char *in,unsigned int inlen,c
   ALIGNED uint64 w[20];
   ALIGNED uint64 wc[16]; /* w[i]+constants[i] */
   uint64 r0,r1,r2,r3,r4,r5,r6,r7;
-  __m128i W0,W1,W2,W3,W4,W5,W6,W7,W8,W9,W10,W11,W12,W13,W14,W15;
-  __m256i X0,X1,X2,X3,X4,X5,X6,X7,X8,X9,X10,X11,X12,X13,X14,X15;
-  __m256i D0,D2,D4,D6,D8,D10,D12,D14;
+  __m128i W0,W2,W4,W6,W8,W10,W12,W14;
+  __m256i X0,X1,X4,X5,X8,X9,X12,X13;
+  __m256i D0,D4,D8,D12;
   int i;
 
   state[0] = r0 = load_bigendian(statebytes);

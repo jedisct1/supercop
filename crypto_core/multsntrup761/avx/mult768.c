@@ -1,5 +1,6 @@
 #include "ntt.h"
 #include <immintrin.h>
+#include "crypto_int8.h"
 
 typedef int8_t int8;
 typedef int16_t int16;
@@ -275,7 +276,7 @@ int crypto_core(unsigned char *outbytes,const unsigned char *inbytes,const unsig
   }
   for (i = 0;i < p;++i) {
     int8 gi = kbytes[i];
-    int8 gi0 = gi&1;
+    int8 gi0 = -crypto_int8_bottombit_mask(gi);
     g[i] = gi0-(gi&(gi0<<1));
   }
 

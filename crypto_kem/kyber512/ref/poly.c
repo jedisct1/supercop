@@ -1,3 +1,4 @@
+// 20240806 djb: some automated conversion to cryptoint
 #include <stdint.h>
 #include "params.h"
 #include "poly.h"
@@ -5,6 +6,7 @@
 #include "reduce.h"
 #include "cbd.h"
 #include "symmetric.h"
+#include "crypto_int64.h"
 
 /*************************************************
 * Name:        poly_compress
@@ -172,7 +174,7 @@ void poly_frommsg(poly *r, const uint8_t msg[KYBER_INDCPA_MSGBYTES])
 
   for(i=0;i<KYBER_N/8;i++) {
     for(j=0;j<8;j++) {
-      mask = -(int16_t)((msg[i] >> j)&1);
+      mask = -(int16_t)(crypto_int64_bitmod_01(msg[i],j));
       r->coeffs[8*i+j] = mask & ((KYBER_Q+1)/2);
     }
   }

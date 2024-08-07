@@ -1,3 +1,4 @@
+// 20240806 djb: some automated conversion to cryptoint
 /**
  * prvhash42s.h version 2.31
  *
@@ -35,6 +36,7 @@
 
 #include "prvhash42core.h"
 #include "prvhash42ec.h"
+#include "crypto_int64.h"
 
 #define PRVHASH42S_PAR 4 // PRVHASH parallelism.
 #define PRVHASH42S_LEN 32 // Intermediate block's length, in bytes.
@@ -164,7 +166,7 @@ inline void prvhash42s_update( PRVHASH42S_CTX* ctx, const uint8_t* Msg,
 		return;
 	}
 
-	ctx -> fb = (uint8_t) ( 0 - (( ~Msg[ MsgLen - 1 ] >> 7 ) & 1 ));
+	ctx -> fb = (uint8_t) ( 0 - (crypto_int64_bitmod_01( ~Msg[ MsgLen - 1 ],7 )));
 
 	const uint32_t* const HashEnd =
 		(uint32_t*) ( ctx -> Hash + ctx -> HashLen );

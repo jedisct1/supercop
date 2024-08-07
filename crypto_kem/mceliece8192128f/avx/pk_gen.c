@@ -1,6 +1,7 @@
 /*
   This file is for public-key generation
 */
+// 20240805 djb: more cryptoint usage
 // 20240611 djb: using crypto_uint64_bottomzeros_num
 // 20240608 djb: using crypto_*_mask
 // 20240508 djb: switch to crypto_sort_int32
@@ -24,6 +25,8 @@
 #include "crypto_declassify.h"
 #include "crypto_int16.h"
 #include "crypto_uint64.h"
+#include "crypto_uint16.h"
+#include "crypto_int64.h"
 
 static crypto_uint64 uint64_is_equal_declassify(uint64_t t,uint64_t u)
 {
@@ -92,15 +95,15 @@ static inline void vec256_cswap(vec256 *x, vec256 *y, vec256 m)
 	*y ^= d;
 }
 
-/* swap   x[i0] and   x[i1]  if x[i1] > x[i0] */
-/* swap mat[i0] and mat[i1]  if x[i1] > x[i0] */
+/* swap   x[i0] and   x[i1]  if x[i1] < x[i0] */
+/* swap mat[i0] and mat[i1]  if x[i1] < x[i0] */
 static inline void minmax_rows(uint16_t *x, vec256 (*mat)[par_width], int i0, int i1)
 {
 	int i;
 	uint16_t m;
 	vec256 mm;
 
-	m = x[i1] - x[i0]; m >>= 15; m = -m;
+	m = crypto_uint16_smaller_mask(x[i1], x[i0]);
 	mm = vec256_set1_16b(m);
 
 	uint16_cswap(&x[i0], &x[i1], m);
@@ -146,25 +149,25 @@ static void de_bitslicing(uint64_t * out, const vec256 in[][GFBITS])
 		for (r = 0; r < 64; r++)
 		{
 			out[i*256 + 0*64 + r] <<= 1;
-			out[i*256 + 0*64 + r] |= (u >> r) & 1;
+			out[i*256 + 0*64 + r] |= crypto_int64_bitmod_01(u, r);
 		}
 		u = vec256_extract(in[i][j], 1);
 		for (r = 0; r < 64; r++)
 		{
 			out[i*256 + 1*64 + r] <<= 1;
-			out[i*256 + 1*64 + r] |= (u >> r) & 1;
+			out[i*256 + 1*64 + r] |= crypto_int64_bitmod_01(u, r);
 		}
 		u = vec256_extract(in[i][j], 2);
 		for (r = 0; r < 64; r++)
 		{
 			out[i*256 + 2*64 + r] <<= 1;
-			out[i*256 + 2*64 + r] |= (u >> r) & 1;
+			out[i*256 + 2*64 + r] |= crypto_int64_bitmod_01(u, r);
 		}
 		u = vec256_extract(in[i][j], 3);
 		for (r = 0; r < 64; r++)
 		{
 			out[i*256 + 3*64 + r] <<= 1;
-			out[i*256 + 3*64 + r] |= (u >> r) & 1;
+			out[i*256 + 3*64 + r] |= crypto_int64_bitmod_01(u, r);
 		}
 	}
 }
@@ -184,10 +187,10 @@ static void to_bitslicing_2x(vec256 out0[][GFBITS], vec256 out1[][GFBITS], const
 		for (r = 63; r >= 0; r--)
 		{
 			u[0][k] <<= 1;
-			u[0][k] |= (in[i*256 + k*64 + r] >> (GFBITS-1-j)) & 1;
+			u[0][k] |= crypto_int64_bitmod_01(in[i*256 + k*64 + r], GFBITS-1-j);
 
 			u[1][k] <<= 1;
-			u[1][k] |= (in[i*256 + k*64 + r] >> (j + GFBITS)) & 1;
+			u[1][k] |= crypto_int64_bitmod_01(in[i*256 + k*64 + r], j + GFBITS);
 		}
     
 		out0[i][j] = vec256_set4x(u[0][0], u[0][1], u[0][2], u[0][3]);
@@ -249,7 +252,7 @@ static int mov_columns(uint64_t mat[][ nBlocks_I*4 ], int16_t * pi, uint64_t * p
 		{
 			d  = t >> j;
 			d ^= t >> pivot_col[j];
-			d &= 1;
+			d = crypto_uint64_bottombit_01(d);
         
 			t ^= d << pivot_col[j];
 			t ^= d << j;
@@ -407,7 +410,7 @@ int pk_gen(unsigned char * pk, const unsigned char * irr, uint32_t * perm, int16
 				vec256_cswap(&mat.v[ row ][ c ], &mat.v[ k ][ c ], mm);
 		}
 
-                if ( uint64_is_zero_declassify((mat.w[ row ][ i ] >> j) & 1) ) // return if not systematic
+                if ( uint64_is_zero_declassify(crypto_int64_bitmod_01(mat.w[ row ][ i ], j)) ) // return if not systematic
 		{
 			return -1;
 		}

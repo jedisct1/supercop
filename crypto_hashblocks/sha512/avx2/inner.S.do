@@ -2,8 +2,8 @@
 
 cpp \
 | qhasm-amd64avx \
-| sed 's/\<inner\>/CRYPTO_NAMESPACE(inner)/' \
-| sed 's/\<_inner\>/_CRYPTO_NAMESPACE(inner)/' \
+| sed 's/\<inner\>/CRYPTO_SHARED_NAMESPACE(inner)/' \
+| sed 's/\<_inner\>/_CRYPTO_SHARED_NAMESPACE(inner)/' \
 | sed 's/^\.p2align 5/.p2align 7/' \
 | awk '{
   found = 0

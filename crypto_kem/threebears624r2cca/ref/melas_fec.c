@@ -1,12 +1,14 @@
+// 20240806 djb: some automated conversion to cryptoint
 #include "namespace.h"
 /* Melas forward error correction, reference code (as implemented in the paper) */
 #include "melas_fec.h"
+#include "crypto_int64.h"
 typedef uint32_t fec_gf_t;
 static const fec_gf_t Q = 0x211;
 
 /* Return s/2^n mod R */
 static fec_gf_t step(unsigned n, fec_gf_t R, fec_gf_t s) {
-    for (; n; n--) s = (s^((s&1)*R))>>1;
+    for (; n; n--) s = (s^((crypto_int64_bottombit_01(s))*R))>>1;
     return s;
 }
 
@@ -35,7 +37,7 @@ void melas_fec_set(
 static fec_gf_t mul(fec_gf_t a, fec_gf_t b) {
     fec_gf_t r = 0;
     for (unsigned i=0; i<9; i++) {
-        r ^= ((b>>(8-i))&1) * a;
+        r ^= (crypto_int64_bitmod_01(b,(8-i))) * a;
         a = step(1,Q,a);
     }
     return r;
@@ -45,7 +47,7 @@ static fec_gf_t mul(fec_gf_t a, fec_gf_t b) {
 static fec_gf_t reverse18(fec_gf_t x) {
     fec_gf_t ret = 0;
     for (unsigned i=0; i<18; i++) {
-        ret ^= ((x>>i)&1)<<(17-i);
+        ret ^= (crypto_int64_bitmod_01(x,i))<<(17-i);
     }
     return ret;
 }
@@ -69,7 +71,7 @@ void melas_fec_correct (
     
     /* Solve using the half trace */
     const uint8_t table[9] = {36,10,43,215,52,11,116,244,0};
-    for (i=0,htr=0; i<9; i++) htr ^= ((r>>i)&1)*table[i];
+    for (i=0,htr=0; i<9; i++) htr ^= (crypto_int64_bitmod_01(r,i))*table[i];
     fec_gf_t e0 = mul(a,htr), e1 = e0^a;
 
     /* Correct the errors using the locators */

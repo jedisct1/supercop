@@ -1,6 +1,7 @@
 /*
   This file is for loading/storing data in a little-endian fashion
 */
+// 20240805 djb: more use of cryptoint
 // 20240508 djb: remove unused bitrev
 
 #ifndef UTIL_H
@@ -9,6 +10,7 @@
 #include "gf.h"
 
 #include <stdint.h>
+#include "crypto_int64.h"
 
 static inline void store_i(unsigned char *out, uint64_t in, int i)
 {
@@ -64,7 +66,7 @@ static inline void irr_load(uint64_t * out, const unsigned char * in)
 	for (j = 0; j < GFBITS; j++) 
 	{
 		out[j] <<= 1;
-		out[j] |= (irr[i] >> j) & 1;
+		out[j] |= crypto_int64_bitmod_01(irr[i], j);
 	}
 }
 

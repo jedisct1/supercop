@@ -1,7 +1,9 @@
+// 20240806 djb: some automated conversion to cryptoint
 #include "api.h"
 #include "ascon.h"
 #include "permutations.h"
 #include "printstate.h"
+#include "crypto_int64.h"
 
 void ascon_initaead(ascon_state_t* s, const mask_key_uint32_t* k,
                     const mask_npub_uint32_t* n) {
@@ -187,5 +189,5 @@ int ascon_iszero(ascon_state_t* s) {
   result ^= s->x[4].s[0].w[0] ^ s->x[4].s[0].w[1];
   result |= result >> 16;
   result |= result >> 8;
-  return ((((int)(result & 0xff) - 1) >> 8) & 1) - 1;
+  return (crypto_int64_bitmod_01(((int)(result & 0xff) - 1),8)) - 1;
 }

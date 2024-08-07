@@ -1,6 +1,8 @@
+// 20240806 djb: some automated conversion to cryptoint
 /* Based on supercop-20200702/crypto_core/invhrss701/simpler/core.c */
 
 #include "poly.h"
+#include "crypto_int64.h"
 
 /* return -1 if x<0 and y<0; otherwise return 0 */
 static inline int16_t both_negative_mask(int16_t x,int16_t y)
@@ -19,7 +21,7 @@ void poly_R2_inv(poly *r, const poly *a)
   w.coeffs[0] = 1;
 
   for (i = 0;i < NTRU_N;++i) f.coeffs[i] = 1;
-  for (i = 0;i < NTRU_N-1;++i) g.coeffs[NTRU_N-2-i] = (a->coeffs[i] ^ a->coeffs[NTRU_N-1]) & 1;
+  for (i = 0;i < NTRU_N-1;++i) g.coeffs[NTRU_N-2-i] = crypto_int64_bottombit_01(a->coeffs[i] ^ a->coeffs[NTRU_N-1]);
   g.coeffs[NTRU_N-1] = 0;
 
   delta = 1;

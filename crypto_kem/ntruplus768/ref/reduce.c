@@ -1,1 +1,1 @@
-../../ntruplus1152/opt/reduce.c
+../../ntruplus1152/ref/reduce.c

@@ -1,7 +1,7 @@
 #ifndef inner_h
 #define inner_h
 
-#define inner CRYPTO_NAMESPACE(inner)
+#define inner CRYPTO_SHARED_NAMESPACE(inner)
 
 #include "crypto_uint64.h"
 

@@ -57,10 +57,10 @@ CRYPTO_NAMESPACE(enc):
 	vmovdqa	(%rsp), %xmm2
 	leaq	32(%rbx), %rdi
 	vmovdqa	16(%rsp), %xmm3
-	vmovups	%xmm0, 0(%rbp)
-	vmovups	%xmm1, 16(%rbp)
-	vmovups	%xmm2, (%rbx)
-	vmovups	%xmm3, 16(%rbx)
+	vmovdqu	%xmm0, 0(%rbp)
+	vmovdqu	%xmm1, 16(%rbp)
+	vmovdqu	%xmm2, (%rbx)
+	vmovdqu	%xmm3, 16(%rbx)
 	call	CRYPTO_NAMESPACE(rq_roundencode)@PLT
 	addq	$4096, %rsp
 	.cfi_def_cfa_offset 48
@@ -79,5 +79,5 @@ CRYPTO_NAMESPACE(enc):
 	.cfi_endproc
 .LFE10:
 	.size	CRYPTO_NAMESPACE(enc), .-CRYPTO_NAMESPACE(enc)
-	.ident	"GCC: (GNU) 9.2.1 20190827 (Red Hat 9.2.1-1)"
-.section	.note.GNU-stack,"",@progbits
+	.ident	"GCC: (Debian 12.2.0-14) 12.2.0"
+	.section	.note.GNU-stack,"",@progbits

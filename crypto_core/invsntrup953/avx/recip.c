@@ -1,1 +1,1 @@
-../../invsntrup761/avx/recip.c
+../../invsntrup1013/avx/recip.c

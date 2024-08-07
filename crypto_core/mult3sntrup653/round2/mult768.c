@@ -1,3 +1,4 @@
+// 20240806 djb: some automated conversion to cryptoint
 #include "ntt.h"
 #include <immintrin.h>
 
@@ -182,6 +183,7 @@ static void mult768(int16 h[1536],const int16 f[768],const int16 g[768])
 #include "crypto_decode_653xint16.h"
 #define crypto_decode_pxint16 crypto_decode_653xint16
 #include "crypto_encode_653xint16.h"
+#include "crypto_int64.h"
 #define crypto_encode_pxint16 crypto_encode_653xint16
 
 #define p 653
@@ -211,12 +213,12 @@ int crypto_core(unsigned char *outbytes,const unsigned char *inbytes,const unsig
 
   for (i = 0;i < p;++i) {
     int8 fi = inbytes[i];
-    int8 fi0 = fi&1;
+    int8 fi0 = crypto_int64_bottombit_01(fi);
     f[i] = fi0-(fi&(fi0<<1));
   }
   for (i = 0;i < p;++i) {
     int8 gi = kbytes[i];
-    int8 gi0 = gi&1;
+    int8 gi0 = crypto_int64_bottombit_01(gi);
     g[i] = gi0-(gi&(gi0<<1));
   }
 

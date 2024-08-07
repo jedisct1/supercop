@@ -2,8 +2,8 @@
 #define _BLAS_SSE_H_
 
 #include "gf16.h"
-#include "emmintrin.h"
-#include "tmmintrin.h"
+#include <emmintrin.h>
+#include <tmmintrin.h>
 #include "blas_config.h"
 #include "gf16_sse.h"
 #include "assert.h"
@@ -11,11 +11,6 @@
 #ifdef  __cplusplus
 extern  "C" {
 #endif
-
-
-
-
-
 
 static inline
 __m128i _load_xmm( const uint8_t *a , unsigned _num_byte ) {
@@ -27,18 +22,6 @@ __m128i _load_xmm( const uint8_t *a , unsigned _num_byte ) {
 }
 
 static inline
-void loadu_xmm( __m128i *xmm_a, const uint8_t *a, unsigned _num_byte ) {
-	unsigned n_16 = (_num_byte>>4);
-	unsigned n_16_rem = _num_byte&0xf;
-	while( n_16-- ) {
-		xmm_a[0] = _mm_loadu_si128( (__m128i*)(a) );
-		xmm_a++;
-		a += 16;
-	}
-	if( n_16_rem ) xmm_a[0] = _load_xmm( a , n_16_rem );
-}
-
-static inline
 void _store_xmm( uint8_t *a , unsigned _num_byte , __m128i data ) {
 	uint8_t temp[32] __attribute__((aligned(32)));
 	assert( 16 >= _num_byte );
@@ -46,38 +29,6 @@ void _store_xmm( uint8_t *a , unsigned _num_byte , __m128i data ) {
 	_mm_store_si128((__m128i*)temp,data);
 	for(unsigned i=0;i<_num_byte;i++) a[i] = temp[i];
 }
-
-static inline
-void storeu_xmm( uint8_t *a , unsigned _num_byte , __m128i *xmm_a ) {
-	unsigned n_16 = (_num_byte>>4);
-	unsigned n_16_rem = _num_byte&0xf;
-	while( n_16-- ) {
-		_mm_storeu_si128( (__m128i*)a , xmm_a[0] );
-		xmm_a++;
-		a += 16;
-	}
-	if( n_16_rem ) _store_xmm( a , n_16_rem , xmm_a[0] );
-}
-
-
-static inline
-void linearmap_8x8_sse( uint8_t * a , __m128i ml , __m128i mh , __m128i mask , unsigned _num_byte ) {
-	unsigned n_16 = _num_byte>>4;
-	for(unsigned i=n_16;i>0;i--) {
-		__m128i inp = _mm_loadu_si128( (__m128i*)(a) );
-		__m128i r0 = linear_transform_8x8_128b( ml , mh , inp , mask );
-		_mm_storeu_si128( (__m128i*)(a) , r0 );
-		a += 16;
-	}
-
-	unsigned rem = _num_byte&15;
-	if( rem ) {
-		__m128i inp = _load_xmm( a , rem );
-		__m128i r0 = linear_transform_8x8_128b( ml , mh , inp , mask );
-		_store_xmm( a , rem , r0 );
-	}
-}
-
 
 static inline
 void linearmap_8x8_accu_sse( uint8_t * accu_c, const uint8_t * a , __m128i ml , __m128i mh , __m128i mask , unsigned _num_byte ) {
@@ -101,14 +52,7 @@ void linearmap_8x8_accu_sse( uint8_t * accu_c, const uint8_t * a , __m128i ml , 
 	}
 }
 
-
-
-
-
 //////////////////////   basic functions  ///////////////////////////////////////////////
-
-
-
 
 static inline
 void gf256v_add_sse( uint8_t * accu_b, const uint8_t * a , unsigned _num_byte ) {
@@ -128,95 +72,7 @@ void gf256v_add_sse( uint8_t * accu_b, const uint8_t * a , unsigned _num_byte ) 
 	}
 }
 
-
-
-
-///////////////////////////////
-
-
-
-extern const unsigned char __mask_low[];
-extern const unsigned char * __gf16_mul;
-extern const unsigned char __gf256_mul[];
-
-
-
-static inline
-void gf16v_mul_scalar_sse( uint8_t * a, uint8_t gf16_b , unsigned _num_byte ) {
-	unsigned b = gf16_b&0xf;
-	__m128i ml = _mm_load_si128( (__m128i*) (__gf16_mul + 32*b) );
-	__m128i mh = _mm_load_si128( (__m128i*) (__gf16_mul + 32*b + 16) );
-	__m128i mask = _mm_set1_epi8(0xf);
-
-	linearmap_8x8_sse( a, ml , mh , mask , _num_byte );
-}
-
-
-
-static inline
-void gf16v_madd_multab_sse( uint8_t * accu_c, const uint8_t * a , const uint8_t * multab , unsigned _num_byte ) {
-	__m128i ml = _mm_load_si128( (__m128i*) multab );
-	__m128i mh = _mm_slli_epi16( ml , 4 );
-	__m128i mask = _mm_set1_epi8(0xf);
-
-	linearmap_8x8_accu_sse( accu_c , a , ml , mh , mask , _num_byte );
-}
-
-
-static inline
-void gf16v_madd_sse( uint8_t * accu_c, const uint8_t * a , uint8_t gf16_b, unsigned _num_byte ) {
-	unsigned b = gf16_b&0xf;
-	__m128i ml = _mm_load_si128( (__m128i*) (__gf16_mul + 32*b) );
-	__m128i mh = _mm_load_si128( (__m128i*) (__gf16_mul + 32*b + 16) );
-	__m128i mask = _mm_set1_epi8(0xf);
-
-	linearmap_8x8_accu_sse( accu_c , a , ml , mh , mask , _num_byte );
-}
-
-
-static inline
-void gf256v_mul_scalar_sse( uint8_t * a, uint8_t _b , unsigned _num_byte ) {
-	unsigned b = _b;
-	__m128i ml = _mm_load_si128( (__m128i*) (__gf256_mul + 32*b) );
-	__m128i mh = _mm_load_si128( (__m128i*) (__gf256_mul + 32*b + 16) );
-	__m128i mask = _mm_set1_epi8(0xf);
-
-	linearmap_8x8_sse( a, ml , mh , mask , _num_byte );
-}
-
-
-static inline
-void gf256v_madd_multab_sse( uint8_t * accu_c, const uint8_t * a , const uint8_t * multab , unsigned _num_byte ) {
-	__m128i ml = _mm_load_si128( (__m128i*) multab );
-	__m128i mh = _mm_load_si128( (__m128i*) (multab+16) );
-	__m128i mask = _mm_set1_epi8(0xf);
-
-	linearmap_8x8_accu_sse( accu_c , a , ml , mh , mask , _num_byte );
-}
-
-static inline
-void gf256v_madd_sse( uint8_t * accu_c, const uint8_t * a , uint8_t _b, unsigned _num_byte ) {
-	unsigned b = _b;
-	__m128i ml = _mm_load_si128( (__m128i*) (__gf256_mul + 32*b) );
-	__m128i mh = _mm_load_si128( (__m128i*) (__gf256_mul + 32*b + 16) );
-	__m128i mask = _mm_set1_epi8(0xf);
-
-	linearmap_8x8_accu_sse( accu_c , a , ml , mh , mask , _num_byte );
-}
-
-
-
-
-
-
-
-
-
-
-
-
 ///////////////// transpose 16x16 //////////////////////////////
-
 
 static inline
 void transpose_16x16_sse( uint8_t * r , const uint8_t * a ) {
@@ -342,14 +198,7 @@ void transpose_16x16_sse( uint8_t * r , const uint8_t * a ) {
 	_mm_store_si128( (__m128i*)( r + 16*15 ) , e15 );
 }
 
-
-
-
-
 /////////////////  GF( 16 ) /////////////////////////////////////
-
-
-
 
 static inline
 void gf16v_generate_multab_16_sse( uint8_t * _multab_byte , const uint8_t * _x0 )
@@ -421,75 +270,6 @@ void gf16v_generate_multab_sse( uint8_t * _multabs , const uint8_t * x , unsigne
 	}
 }
 
-
-
-static inline
-void gf16v_split_sse( uint8_t * x_align32 , const uint8_t * _x , unsigned n_gf16 )
-{
-	assert( n <= 512 ); /// for spliting gf256v
-	uint8_t * x = x_align32;
-	unsigned n_byte = (n_gf16+1)/2;
-	unsigned n_16 = n_byte>>4;
-	unsigned n_16_rem = n_byte&0xf;
-	__m128i mask_f = _mm_set1_epi8(0xf);
-	for(unsigned i=0;i<n_16;i++) {
-		__m128i inp = _mm_loadu_si128( (__m128i*)_x ); _x += 16;
-		__m128i il = inp&mask_f;
-		__m128i ih = _mm_srli_epi16(inp,4)&mask_f;
-		_mm_store_si128( (__m128i*)( x+ 32*i ) , _mm_unpacklo_epi8(il,ih) );
-		_mm_store_si128( (__m128i*)( x+ 32*i + 16 ) , _mm_unpackhi_epi8(il,ih) );
-	}
-	if( n_16_rem ) {
-		unsigned i = n_16;
-		__m128i inp = _load_xmm( _x , n_16_rem );
-		__m128i il = inp&mask_f;
-		__m128i ih = _mm_srli_epi16(inp,4)&mask_f;
-		_mm_store_si128( (__m128i*)( x+ 32*i ) , _mm_unpacklo_epi8(il,ih) );
-		_mm_store_si128( (__m128i*)( x+ 32*i + 16 ) , _mm_unpackhi_epi8(il,ih) );
-	}
-}
-
-
-static inline
-uint8_t gf16v_dot_sse( const uint8_t * a , const uint8_t * b , unsigned n_byte )
-{
-	uint8_t v1[32] __attribute__((aligned(32)));
-	uint8_t v2[32] __attribute__((aligned(32)));
-	uint8_t v3[32] __attribute__((aligned(32)));
-
-	unsigned n_xmm = n_byte>>4;
-	unsigned n_rem = n_byte&15;
-	__m128i r = _mm_setzero_si128();
-	for(unsigned i=0;i<n_xmm;i++) {
-		__m128i inp1 = _mm_loadu_si128(  (__m128i*)(a+i*16) );
-		__m128i inp2 = _mm_loadu_si128(  (__m128i*)(b+i*16) );
-		gf16v_split_16to32_sse( (__m128i *)v1 , inp1 );
-		gf16v_split_16to32_sse( (__m128i *)v2 , inp2 );
-		r ^= tbl_gf16_mul( _mm_load_si128( (__m128i*)(v1) ) , _mm_load_si128( (__m128i*)(v2) ) );
-		r ^= tbl_gf16_mul( _mm_load_si128( (__m128i*)(v1+16) ) , _mm_load_si128( (__m128i*)(v2+16) ) );
-	}
-	if( n_rem ) {
-		_mm_store_si128( (__m128i*)(v3) , _mm_setzero_si128() );
-		for(unsigned i=0;i<n_rem;i++) v3[i] = a[n_xmm*16+i];
-		__m128i inp1 = _mm_load_si128(  (__m128i*)(v3) );
-		for(unsigned i=0;i<n_rem;i++) v3[i] = b[n_xmm*16+i];
-		__m128i inp2 = _mm_load_si128(  (__m128i*)(v3) );
-		gf16v_split_16to32_sse( (__m128i *)v1 , inp1 );
-		gf16v_split_16to32_sse( (__m128i *)v2 , inp2 );
-		r ^= tbl_gf16_mul( _mm_load_si128( (__m128i*)(v1) ) , _mm_load_si128( (__m128i*)(v2) ) );
-		r ^= tbl_gf16_mul( _mm_load_si128( (__m128i*)(v1+16) ) , _mm_load_si128( (__m128i*)(v2+16) ) );
-	}
-	r ^= _mm_srli_si128(r,8);
-	r ^= _mm_srli_si128(r,4);
-	r ^= _mm_srli_si128(r,2);
-	r ^= _mm_srli_si128(r,1);
-	r ^= _mm_srli_epi16(r,4);
-	return _mm_extract_epi16(r,0)&0xf;
-}
-
-
-
-
 static inline
 void gf256v_generate_multab_sse( uint8_t * _multabs , const uint8_t * _x , unsigned n )
 {
@@ -505,11 +285,6 @@ void gf256v_generate_multab_sse( uint8_t * _multabs , const uint8_t * _x , unsig
 		_mm_store_si128( (__m128i*) (_multabs+32*i+16) , mh256 );
 	}
 }
-
-
-
-
-
 
 #ifdef  __cplusplus
 }

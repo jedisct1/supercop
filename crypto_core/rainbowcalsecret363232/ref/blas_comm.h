@@ -1,3 +1,5 @@
+// 20240806 djb: some automated conversion to cryptoint
+#include "crypto_int64.h"
 /// @file blas_comm.h
 /// @brief Common functions for linear algebra.
 ///
@@ -22,7 +24,7 @@ static inline uint8_t gf16v_get_ele(const uint8_t *a, unsigned i) {
     uint8_t r = a[i >> 1];
     uint8_t r0 = r&0xf;
     uint8_t r1 = r>>4;
-    uint8_t m = (uint8_t)(-(i&1));
+    uint8_t m = (uint8_t)(-(crypto_int64_bottombit_01(i)));
     return (r1&m)|((~m)&r0);
 }
 
@@ -34,7 +36,7 @@ static inline uint8_t gf16v_get_ele(const uint8_t *a, unsigned i) {
 /// @return  the value of the element.
 ///
 static inline uint8_t gf16v_set_ele(uint8_t *a, unsigned i, uint8_t v) {
-    uint8_t m = 0xf ^ (-(i&1));   ///  1--> 0xf0 , 0--> 0x0f
+    uint8_t m = 0xf ^ (-(crypto_int64_bottombit_01(i)));   ///  1--> 0xf0 , 0--> 0x0f
     uint8_t ai_remaining = a[i>>1] & (~m);   /// erase
     a[i>>1] = ai_remaining | (m&(v<<4))|(m&v&0xf);  /// set
     return v;

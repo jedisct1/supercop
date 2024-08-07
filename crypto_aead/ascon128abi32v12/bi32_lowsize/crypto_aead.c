@@ -1,3 +1,4 @@
+// 20240806 djb: some automated conversion to cryptoint
 #include "crypto_aead.h"
 
 #include <string.h>
@@ -6,6 +7,7 @@
 #include "ascon.h"
 #include "permutations.h"
 #include "printstate.h"
+#include "crypto_int64.h"
 
 #ifdef ASCON_AEAD_RATE
 
@@ -42,7 +44,7 @@ int crypto_aead_decrypt(unsigned char* m, unsigned long long* mlen,
   ascon_aead(t, m, c, *mlen, ad, adlen, npub, k, ASCON_DECRYPT);
   /* verify tag (should be constant time, check compiler output) */
   for (i = 0; i < CRYPTO_ABYTES; ++i) result |= t[i] ^ c[*mlen + i];
-  return (((result - 1) >> 8) & 1) - 1;
+  return (crypto_int64_bitmod_01((result - 1),8)) - 1;
 }
 
 #endif

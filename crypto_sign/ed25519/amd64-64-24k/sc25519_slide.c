@@ -1,4 +1,6 @@
+// 20240806 djb: some automated conversion to cryptoint
 #include "sc25519.h"
+#include "crypto_int64.h"
 
 void sc25519_slide(signed char r[256], const sc25519 *s, int swindowsize)
 {
@@ -10,10 +12,10 @@ void sc25519_slide(signed char r[256], const sc25519 *s, int swindowsize)
 
   /* first put the binary expansion into r  */
   for(i=0;i<64;i++) {
-    r[i] = sv0 & 1;
-    r[i+64] = sv1 & 1;
-    r[i+128] = sv2 & 1;
-    r[i+192] = sv3 & 1;
+    r[i] = crypto_int64_bottombit_01(sv0);
+    r[i+64] = crypto_int64_bottombit_01(sv1);
+    r[i+128] = crypto_int64_bottombit_01(sv2);
+    r[i+192] = crypto_int64_bottombit_01(sv3);
     sv0 >>= 1;
     sv1 >>= 1;
     sv2 >>= 1;

@@ -1,6 +1,8 @@
+// 20240806 djb: some automated conversion to cryptoint
 // SPDX-License-Identifier: MIT
 
 #include "field.h"
+#include "crypto_int64.h"
 #include <stddef.h>
 
 void GF_to_bytes(uint8_t *out, const GF in)
@@ -46,25 +48,25 @@ void GF_transposed_matmul(GF c, const GF a, const GF b[AIM2_NUM_BITS_FIELD])
     uint64_t index = *a_ptr;
     for (size_t j = AIM2_NUM_BITS_WORD; j; j -= 4, index >>= 4, b_ptr += 4)
     {
-      mask = -(index & 1);
+      mask = -(crypto_int64_bottombit_01(index));
       temp_c0 ^= (b_ptr[0][0] & mask);
       temp_c1 ^= (b_ptr[0][1] & mask);
       temp_c2 ^= (b_ptr[0][2] & mask);
       temp_c3 ^= (b_ptr[0][3] & mask);
 
-      mask = -((index >> 1) & 1);
+      mask = -(crypto_int64_bitmod_01(index,1));
       temp_c0 ^= (b_ptr[1][0] & mask);
       temp_c1 ^= (b_ptr[1][1] & mask);
       temp_c2 ^= (b_ptr[1][2] & mask);
       temp_c3 ^= (b_ptr[1][3] & mask);
 
-      mask = -((index >> 2) & 1);
+      mask = -(crypto_int64_bitmod_01(index,2));
       temp_c0 ^= (b_ptr[2][0] & mask);
       temp_c1 ^= (b_ptr[2][1] & mask);
       temp_c2 ^= (b_ptr[2][2] & mask);
       temp_c3 ^= (b_ptr[2][3] & mask);
 
-      mask = -((index >> 3) & 1);
+      mask = -(crypto_int64_bitmod_01(index,3));
       temp_c0 ^= (b_ptr[3][0] & mask);
       temp_c1 ^= (b_ptr[3][1] & mask);
       temp_c2 ^= (b_ptr[3][2] & mask);
@@ -96,25 +98,25 @@ void GF_transposed_matmul_add_N(GF c[AIMER_N], const GF a[AIMER_N],
 
       for (size_t j = AIM2_NUM_BITS_WORD; j; j -= 4, index >>= 4, b_ptr += 4)
       {
-        mask = -(index & 1);
+        mask = -(crypto_int64_bottombit_01(index));
         temp_c0 ^= (b_ptr[0][0] & mask);
         temp_c1 ^= (b_ptr[0][1] & mask);
         temp_c2 ^= (b_ptr[0][2] & mask);
         temp_c3 ^= (b_ptr[0][3] & mask);
 
-        mask = -((index >> 1) & 1);
+        mask = -(crypto_int64_bitmod_01(index,1));
         temp_c0 ^= (b_ptr[1][0] & mask);
         temp_c1 ^= (b_ptr[1][1] & mask);
         temp_c2 ^= (b_ptr[1][2] & mask);
         temp_c3 ^= (b_ptr[1][3] & mask);
 
-        mask = -((index >> 2) & 1);
+        mask = -(crypto_int64_bitmod_01(index,2));
         temp_c0 ^= (b_ptr[2][0] & mask);
         temp_c1 ^= (b_ptr[2][1] & mask);
         temp_c2 ^= (b_ptr[2][2] & mask);
         temp_c3 ^= (b_ptr[2][3] & mask);
 
-        mask = -((index >> 3) & 1);
+        mask = -(crypto_int64_bitmod_01(index,3));
         temp_c0 ^= (b_ptr[3][0] & mask);
         temp_c1 ^= (b_ptr[3][1] & mask);
         temp_c2 ^= (b_ptr[3][2] & mask);

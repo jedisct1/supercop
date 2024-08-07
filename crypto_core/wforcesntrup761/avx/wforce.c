@@ -19,9 +19,8 @@ int crypto_core(unsigned char *out,const unsigned char *in,const unsigned char *
   crypto_core_weight((unsigned char *) &weight,in,0,0);
   crypto_decode_int16(&weight,(unsigned char *) &weight);
 
-  mask = (weight-w)|(w-weight);
-  mask >>= 15;
-  maskvec = _mm256_set1_epi16(~mask);
+  mask = crypto_int16_equal_mask(weight,w);
+  maskvec = _mm256_set1_epi16(mask);
 
   i = w-32;
   for (;;) {

@@ -5,6 +5,7 @@
   For the implementation strategy, see
   https://eprint.iacr.org/2017/793.pdf
 */
+// 20240805 djb: more use of cryptoint
 // 20240508 djb: include vec128_gf.h, vec256_gf.h
 // 20221230 djb: split these arrays into separate .c files
 // 20221230 djb: rename consts array as fft_consts
@@ -28,6 +29,7 @@
 #include "vec.h"
 
 #include <stdint.h>
+#include "crypto_int64.h"
 
 static void radix_conversions_tr(vec128 in[ GFBITS ])
 {
@@ -266,13 +268,13 @@ static void butterflies_tr(vec128 out[ GFBITS ], vec256 in[][ GFBITS ])
 
 	//
 
-	for (j = 0; j < GFBITS; j++) { tmp[j] = (beta[0] >> j) & 1; tmp[j] = -tmp[j]; }
+	for (j = 0; j < GFBITS; j++) { tmp[j] = crypto_int64_bitmod_mask(beta[0], j); }
 
 	vec_mul(out64[1], pre[0], tmp);
 
 	for (i = 1; i < 6; i++)
 	{
-		for (j = 0; j < GFBITS; j++) { tmp[j] = (beta[i] >> j) & 1; tmp[j] = -tmp[j]; }
+		for (j = 0; j < GFBITS; j++) { tmp[j] = crypto_int64_bitmod_mask(beta[i], j); }
 
 		vec_mul(tmp, pre[i], tmp);
 		vec_add(out64[1], out64[1], tmp);

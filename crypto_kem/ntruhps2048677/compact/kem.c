@@ -1,9 +1,12 @@
+// 20240806 djb: some automated conversion to cryptoint
 #include <stddef.h>
 #include <stdint.h>
 #include "crypto_kem.h"
 #include "randombytes.h"
 #include "crypto_hash_sha3256.h"
 #include "crypto_sort_int32.h"
+#include "crypto_int8.h"
+#include "crypto_int64.h"
 
 #define NTRU_N 677
 #define NTRU_LOGQ 11
@@ -126,7 +129,7 @@ static void poly_R2_inv(poly *r, const poly *a) {
   for (i = 0; i < NTRU_N; ++i) w.coeffs[i] = 0;
   w.coeffs[0] = 1;
   for (i = 0; i < NTRU_N; ++i) f.coeffs[i] = 1;
-  for (i = 0; i < NTRU_N - 1; ++i) g.coeffs[NTRU_N - 2 - i] = (a->coeffs[i] ^ a->coeffs[NTRU_N - 1]) & 1;
+  for (i = 0; i < NTRU_N - 1; ++i) g.coeffs[NTRU_N - 2 - i] = crypto_int64_bottombit_01(a->coeffs[i] ^ a->coeffs[NTRU_N - 1]);
   g.coeffs[NTRU_N - 1] = 0;
   delta = 1;
   for (loop = 0; loop < 2 * (NTRU_N - 1) - 1; ++loop) {
@@ -217,13 +220,13 @@ static void poly_S3_frombytes(poly *r, const unsigned char msg[NTRU_OWCPA_MSGBYT
 static void poly_Sq_tobytes(unsigned char *r, const poly *a) {
   int i;
   for (i = 0; i < crypto_kem_PUBLICKEYBYTES; i++) r[i] = 0;
-  for (i = 0; i < NTRU_LOGQ * NTRU_PACK_DEG; i++) r[i / 8] |= (1 & (a->coeffs[i / NTRU_LOGQ] >> (i % NTRU_LOGQ))) << (i % 8);
+  for (i = 0; i < NTRU_LOGQ * NTRU_PACK_DEG; i++) r[i / 8] |= (crypto_int64_bitmod_01(a->coeffs[i / NTRU_LOGQ],(i % NTRU_LOGQ))) << (i % 8);
 }
 
 static void poly_Sq_frombytes(poly *r, const unsigned char *a) {
   int i;
   for (i = 0; i < NTRU_N; i++) r->coeffs[i] = 0;
-  for (i = 0; i < NTRU_LOGQ * NTRU_PACK_DEG; i++) r->coeffs[i / NTRU_LOGQ] |= (1 & (a[i / 8] >> (i % 8))) << (i % NTRU_LOGQ);
+  for (i = 0; i < NTRU_LOGQ * NTRU_PACK_DEG; i++) r->coeffs[i / NTRU_LOGQ] |= (crypto_int8_bitmod_01(a[i / 8],i)) << (i % NTRU_LOGQ);
 }
 
 static void poly_Rq_sum_zero_frombytes(poly *r, const unsigned char *a) {
@@ -239,11 +242,11 @@ static void sample_iid(poly *r, const unsigned char uniformbytes[NTRU_SAMPLE_IID
   r->coeffs[NTRU_N - 1] = 0;
 }
 
-void sample_fixed_type(poly *r, const unsigned char u[NTRU_SAMPLE_FT_BYTES]) {
+static void sample_fixed_type(poly *r, const unsigned char u[NTRU_SAMPLE_FT_BYTES]) {
   int32_t s[NTRU_N - 1];
   int i;
   for (i = 0; i < NTRU_N - 1; i++) s[i] = 0;
-  for (i = 0; i < 30 * (NTRU_N - 1); i++) s[i / 30] |= (1 & (u[i / 8] >> (i % 8))) << (2 + (i % 30));
+  for (i = 0; i < 30 * (NTRU_N - 1); i++) s[i / 30] |= (crypto_int8_bitmod_01(u[i / 8],i)) << (2 + (i % 30));
   for (i = 0; i < NTRU_WEIGHT / 2; i++) s[i] |= 1;
   for (i = NTRU_WEIGHT / 2; i < NTRU_WEIGHT; i++) s[i] |= 2;
   crypto_sort_int32(s, NTRU_N - 1);
@@ -270,7 +273,7 @@ static void cmov(unsigned char *r, const unsigned char *x, size_t len, unsigned 
 static int owcpa_check_ciphertext(const unsigned char *ciphertext) {
   uint16_t t = ciphertext[crypto_kem_CIPHERTEXTBYTES - 1];
   t &= 0xff << (8 - (7 & (NTRU_LOGQ * NTRU_PACK_DEG)));
-  return (int)(1 & ((~t + 1) >> 15));
+  return (int)(crypto_int64_bitmod_01((~t + 1),15));
 }
 
 static int owcpa_check_r(const poly *r) {
@@ -282,7 +285,7 @@ static int owcpa_check_r(const poly *r) {
     t |= (c + 2) & 4;
   }
   t |= r->coeffs[NTRU_N - 1];
-  return (int)(1 & ((~t + 1) >> 31));
+  return (int)(crypto_int64_bitmod_01((~t + 1),31));
 }
 
 static int owcpa_check_m(const poly *m) {
@@ -291,12 +294,12 @@ static int owcpa_check_m(const poly *m) {
   uint16_t ps = 0;
   uint16_t ms = 0;
   for (i = 0; i < NTRU_N; i++) {
-    ps += m->coeffs[i] & 1;
+    ps += crypto_int64_bottombit_01(m->coeffs[i]);
     ms += m->coeffs[i] & 2;
   }
   t |= ps ^ (ms >> 1);
   t |= ms ^ NTRU_WEIGHT;
-  return (int)(1 & ((~t + 1) >> 31));
+  return (int)(crypto_int64_bitmod_01((~t + 1),31));
 }
 
 static void owcpa_keypair(unsigned char *pk, unsigned char *sk, const unsigned char seed[NTRU_SAMPLE_FG_BYTES]) {

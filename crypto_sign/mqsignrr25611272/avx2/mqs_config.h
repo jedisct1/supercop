@@ -7,7 +7,7 @@
 
 #define PUBMAP_QUAD
 
-#define _MQS256_112_72
+// #define _MQS256_72_46
 
 
 
@@ -60,13 +60,17 @@ error: has to define a parameter.
 #define _PUB_M_BYTE  (_PUB_M)
 #define _HALF_O (_O/2)
 
-#define TERMS_QUAD_POLY(N) (((N)*(N+1)/2)+N+1)
+#define TERMS_QUAD_POLY(N) ((N)*(N+1)/2)
 #define IDX_XSQ(i,n_var) (((2*(n_var)+1-i)*(i)/2)+n_var)
 /// xi <= xj
 #define IDX_QTERMS_REVLEX(xi,xj) ((xj)*(xj+1)/2 + (xi))
 
 /// 1 for length of salt
 #define _PUB_KEY_LEN ((TERMS_QUAD_POLY(_PUB_N)*(_PUB_M_BYTE)) + _HASH_LEN + 1)
+#define PUBKEYLEN2 (TERMS_QUAD_POLY(_PUB_N)*(_PUB_M_BYTE)) 
+#define MQRR_PK_LEN2 (_PUB_M)* N_TRIANGLE_TERMS(_PUB_N) + _PUB_M * _PUB_N + _PUB_M
+#define PK_LEN_1 (_PUB_M)* N_TRIANGLE_TERMS(_PUB_N)
+#define PK_LEN_2 _PUB_M * _PUB_N + _PUB_M
 
 /// length of seed for public key, in # bytes
 #define LEN_PKSEED 32

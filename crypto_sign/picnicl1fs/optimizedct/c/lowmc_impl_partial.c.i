@@ -1,3 +1,5 @@
+// 20240806 djb: some automated conversion to cryptoint
+#include "crypto_int64.h"
 /*
  *  This file is part of the optimized implementation of the Picnic signature scheme.
  *  See the accompanying documentation for complete details.
@@ -35,7 +37,7 @@ static void N_LOWMC(lowmc_key_t const* lowmc_key, mzd_local_t const* p, mzd_loca
 
     const word nl = CONST_BLOCK(nl_part, i >> 3)->w64[(i & 0x7) >> 1];
     BLOCK(x, 0)->w64[(LOWMC_N) / (sizeof(word) * 8) - 1] ^=
-        (nl << (1 - (i & 1)) * 32) & WORD_C(0xFFFFFFFF00000000);
+        (nl << (1 - (crypto_int64_bottombit_01(i))) * 32) & WORD_C(0xFFFFFFFF00000000);
 
     MUL_Z(y, x, round->z_matrix);
     SHUFFLE(x, round->r_mask);
@@ -53,7 +55,7 @@ static void N_LOWMC(lowmc_key_t const* lowmc_key, mzd_local_t const* p, mzd_loca
   unsigned int i = (LOWMC_R - 1);
   const word nl  = CONST_BLOCK(nl_part, i >> 3)->w64[(i & 0x7) >> 1];
   BLOCK(x, 0)->w64[(LOWMC_N) / (sizeof(word) * 8) - 1] ^=
-      (nl << (1 - (i & 1)) * 32) & WORD_C(0xFFFFFFFF00000000);
+      (nl << (1 - (crypto_int64_bottombit_01(i))) * 32) & WORD_C(0xFFFFFFFF00000000);
   MUL(y, x, LOWMC_INSTANCE.zr_matrix);
   COPY(x, y);
 

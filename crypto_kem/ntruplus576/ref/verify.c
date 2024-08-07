@@ -1,1 +1,1 @@
-../../ntruplus1152/opt/verify.c
+../../ntruplus1152/ref/verify.c

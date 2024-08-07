@@ -17,15 +17,10 @@ error here.
 #define gfmat_prod_multab              gf256mat_prod_multab_avx2
 #define batch_quad_trimat_eval_multab  batch_quad_trimat_eval_multab_gf256_avx2
 #define circmat_eval_multab circmat_eval_multab_avx2
-#define sparmat_vv_eval_multab sparmat_vv_eval_multab_avx2
-#define sparmat_gen_linear_multab sparmat_gen_linear_multab_avx2
 
 #define batch_trimat_madd_multab    batch_trimat_madd_multab_gf256_avx2
 #define batch_trimatTr_madd_multab  batch_trimatTr_madd_multab_gf256_avx2
-#define batch_2trimat_madd_multab   batch_2trimat_madd_multab_gf256_avx2
 #define batch_matTr_madd_multab     batch_matTr_madd_multab_gf256_avx2
-#define batch_bmatTr_madd_multab    batch_bmatTr_madd_multab_gf256_avx2
-#define batch_mat_madd_multab       batch_mat_madd_multab_gf256_avx2
 
 #endif
 

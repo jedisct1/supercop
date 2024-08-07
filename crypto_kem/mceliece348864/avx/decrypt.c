@@ -1,6 +1,7 @@
 /*
   This file is for Niederreiter decryption
 */
+// 20240805 djb: more mask usage
 // 20240503 djb: remove #ifdef KAT ... #endif
 // 20221230 djb: add linker lines
 
@@ -18,7 +19,7 @@
 #include "fft.h"
 #include "bm.h"
 
-#include <stdio.h>
+#include "crypto_int16.h"
 
 static void scaling(vec256 out[][GFBITS], vec256 inv[][GFBITS], const unsigned char *sk, vec256 *recv)
 {
@@ -119,10 +120,7 @@ static int weight_check(unsigned char * e, vec128 * error)
 		w1 += __builtin_popcountll( e[i] );
 
 	check = (w0 ^ SYS_T) | (w1 ^ SYS_T);
-	check -= 1;
-	check >>= 15;
-
-	return check;
+	return -crypto_int16_zero_mask(check);
 }
 
 static uint64_t synd_cmp(vec128 *s0 , vec128 *s1)

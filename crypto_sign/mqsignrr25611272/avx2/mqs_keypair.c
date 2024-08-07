@@ -20,7 +20,6 @@ static
 void generate_T_part(unsigned char* t, prng_t* prng0)
 {
 	sk_mqrr* _sk;
-
 	unsigned size;
 
 	size = sizeof(_sk->mat_t);
@@ -31,7 +30,6 @@ static
 void generate_F(unsigned char* sk, prng_t* prng0)
 {
 	sk_mqrr* _sk;
-
 	unsigned size;
 
 	size = sizeof(_sk->Fq1);
@@ -41,11 +39,6 @@ void generate_F(unsigned char* sk, prng_t* prng0)
 	size = sizeof(_sk->Fq2);
 	prng_gen(prng0, sk, size);
 	sk += size;
-#if defined PUBMAP_QUAD_LIN
-	size = sizeof(_sk->Fl);
-	prng_gen(prng0, sk, size);
-
-#endif
 }
 
 static
@@ -75,6 +68,7 @@ int generate_keypair_mqrr(pk_mqs* rpk, sk_mqrr* sk, const unsigned char* sk_seed
 	ext_pk _pk;
 	ext_pk* pk = &_pk;
 #endif
+
 	cal_ext_pk_mqrr(pk, sk, sk);
 
 	extpk_to_pk(rpk, pk);     // convert the public key from ext_pk to pk
@@ -85,5 +79,6 @@ int generate_keypair_mqrr(pk_mqs* rpk, sk_mqrr* sk, const unsigned char* sk_seed
 #if defined(_MALLOC_)
 	free(pk);
 #endif
+
 	return 0;
 }

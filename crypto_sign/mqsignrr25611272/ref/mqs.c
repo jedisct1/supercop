@@ -28,7 +28,7 @@ void transpose(uint8_t * r, const uint8_t * a)
 	}
 }
 
-int mqrr_sign(uint8_t* signature, const sk_mqrr* sk, const uint8_t* sk_seed, const uint8_t* m, const uint32_t mlen, const uint8_t* ss)
+int mqrr_sign(uint8_t* signature, const sk_mqrr* sk, const uint8_t* m, const uint32_t mlen)
 {
 	// allocate temporary storage.
 	uint8_t mat[_O * _O_BYTE];
@@ -37,12 +37,15 @@ int mqrr_sign(uint8_t* signature, const sk_mqrr* sk, const uint8_t* sk_seed, con
 	uint8_t m_salt_digest[mlen + _SALT_BYTE + _HASH_LEN];
 	uint8_t* salt = m_salt_digest + mlen;
 
+	uint8_t ss[32];
+	randombytes(ss, 32);
+
 	hash_msg(salt, _SALT_BYTE, ss, _SALT_SOURCE_LEN);
 
 	// setup PRNG
 	prng_t prng_sign;
 	uint8_t prng_preseed[LEN_SKSEED + _SALT_BYTE];
-	memcpy(prng_preseed, sk_seed, LEN_SKSEED);
+	memcpy(prng_preseed, sk->sk_seed, LEN_SKSEED);
 	memcpy(prng_preseed + LEN_SKSEED, salt, _SALT_BYTE);
 
 	uint8_t prng_seed[_HASH_LEN];
@@ -80,7 +83,6 @@ int mqrr_sign(uint8_t* signature, const sk_mqrr* sk, const uint8_t* sk_seed, con
 	uint8_t D[H_hh] __attribute__((aligned(32)));
 	uint8_t A_inv[H_hh] __attribute__((aligned(32)));
 	uint8_t CA_inv[H_hh] __attribute__((aligned(32)));
-
 
 	uint8_t temp_vec[_O_BYTE] __attribute__((aligned(32)));
 	uint8_t temp_vec2[_O_BYTE] __attribute__((aligned(32)));
@@ -120,7 +122,8 @@ rej: ;
 
 	rr &= gf256mat_gaussian_elim(temp_mat, temp_vec + H_half, H_half);
 	crypto_declassify(&rr,sizeof rr);
-	if(!rr) goto rej;
+	if(!rr)
+		goto rej;
 
 	gf256mat_back_substitute(temp_vec + H_half, temp_mat, H_half);
 
@@ -133,6 +136,7 @@ rej: ;
 	gf256v_set_zero(x_o + H_half, H_half);
 	gf256v_add(x_o, temp_vec2, _O_BYTE);
 // remain part of linear solve
+
 rej_out: ;
 	//  w = T^-1 * y
 	uint8_t w[_PUB_N_BYTE];
@@ -160,11 +164,11 @@ rej_out: ;
 	return 0;
 }
 
-int mqsc_verify(const uint8_t* m, const uint32_t mlen, const uint8_t* signature, const uint8_t* pk)
+int mqrr_verify(const uint8_t* m, const uint32_t mlen, const uint8_t* signature, const uint8_t* pk)
 {
 	// assert(_O>=_O2);
 	unsigned char digest_ck[_PUB_M_BYTE];
-	mqsc_pubmap(digest_ck, pk, signature);
+	mqrr_pubmap(digest_ck, pk, signature);
 
 	unsigned char correct[_PUB_M_BYTE];
 	unsigned char m_salt_digest[mlen + _SALT_BYTE + _HASH_LEN];

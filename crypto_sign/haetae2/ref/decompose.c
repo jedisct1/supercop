@@ -1,5 +1,7 @@
+// 20240806 djb: some automated conversion to cryptoint
 #include "decompose.h"
 #include "params.h"
+#include "crypto_int64.h"
 #include <stdint.h>
 
 /*************************************************
@@ -63,7 +65,7 @@ int32_t decompose_vk(int32_t *a0, const int32_t a) {
 #if D > 1
 #error "Only implemented for D = 1"
 #endif
-    *a0 = a & 1;
+    *a0 = crypto_int64_bottombit_01(a);
     *a0 -= ((a >> 1) & *a0) << 1;
     return (a - *a0) >> 1;
 }

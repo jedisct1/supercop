@@ -15,13 +15,14 @@
 #if HAETAE_MODE == 2
 #define K 2
 #define L 4
-#define ETA 1
 #define TAU 58
 #define B0 9846.02
-#define B1 9838.99
+#define B1 9838.98
 #define B2 12777.52
 #define GAMMA 48.858
 #define LN 8192 // Large N
+#define LNHALF 4096
+#define LNBITS 13 
 #define SQNM 39.191835884530846 // \sqrt(n * m)
 #define D 1
 #define crypto_BYTES 1474
@@ -38,13 +39,14 @@
 #elif HAETAE_MODE == 3
 #define K 3
 #define L 6
-#define ETA 1
 #define TAU 80
 #define B0 18314.98
 #define B1 18307.70
 #define B2 21906.65
 #define GAMMA 57.707
 #define LN 8192 // Large N
+#define LNHALF 4096
+#define LNBITS 13 
 #define SQNM 48.0
 #define D 1
 #define crypto_BYTES 2349
@@ -61,13 +63,14 @@
 #elif HAETAE_MODE == 5
 #define K 4
 #define L 7
-#define ETA 1
 #define TAU 128
 #define B0 22343.66
 #define B1 22334.95
 #define B2 24441.49
 #define GAMMA 55.13
 #define LN 8192 // Large N
+#define LNHALF 4096
+#define LNBITS 13 
 #define SQNM 53.0659966456864
 #define D 0
 #define crypto_BYTES 2948
@@ -83,9 +86,6 @@
 
 #endif // HAETAE_MODE
 
-#define LNHALF 4096
-#define LNBITS 13
-
 #define HALF_ALPHA_HINT (ALPHA_HINT >> 1) // ALPHA / 2
 
 #define B0SQ ((uint64_t)(B0*B0))
@@ -94,11 +94,12 @@
 
 #define M (L-1)
 
-#if ETA == 1
+#define ETA 1
 #define POLYETA_PACKEDBYTES 64
+#if D == 1
 #define POLY2ETA_PACKEDBYTES 96
-#elif ETA == 2
-#define POLYETA_PACKEDBYTES 96
+#elif D == 0
+#define POLY2ETA_PACKEDBYTES 64
 #endif
 
 #define POLYC_PACKEDBYTES 32       // 1bit * N / 8bits
@@ -108,12 +109,7 @@
 #define POLYVECL_BYTES (L * N * sizeof(int32_t))
 
 #define crypto_PUBLICKEYBYTES (SEEDBYTES + K * POLYQ_PACKEDBYTES)                                      // seed + b
-#if D == 1
 #define crypto_SECRETKEYBYTES (crypto_PUBLICKEYBYTES + M * POLYETA_PACKEDBYTES + K * POLY2ETA_PACKEDBYTES + SEEDBYTES)  // pk + s + K
-#elif D == 0
-#define crypto_SECRETKEYBYTES (crypto_PUBLICKEYBYTES + (M + K) * POLYETA_PACKEDBYTES + SEEDBYTES)  // pk + s + K
-#else
-#error
-#endif
+
 #endif
 // clang-format on

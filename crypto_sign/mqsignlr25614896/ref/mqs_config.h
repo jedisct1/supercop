@@ -55,7 +55,7 @@ error: has to define a parameter.
 #define _PUB_M_BYTE  (_PUB_M)
 #define _HALF_O (_O/2)
 
-#define TERMS_QUAD_POLY(N) (((N)*(N+1)/2)+N+1)
+#define TERMS_QUAD_POLY(N) ((N)*(N+1)/2)
 #define IDX_XSQ(i,n_var) (((2*(n_var)+1-i)*(i)/2)+n_var)
 /// xi <= xj
 #define IDX_QTERMS_REVLEX(xi,xj) ((xj)*(xj+1)/2 + (xi))

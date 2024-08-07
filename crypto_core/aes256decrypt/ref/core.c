@@ -1,4 +1,6 @@
+// 20240806 djb: some automated conversion to cryptoint
 #include "crypto_core.h"
+#include "crypto_int64.h"
 
 static unsigned char multiply(unsigned int c,unsigned int d)
 {
@@ -9,8 +11,8 @@ static unsigned char multiply(unsigned int c,unsigned int d)
   int i;
   int j;
 
-  for (i = 0;i < 8;++i) f[i] = 1 & (c >> i);
-  for (i = 0;i < 8;++i) g[i] = 1 & (d >> i);
+  for (i = 0;i < 8;++i) f[i] = crypto_int64_bitmod_01(c,i);
+  for (i = 0;i < 8;++i) g[i] = crypto_int64_bitmod_01(d,i);
   for (i = 0;i < 15;++i) h[i] = 0;
   for (i = 0;i < 8;++i)
     for (j = 0;j < 8;++j) h[i + j] ^= f[i] & g[j];
@@ -56,7 +58,7 @@ static unsigned char bytesub(unsigned char c)
   int i;
 
   c = invert(c);
-  for (i = 0;i < 8;++i) f[i] = 1 & (c >> i);
+  for (i = 0;i < 8;++i) f[i] = crypto_int64_bitmod_01(c,i);
   h[0] = f[0] ^ f[4] ^ f[5] ^ f[6] ^ f[7] ^ 1;
   h[1] = f[1] ^ f[5] ^ f[6] ^ f[7] ^ f[0] ^ 1;
   h[2] = f[2] ^ f[6] ^ f[7] ^ f[0] ^ f[1];
@@ -76,7 +78,7 @@ static unsigned char invbytesub(unsigned char c)
   unsigned char f[8];
   int i;
 
-  for (i = 0;i < 8;++i) h[i] = 1 & (c >> i);
+  for (i = 0;i < 8;++i) h[i] = crypto_int64_bitmod_01(c,i);
   h[0] ^= 1;
   h[1] ^= 1;
   h[5] ^= 1;

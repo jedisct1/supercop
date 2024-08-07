@@ -1,1 +1,1 @@
-../../multsntrup761/avx/ntt.c
+../../multsntrup1013/avx/ntt.c

@@ -1,1 +1,1 @@
-#define CRYPTO_BYTES 1349
+../avx/api.h

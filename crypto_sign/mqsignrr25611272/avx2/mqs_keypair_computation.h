@@ -14,14 +14,6 @@ struct mqsc_extend_publickey {
 	unsigned char quad1[_O * N_TRIANGLE_TERMS(_V)];
 	unsigned char quad2[_O * _V * _O];
 	unsigned char quad3[_O * N_TRIANGLE_TERMS(_O)]; 
-
-#if defined PUBMAP_QUAD_LIN
-	// lin refers to Fl * Tl
-	unsigned char linear[_O * (_V + _O)];
-#elif defined PUBMAP_QUAD_LIN_CONST
-	// consts refers to tran(Tc) * Fq * Tc  +  Fl * Tc  +  Fc
-	unsigned char constants[_O];
-#endif
 } ext_pk;
 
 void extpk_to_pk(pk_mqs* pk, const ext_pk* extpk);

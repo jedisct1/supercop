@@ -1,3 +1,4 @@
+// 20240806 djb: some automated conversion to cryptoint
 /*
   This file is for public-key generation
 */
@@ -21,6 +22,7 @@
 #include "crypto_declassify.h"
 #include "crypto_uint8.h"
 #include "crypto_uint16.h"
+#include "crypto_int64.h"
 #include "crypto_uint64.h"
 
 static crypto_uint64 uint64_is_equal_declassify(uint64_t t,uint64_t u)
@@ -177,14 +179,14 @@ int pk_gen(unsigned char * pk, unsigned char * sk, uint32_t * perm, int16_t * pi
 		for (j = 0; j < SYS_N; j+=8)
 		for (k = 0; k < GFBITS;  k++)
 		{
-			b  = (inv[j+7] >> k) & 1; b <<= 1;
-			b |= (inv[j+6] >> k) & 1; b <<= 1;
-			b |= (inv[j+5] >> k) & 1; b <<= 1;
-			b |= (inv[j+4] >> k) & 1; b <<= 1;
-			b |= (inv[j+3] >> k) & 1; b <<= 1;
-			b |= (inv[j+2] >> k) & 1; b <<= 1;
-			b |= (inv[j+1] >> k) & 1; b <<= 1;
-			b |= (inv[j+0] >> k) & 1;
+			b  = crypto_int64_bitmod_01(inv[j+7],k); b <<= 1;
+			b |= crypto_int64_bitmod_01(inv[j+6],k); b <<= 1;
+			b |= crypto_int64_bitmod_01(inv[j+5],k); b <<= 1;
+			b |= crypto_int64_bitmod_01(inv[j+4],k); b <<= 1;
+			b |= crypto_int64_bitmod_01(inv[j+3],k); b <<= 1;
+			b |= crypto_int64_bitmod_01(inv[j+2],k); b <<= 1;
+			b |= crypto_int64_bitmod_01(inv[j+1],k); b <<= 1;
+			b |= crypto_int64_bitmod_01(inv[j+0],k);
 
 			mat[ i*GFBITS + k ][ j/8 ] = b;
 		}

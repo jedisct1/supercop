@@ -5,6 +5,7 @@
   For the implementation strategy, see
   https://eprint.iacr.org/2017/793.pdf
 */
+// 20240805 djb: more use of cryptoint
 // 20240508 djb: include vec{128,256}_gf.h
 // 20221230 djb: split these arrays into separate .c files
 // 20221230 djb: rename consts array as fft_consts
@@ -26,6 +27,7 @@
 #include "vec256_gf.h"
 
 #include <stdint.h>
+#include "crypto_int64.h"
 
 /* input: in, polynomial in bitsliced form */
 /* output: in, result of applying the radix conversions on in */
@@ -127,8 +129,8 @@ static void butterflies(vec256 out[][ GFBITS ], vec128 *in)
 	{
 		for (j = 0; j < GFBITS; j++)
 		{
-			v0 = (beta[i+0] >> j) & 1; v0 = -v0;
-			v1 = (beta[i+1] >> j) & 1; v1 = -v1;
+			v0 = crypto_int64_bitmod_mask(beta[i+0], j);
+			v1 = crypto_int64_bitmod_mask(beta[i+1], j);
 
 			tmp[j] = vec128_set2x(v0, v1);
 		}

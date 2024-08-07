@@ -4,7 +4,7 @@
 	.globl	CRYPTO_NAMESPACE(rq_recip3)
 	.type	CRYPTO_NAMESPACE(rq_recip3), @function
 CRYPTO_NAMESPACE(rq_recip3):
-.LFB5293:
+.LFB6406:
 	.cfi_startproc
 	pushq	%rbp
 	.cfi_def_cfa_offset 16
@@ -15,777 +15,696 @@ CRYPTO_NAMESPACE(rq_recip3):
 	pushq	%r15
 	pushq	%r14
 	pushq	%r13
-	pushq	%r12
 	.cfi_offset 15, -24
 	.cfi_offset 14, -32
 	.cfi_offset 13, -40
-	.cfi_offset 12, -48
-	movq	%rsi, %r12
+	movq	%rsi, %r13
 	xorl	%esi, %esi
+	pushq	%r12
 	pushq	%rbx
+	.cfi_offset 12, -48
 	.cfi_offset 3, -56
 	movq	%rdi, %rbx
 	andq	$-32, %rsp
 	subq	$6240, %rsp
-	leaq	3136(%rsp), %rdi
+	leaq	3136(%rsp), %r12
+	movq	%r12, %rdi
 	call	memset@PLT
-	vmovdqa	.LC1(%rip), %xmm2
-	movq	%rsp, %rsi
-	movl	$-1, 4656(%rsp)
-	vmovdqa	.LC0(%rip), %ymm3
-	leaq	729(%r12), %rcx
-	leaq	1472(%rsp), %rdx
-	movq	%rsi, %rax
-	vpmovsxbw	%xmm2, %ymm2
-	.p2align 4,,10
-	.p2align 3
+	movl	$3, %esi
+	movl	.LC0(%rip), %eax
+	vmovdqa	.LC1(%rip), %ymm4
+	vmovd	%esi, %xmm2
+	leaq	729(%r13), %rdx
+	leaq	1472(%rsp), %rcx
+	vpbroadcastb	%xmm2, %xmm2
+	movl	%eax, 4656(%rsp)
+	movq	%rsp, %rax
+	vpmovsxbw	%xmm2, %ymm3
 .L2:
-	vmovdqu	(%rcx), %ymm4
+	vmovdqu	(%rdx), %ymm5
 	addq	$64, %rax
-	subq	$32, %rcx
-	vperm2i128	$1, %ymm4, %ymm4, %ymm0
-	vpshufb	%ymm3, %ymm0, %ymm0
+	subq	$32, %rdx
+	vperm2i128	$1, %ymm5, %ymm5, %ymm0
+	vpshufb	%ymm4, %ymm0, %ymm0
 	vpmovsxbw	%xmm0, %ymm1
 	vextracti128	$0x1, %ymm0, %xmm0
 	vpmovsxbw	%xmm0, %ymm0
-	vpmullw	%ymm2, %ymm1, %ymm1
-	vpmullw	%ymm2, %ymm0, %ymm0
+	vpmullw	%ymm3, %ymm1, %ymm1
+	vpmullw	%ymm3, %ymm0, %ymm0
 	vmovdqa	%ymm1, -64(%rax)
 	vmovdqa	%ymm0, -32(%rax)
-	cmpq	%rax, %rdx
+	cmpq	%rax, %rcx
 	jne	.L2
-	leaq	24(%r12), %rcx
-	addq	$1522, %rsi
-	.p2align 4,,10
-	.p2align 3
-.L3:
-	movsbw	(%rcx), %ax
-	addq	$2, %rdx
-	decq	%rcx
-	leal	(%rax,%rax,2), %eax
-	movw	%ax, -2(%rdx)
-	cmpq	%rdx, %rsi
-	jne	.L3
-	leaq	4688(%rsp), %r12
-	vpxor	%xmm0, %xmm0, %xmm0
-	movl	$1538, %edx
+	vmovdqu	9(%r13), %xmm3
+	movsbw	0(%r13), %ax
 	xorl	%esi, %esi
-	vmovups	%xmm0, 1522(%rsp)
-	movq	%r12, %rdi
+	movl	$1538, %edx
+	movl	$1, %r14d
+	vpshufb	.LC3(%rip), %xmm3, %xmm0
+	vpmovsxbw	%xmm2, %xmm3
+	leal	(%rax,%rax,2), %eax
+	vpmovsxbw	%xmm0, %xmm1
+	vpsrldq	$8, %xmm0, %xmm0
+	movw	%ax, 1520(%rsp)
+	vpmullw	%xmm3, %xmm1, %xmm1
+	vpmovsxbw	%xmm0, %xmm0
+	vmovdqa	.LC5(%rip), %xmm3
+	vmovdqa	%xmm1, 1472(%rsp)
+	vpsrldq	$8, %xmm2, %xmm1
+	vpmovsxbw	%xmm1, %xmm1
+	vpmullw	%xmm1, %xmm0, %xmm0
+	vpmovsxbw	1(%r13), %xmm1
+	leaq	4688(%rsp), %r13
+	movq	%r13, %rdi
+	vmovdqa	%xmm0, 1488(%rsp)
+	vpsllw	$1, %xmm1, %xmm0
+	vpaddw	%xmm1, %xmm0, %xmm0
+	vpshufb	%xmm3, %xmm0, %xmm0
+	vmovdqa	%xmm0, 1504(%rsp)
+	vpxor	%xmm0, %xmm0, %xmm0
+	vmovdqu	%xmm0, 1522(%rsp)
 	vzeroupper
 	call	memset@PLT
-	movl	$1, %edx
+	movl	$1, %eax
 	xorl	%esi, %esi
-	movw	%dx, 4688(%rsp)
 	leaq	1568(%rsp), %rdi
 	movl	$1538, %edx
+	movw	%ax, 4688(%rsp)
 	call	memset@PLT
-	vmovdqa	.LC2(%rip), %ymm4
-	movl	$1, %edx
-	vmovdqa	.LC3(%rip), %ymm3
-	movq	%rax, %rdi
 	movl	$1, %esi
-	leaq	2(%rsp), %r9
 	xorl	%ecx, %ecx
-	leaq	3138(%rsp), %r10
-	leaq	4674(%rsp), %r11
-	.p2align 4,,10
-	.p2align 3
-.L6:
-	movswl	(%rsp), %r8d
-	movl	%esi, %r13d
-	negl	%r13d
-	imull	$58470, %r8d, %eax
-	addl	$134217728, %eax
-	sarl	$28, %eax
-	imull	$-4591, %eax, %eax
-	addl	%r8d, %eax
-	movzwl	%ax, %r8d
-	negl	%r8d
-	andl	%r13d, %r8d
-	xorl	%esi, %r13d
-	sarl	$31, %r8d
-	andl	%r8d, %r13d
-	vmovd	%r8d, %xmm6
-	xorl	%r13d, %esi
-	movl	%edx, %r13d
-	vpbroadcastd	%xmm6, %ymm6
-	xorl	%eax, %r13d
-	incl	%esi
-	movswl	%r13w, %r13d
-	andl	%r8d, %r13d
-	xorl	%r13d, %edx
-	xorl	%r13d, %eax
-	vmovd	%edx, %xmm5
-	vmovd	%eax, %xmm1
-	movw	%dx, 3136(%rsp)
-	movq	%r10, %rax
-	vpbroadcastw	%xmm5, %ymm5
-	vpbroadcastw	%xmm1, %ymm1
-	movq	%r9, %rdx
-	vpmullw	%ymm4, %ymm1, %ymm7
-	vpmullw	%ymm4, %ymm5, %ymm8
-	.p2align 4,,10
-	.p2align 3
-.L4:
-	vmovdqu	(%rax), %ymm0
-	addq	$32, %rax
-	addq	$32, %rdx
-	vpblendvb	%ymm6, -32(%rdx), %ymm0, %ymm10
-	vmovdqu	-32(%rdx), %ymm0
-	vpmullw	%ymm10, %ymm7, %ymm2
-	vpmulhw	%ymm1, %ymm10, %ymm9
-	vpblendvb	%ymm6, -32(%rax), %ymm0, %ymm0
-	vmovdqu	%ymm10, -32(%rax)
-	vpmulhw	%ymm5, %ymm0, %ymm11
-	vpmullw	%ymm0, %ymm8, %ymm0
-	vpmulhw	%ymm3, %ymm2, %ymm2
-	vpmulhw	%ymm3, %ymm0, %ymm0
-	vpaddw	%ymm11, %ymm2, %ymm2
-	vpaddw	%ymm0, %ymm9, %ymm0
-	vpsubw	%ymm0, %ymm2, %ymm0
-	vmovdqu	%ymm0, -34(%rdx)
-	cmpq	%r11, %rax
-	jne	.L4
-	movl	%ecx, %eax
-	leal	1(%rcx), %r8d
-	shrl	$4, %ecx
-	notl	%eax
-	movl	%ecx, %edx
-	andl	$15, %eax
-	notq	%rdx
-	addl	%r8d, %eax
-	salq	$5, %rdx
-	cltq
-	addq	%rax, %rax
-	leaq	(%rdi,%rax), %r13
-	addq	%r12, %rax
-	addq	%r13, %rdx
+	vpxor	%xmm9, %xmm9, %xmm9
+	movq	%rax, %rdi
+	movl	$15631, %eax
+	vmovdqa	.LC5(%rip), %xmm3
+	leaq	2(%rsp), %r8
+	vmovd	%eax, %xmm8
+	movl	$4591, %eax
+	leaq	3138(%rsp), %r9
+	vmovd	%eax, %xmm2
+	leaq	4674(%rsp), %r10
+	vpbroadcastw	%xmm8, %ymm8
+	vpbroadcastw	%xmm2, %ymm2
 	.p2align 4,,10
 	.p2align 3
 .L5:
-	vmovdqu	-32(%r13), %ymm2
-	vmovdqu	-32(%rax), %ymm0
-	subq	$32, %r13
-	subq	$32, %rax
-	vpblendvb	%ymm6, (%rax), %ymm2, %ymm10
-	vpblendvb	%ymm6, %ymm2, %ymm0, %ymm0
-	vpmulhw	%ymm5, %ymm0, %ymm11
-	vpmullw	%ymm10, %ymm7, %ymm2
-	vmovdqu	%ymm10, 2(%r13)
-	vpmullw	%ymm0, %ymm8, %ymm0
-	vpmulhw	%ymm1, %ymm10, %ymm9
-	vpmulhw	%ymm3, %ymm2, %ymm2
-	vpmulhw	%ymm3, %ymm0, %ymm0
-	vpaddw	%ymm11, %ymm2, %ymm2
-	vpaddw	%ymm0, %ymm9, %ymm0
-	vpsubw	%ymm0, %ymm2, %ymm0
-	vmovdqu	%ymm0, (%rax)
-	cmpq	%rdx, %r13
-	jne	.L5
-	movzwl	3136(%rsp), %edx
-	cmpl	$761, %r8d
-	je	.L22
-	movl	%r8d, %ecx
-	jmp	.L6
-	.p2align 4,,10
-	.p2align 3
-.L22:
-	movl	$760, %r12d
-	leaq	6224(%rsp), %rax
-	leaq	3104(%rsp), %r13
-	.p2align 4,,10
-	.p2align 3
-.L9:
-	movswl	(%rsp), %r8d
-	movl	%esi, %r14d
-	movl	%r12d, %r11d
-	negl	%r14d
-	imull	$58470, %r8d, %ecx
-	movl	%r14d, %r15d
-	xorl	%esi, %r15d
-	addl	$134217728, %ecx
-	sarl	$28, %ecx
-	imull	$-4591, %ecx, %ecx
-	addl	%r8d, %ecx
-	movzwl	%cx, %r8d
-	negl	%r8d
-	andl	%r14d, %r8d
-	movl	%edx, %r14d
-	xorl	%ecx, %r14d
-	sarl	$31, %r8d
-	movswl	%r14w, %r14d
-	andl	%r8d, %r15d
-	vmovd	%r8d, %xmm1
-	andl	%r8d, %r14d
-	xorl	%esi, %r15d
+	movswl	(%rsp), %edx
+	movl	%esi, %r11d
+	negl	%r11d
+	imull	$58470, %edx, %eax
+	addl	$134217728, %eax
+	sarl	$28, %eax
+	imull	$-4591, %eax, %eax
+	addl	%edx, %eax
+	movzwl	%ax, %edx
+	negl	%edx
+	andl	%r11d, %edx
+	xorl	%esi, %r11d
+	sarl	$31, %edx
+	andl	%edx, %r11d
+	vmovd	%edx, %xmm1
+	xorl	%esi, %r11d
 	vpbroadcastd	%xmm1, %ymm1
-	xorl	%r14d, %edx
-	xorl	%r14d, %ecx
-	leal	1(%r15), %esi
-	vmovd	%edx, %xmm6
-	vmovd	%ecx, %xmm0
-	movw	%dx, 3136(%rsp)
-	movq	%r9, %rcx
-	vpbroadcastw	%xmm6, %ymm6
-	vpbroadcastw	%xmm0, %ymm0
-	movq	%r10, %rdx
-	vpmullw	%ymm4, %ymm0, %ymm7
-	vpmullw	%ymm4, %ymm6, %ymm8
+	leal	1(%r11), %esi
+	vpcmpgtb	%ymm1, %ymm9, %ymm1
+	movl	%r14d, %r11d
+	xorl	%eax, %r11d
+	movswl	%r11w, %r11d
+	andl	%edx, %r11d
+	movq	%r8, %rdx
+	xorl	%r11d, %r14d
+	xorl	%r11d, %eax
+	vmovd	%eax, %xmm4
+	vmovd	%r14d, %xmm5
+	movq	%r9, %rax
+	movw	%r14w, 3136(%rsp)
+	vpbroadcastw	%xmm5, %ymm5
+	vpbroadcastw	%xmm4, %ymm4
+	vpmullw	%ymm8, %ymm4, %ymm6
+	vpmullw	%ymm8, %ymm5, %ymm7
 	.p2align 4,,10
 	.p2align 3
-.L7:
-	vmovdqu	(%rdx), %ymm5
-	subl	$16, %r11d
+.L3:
+	vmovdqu	(%rax), %ymm0
+	addq	$32, %rax
 	addq	$32, %rdx
-	addq	$32, %rcx
-	vpblendvb	%ymm1, -32(%rcx), %ymm5, %ymm10
-	vmovdqu	-32(%rcx), %ymm5
-	vpmulhw	%ymm0, %ymm10, %ymm9
-	vpblendvb	%ymm1, -32(%rdx), %ymm5, %ymm2
-	vpmullw	%ymm10, %ymm7, %ymm5
-	vmovdqu	%ymm10, -32(%rdx)
-	vpmulhw	%ymm6, %ymm2, %ymm11
-	vpmullw	%ymm2, %ymm8, %ymm2
-	vpmulhw	%ymm3, %ymm5, %ymm5
-	vpmulhw	%ymm3, %ymm2, %ymm2
-	vpaddw	%ymm11, %ymm5, %ymm5
-	vpaddw	%ymm2, %ymm9, %ymm2
-	vpsubw	%ymm2, %ymm5, %ymm2
-	vmovdqu	%ymm2, -34(%rcx)
-	testl	%r11d, %r11d
-	jg	.L7
-	movq	%rax, %rcx
-	movq	%r13, %rdx
+	vpblendvb	%ymm1, -32(%rdx), %ymm0, %ymm12
+	vmovdqu	-32(%rdx), %ymm0
+	vpmullw	%ymm12, %ymm6, %ymm10
+	vpmulhw	%ymm4, %ymm12, %ymm11
+	vpblendvb	%ymm1, -32(%rax), %ymm0, %ymm0
+	vmovdqu	%ymm12, -32(%rax)
+	vpmulhw	%ymm5, %ymm0, %ymm13
+	vpmullw	%ymm0, %ymm7, %ymm0
+	vpmulhw	%ymm2, %ymm10, %ymm10
+	vpmulhw	%ymm2, %ymm0, %ymm0
+	vpaddw	%ymm13, %ymm10, %ymm10
+	vpaddw	%ymm0, %ymm11, %ymm0
+	vpsubw	%ymm0, %ymm10, %ymm0
+	vmovdqa	%ymm0, -34(%rdx)
+	cmpq	%r10, %rax
+	jne	.L3
+	movl	%ecx, %eax
+	leal	1(%rcx), %edx
+	shrl	$4, %ecx
+	notl	%eax
+	incl	%ecx
+	andl	$15, %eax
+	salq	$5, %rcx
+	addl	%edx, %eax
+	cltq
+	addq	%rax, %rax
+	leaq	(%rdi,%rax), %r11
+	addq	%r13, %rax
+	movq	%r11, %r14
+	subq	%rcx, %r14
+	.p2align 4,,10
+	.p2align 3
+.L4:
+	vmovdqu	-32(%r11), %ymm0
+	subq	$32, %r11
+	subq	$32, %rax
+	vpblendvb	%ymm1, (%rax), %ymm0, %ymm12
+	vmovdqu	(%rax), %ymm0
+	vpmullw	%ymm12, %ymm6, %ymm10
+	vpmulhw	%ymm4, %ymm12, %ymm11
+	vpblendvb	%ymm1, (%r11), %ymm0, %ymm0
+	vmovdqu	%ymm12, 2(%r11)
+	vpmulhw	%ymm5, %ymm0, %ymm13
+	vpmullw	%ymm0, %ymm7, %ymm0
+	vpmulhw	%ymm2, %ymm10, %ymm10
+	vpmulhw	%ymm2, %ymm0, %ymm0
+	vpaddw	%ymm13, %ymm10, %ymm10
+	vpaddw	%ymm0, %ymm11, %ymm0
+	vpsubw	%ymm0, %ymm10, %ymm0
+	vmovdqu	%ymm0, (%rax)
+	cmpq	%r11, %r14
+	jne	.L4
+	movzwl	3136(%rsp), %r14d
+	cmpl	$761, %edx
+	je	.L20
+	movl	%edx, %ecx
+	jmp	.L5
+.L20:
+	movl	$15631, %eax
+	movl	$760, %r10d
+	vpxor	%xmm9, %xmm9, %xmm9
+	vmovd	%eax, %xmm8
+	movl	$4591, %eax
+	leaq	6224(%rsp), %r13
+	vmovd	%eax, %xmm2
+	leaq	3104(%rsp), %r11
+	vpbroadcastw	%xmm8, %ymm8
+	vpbroadcastw	%xmm2, %ymm2
 	.p2align 4,,10
 	.p2align 3
 .L8:
-	vmovdqu	-32(%rdx), %ymm5
-	subq	$32, %rdx
-	subq	$32, %rcx
-	vpblendvb	%ymm1, (%rcx), %ymm5, %ymm10
-	vmovdqu	(%rcx), %ymm5
-	vpmulhw	%ymm0, %ymm10, %ymm9
-	vpblendvb	%ymm1, (%rdx), %ymm5, %ymm2
-	vpmullw	%ymm10, %ymm7, %ymm5
-	vmovdqu	%ymm10, 2(%rdx)
-	vpmulhw	%ymm6, %ymm2, %ymm11
-	vpmullw	%ymm2, %ymm8, %ymm2
-	vpmulhw	%ymm3, %ymm5, %ymm5
-	vpmulhw	%ymm3, %ymm2, %ymm2
-	vpaddw	%ymm11, %ymm5, %ymm5
-	vpaddw	%ymm2, %ymm9, %ymm2
-	vpsubw	%ymm2, %ymm5, %ymm2
-	vmovdqu	%ymm2, (%rcx)
-	cmpq	%rdi, %rdx
-	jne	.L8
-	movswl	3136(%rsp), %edx
-	decl	%r12d
-	jne	.L9
-	imull	$228, %edx, %eax
-	vmovdqa	.LC4(%rip), %ymm8
-	vmovdqa	.LC5(%rip), %ymm7
-	vmovdqa	.LC6(%rip), %ymm4
-	vmovdqa	.LC7(%rip), %ymm3
-	vmovdqa	.LC8(%rip), %ymm2
-	vmovdqa	.LC9(%rip), %ymm1
-	sarl	$20, %eax
-	vmovdqa	.LC10(%rip), %ymm6
-	imull	$-4591, %eax, %eax
-	addl	%eax, %edx
-	imull	$58470, %edx, %eax
-	addl	$134217728, %eax
-	sarl	$28, %eax
-	imull	$-4591, %eax, %eax
-	addl	%eax, %edx
-	movswl	%dx, %edx
-	movl	%edx, %ecx
-	movl	%edx, %esi
-	imull	%edx, %ecx
-	imull	$228, %ecx, %eax
-	sarl	$20, %eax
-	imull	$-4591, %eax, %eax
-	addl	%ecx, %eax
-	imull	$58470, %eax, %ecx
-	addl	$134217728, %ecx
-	sarl	$28, %ecx
-	imull	$-4591, %ecx, %ecx
-	addl	%ecx, %eax
-	cwtl
-	imull	%eax, %esi
-	imull	%eax, %eax
-	imull	$228, %esi, %ecx
-	imull	$228, %eax, %edi
-	sarl	$20, %ecx
-	imull	$-4591, %ecx, %ecx
-	sarl	$20, %edi
-	imull	$-4591, %edi, %edi
-	addl	%esi, %ecx
-	imull	$58470, %ecx, %esi
-	addl	$134217728, %esi
-	sarl	$28, %esi
-	imull	$-4591, %esi, %esi
-	addl	%edi, %eax
-	imull	$58470, %eax, %edi
-	addl	$134217728, %edi
-	sarl	$28, %edi
-	imull	$-4591, %edi, %edi
-	addl	%edi, %eax
-	cwtl
-	imull	%eax, %eax
-	movl	%eax, %edi
-	imull	$228, %eax, %eax
-	sarl	$20, %eax
-	imull	$-4591, %eax, %eax
-	addl	%edi, %eax
-	imull	$58470, %eax, %edi
-	addl	$134217728, %edi
-	sarl	$28, %edi
-	imull	$-4591, %edi, %edi
-	addl	%edi, %eax
-	cwtl
-	imull	%eax, %eax
-	movl	%eax, %edi
-	imull	$228, %eax, %eax
-	sarl	$20, %eax
-	imull	$-4591, %eax, %eax
-	addl	%edi, %eax
-	imull	$58470, %eax, %edi
-	addl	$134217728, %edi
-	sarl	$28, %edi
-	imull	$-4591, %edi, %edi
-	addl	%edi, %eax
-	cwtl
-	imull	%eax, %eax
-	imull	$228, %eax, %edi
-	sarl	$20, %edi
-	imull	$-4591, %edi, %edi
-	addl	%eax, %edi
-	leal	(%rcx,%rsi), %eax
-	imull	$58470, %edi, %r8d
-	cwtl
-	addl	$134217728, %r8d
-	sarl	$28, %r8d
-	imull	$-4591, %r8d, %r8d
-	leal	(%rdi,%r8), %ecx
-	movswl	%cx, %ecx
-	movl	%ecx, %esi
-	imull	%eax, %esi
-	imull	$228, %esi, %ecx
-	sarl	$20, %ecx
-	imull	$-4591, %ecx, %ecx
-	addl	%esi, %ecx
-	imull	$58470, %ecx, %esi
-	addl	$134217728, %esi
-	sarl	$28, %esi
-	imull	$-4591, %esi, %esi
-	addl	%esi, %ecx
-	movswl	%cx, %ecx
-	movl	%ecx, %esi
-	imull	%ecx, %esi
-	imull	$228, %esi, %ecx
-	sarl	$20, %ecx
-	imull	$-4591, %ecx, %ecx
-	addl	%esi, %ecx
-	imull	$58470, %ecx, %esi
-	addl	$134217728, %esi
-	sarl	$28, %esi
-	imull	$-4591, %esi, %esi
-	addl	%esi, %ecx
-	movswl	%cx, %ecx
-	imull	%ecx, %ecx
-	imull	$228, %ecx, %esi
-	sarl	$20, %esi
-	imull	$-4591, %esi, %esi
-	addl	%esi, %ecx
-	imull	$58470, %ecx, %esi
-	addl	$134217728, %esi
-	sarl	$28, %esi
-	imull	$-4591, %esi, %esi
-	addl	%esi, %ecx
-	movswl	%cx, %ecx
-	movl	%ecx, %esi
-	imull	%eax, %esi
-	imull	$228, %esi, %ecx
-	sarl	$20, %ecx
-	imull	$-4591, %ecx, %ecx
-	addl	%esi, %ecx
-	imull	$58470, %ecx, %esi
-	addl	$134217728, %esi
-	sarl	$28, %esi
-	imull	$-4591, %esi, %esi
-	addl	%esi, %ecx
-	movswl	%cx, %ecx
-	movl	%ecx, %esi
-	imull	%ecx, %esi
-	imull	$228, %esi, %ecx
-	sarl	$20, %ecx
-	imull	$-4591, %ecx, %ecx
-	addl	%esi, %ecx
-	imull	$58470, %ecx, %esi
-	addl	$134217728, %esi
-	sarl	$28, %esi
-	imull	$-4591, %esi, %esi
-	addl	%esi, %ecx
-	movswl	%cx, %ecx
-	movl	%ecx, %esi
-	imull	%ecx, %esi
-	imull	$228, %esi, %ecx
-	sarl	$20, %ecx
-	imull	$-4591, %ecx, %ecx
-	addl	%esi, %ecx
-	imull	$58470, %ecx, %esi
-	addl	$134217728, %esi
-	sarl	$28, %esi
-	imull	$-4591, %esi, %esi
-	addl	%esi, %ecx
-	movswl	%cx, %ecx
-	imull	%ecx, %ecx
-	imull	$228, %ecx, %esi
-	sarl	$20, %esi
-	imull	$-4591, %esi, %esi
-	addl	%esi, %ecx
-	imull	$58470, %ecx, %esi
-	addl	$134217728, %esi
-	sarl	$28, %esi
-	imull	$-4591, %esi, %esi
-	addl	%esi, %ecx
-	leaq	1556(%rsp), %rsi
-	movswl	%cx, %ecx
-	imull	%eax, %ecx
-	imull	$228, %ecx, %eax
-	sarl	$20, %eax
-	imull	$-4591, %eax, %eax
-	addl	%ecx, %eax
-	imull	$58470, %eax, %ecx
-	addl	$134217728, %ecx
-	sarl	$28, %ecx
-	imull	$-4591, %ecx, %ecx
-	addl	%ecx, %eax
-	cwtl
-	imull	%eax, %eax
-	movl	%eax, %ecx
-	imull	$228, %eax, %eax
-	sarl	$20, %eax
-	imull	$-4591, %eax, %eax
-	addl	%ecx, %eax
-	imull	$58470, %eax, %ecx
-	addl	$134217728, %ecx
-	sarl	$28, %ecx
-	imull	$-4591, %ecx, %ecx
-	addl	%ecx, %eax
-	cwtl
-	imull	%eax, %eax
-	imull	$228, %eax, %ecx
-	sarl	$20, %ecx
-	imull	$-4591, %ecx, %ecx
-	addl	%ecx, %eax
-	imull	$58470, %eax, %ecx
-	addl	$134217728, %ecx
-	sarl	$28, %ecx
-	imull	$-4591, %ecx, %ecx
-	addl	%ecx, %eax
-	cwtl
-	imull	%eax, %edx
-	imull	$228, %edx, %eax
-	sarl	$20, %eax
-	imull	$-4591, %eax, %eax
-	addl	%eax, %edx
-	imull	$58470, %edx, %eax
-	addl	$134217728, %eax
-	sarl	$28, %eax
-	imull	$-4591, %eax, %eax
-	addl	%edx, %eax
-	movq	%rbx, %rdx
-	vmovd	%eax, %xmm5
-	movswl	%ax, %ecx
-	leaq	3060(%rsp), %rax
-	vpbroadcastw	%xmm5, %ymm5
-	.p2align 4,,10
-	.p2align 3
-.L10:
-	vmovdqu	(%rax), %ymm0
-	subq	$32, %rax
-	addq	$32, %rdx
-	vperm2i128	$1, %ymm0, %ymm0, %ymm0
-	vpshufb	%ymm8, %ymm0, %ymm0
-	vpmulhw	%ymm7, %ymm0, %ymm9
-	vpmullw	%ymm0, %ymm7, %ymm11
-	vpmovsxwd	%xmm0, %ymm12
-	vextracti128	$0x1, %ymm0, %xmm0
-	vpmovsxwd	%xmm0, %ymm0
-	vpunpcklwd	%ymm9, %ymm11, %ymm10
-	vpunpckhwd	%ymm9, %ymm11, %ymm11
-	vperm2i128	$32, %ymm11, %ymm10, %ymm9
-	vperm2i128	$49, %ymm11, %ymm10, %ymm10
-	vpsrad	$20, %ymm9, %ymm9
-	vpsrad	$20, %ymm10, %ymm10
-	vpmulld	%ymm4, %ymm9, %ymm9
-	vpmulld	%ymm4, %ymm10, %ymm10
-	vpaddd	%ymm12, %ymm9, %ymm9
-	vpaddd	%ymm0, %ymm10, %ymm10
-	vpmulld	%ymm3, %ymm10, %ymm11
-	vpmulld	%ymm3, %ymm9, %ymm0
-	vpand	%ymm10, %ymm1, %ymm10
-	vpand	%ymm9, %ymm1, %ymm9
-	vpackusdw	%ymm10, %ymm9, %ymm9
-	vpermq	$216, %ymm9, %ymm9
-	vpaddd	%ymm2, %ymm0, %ymm0
-	vpaddd	%ymm2, %ymm11, %ymm11
-	vpsrad	$28, %ymm0, %ymm0
-	vpsrad	$28, %ymm11, %ymm11
-	vpand	%ymm11, %ymm1, %ymm11
-	vpand	%ymm0, %ymm1, %ymm0
-	vpackusdw	%ymm11, %ymm0, %ymm0
-	vpermq	$216, %ymm0, %ymm0
-	vpmullw	%ymm0, %ymm6, %ymm0
-	vpaddw	%ymm9, %ymm0, %ymm0
-	vpmullw	%ymm0, %ymm5, %ymm10
-	vpmulhw	%ymm0, %ymm5, %ymm0
-	vpunpcklwd	%ymm0, %ymm10, %ymm9
-	vpunpckhwd	%ymm0, %ymm10, %ymm0
-	vperm2i128	$32, %ymm0, %ymm9, %ymm11
-	vperm2i128	$49, %ymm0, %ymm9, %ymm10
-	vpslld	$3, %ymm10, %ymm9
-	vpslld	$3, %ymm11, %ymm0
-	vpsubd	%ymm11, %ymm0, %ymm0
-	vpsubd	%ymm10, %ymm9, %ymm9
-	vpslld	$3, %ymm0, %ymm0
-	vpslld	$3, %ymm9, %ymm9
-	vpaddd	%ymm11, %ymm0, %ymm0
-	vpaddd	%ymm10, %ymm9, %ymm9
-	vpslld	$2, %ymm0, %ymm0
-	vpslld	$2, %ymm9, %ymm9
-	vpsrad	$20, %ymm0, %ymm0
-	vpsrad	$20, %ymm9, %ymm9
-	vpmulld	%ymm4, %ymm0, %ymm0
-	vpmulld	%ymm4, %ymm9, %ymm9
-	vpaddd	%ymm11, %ymm0, %ymm0
-	vpaddd	%ymm10, %ymm9, %ymm9
-	vpmulld	%ymm3, %ymm9, %ymm11
-	vpmulld	%ymm3, %ymm0, %ymm10
-	vpand	%ymm9, %ymm1, %ymm9
-	vpand	%ymm0, %ymm1, %ymm0
-	vpackusdw	%ymm9, %ymm0, %ymm0
-	vpermq	$216, %ymm0, %ymm0
-	vpaddd	%ymm2, %ymm10, %ymm10
-	vpaddd	%ymm2, %ymm11, %ymm11
-	vpsrad	$28, %ymm10, %ymm10
-	vpsrad	$28, %ymm11, %ymm11
-	vpand	%ymm10, %ymm1, %ymm10
-	vpand	%ymm11, %ymm1, %ymm11
-	vpackusdw	%ymm11, %ymm10, %ymm10
-	vpermq	$216, %ymm10, %ymm10
-	vpmullw	%ymm10, %ymm6, %ymm10
-	vpaddw	%ymm0, %ymm10, %ymm0
-	vmovdqu	%ymm0, -32(%rdx)
-	cmpq	%rsi, %rax
-	jne	.L10
-	movswl	1586(%rsp), %edx
-	movq	$0, 1522(%rbx)
-	movl	$0, 1530(%rbx)
-	imull	$228, %edx, %eax
-	sarl	$20, %eax
-	imull	$-4591, %eax, %eax
-	addl	%eax, %edx
-	imull	$58470, %edx, %eax
-	addl	$134217728, %eax
-	sarl	$28, %eax
-	imull	$-4591, %eax, %eax
-	addl	%edx, %eax
-	cwtl
-	imull	%ecx, %eax
-	imull	$228, %eax, %edx
-	sarl	$20, %edx
-	imull	$-4591, %edx, %edx
-	addl	%edx, %eax
+	movswl	(%rsp), %eax
+	movl	%r14d, %r15d
+	decl	%r10d
 	imull	$58470, %eax, %edx
 	addl	$134217728, %edx
 	sarl	$28, %edx
 	imull	$-4591, %edx, %edx
-	addl	%edx, %eax
-	movw	%ax, 1504(%rbx)
-	movswl	1584(%rsp), %eax
-	imull	$228, %eax, %edx
+	addl	%eax, %edx
+	movl	%esi, %eax
+	movzwl	%dx, %ecx
+	negl	%eax
+	xorl	%edx, %r15d
+	negl	%ecx
+	movswl	%r15w, %r15d
+	andl	%eax, %ecx
+	xorl	%esi, %eax
+	sarl	$31, %ecx
+	andl	%ecx, %r15d
+	vmovd	%ecx, %xmm1
+	andl	%ecx, %eax
+	movq	%r8, %rcx
+	xorl	%r15d, %r14d
+	xorl	%r15d, %edx
+	vpbroadcastd	%xmm1, %ymm1
+	xorl	%esi, %eax
+	vmovd	%r14d, %xmm5
+	vmovd	%edx, %xmm4
+	movl	%r10d, %edx
+	movw	%r14w, 3136(%rsp)
+	vpbroadcastw	%xmm5, %ymm5
+	vpbroadcastw	%xmm4, %ymm4
+	shrl	$4, %edx
+	leal	1(%rax), %esi
+	vpmullw	%ymm8, %ymm4, %ymm6
+	vpmullw	%ymm8, %ymm5, %ymm7
+	salq	$5, %rdx
+	vpcmpgtb	%ymm1, %ymm9, %ymm1
+	leaq	34(%r12,%rdx), %r14
+	movq	%r9, %rdx
+	.p2align 4,,10
+	.p2align 3
+.L6:
+	vmovdqu	(%rdx), %ymm0
+	addq	$32, %rdx
+	addq	$32, %rcx
+	vpblendvb	%ymm1, -32(%rcx), %ymm0, %ymm12
+	vmovdqu	-32(%rcx), %ymm0
+	vpmullw	%ymm12, %ymm6, %ymm10
+	vpmulhw	%ymm4, %ymm12, %ymm11
+	vpblendvb	%ymm1, -32(%rdx), %ymm0, %ymm0
+	vmovdqu	%ymm12, -32(%rdx)
+	vpmulhw	%ymm5, %ymm0, %ymm13
+	vpmullw	%ymm0, %ymm7, %ymm0
+	vpmulhw	%ymm2, %ymm10, %ymm10
+	vpmulhw	%ymm2, %ymm0, %ymm0
+	vpaddw	%ymm13, %ymm10, %ymm10
+	vpaddw	%ymm0, %ymm11, %ymm0
+	vpsubw	%ymm0, %ymm10, %ymm0
+	vmovdqa	%ymm0, -34(%rcx)
+	cmpq	%r14, %rdx
+	jne	.L6
+	movswl	3136(%rsp), %r14d
+	movq	%r13, %rcx
+	movq	%r11, %rdx
+	.p2align 4,,10
+	.p2align 3
+.L7:
+	vmovdqa	-32(%rdx), %ymm0
+	subq	$32, %rdx
+	subq	$32, %rcx
+	vpblendvb	%ymm1, (%rcx), %ymm0, %ymm12
+	vmovdqu	(%rcx), %ymm0
+	vpmullw	%ymm12, %ymm6, %ymm10
+	vpmulhw	%ymm4, %ymm12, %ymm11
+	vpblendvb	%ymm1, (%rdx), %ymm0, %ymm0
+	vmovdqu	%ymm12, 2(%rdx)
+	vpmulhw	%ymm5, %ymm0, %ymm13
+	vpmullw	%ymm0, %ymm7, %ymm0
+	vpmulhw	%ymm2, %ymm10, %ymm10
+	vpmulhw	%ymm2, %ymm0, %ymm0
+	vpaddw	%ymm13, %ymm10, %ymm10
+	vpaddw	%ymm0, %ymm11, %ymm0
+	vpsubw	%ymm0, %ymm10, %ymm0
+	vmovdqu	%ymm0, (%rcx)
+	cmpq	%rdi, %rdx
+	jne	.L7
+	testl	%r10d, %r10d
+	jne	.L8
+	imull	$228, %r14d, %edx
+	movq	%rbx, %r10
+	leaq	3060(%rsp), %r9
+	leaq	1556(%rsp), %r11
 	sarl	$20, %edx
 	imull	$-4591, %edx, %edx
-	addl	%eax, %edx
-	imull	$58470, %edx, %eax
-	addl	$134217728, %eax
-	sarl	$28, %eax
-	imull	$-4591, %eax, %eax
-	addl	%eax, %edx
+	addl	%r14d, %edx
+	imull	$58470, %edx, %ecx
+	addl	$134217728, %ecx
+	sarl	$28, %ecx
+	imull	$-4591, %ecx, %ecx
+	addl	%ecx, %edx
+	movswl	%dx, %ecx
+	movl	%ecx, %esi
+	movl	%ecx, %edi
+	imull	%ecx, %esi
+	imull	$228, %esi, %edx
+	sarl	$20, %edx
+	imull	$-4591, %edx, %edx
+	addl	%esi, %edx
+	imull	$58470, %edx, %esi
+	addl	$134217728, %esi
+	sarl	$28, %esi
+	imull	$-4591, %esi, %esi
+	addl	%esi, %edx
+	movswl	%dx, %edx
+	imull	%edx, %edi
+	imull	%edx, %edx
+	imull	$228, %edi, %esi
+	imull	$228, %edx, %r8d
+	sarl	$20, %esi
+	imull	$-4591, %esi, %esi
+	sarl	$20, %r8d
+	imull	$-4591, %r8d, %r8d
+	addl	%edi, %esi
+	imull	$58470, %esi, %edi
+	addl	$134217728, %edi
+	sarl	$28, %edi
+	imull	$-4591, %edi, %edi
+	addl	%r8d, %edx
+	imull	$58470, %edx, %r8d
+	addl	$134217728, %r8d
+	sarl	$28, %r8d
+	imull	$-4591, %r8d, %r8d
+	addl	%edx, %r8d
+	movswl	%r8w, %r8d
+	imull	%r8d, %r8d
+	imull	$228, %r8d, %edx
+	sarl	$20, %edx
+	imull	$-4591, %edx, %edx
+	addl	%r8d, %edx
+	imull	$58470, %edx, %r8d
+	addl	$134217728, %r8d
+	sarl	$28, %r8d
+	imull	$-4591, %r8d, %r8d
+	addl	%edx, %r8d
+	movswl	%r8w, %r8d
+	imull	%r8d, %r8d
+	imull	$228, %r8d, %edx
+	sarl	$20, %edx
+	imull	$-4591, %edx, %edx
+	addl	%r8d, %edx
+	imull	$58470, %edx, %r8d
+	addl	$134217728, %r8d
+	sarl	$28, %r8d
+	imull	$-4591, %r8d, %r8d
+	addl	%r8d, %edx
+	movswl	%dx, %edx
+	imull	%edx, %edx
+	imull	$228, %edx, %r8d
+	sarl	$20, %r8d
+	imull	$-4591, %r8d, %r8d
+	addl	%r8d, %edx
+	imull	$58470, %edx, %r8d
+	addl	$134217728, %r8d
+	addl	%edi, %esi
+	sarl	$28, %r8d
+	movswl	%si, %edi
+	imull	$-4591, %r8d, %r8d
+	leal	(%rdx,%r8), %esi
+	movswl	%si, %esi
+	imull	%edi, %esi
+	imull	$228, %esi, %edx
+	sarl	$20, %edx
+	imull	$-4591, %edx, %edx
+	addl	%esi, %edx
+	imull	$58470, %edx, %esi
+	addl	$134217728, %esi
+	sarl	$28, %esi
+	imull	$-4591, %esi, %esi
+	addl	%edx, %esi
+	movswl	%si, %esi
+	imull	%esi, %esi
+	imull	$228, %esi, %edx
+	sarl	$20, %edx
+	imull	$-4591, %edx, %edx
+	addl	%esi, %edx
+	imull	$58470, %edx, %esi
+	addl	$134217728, %esi
+	sarl	$28, %esi
+	imull	$-4591, %esi, %esi
+	addl	%esi, %edx
+	movswl	%dx, %edx
+	imull	%edx, %edx
+	imull	$228, %edx, %esi
+	sarl	$20, %esi
+	imull	$-4591, %esi, %esi
+	addl	%esi, %edx
+	imull	$58470, %edx, %esi
+	addl	$134217728, %esi
+	sarl	$28, %esi
+	imull	$-4591, %esi, %esi
+	addl	%edx, %esi
+	movswl	%si, %esi
+	imull	%edi, %esi
+	imull	$228, %esi, %edx
+	sarl	$20, %edx
+	imull	$-4591, %edx, %edx
+	addl	%esi, %edx
+	imull	$58470, %edx, %esi
+	addl	$134217728, %esi
+	sarl	$28, %esi
+	imull	$-4591, %esi, %esi
+	addl	%edx, %esi
+	movswl	%si, %esi
+	imull	%esi, %esi
+	imull	$228, %esi, %edx
+	sarl	$20, %edx
+	imull	$-4591, %edx, %edx
+	addl	%esi, %edx
+	imull	$58470, %edx, %esi
+	addl	$134217728, %esi
+	sarl	$28, %esi
+	imull	$-4591, %esi, %esi
+	addl	%edx, %esi
+	movswl	%si, %esi
+	imull	%esi, %esi
+	imull	$228, %esi, %edx
+	sarl	$20, %edx
+	imull	$-4591, %edx, %edx
+	addl	%esi, %edx
+	imull	$58470, %edx, %esi
+	addl	$134217728, %esi
+	sarl	$28, %esi
+	imull	$-4591, %esi, %esi
+	addl	%esi, %edx
+	movswl	%dx, %edx
+	imull	%edx, %edx
+	imull	$228, %edx, %esi
+	sarl	$20, %esi
+	imull	$-4591, %esi, %esi
+	addl	%esi, %edx
+	imull	$58470, %edx, %esi
+	addl	$134217728, %esi
+	sarl	$28, %esi
+	imull	$-4591, %esi, %esi
+	addl	%edx, %esi
+	movswl	%si, %esi
+	imull	%edi, %esi
+	movl	$-4591, %edi
+	vmovd	%edi, %xmm2
+	movl	$58470, %edi
+	vmovd	%edi, %xmm14
+	movl	$134217728, %edi
+	vpbroadcastd	%xmm2, %ymm10
+	imull	$228, %esi, %edx
+	vmovd	%edi, %xmm5
+	movl	$65535, %edi
+	vmovd	%edi, %xmm4
+	vpbroadcastd	%xmm14, %ymm9
+	vpbroadcastd	%xmm5, %ymm8
+	movl	$-4591, %edi
+	vpbroadcastd	%xmm4, %ymm7
+	sarl	$20, %edx
+	imull	$-4591, %edx, %edx
+	addl	%esi, %edx
+	imull	$58470, %edx, %esi
+	addl	$134217728, %esi
+	sarl	$28, %esi
+	imull	$-4591, %esi, %esi
+	addl	%edx, %esi
+	movswl	%si, %esi
+	imull	%esi, %esi
+	imull	$228, %esi, %edx
+	sarl	$20, %edx
+	imull	$-4591, %edx, %edx
+	addl	%esi, %edx
+	imull	$58470, %edx, %esi
+	addl	$134217728, %esi
+	sarl	$28, %esi
+	imull	$-4591, %esi, %esi
+	addl	%esi, %edx
+	movswl	%dx, %edx
+	imull	%edx, %edx
+	imull	$228, %edx, %esi
+	sarl	$20, %esi
+	imull	$-4591, %esi, %esi
+	addl	%esi, %edx
+	imull	$58470, %edx, %esi
+	addl	$134217728, %esi
+	sarl	$28, %esi
+	imull	$-4591, %esi, %esi
+	addl	%esi, %edx
 	movswl	%dx, %edx
 	imull	%ecx, %edx
-	imull	$228, %edx, %eax
-	sarl	$20, %eax
-	imull	$-4591, %eax, %eax
-	addl	%eax, %edx
-	imull	$58470, %edx, %eax
-	addl	$134217728, %eax
-	sarl	$28, %eax
-	imull	$-4591, %eax, %eax
-	addl	%edx, %eax
-	movswl	1582(%rsp), %edx
-	movw	%ax, 1506(%rbx)
-	imull	$228, %edx, %eax
-	sarl	$20, %eax
-	imull	$-4591, %eax, %eax
-	addl	%eax, %edx
-	imull	$58470, %edx, %eax
-	addl	$134217728, %eax
-	sarl	$28, %eax
-	imull	$-4591, %eax, %eax
-	addl	%edx, %eax
-	cwtl
-	imull	%ecx, %eax
-	imull	$228, %eax, %edx
-	sarl	$20, %edx
+	imull	$228, %edx, %ecx
+	sarl	$20, %ecx
+	imull	$-4591, %ecx, %ecx
+	addl	%edx, %ecx
+	imull	$58470, %ecx, %edx
+	addl	$134217728, %edx
+	sarl	$28, %edx
 	imull	$-4591, %edx, %edx
-	addl	%eax, %edx
-	imull	$58470, %edx, %eax
-	addl	$134217728, %eax
-	sarl	$28, %eax
-	imull	$-4591, %eax, %eax
-	addl	%edx, %eax
-	movswl	1580(%rsp), %edx
-	movw	%ax, 1508(%rbx)
-	imull	$228, %edx, %eax
-	sarl	$20, %eax
-	imull	$-4591, %eax, %eax
-	addl	%eax, %edx
-	imull	$58470, %edx, %eax
-	addl	$134217728, %eax
-	sarl	$28, %eax
-	imull	$-4591, %eax, %eax
-	addl	%edx, %eax
-	cwtl
-	imull	%ecx, %eax
-	imull	$228, %eax, %edx
-	sarl	$20, %edx
-	imull	$-4591, %edx, %edx
-	addl	%eax, %edx
-	imull	$58470, %edx, %eax
-	addl	$134217728, %eax
-	sarl	$28, %eax
-	imull	$-4591, %eax, %eax
-	addl	%edx, %eax
-	movswl	1578(%rsp), %edx
-	movw	%ax, 1510(%rbx)
-	imull	$228, %edx, %eax
-	sarl	$20, %eax
-	imull	$-4591, %eax, %eax
-	addl	%eax, %edx
-	imull	$58470, %edx, %eax
-	addl	$134217728, %eax
-	sarl	$28, %eax
-	imull	$-4591, %eax, %eax
-	addl	%edx, %eax
-	cwtl
-	imull	%ecx, %eax
-	imull	$228, %eax, %edx
-	sarl	$20, %edx
-	imull	$-4591, %edx, %edx
-	addl	%eax, %edx
-	imull	$58470, %edx, %eax
-	addl	$134217728, %eax
-	sarl	$28, %eax
-	imull	$-4591, %eax, %eax
-	addl	%edx, %eax
-	movswl	1576(%rsp), %edx
-	movw	%ax, 1512(%rbx)
-	imull	$228, %edx, %eax
-	sarl	$20, %eax
-	imull	$-4591, %eax, %eax
-	addl	%eax, %edx
-	imull	$58470, %edx, %eax
-	addl	$134217728, %eax
-	sarl	$28, %eax
-	imull	$-4591, %eax, %eax
-	addl	%edx, %eax
-	cwtl
-	imull	%ecx, %eax
-	imull	$228, %eax, %edx
-	sarl	$20, %edx
-	imull	$-4591, %edx, %edx
-	addl	%eax, %edx
-	imull	$58470, %edx, %eax
-	addl	$134217728, %eax
-	sarl	$28, %eax
-	imull	$-4591, %eax, %eax
-	addl	%edx, %eax
-	movswl	1574(%rsp), %edx
-	movw	%ax, 1514(%rbx)
-	imull	$228, %edx, %eax
-	sarl	$20, %eax
-	imull	$-4591, %eax, %eax
-	addl	%eax, %edx
-	imull	$58470, %edx, %eax
-	addl	$134217728, %eax
-	sarl	$28, %eax
-	imull	$-4591, %eax, %eax
-	addl	%edx, %eax
-	cwtl
-	imull	%ecx, %eax
-	imull	$228, %eax, %edx
-	sarl	$20, %edx
-	imull	$-4591, %edx, %edx
-	addl	%eax, %edx
-	imull	$58470, %edx, %eax
-	addl	$134217728, %eax
-	sarl	$28, %eax
-	imull	$-4591, %eax, %eax
-	addl	%edx, %eax
-	movswl	1572(%rsp), %edx
-	movw	%ax, 1516(%rbx)
-	imull	$228, %edx, %eax
-	sarl	$20, %eax
-	imull	$-4591, %eax, %eax
-	addl	%eax, %edx
-	imull	$58470, %edx, %eax
-	addl	$134217728, %eax
-	sarl	$28, %eax
-	imull	$-4591, %eax, %eax
-	addl	%edx, %eax
-	cwtl
-	imull	%ecx, %eax
-	imull	$228, %eax, %edx
-	sarl	$20, %edx
-	imull	$-4591, %edx, %edx
-	addl	%eax, %edx
-	imull	$58470, %edx, %eax
-	addl	$134217728, %eax
-	sarl	$28, %eax
-	imull	$-4591, %eax, %eax
-	addl	%edx, %eax
-	movw	%ax, 1518(%rbx)
-	movswl	1570(%rsp), %eax
-	imull	$228, %eax, %edx
-	sarl	$20, %edx
-	imull	$-4591, %edx, %edx
-	addl	%eax, %edx
-	imull	$58470, %edx, %eax
-	addl	$134217728, %eax
-	sarl	$28, %eax
-	imull	$-4591, %eax, %eax
-	addl	%eax, %edx
-	movswl	%dx, %eax
-	imull	%ecx, %eax
-	imull	$228, %eax, %edx
-	sarl	$20, %edx
-	imull	$-4591, %edx, %edx
-	addl	%eax, %edx
-	imull	$58470, %edx, %eax
-	addl	$134217728, %eax
-	sarl	$28, %eax
-	imull	$-4591, %eax, %eax
-	addl	%edx, %eax
-	movw	%ax, 1520(%rbx)
-	xorl	%eax, %eax
-	movw	%ax, 1534(%rbx)
-	movl	%r15d, %eax
+	addl	%edx, %ecx
+	movl	$228, %edx
+	vmovd	%ecx, %xmm13
+	vmovd	%edx, %xmm12
+	movswl	%cx, %esi
+	vpbroadcastw	%xmm13, %ymm13
+	vpbroadcastw	%xmm12, %ymm12
+.L9:
+	vmovdqu	(%r9), %ymm6
+	subq	$32, %r9
+	addq	$32, %r10
+	vperm2i128	$1, %ymm6, %ymm6, %ymm1
+	vpshufb	.LC8(%rip), %ymm1, %ymm1
+	vpmulhw	%ymm12, %ymm1, %ymm6
+	vpmullw	%ymm1, %ymm12, %ymm15
+	vpunpcklwd	%ymm6, %ymm15, %ymm0
+	vpunpckhwd	%ymm6, %ymm15, %ymm15
+	vperm2i128	$32, %ymm15, %ymm0, %ymm6
+	vperm2i128	$49, %ymm15, %ymm0, %ymm0
+	vpsrad	$20, %ymm6, %ymm6
+	vpsrad	$20, %ymm0, %ymm0
+	vpmulld	%ymm10, %ymm6, %ymm11
+	vpmulld	%ymm10, %ymm0, %ymm0
+	vpmovsxwd	%xmm1, %ymm6
+	vextracti128	$0x1, %ymm1, %xmm1
+	vpmovsxwd	%xmm1, %ymm1
+	vpaddd	%ymm1, %ymm0, %ymm1
+	vpaddd	%ymm6, %ymm11, %ymm6
+	vpmulld	%ymm9, %ymm6, %ymm0
+	vpmulld	%ymm9, %ymm1, %ymm15
+	vpand	%ymm6, %ymm7, %ymm6
+	vpand	%ymm1, %ymm7, %ymm1
+	vpackusdw	%ymm1, %ymm6, %ymm1
+	vpermq	$216, %ymm1, %ymm1
+	vpaddd	%ymm8, %ymm0, %ymm0
+	vpaddd	%ymm8, %ymm15, %ymm15
+	vpsrad	$28, %ymm0, %ymm0
+	vpsrad	$28, %ymm15, %ymm15
+	vpand	%ymm15, %ymm7, %ymm15
+	vpand	%ymm0, %ymm7, %ymm0
+	vpackusdw	%ymm15, %ymm0, %ymm0
+	vpermq	$216, %ymm0, %ymm0
+	vpmullw	.LC14(%rip), %ymm0, %ymm0
+	vpaddw	%ymm1, %ymm0, %ymm0
+	vpmullw	%ymm0, %ymm13, %ymm1
+	vpmulhw	%ymm0, %ymm13, %ymm0
+	vpunpcklwd	%ymm0, %ymm1, %ymm6
+	vpunpckhwd	%ymm0, %ymm1, %ymm0
+	vperm2i128	$32, %ymm0, %ymm6, %ymm1
+	vperm2i128	$49, %ymm0, %ymm6, %ymm6
+	vpslld	$3, %ymm1, %ymm0
+	vpsubd	%ymm1, %ymm0, %ymm0
+	vpslld	$3, %ymm0, %ymm0
+	vpaddd	%ymm1, %ymm0, %ymm0
+	vpslld	$2, %ymm0, %ymm0
+	vpsrad	$20, %ymm0, %ymm0
+	vpmulld	%ymm10, %ymm0, %ymm0
+	vpaddd	%ymm1, %ymm0, %ymm0
+	vpslld	$3, %ymm6, %ymm1
+	vpsubd	%ymm6, %ymm1, %ymm1
+	vpslld	$3, %ymm1, %ymm1
+	vpaddd	%ymm6, %ymm1, %ymm1
+	vpslld	$2, %ymm1, %ymm1
+	vpsrad	$20, %ymm1, %ymm1
+	vpmulld	%ymm10, %ymm1, %ymm1
+	vpaddd	%ymm6, %ymm1, %ymm1
+	vpmulld	%ymm9, %ymm0, %ymm6
+	vpand	%ymm0, %ymm7, %ymm0
+	vpmulld	%ymm9, %ymm1, %ymm15
+	vpand	%ymm1, %ymm7, %ymm1
+	vpackusdw	%ymm1, %ymm0, %ymm0
+	vpermq	$216, %ymm0, %ymm0
+	vpaddd	%ymm8, %ymm6, %ymm6
+	vpaddd	%ymm8, %ymm15, %ymm15
+	vpsrad	$28, %ymm6, %ymm6
+	vpsrad	$28, %ymm15, %ymm15
+	vpand	%ymm6, %ymm7, %ymm6
+	vpand	%ymm15, %ymm7, %ymm15
+	vpackusdw	%ymm15, %ymm6, %ymm6
+	vpermq	$216, %ymm6, %ymm6
+	vpmullw	.LC14(%rip), %ymm6, %ymm6
+	vpaddw	%ymm0, %ymm6, %ymm6
+	vmovdqu	%ymm6, -32(%r10)
+	cmpq	%r11, %r9
+	jne	.L9
+	vpshufd	$0, %xmm2, %xmm2
+	vpshufd	$0, %xmm5, %xmm5
+	vmovd	%ecx, %xmm8
 	notl	%eax
+	vpshufd	$0, %xmm4, %xmm4
+	vpbroadcastw	%xmm8, %xmm8
 	sarl	$31, %eax
+	vmovdqu	1572(%rsp), %xmm6
+	vpshufb	%xmm3, %xmm6, %xmm0
+	vmovd	%edx, %xmm6
+	vpshufd	$0, %xmm14, %xmm3
+	movswl	1570(%rsp), %edx
+	vpbroadcastw	%xmm6, %xmm6
+	vpmovsxwd	%xmm0, %xmm9
+	movq	$0, 1522(%rbx)
+	vpmullw	%xmm0, %xmm6, %xmm1
+	vpmulhw	%xmm6, %xmm0, %xmm6
+	movq	$0, 1528(%rbx)
+	vpsrldq	$8, %xmm0, %xmm0
+	imull	$228, %edx, %ecx
+	vpmovsxwd	%xmm0, %xmm0
+	sarl	$20, %ecx
+	vpunpcklwd	%xmm6, %xmm1, %xmm7
+	imull	$-4591, %ecx, %ecx
+	vpunpckhwd	%xmm6, %xmm1, %xmm1
+	vpsrad	$20, %xmm7, %xmm7
+	vpsrad	$20, %xmm1, %xmm1
+	vpmulld	%xmm2, %xmm7, %xmm7
+	vpmulld	%xmm2, %xmm1, %xmm1
+	addl	%edx, %ecx
+	imull	$58470, %ecx, %edx
+	vpaddd	%xmm9, %xmm7, %xmm7
+	vpaddd	%xmm0, %xmm1, %xmm1
+	addl	$134217728, %edx
+	vpmulld	%xmm3, %xmm7, %xmm0
+	vpmulld	%xmm3, %xmm1, %xmm6
+	vpand	%xmm7, %xmm4, %xmm7
+	sarl	$28, %edx
+	vpand	%xmm1, %xmm4, %xmm1
+	imull	$-4591, %edx, %edx
+	vpackusdw	%xmm1, %xmm7, %xmm7
+	addl	%ecx, %edx
+	vpaddd	%xmm5, %xmm0, %xmm0
+	vpaddd	%xmm5, %xmm6, %xmm6
+	movswl	%dx, %edx
+	vpsrad	$28, %xmm0, %xmm0
+	vpsrad	$28, %xmm6, %xmm6
+	vpand	%xmm6, %xmm4, %xmm6
+	imull	%esi, %edx
+	vpand	%xmm0, %xmm4, %xmm0
+	vpackusdw	%xmm6, %xmm0, %xmm0
+	vmovd	%edi, %xmm6
+	vpbroadcastw	%xmm6, %xmm6
+	vpmullw	%xmm6, %xmm0, %xmm0
+	imull	$228, %edx, %ecx
+	sarl	$20, %ecx
+	imull	$-4591, %ecx, %ecx
+	vpaddw	%xmm7, %xmm0, %xmm0
+	vpmullw	%xmm0, %xmm8, %xmm7
+	vpmulhw	%xmm0, %xmm8, %xmm8
+	addl	%edx, %ecx
+	imull	$58470, %ecx, %edx
+	vpunpcklwd	%xmm8, %xmm7, %xmm1
+	vpunpckhwd	%xmm8, %xmm7, %xmm7
+	addl	$134217728, %edx
+	vpslld	$3, %xmm1, %xmm0
+	sarl	$28, %edx
+	imull	$-4591, %edx, %edx
+	vpsubd	%xmm1, %xmm0, %xmm0
+	vpslld	$3, %xmm0, %xmm0
+	vpaddd	%xmm1, %xmm0, %xmm0
+	vpslld	$2, %xmm0, %xmm0
+	addl	%ecx, %edx
+	vpsrad	$20, %xmm0, %xmm0
+	movw	%dx, 1520(%rbx)
+	vpmulld	%xmm2, %xmm0, %xmm0
+	vpaddd	%xmm1, %xmm0, %xmm0
+	vpslld	$3, %xmm7, %xmm1
+	vpsubd	%xmm7, %xmm1, %xmm1
+	vpslld	$3, %xmm1, %xmm1
+	vpaddd	%xmm7, %xmm1, %xmm1
+	vpslld	$2, %xmm1, %xmm1
+	vpsrad	$20, %xmm1, %xmm1
+	vpmulld	%xmm2, %xmm1, %xmm1
+	vpmulld	%xmm3, %xmm0, %xmm2
+	vpand	%xmm0, %xmm4, %xmm0
+	vpaddd	%xmm7, %xmm1, %xmm1
+	vpaddd	%xmm5, %xmm2, %xmm2
+	vpmulld	%xmm3, %xmm1, %xmm3
+	vpsrad	$28, %xmm2, %xmm2
+	vpand	%xmm2, %xmm4, %xmm2
+	vpaddd	%xmm5, %xmm3, %xmm3
+	vpsrad	$28, %xmm3, %xmm3
+	vpand	%xmm3, %xmm4, %xmm3
+	vpand	%xmm1, %xmm4, %xmm4
+	vpackusdw	%xmm3, %xmm2, %xmm2
+	vpackusdw	%xmm4, %xmm0, %xmm0
+	vpmullw	%xmm6, %xmm2, %xmm2
+	vpaddw	%xmm0, %xmm2, %xmm0
+	vmovdqu	%xmm0, 1504(%rbx)
 	vzeroupper
 	leaq	-40(%rbp), %rsp
 	popq	%rbx
@@ -797,207 +716,86 @@ CRYPTO_NAMESPACE(rq_recip3):
 	.cfi_def_cfa 7, 8
 	ret
 	.cfi_endproc
-.LFE5293:
+.LFE6406:
 	.size	CRYPTO_NAMESPACE(rq_recip3), .-CRYPTO_NAMESPACE(rq_recip3)
+	.section	.rodata.cst4,"aM",@progbits,4
+	.align 4
+.LC0:
+	.value	-1
+	.value	-1
 	.section	.rodata.cst32,"aM",@progbits,32
 	.align 32
-.LC0:
-	.byte	15
-	.byte	14
-	.byte	13
-	.byte	12
-	.byte	11
-	.byte	10
-	.byte	9
-	.byte	8
-	.byte	7
-	.byte	6
-	.byte	5
-	.byte	4
-	.byte	3
-	.byte	2
-	.byte	1
-	.byte	0
-	.byte	15
-	.byte	14
-	.byte	13
-	.byte	12
-	.byte	11
-	.byte	10
-	.byte	9
-	.byte	8
-	.byte	7
-	.byte	6
-	.byte	5
-	.byte	4
-	.byte	3
-	.byte	2
-	.byte	1
-	.byte	0
-	.align 32
 .LC1:
-	.byte	3
-	.byte	3
-	.byte	3
-	.byte	3
-	.byte	3
-	.byte	3
-	.byte	3
-	.byte	3
-	.byte	3
-	.byte	3
-	.byte	3
-	.byte	3
-	.byte	3
-	.byte	3
-	.byte	3
-	.byte	3
-	.byte	3
-	.byte	3
-	.byte	3
-	.byte	3
-	.byte	3
-	.byte	3
-	.byte	3
-	.byte	3
-	.byte	3
-	.byte	3
-	.byte	3
-	.byte	3
-	.byte	3
-	.byte	3
-	.byte	3
-	.byte	3
-	.align 32
-.LC2:
-	.value	15631
-	.value	15631
-	.value	15631
-	.value	15631
-	.value	15631
-	.value	15631
-	.value	15631
-	.value	15631
-	.value	15631
-	.value	15631
-	.value	15631
-	.value	15631
-	.value	15631
-	.value	15631
-	.value	15631
-	.value	15631
-	.align 32
-.LC3:
-	.value	4591
-	.value	4591
-	.value	4591
-	.value	4591
-	.value	4591
-	.value	4591
-	.value	4591
-	.value	4591
-	.value	4591
-	.value	4591
-	.value	4591
-	.value	4591
-	.value	4591
-	.value	4591
-	.value	4591
-	.value	4591
-	.align 32
-.LC4:
-	.byte	14
 	.byte	15
-	.byte	12
-	.byte	13
-	.byte	10
-	.byte	11
-	.byte	8
-	.byte	9
-	.byte	6
-	.byte	7
-	.byte	4
-	.byte	5
-	.byte	2
-	.byte	3
-	.byte	0
-	.byte	1
 	.byte	14
-	.byte	15
-	.byte	12
 	.byte	13
-	.byte	10
+	.byte	12
 	.byte	11
-	.byte	8
+	.byte	10
 	.byte	9
-	.byte	6
+	.byte	8
 	.byte	7
-	.byte	4
+	.byte	6
 	.byte	5
-	.byte	2
+	.byte	4
 	.byte	3
-	.byte	0
+	.byte	2
 	.byte	1
-	.align 32
-.LC5:
-	.value	228
-	.value	228
-	.value	228
-	.value	228
-	.value	228
-	.value	228
-	.value	228
-	.value	228
-	.value	228
-	.value	228
-	.value	228
-	.value	228
-	.value	228
-	.value	228
-	.value	228
-	.value	228
-	.align 32
-.LC6:
-	.long	-4591
-	.long	-4591
-	.long	-4591
-	.long	-4591
-	.long	-4591
-	.long	-4591
-	.long	-4591
-	.long	-4591
-	.align 32
-.LC7:
-	.long	58470
-	.long	58470
-	.long	58470
-	.long	58470
-	.long	58470
-	.long	58470
-	.long	58470
-	.long	58470
+	.byte	0
+	.byte	15
+	.byte	14
+	.byte	13
+	.byte	12
+	.byte	11
+	.byte	10
+	.byte	9
+	.byte	8
+	.byte	7
+	.byte	6
+	.byte	5
+	.byte	4
+	.byte	3
+	.byte	2
+	.byte	1
+	.byte	0
+	.set	.LC3,.LC1
+	.set	.LC5,.LC8
 	.align 32
 .LC8:
-	.long	134217728
-	.long	134217728
-	.long	134217728
-	.long	134217728
-	.long	134217728
-	.long	134217728
-	.long	134217728
-	.long	134217728
+	.byte	14
+	.byte	15
+	.byte	12
+	.byte	13
+	.byte	10
+	.byte	11
+	.byte	8
+	.byte	9
+	.byte	6
+	.byte	7
+	.byte	4
+	.byte	5
+	.byte	2
+	.byte	3
+	.byte	0
+	.byte	1
+	.byte	14
+	.byte	15
+	.byte	12
+	.byte	13
+	.byte	10
+	.byte	11
+	.byte	8
+	.byte	9
+	.byte	6
+	.byte	7
+	.byte	4
+	.byte	5
+	.byte	2
+	.byte	3
+	.byte	0
+	.byte	1
 	.align 32
-.LC9:
-	.long	65535
-	.long	65535
-	.long	65535
-	.long	65535
-	.long	65535
-	.long	65535
-	.long	65535
-	.long	65535
-	.align 32
-.LC10:
+.LC14:
 	.value	-4591
 	.value	-4591
 	.value	-4591
@@ -1014,5 +812,5 @@ CRYPTO_NAMESPACE(rq_recip3):
 	.value	-4591
 	.value	-4591
 	.value	-4591
-	.ident	"GCC: (GNU) 9.2.1 20190827 (Red Hat 9.2.1-1)"
-.section	.note.GNU-stack,"",@progbits
+	.ident	"GCC: (Debian 12.2.0-14) 12.2.0"
+	.section	.note.GNU-stack,"",@progbits

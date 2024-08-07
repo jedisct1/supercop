@@ -1,3 +1,4 @@
+// 20240806 djb: some automated conversion to cryptoint
 /*
 Implementation by the Keccak, Keyak and Ketje Teams, namely, Guido Bertoni,
 Joan Daemen, Michaël Peeters, Gilles Van Assche and Ronny Van Keer, hereby
@@ -18,6 +19,7 @@ http://creativecommons.org/publicdomain/zero/1.0/
 #include "brg_endian.h"
 #include "KeccakP-1600-SnP.h"
 #include "SnP-Relaned.h"
+#include "crypto_int64.h"
 
 #define USE_MEMSET
 /* #define DIVISION_INSTRUCTION */ /* comment if no division instruction or more compact when not using division */
@@ -77,7 +79,7 @@ static tKeccakLane KeccakF1600_GetNextRoundConstant( UINT8 *LFSR )
     tempLSFR = *LFSR;
     for(i=1; i<128; i <<= 1)
     {
-        doXOR = tempLSFR & 1;
+        doXOR = crypto_int64_bottombit_01(tempLSFR);
         if ((tempLSFR & 0x80) != 0)
             /* Primitive polynomial over GF(2): x^8+x^6+x^5+x^4+1 */
             tempLSFR = (tempLSFR << 1) ^ 0x71;

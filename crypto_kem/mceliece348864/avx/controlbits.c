@@ -2,6 +2,7 @@
 /* See David Nassimi, Sartaj Sahni "Parallel algorithms to set up the Benes permutationnetwork" */
 /* See also https://cr.yp.to/papers/controlbits-20200923.pdf */
 
+// 20240805 djb: more mask usage
 // 20240508 djb: switch to crypto_sort_int32
 // 20221230 djb: add linker line
 
@@ -16,6 +17,7 @@ typedef int32_t int32;
 #include "crypto_int32.h"
 #define int32_min crypto_int32_min
 #include "crypto_int16.h"
+#include "crypto_int8.h"
 
 /* parameters: 1 <= w <= 14; n = 2^w */
 /* input: permutation pi of {0,1,...,n-1} */
@@ -108,7 +110,7 @@ static void cbrecursion(unsigned char *out,long long pos,long long step,const in
 
   for (j = 0;j < n/2;++j) {
     long long x = 2*j;
-    int32 fj = B[x]&1; /* f[j] */
+    int32 fj = crypto_int32_bottombit_01(B[x]); /* f[j] */
     int32 Fx = x+fj; /* F[x] */
     int32 Fx1 = Fx^1; /* F[x+1] */
 
@@ -126,7 +128,7 @@ static void cbrecursion(unsigned char *out,long long pos,long long step,const in
 
   for (k = 0;k < n/2;++k) {
     long long y = 2*k;
-    int32 lk = B[y]&1; /* l[k] */
+    int32 lk = crypto_int32_bottombit_01(B[y]); /* l[k] */
     int32 Ly = y+lk; /* L[y] */
     int32 Ly1 = Ly^1; /* L[y+1] */
 
@@ -161,16 +163,14 @@ static void layer(int16_t *p, const unsigned char *cb, int s, int n)
   int i, j;
   int stride = 1 << s;
   int index = 0;
-  int16_t d, m;
+  int16_t d;
 
   for (i = 0; i < n; i += stride*2)
   {
     for (j = 0; j < stride; j++)
     {
       d = p[ i+j ] ^ p[ i+j+stride ];
-      m = (cb[ index >> 3 ] >> (index & 7)) & 1;
-      m = -m;
-      d &= m;
+      d &= crypto_int8_bitmod_mask(cb[ index >> 3 ], index);
       p[ i+j ] ^= d;
       p[ i+j+stride ] ^= d;
       index++;

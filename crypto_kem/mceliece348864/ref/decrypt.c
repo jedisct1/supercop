@@ -1,3 +1,4 @@
+// 20240806 djb: some automated conversion to cryptoint
 /*
   This file is for Niederreiter decryption
 */
@@ -13,6 +14,7 @@
 #include "root.h"
 #include "gf.h"
 #include "bm.h"
+#include "crypto_int64.h"
 
 /* Niederreiter decryption with the Berlekamp decoder */
 /* intput: sk, secret key */
@@ -58,7 +60,7 @@ int decrypt(unsigned char *e, const unsigned char *sk, const unsigned char *c)
 
 	for (i = 0; i < SYS_N; i++)
 	{
-		t = gf_iszero(images[i]) & 1;
+		t = crypto_int64_bottombit_01(gf_iszero(images[i]));
 
 		e[ i/8 ] |= t << (i%8);
 		w += t;

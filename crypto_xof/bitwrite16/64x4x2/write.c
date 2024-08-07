@@ -1,3 +1,4 @@
+// 20240805 djb: more cryptoint usage
 // 20240504 djb
 
 #include "crypto_int64.h"
@@ -42,15 +43,15 @@ static void atmost8192(
       crypto_uint64 hi2 = crypto_uint64_load(h+8*i+16);
       crypto_uint64 hi3 = crypto_uint64_load(h+8*i+24);
       crypto_uint64 base_0 = word64_0 & equal_mask(i>>2,pos_0>>8);
-      crypto_uint64 mask7_0 = -(1&(pos_0>>7));
+      crypto_uint64 mask7_0 = crypto_int64_bitmod_mask(pos_0, 7);
       crypto_uint64 base70_0 = base_0 & ~mask7_0;
       crypto_uint64 base71_0 = base_0 & mask7_0;
-      crypto_uint64 mask6_0 = -(1&(pos_0>>6));
+      crypto_uint64 mask6_0 = crypto_int64_bitmod_mask(pos_0, 6);
       crypto_uint64 base_1 = word64_1 & equal_mask(i>>2,pos_1>>8);
-      crypto_uint64 mask7_1 = -(1&(pos_1>>7));
+      crypto_uint64 mask7_1 = crypto_int64_bitmod_mask(pos_1, 7);
       crypto_uint64 base70_1 = base_1 & ~mask7_1;
       crypto_uint64 base71_1 = base_1 & mask7_1;
-      crypto_uint64 mask6_1 = -(1&(pos_1>>6));
+      crypto_uint64 mask6_1 = crypto_int64_bitmod_mask(pos_1, 6);
       hi0 |= base70_0 & ~mask6_0;
       hi1 |= base70_0 & mask6_0;
       hi2 |= base71_0 & ~mask6_0;

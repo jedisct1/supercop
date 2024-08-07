@@ -1,1 +1,1 @@
-../../ntruplus1152/opt/poly.h
+../../ntruplus1152/ref/poly.h

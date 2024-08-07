@@ -1,3 +1,4 @@
+// 20240806 djb: some automated conversion to cryptoint
 /*
 Implementation by the Keccak, Keyak and Ketje Teams, namely, Guido Bertoni,
 Joan Daemen, Michaël Peeters, Gilles Van Assche and Ronny Van Keer, hereby
@@ -28,6 +29,7 @@ http://creativecommons.org/publicdomain/zero/1.0/
 #include "align.h"
 #include "brg_endian.h"
 #include "KeccakP-1600-AVX512-config.h"
+#include "crypto_int64.h"
 
 #if (PLATFORM_BYTE_ORDER != IS_LITTLE_ENDIAN)
 #error Expecting a little-endian platform
@@ -173,7 +175,7 @@ static __m512i _mm512_mask_blend_epi64(unsigned char mask, __m512i a, __m512i b)
     unsigned int i;
 
     for ( i = 0; i < 8; ++i, mask >>= 1 )
-        r.x[i] = (mask & 1) ? b.x[i] : a.x[i];
+        r.x[i] = (crypto_int64_bottombit_01(mask)) ? b.x[i] : a.x[i];
     return(r);
 }
 
@@ -184,7 +186,7 @@ static __m512i _mm512_maskz_loadu_epi64( unsigned char mask, const void * a)
     const UINT64 *p = a;
 
     for ( i = 0; i < 8; ++i, mask >>= 1 )
-        r.x[i] = (mask & 1) ? p[i] : 0;
+        r.x[i] = (crypto_int64_bottombit_01(mask)) ? p[i] : 0;
     return(r);
 }
 
@@ -194,7 +196,7 @@ static void _mm512_mask_storeu_epi64( void * a, unsigned char mask, __m512i v)
     UINT64 *p = a;
 
     for ( i = 0; i < 8; ++i, mask >>= 1 )
-        if ( mask & 1 )
+        if ( crypto_int64_bottombit_01(mask))
             p[i] = v.x[i];
 }
 
@@ -496,7 +498,7 @@ void KeccakP1600_Permute_Nrounds(void *state, unsigned int nrounds)
     UINT64 *stateAsLanes = (UINT64*)state;
 
     copyFromState(stateAsLanes);
-    if ((nrounds & 1) != 0) {
+    if ((crypto_int64_bottombit_01(nrounds)) != 0) {
         KeccakP_Round( 24-nrounds );
         --nrounds;
     }

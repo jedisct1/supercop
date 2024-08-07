@@ -5,6 +5,7 @@
 #include "small.h"
 #include "rq.h"
 #include "crypto_kem.h"
+#include "crypto_declassify.h"
 
 #if crypto_kem_PUBLICKEYBYTES != rq_encode_len
 #error "crypto_kem_PUBLICKEYBYTES must match rq_encode_len"
@@ -20,10 +21,13 @@ int crypto_kem_keypair(unsigned char *pk,unsigned char *sk)
   small f[768];
   modq f3recip[768];
   modq h[768];
+  int recip;
 
-  do
+  do {
     small_random(g);
-  while (r3_recip(grecip,g) != 0);
+    recip = r3_recip(grecip,g);
+    crypto_declassify(&recip,sizeof recip);
+  } while (recip != 0);
 
   small_random_weightw(f);
   rq_recip3(f3recip,f);

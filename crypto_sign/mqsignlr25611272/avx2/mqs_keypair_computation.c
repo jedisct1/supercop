@@ -37,12 +37,6 @@ void extpk_to_pk(pk_mqs* pk, const ext_pk* extpk)
 			idx += _O;
 		}
 	}
-
-#if defined PUBMAP_QUAD_LIN
-	memcpy(pk->pk + (_PUB_M)* N_TRIANGLE_TERMS(_PUB_N), extpk->linear, _O * _PUB_N);
-#elif defined PUBMAP_QUAD_LIN_CONST
-	memcpy(pk->pk + (_PUB_M)* N_TRIANGLE_TERMS(_PUB_N) + _O * _PUB_N, extpk->constants, _O);
-#endif
 }
 
 // Choosing implementations depends on the macros: _BLAS_SSE_ and _BLAS_AVX2_

@@ -1,9 +1,11 @@
+// 20240806 djb: some automated conversion to cryptoint
 #include "sampler.h"
 #include "fixpoint.h"
 #include "symmetric.h"
 #include <stdint.h>
 
 #include "crypto_uint32.h"
+#include "crypto_int64.h"
 #include "crypto_declassify.h"
 
 /*************************************************
@@ -168,7 +170,7 @@ static uint64_t sample_gauss16(const uint64_t rand16) {
     unsigned int i;
     uint64_t r = 0;
     for (i = 0; i < CDTLEN; i++) {
-        r += (((uint64_t)CDT[i] - rand16) >> 63) & 1;
+        r += crypto_int64_bitmod_01(((uint64_t)CDT[i] - rand16),63);
     }
     return r;
 }
@@ -212,7 +214,7 @@ static int sample_gauss_sigma76(uint64_t *r, fp96_76 *sqr,
     exp_in >>= 1;
 
     return ((((int64_t)(rand_rej ^
-                        (rand_rej & 1)) // set lowest bit to zero in order to
+                        (crypto_int64_bottombit_01(rand_rej))) // set lowest bit to zero in order to
                                         // use it for rejection if sample==0
               - (int64_t)approx_exp(exp_in)) >>
              63) // reject with prob 1-approx_exp(exp_in)

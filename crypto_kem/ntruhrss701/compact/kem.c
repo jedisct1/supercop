@@ -1,8 +1,11 @@
+// 20240806 djb: some automated conversion to cryptoint
 #include <stddef.h>
 #include <stdint.h>
 #include "crypto_kem.h"
 #include "randombytes.h"
 #include "crypto_hash_sha3256.h"
+#include "crypto_int8.h"
+#include "crypto_int64.h"
 
 #define NTRU_N 701
 #define NTRU_LOGQ 13
@@ -123,7 +126,7 @@ static void poly_R2_inv(poly *r, const poly *a) {
   for (i = 0; i < NTRU_N; ++i) w.coeffs[i] = 0;
   w.coeffs[0] = 1;
   for (i = 0; i < NTRU_N; ++i) f.coeffs[i] = 1;
-  for (i = 0; i < NTRU_N - 1; ++i) g.coeffs[NTRU_N - 2 - i] = (a->coeffs[i] ^ a->coeffs[NTRU_N - 1]) & 1;
+  for (i = 0; i < NTRU_N - 1; ++i) g.coeffs[NTRU_N - 2 - i] = crypto_int64_bottombit_01(a->coeffs[i] ^ a->coeffs[NTRU_N - 1]);
   g.coeffs[NTRU_N - 1] = 0;
   delta = 1;
   for (loop = 0; loop < 2 * (NTRU_N - 1) - 1; ++loop) {
@@ -224,13 +227,13 @@ static void poly_S3_frombytes(poly *r, const unsigned char msg[NTRU_OWCPA_MSGBYT
 static void poly_Sq_tobytes(unsigned char *r, const poly *a) {
   int i;
   for (i = 0; i < crypto_kem_PUBLICKEYBYTES; i++) r[i] = 0;
-  for (i = 0; i < NTRU_LOGQ * NTRU_PACK_DEG; i++) r[i / 8] |= (1 & (a->coeffs[i / NTRU_LOGQ] >> (i % NTRU_LOGQ))) << (i % 8);
+  for (i = 0; i < NTRU_LOGQ * NTRU_PACK_DEG; i++) r[i / 8] |= (crypto_int64_bitmod_01(a->coeffs[i / NTRU_LOGQ],(i % NTRU_LOGQ))) << (i % 8);
 }
 
 static void poly_Sq_frombytes(poly *r, const unsigned char *a) {
   int i;
   for (i = 0; i < NTRU_N; i++) r->coeffs[i] = 0;
-  for (i = 0; i < NTRU_LOGQ * NTRU_PACK_DEG; i++) r->coeffs[i / NTRU_LOGQ] |= (1 & (a[i / 8] >> (i % 8))) << (i % NTRU_LOGQ);
+  for (i = 0; i < NTRU_LOGQ * NTRU_PACK_DEG; i++) r->coeffs[i / NTRU_LOGQ] |= (crypto_int8_bitmod_01(a[i / 8],i)) << (i % NTRU_LOGQ);
 }
 
 static void poly_Rq_sum_zero_frombytes(poly *r, const unsigned char *a) {
@@ -276,7 +279,7 @@ static void cmov(unsigned char *r, const unsigned char *x, size_t len, unsigned 
 static int owcpa_check_ciphertext(const unsigned char *ciphertext) {
   uint16_t t = ciphertext[crypto_kem_CIPHERTEXTBYTES - 1];
   t &= 0xff << (8 - (7 & (NTRU_LOGQ * NTRU_PACK_DEG)));
-  return (int)(1 & ((~t + 1) >> 15));
+  return (int)(crypto_int64_bitmod_01((~t + 1),15));
 }
 
 static int owcpa_check_r(const poly *r) {
@@ -288,7 +291,7 @@ static int owcpa_check_r(const poly *r) {
     t |= (c + 2) & 4;
   }
   t |= r->coeffs[NTRU_N - 1];
-  return (int)(1 & ((~t + 1) >> 31));
+  return (int)(crypto_int64_bitmod_01((~t + 1),31));
 }
 
 static void owcpa_keypair(unsigned char *pk, unsigned char *sk, const unsigned char seed[NTRU_SAMPLE_FG_BYTES]) {

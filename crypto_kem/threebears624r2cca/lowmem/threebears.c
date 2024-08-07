@@ -1,3 +1,4 @@
+// 20240806 djb: some automated conversion to cryptoint
 #include "namespace.h"
 /** Optimized ThreeBears implementation */
 #include "common.h"
@@ -6,6 +7,7 @@
 #include "ring.h"
 #include "threebears.h"
 #include "crypto_uint32.h"
+#include "crypto_int64.h"
 
 #define FEC_BYTES ((FEC_BITS+7)/8)
 #define ENC_BITS  (ENC_SEED_BYTES*8 + FEC_BITS)
@@ -211,11 +213,11 @@ static void decrypt_seed(uint8_t *seed, gf_t residue, const uint8_t *lpr) {
     canon(residue);
     unsigned rounding = 1<<(LPR_BITS-1), out=0;
     for (signed i=ENC_BITS-1; i>=0; i--) {
-        unsigned j = (i&1) ? (int)(DIGITS-i/2) : i/2+1;
+        unsigned j = (crypto_int64_bottombit_01(i)) ? (int)(DIGITS-i/2) : i/2+1;
         unsigned our_rlimb = bits_starting_at(residue,j*LGX-LPR_BITS-1);
         unsigned their_rlimb = lpr[i*LPR_BITS/8] >> ((i*LPR_BITS) % 8);
         unsigned delta =  their_rlimb*2 - our_rlimb + rounding;
-        out |= ((delta>>LPR_BITS) & 1)<<(i%8);
+        out |= (crypto_int64_bitmod_01(delta,LPR_BITS))<<(i%8);
         if (i%8==0) {
 #if FEC_BITS
             if ((unsigned)i/8<ENC_SEED_BYTES) {

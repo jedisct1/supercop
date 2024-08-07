@@ -1,9 +1,11 @@
+// 20240806 djb: some automated conversion to cryptoint
 #include "packing.h"
 #include "encoding.h"
 #include "params.h"
 #include "poly.h"
 #include "polymat.h"
 #include "polyvec.h"
+#include "crypto_int8.h"
 #include <string.h>
 
 /*************************************************
@@ -252,7 +254,7 @@ int unpack_sig(poly *c, polyvecl *lowbits_z1,
 
     for (i = 0; i < N; i++)
     {
-      c->coeffs[i] = (sig[i/8] >> (i%8)) & 1;
+      c->coeffs[i] = crypto_int8_bitmod_01(sig[i/8],i);
     }
     sig += N / 8;
 

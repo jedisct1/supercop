@@ -1,3 +1,4 @@
+// 20240806 djb: some automated conversion to cryptoint
 /*
   This file is for syndrome computation
 */
@@ -6,6 +7,7 @@
 
 #include "params.h"
 #include "root.h"
+#include "crypto_int8.h"
 
 #include <stdio.h>
 
@@ -21,7 +23,7 @@ void synd(gf *out, gf *f, gf *L, unsigned char *r)
 
 	for (i = 0; i < SYS_N; i++)
 	{
-		c = (r[i/8] >> (i%8)) & 1;
+		c = crypto_int8_bitmod_01(r[i/8],i);
 
 		e = eval(f, L[i]);
 		e_inv = gf_inv(gf_mul(e,e));

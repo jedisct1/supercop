@@ -29,7 +29,7 @@ void transpose(uint8_t * r, const uint8_t * a)
 	}
 }
 
-int mqlr_sign(uint8_t* signature, const sk_mqlr* sk, const uint8_t* sk_seed, const uint8_t* m, const uint32_t mlen, const uint8_t* ss)
+int mqlr_sign(uint8_t* signature, const sk_mqlr* sk, const uint8_t* m, const uint32_t mlen)
 {
 	// allocate temporary storage.
 	uint8_t _ALIGN_(32) mat[_O * _O_BYTE];
@@ -38,12 +38,15 @@ int mqlr_sign(uint8_t* signature, const sk_mqlr* sk, const uint8_t* sk_seed, con
 	uint8_t m_salt[mlen + _SALT_BYTE];
 	uint8_t* salt = m_salt + mlen;
 
+	uint8_t ss[32];
+	randombytes(ss, 32);
+
 	hash_msg(salt, _SALT_BYTE, ss, _SALT_SOURCE_LEN);
 
 	// setup PRNG
 	prng_t prng_sign;
 	uint8_t prng_preseed[LEN_SKSEED + _SALT_BYTE];
-	memcpy(prng_preseed, sk_seed, LEN_SKSEED);
+	memcpy(prng_preseed, sk->sk_seed, LEN_SKSEED);
 	memcpy(prng_preseed + LEN_SKSEED, salt, _SALT_BYTE);         
 
 	uint8_t prng_seed[_HASH_LEN];
@@ -100,7 +103,7 @@ rej: ;
 	circmat_eval_multab(r_l1_F1, sk->Fq1, multab, _V, _O);
 	memcpy(temp_o, r_l1_F1, _O_BYTE);
 
-	rr = gf256mat_solve_linear_eq(mat_tmp, _O_BYTE, B, C, D, A_inv);
+	rr = gfmat_solve_linear_eq(mat_tmp, _O_BYTE, B, C, D, A_inv);
 	crypto_declassify(&rr,sizeof rr);
 	if(!rr)
 		goto rej;
@@ -121,7 +124,8 @@ rej: ;
 
 	rr &= gf256mat_gaussian_elim_avx2(temp_mat, temp_vec + H_half, H_half);
 	crypto_declassify(&rr,sizeof rr);
-	if(!rr) goto rej;
+	if(!rr)
+		goto rej;
 
 	gf256mat_back_substitute_avx2(temp_vec + H_half, temp_mat, H_half);
 
@@ -134,8 +138,8 @@ rej: ;
 	gf256v_set_zero(x_o + H_half, H_half);
 	gf256v_add_avx2(x_o, temp_vec2, _O_BYTE);
 // remain part of linear solve
-rej_out: ;
 
+rej_out: ;
 	//  w = T^-1 * y
 	uint8_t w[_PUB_N_BYTE];
 	// identity part of T.

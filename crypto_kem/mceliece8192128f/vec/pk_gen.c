@@ -1,6 +1,7 @@
 /*
   This file is for public-key generation
 */
+// 20240805 djb: more use of cryptoint
 // 20240715 djb: more use of crypto_*_mask
 // 20240611 djb: using crypto_uint64_bottomzeros_num
 // 20240608 djb: using crypto_*_mask
@@ -24,6 +25,7 @@
 #include "crypto_declassify.h"
 #include "crypto_uint16.h"
 #include "crypto_uint64.h"
+#include "crypto_int64.h"
 
 static crypto_uint64 uint64_is_equal_declassify(uint64_t t,uint64_t u)
 {
@@ -53,7 +55,7 @@ static void de_bitslicing(uint64_t * out, const vec in[][GFBITS])
 	for (r = 0; r < 64; r++) 
 	{ 
 		out[i*64 + r] <<= 1; 
-		out[i*64 + r] |= (in[i][j] >> r) & 1; 
+		out[i*64 + r] |= crypto_int64_bitmod_01(in[i][j], r); 
 	}
 }
 
@@ -69,14 +71,14 @@ static void to_bitslicing_2x(vec out0[][GFBITS], vec out1[][GFBITS], const uint6
 		for (r = 63; r >= 0; r--)
 		{
 			out1[i][j] <<= 1;
-			out1[i][j] |= (in[i*64 + r] >> (j + GFBITS)) & 1;
+			out1[i][j] |= crypto_int64_bitmod_01(in[i*64 + r], j + GFBITS);
 		}
         
 		for (j = GFBITS-1; j >= 0; j--)
 		for (r = 63; r >= 0; r--)
 		{
 			out0[i][GFBITS-1-j] <<= 1;
-			out0[i][GFBITS-1-j] |= (in[i*64 + r] >> j) & 1;
+			out0[i][GFBITS-1-j] |= crypto_int64_bitmod_01(in[i*64 + r], j);
 		}
 	}
 }
@@ -138,7 +140,7 @@ static int mov_columns(uint64_t mat[][ 128 ], int16_t * pi, uint64_t * pivots)
 		{
 			d  = t >> j;
 			d ^= t >> ctz_list[j];
-			d = -crypto_uint64_bottombit_mask(d);
+			d = crypto_uint64_bottombit_01(d);
         
 			t ^= d << ctz_list[j];
 			t ^= d << j;

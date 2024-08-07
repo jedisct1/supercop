@@ -1,4 +1,6 @@
+// 20240806 djb: some automated conversion to cryptoint
 #include "poly.h"
+#include "crypto_int64.h"
 
 #include <immintrin.h>
 
@@ -140,7 +142,7 @@ static void vec256_init(vec256 *G0,vec256 *G1,const small *s)
 
   for (i = 0;i < ppad;++i) {
     si = srev[i+ppad-p];
-    g0[i] = si & 1;
+    g0[i] = crypto_int64_bottombit_01(si);
     g1[i] = (si >> 1) & g0[i];
   }
 
@@ -225,7 +227,7 @@ static inline void vec256_eliminate(vec256 *f0,vec256 *f1,vec256 *g0,vec256 *g1,
 
 static inline int vec256_bit0mask(vec256 *f)
 {
-  return -(_mm_cvtsi128_si32(_mm256_castsi256_si128(f[0])) & 1);
+  return -(crypto_int64_bottombit_01(_mm_cvtsi128_si32(_mm256_castsi256_si128(f[0]))));
 }
 
 static inline void vec256_divx_1(vec256 *f)

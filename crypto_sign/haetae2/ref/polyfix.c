@@ -1,3 +1,4 @@
+// 20240806 djb: some automated conversion to cryptoint
 #include "polyfix.h"
 #include "decompose.h"
 #include "math.h"
@@ -6,6 +7,7 @@
 #include "reduce.h"
 #include "symmetric.h"
 #include <stdint.h>
+#include "crypto_int64.h"
 #include "crypto_uint64.h"
 #include "crypto_declassify.h"
 
@@ -44,8 +46,8 @@ void polyfixfix_sub(polyfix *c, const polyfix *a, const polyfix *b) {
 }
 
 int32_t fix_round(int32_t num) {
-  return (num + LNHALF) >> LNBITS;
-}
+    return (num + LNHALF) >> LNBITS;
+} 
 
 /*************************************************
  * Name:        polyfix_round
@@ -254,7 +256,7 @@ uint16_t polyfixveclk_sample_hyperball(polyfixvecl *y1, polyfixveck *y2, uint8_t
         // divide sqsum by 2 and approximate inverse square root
         sqsum.limb48[0] += 1; // rounding
         sqsum.limb48[0] >>= 1;
-        sqsum.limb48[0] += (sqsum.limb48[1] & 1) << 47;
+        sqsum.limb48[0] += (crypto_int64_bottombit_01(sqsum.limb48[1])) << 47;
         sqsum.limb48[1] >>= 1;
         sqsum.limb48[1] += sqsum.limb48[0] >> 48;
         sqsum.limb48[0] &= (1ULL << 48) - 1;

@@ -3,7 +3,7 @@
 #define _MPKC_H_
 
 #include "blas.h"
-#include "string.h"
+#include <string.h>
 #include "mqs_config.h"
 
 #define IDX_XSQ(i,n_var) (((2*(n_var)+1-i)*(i)/2)+n_var)

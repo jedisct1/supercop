@@ -11,7 +11,7 @@ extern  "C" {
 
 #pragma pack(push,1)
 
-#define MQLR_PK_LEN		(_PUB_M)* N_TRIANGLE_TERMS(_PUB_N) + _PUB_M * _PUB_N + _PUB_M
+#define MQLR_PK_LEN		(_PUB_M)* N_TRIANGLE_TERMS(_PUB_N)
 #define MQLR_T_LEN		_V * _O
 #define MQLR_VT_LEN		_PUB_N
 #define MQLR_FQ1_LEN	_V * _V

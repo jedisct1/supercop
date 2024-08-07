@@ -1,4 +1,6 @@
+// 20240806 djb: some automated conversion to cryptoint
 #include "fe25519.h"
+#include "crypto_int64.h"
 
 void fe25519_unpack(fe25519 *r, const unsigned char x[32])
 {
@@ -25,7 +27,7 @@ void fe25519_unpack(fe25519 *r, const unsigned char x[32])
   r->v[2] += (unsigned long long)x[16] << 26;
   r->v[2] += (unsigned long long)x[17] << 34;
   r->v[2] += (unsigned long long)x[18] << 42;
-  r->v[2] += ((unsigned long long)x[19] & 1) << 50;
+  r->v[2] += (crypto_int64_bottombit_01((unsigned long long)x[19])) << 50;
   
   r->v[3] = x[19] >> 1;
   r->v[3] += (unsigned long long)x[20] <<  7;

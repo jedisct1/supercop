@@ -1,1 +1,1 @@
-../../ntruplus1152/opt/sha256.c
+../../ntruplus1152/ref/sha256.c

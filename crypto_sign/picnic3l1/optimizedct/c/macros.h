@@ -1,3 +1,4 @@
+// 20240806 djb: some automated conversion to cryptoint
 /*
  *  This file is part of the optimized implementation of the Picnic signature scheme.
  *  See the accompanying documentation for complete details.
@@ -241,7 +242,7 @@ ATTR_CONST ATTR_ARTIFICIAL static inline uint64_t parity64_uint64(uint64_t in) {
   in ^= in >> 1;
   in ^= in >> 2;
   in = (in & 0x1111111111111111) * 0x1111111111111111;
-  return (in >> 60) & 1;
+  return crypto_int64_bitmod_01(in,60);
 }
 #endif
 
@@ -309,6 +310,7 @@ ATTR_CONST ATTR_ARTIFICIAL static inline uint32_t ceil_log2(uint32_t x) {
 /* crypto_declassify wrapper */
 #if defined(TIMECOP) || defined(SUPERCOP)
 #include "crypto_declassify.h"
+#include "crypto_int64.h"
 #define picnic_declassify(x, len) crypto_declassify((void*)x, len)
 #elif defined(WITH_VALGRIND)
 #include <valgrind/memcheck.h>

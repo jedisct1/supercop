@@ -15,7 +15,7 @@ int crypto_core(unsigned char *outbytes,const unsigned char *inbytes,const unsig
   int16 weight = 0;
   int i;
 
-  for (i = 0;i < p;++i) weight += in[i]&1;
+  for (i = 0;i < p;++i) weight -= crypto_int8_bottombit_mask(in[i]);
   crypto_encode_int16(outbytes,&weight);
   return 0;
 }

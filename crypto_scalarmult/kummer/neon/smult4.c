@@ -1,6 +1,8 @@
+// 20240806 djb: some automated conversion to cryptoint
 #include "smult.h"
 #include "gfex2.h"
 #include "gfex4.h"
+#include "crypto_int64.h"
 
 static const unsigned char __attribute__((aligned(32))) one[16] = {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 static const unsigned char __attribute__((aligned(32))) _28[16]       = {0xf8,0xff,0xff,0x0f,0xf8,0xff,0xff,0x0f,0xf8,0xff,0xff,0x0f,0xf8,0xff,0xff,0x0f};
@@ -93,7 +95,7 @@ int smult(unsigned char *q, const unsigned char *n, const unsigned char *p)
 
 
   loop(&xyzt3,&xyzt2,&_1xyz,c,n,&_const[0]);
-  bit = n[0]&1;
+  bit = crypto_int64_bottombit_01(n[0]);
   cswap(&xyzt2,&xyzt3,1 ^ bit);
 
 

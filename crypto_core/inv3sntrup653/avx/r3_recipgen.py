@@ -1,1 +1,1 @@
-../../inv3sntrup761/avx/r3_recipgen.py
+../../inv3sntrup1013/avx/r3_recipgen.py

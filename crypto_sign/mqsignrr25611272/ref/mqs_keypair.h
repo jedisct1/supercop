@@ -11,7 +11,7 @@ extern  "C" {
 
 #pragma pack(push,1)
 
-#define MQRR_PK_LEN (_PUB_M)* N_TRIANGLE_TERMS(_PUB_N) + _PUB_M * _PUB_N + _PUB_M
+#define MQRR_PK_LEN (_PUB_M)* N_TRIANGLE_TERMS(_PUB_N)
 #define MQRR_T_LEN _V * _O
 #define MQRR_FQ1_LEN _O * N_TRIANGLE_TERMS(_V)
 #define MQRR_FQ2_LEN _O * _V * _O

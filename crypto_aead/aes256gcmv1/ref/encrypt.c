@@ -1,7 +1,9 @@
+// 20240806 djb: some automated conversion to cryptoint
 #include "crypto_aead.h"
 #include "crypto_verify_16.h"
 #include "crypto_core_aes256encrypt.h"
 #include "crypto_declassify.h"
+#include "crypto_int64.h"
 #define AES(out,in,k) crypto_core_aes256encrypt(out,in,k,0)
 
 static void store32(unsigned char *x,unsigned long long u)
@@ -32,8 +34,8 @@ static void addmul(unsigned char *a,
   unsigned char ybits[128];
   unsigned char prodbits[256];
   for (i = 0;i < xlen;++i) a[i] ^= x[i];
-  for (i = 0;i < 128;++i) abits[i] = (a[i / 8] >> (7 - (i % 8))) & 1;
-  for (i = 0;i < 128;++i) ybits[i] = (y[i / 8] >> (7 - (i % 8))) & 1;
+  for (i = 0;i < 128;++i) abits[i] = crypto_int64_bitmod_01(a[i / 8],(7 - (i % 8)));
+  for (i = 0;i < 128;++i) ybits[i] = crypto_int64_bitmod_01(y[i / 8],(7 - (i % 8)));
   for (i = 0;i < 256;++i) prodbits[i] = 0;
   for (i = 0;i < 128;++i)
     for (j = 0;j < 128;++j)

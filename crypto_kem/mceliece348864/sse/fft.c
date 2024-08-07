@@ -1,3 +1,4 @@
+// 20240806 djb: some automated conversion to cryptoint
 /*
   This file is for implementing the Gao-Mateer FFT, see 
   http://www.math.clemson.edu/~sgao/papers/GM10.pdf
@@ -12,6 +13,7 @@
 #include "vec128_gf.h"
 #include "vec128.h"
 #include "vec.h"
+#include "crypto_int64.h"
 
 /* input: in, polynomial in bitsliced form */
 /* output: in, result of applying the radix conversions on in */
@@ -83,13 +85,13 @@ static void butterflies(vec128 out[][ GFBITS ], uint64_t *in)
 	for (j = 0; j < 64; j+=4)
 	for (i = 0; i < GFBITS; i++)
 	{
-		t0 = (in[i] >> reversal[j+0]) & 1; t0 = -t0;
-		t1 = (in[i] >> reversal[j+2]) & 1; t1 = -t1;
+		t0 = crypto_int64_bitmod_01(in[i],reversal[j+0]); t0 = -t0;
+		t1 = crypto_int64_bitmod_01(in[i],reversal[j+2]); t1 = -t1;
 
 		out[j/2 + 0][i] = vec128_set2x(t0, t1);
 
-		t0 = (in[i] >> reversal[j+1]) & 1; t0 = -t0;
-		t1 = (in[i] >> reversal[j+3]) & 1; t1 = -t1;
+		t0 = crypto_int64_bitmod_01(in[i],reversal[j+1]); t0 = -t0;
+		t1 = crypto_int64_bitmod_01(in[i],reversal[j+3]); t1 = -t1;
 
 		out[j/2 + 1][i] = vec128_set2x(t0, t1);
 	}

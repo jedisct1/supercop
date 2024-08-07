@@ -4,261 +4,230 @@
 	.globl	CRYPTO_NAMESPACE(swap)
 	.type	CRYPTO_NAMESPACE(swap), @function
 CRYPTO_NAMESPACE(swap):
-.LFB5279:
+.LFB6392:
 	.cfi_startproc
-	vmovd	%ecx, %xmm1
+	vmovd	%ecx, %xmm0
+	movq	%rdi, %rax
 	movl	%ecx, %r9d
-	vpbroadcastd	%xmm1, %ymm1
+	movl	%ecx, %edi
+	vpbroadcastd	%xmm0, %ymm0
 	cmpl	$31, %edx
-	jle	.L11
-	subl	$32, %edx
-	movq	%rsi, %rax
-	movl	%edx, %r11d
-	shrl	$5, %r11d
+	jle	.L14
+	leal	-32(%rdx), %r11d
+	vpxor	%xmm1, %xmm1, %xmm1
+	movq	%rsi, %rdx
 	movl	%r11d, %r10d
-	incq	%r10
-	salq	$5, %r10
-	leaq	(%rdi,%r10), %r8
+	vpcmpgtb	%ymm0, %ymm1, %ymm1
+	shrl	$5, %r10d
+	leal	1(%r10), %r8d
+	salq	$5, %r8
+	leaq	(%rax,%r8), %rcx
 	.p2align 4,,10
 	.p2align 3
 .L3:
-	vmovdqu	(%rdi), %ymm4
-	vmovdqu	(%rax), %ymm5
-	addq	$32, %rdi
+	vmovdqu	(%rax), %ymm4
+	vmovdqu	(%rdx), %ymm5
 	addq	$32, %rax
-	vpblendvb	%ymm1, -32(%rax), %ymm4, %ymm2
+	addq	$32, %rdx
+	vpblendvb	%ymm1, -32(%rdx), %ymm4, %ymm2
 	vpblendvb	%ymm1, %ymm4, %ymm5, %ymm0
-	vmovdqu	%ymm2, -32(%rdi)
-	vmovdqu	%ymm0, -32(%rax)
-	cmpq	%r8, %rdi
+	vmovdqu	%ymm2, -32(%rax)
+	vmovdqu	%ymm0, -32(%rdx)
+	cmpq	%rcx, %rax
 	jne	.L3
-	sall	$5, %r11d
-	addq	%r10, %rsi
-	subl	%r11d, %edx
+	sall	$5, %r10d
+	movl	%r11d, %edx
+	addq	%r8, %rsi
+	subl	%r10d, %edx
 .L2:
 	testl	%edx, %edx
-	jle	.L62
-	leaq	15(%r8), %rax
+	jle	.L41
+	leal	-1(%rdx), %r8d
+	cmpl	$6, %r8d
+	jbe	.L5
+	leaq	15(%rcx), %rax
 	subq	%rsi, %rax
 	cmpq	$30, %rax
-	leal	-1(%rdx), %eax
-	jbe	.L5
-	cmpl	$14, %eax
-	jbe	.L5
-	vmovdqu	(%r8), %xmm2
+	ja	.L45
+.L5:
+	movl	%edx, %edx
+	addq	%rsi, %rdx
+	.p2align 4,,10
+	.p2align 3
+.L12:
+	movzbl	(%rsi), %eax
+	movzbl	(%rcx), %edi
+	incq	%rsi
+	incq	%rcx
+	movzbl	-1(%rcx), %r8d
+	xorl	%eax, %edi
+	andl	%r9d, %edi
+	xorl	%edi, %r8d
+	xorl	%edi, %eax
+	movb	%r8b, -1(%rcx)
+	movb	%al, -1(%rsi)
+	cmpq	%rdx, %rsi
+	jne	.L12
+.L41:
+	vzeroupper
+	ret
+	.p2align 4,,10
+	.p2align 3
+.L45:
+	pushq	%rbp
+	.cfi_def_cfa_offset 16
+	.cfi_offset 6, -16
+	movl	%edx, %r10d
+	movq	%rsp, %rbp
+	.cfi_def_cfa_register 6
+	pushq	%rbx
+	.cfi_offset 3, -24
+	cmpl	$14, %r8d
+	jle	.L15
+	vmovdqu	(%rcx), %xmm2
 	vmovdqu	(%rsi), %xmm0
-	vmovd	%r9d, %xmm3
+	vmovd	%edi, %xmm3
 	movl	%edx, %eax
 	vpbroadcastb	%xmm3, %xmm3
 	andl	$-16, %eax
 	vpxor	%xmm0, %xmm2, %xmm1
-	movl	%eax, %edi
 	vpand	%xmm3, %xmm1, %xmm1
 	vpxor	%xmm1, %xmm2, %xmm2
 	vpxor	%xmm1, %xmm0, %xmm0
-	vmovups	%xmm2, (%r8)
-	addq	%rdi, %r8
-	vmovups	%xmm0, (%rsi)
-	addq	%rdi, %rsi
-	movl	%edx, %edi
-	subl	%eax, %edi
-	cmpl	%eax, %edx
-	je	.L62
-	movzbl	(%rsi), %eax
-	movzbl	(%r8), %edx
-	movzbl	(%r8), %r9d
-	xorl	%eax, %edx
-	andl	%ecx, %edx
-	xorl	%edx, %r9d
-	xorl	%edx, %eax
-	movb	%r9b, (%r8)
-	movb	%al, (%rsi)
-	cmpl	$1, %edi
-	je	.L62
-	movzbl	1(%rsi), %eax
-	movzbl	1(%r8), %edx
-	movzbl	1(%r8), %r9d
-	xorl	%eax, %edx
-	andl	%ecx, %edx
-	xorl	%edx, %r9d
-	xorl	%edx, %eax
-	movb	%r9b, 1(%r8)
-	movb	%al, 1(%rsi)
-	cmpl	$2, %edi
-	je	.L62
-	movzbl	2(%rsi), %eax
-	movzbl	2(%r8), %edx
-	movzbl	2(%r8), %r9d
-	xorl	%eax, %edx
-	andl	%ecx, %edx
-	xorl	%edx, %r9d
-	xorl	%edx, %eax
-	movb	%r9b, 2(%r8)
-	movb	%al, 2(%rsi)
-	cmpl	$3, %edi
-	je	.L62
-	movzbl	3(%rsi), %eax
-	movzbl	3(%r8), %edx
-	movzbl	3(%r8), %r9d
-	xorl	%eax, %edx
-	andl	%ecx, %edx
-	xorl	%edx, %r9d
-	xorl	%edx, %eax
-	movb	%r9b, 3(%r8)
-	movb	%al, 3(%rsi)
-	cmpl	$4, %edi
-	je	.L62
-	movzbl	4(%rsi), %eax
-	movzbl	4(%r8), %edx
-	movzbl	4(%r8), %r9d
-	xorl	%eax, %edx
-	andl	%ecx, %edx
-	xorl	%edx, %r9d
-	xorl	%edx, %eax
-	movb	%r9b, 4(%r8)
-	movb	%al, 4(%rsi)
-	cmpl	$5, %edi
-	je	.L62
-	movzbl	5(%rsi), %eax
-	movzbl	5(%r8), %edx
-	movzbl	5(%r8), %r9d
-	xorl	%eax, %edx
-	andl	%ecx, %edx
-	xorl	%edx, %r9d
-	xorl	%edx, %eax
-	movb	%r9b, 5(%r8)
-	movb	%al, 5(%rsi)
-	cmpl	$6, %edi
-	je	.L62
-	movzbl	6(%rsi), %eax
-	movzbl	6(%r8), %edx
-	movzbl	6(%r8), %r9d
-	xorl	%eax, %edx
-	andl	%ecx, %edx
-	xorl	%edx, %r9d
-	xorl	%edx, %eax
-	movb	%r9b, 6(%r8)
-	movb	%al, 6(%rsi)
-	cmpl	$7, %edi
-	je	.L62
-	movzbl	7(%rsi), %eax
-	movzbl	7(%r8), %edx
-	movzbl	7(%r8), %r9d
-	xorl	%eax, %edx
-	andl	%ecx, %edx
-	xorl	%edx, %r9d
-	xorl	%edx, %eax
-	movb	%r9b, 7(%r8)
-	movb	%al, 7(%rsi)
-	cmpl	$8, %edi
-	je	.L62
-	movzbl	8(%rsi), %eax
-	movzbl	8(%r8), %edx
-	movzbl	8(%r8), %r9d
-	xorl	%eax, %edx
-	andl	%ecx, %edx
-	xorl	%edx, %r9d
-	xorl	%edx, %eax
-	movb	%r9b, 8(%r8)
-	movb	%al, 8(%rsi)
-	cmpl	$9, %edi
-	je	.L62
-	movzbl	9(%rsi), %eax
-	movzbl	9(%r8), %edx
-	movzbl	9(%r8), %r9d
-	xorl	%eax, %edx
-	andl	%ecx, %edx
-	xorl	%edx, %r9d
-	xorl	%edx, %eax
-	movb	%r9b, 9(%r8)
-	movb	%al, 9(%rsi)
-	cmpl	$10, %edi
-	je	.L62
-	movzbl	10(%rsi), %eax
-	movzbl	10(%r8), %edx
-	movzbl	10(%r8), %r9d
-	xorl	%eax, %edx
-	andl	%ecx, %edx
-	xorl	%edx, %r9d
-	xorl	%edx, %eax
-	movb	%r9b, 10(%r8)
-	movb	%al, 10(%rsi)
-	cmpl	$11, %edi
-	je	.L62
-	movzbl	11(%rsi), %eax
-	movzbl	11(%r8), %edx
-	movzbl	11(%r8), %r9d
-	xorl	%eax, %edx
-	andl	%ecx, %edx
-	xorl	%edx, %r9d
-	xorl	%edx, %eax
-	movb	%r9b, 11(%r8)
-	movb	%al, 11(%rsi)
-	cmpl	$12, %edi
-	je	.L62
-	movzbl	12(%rsi), %eax
-	movzbl	12(%r8), %edx
-	movzbl	12(%r8), %r9d
-	xorl	%eax, %edx
-	andl	%ecx, %edx
-	xorl	%edx, %r9d
-	xorl	%edx, %eax
-	movb	%r9b, 12(%r8)
-	movb	%al, 12(%rsi)
-	cmpl	$13, %edi
-	je	.L62
-	movzbl	13(%rsi), %eax
-	movzbl	13(%r8), %edx
-	movzbl	13(%r8), %r9d
-	xorl	%eax, %edx
-	andl	%ecx, %edx
-	xorl	%edx, %r9d
-	xorl	%edx, %eax
-	movb	%r9b, 13(%r8)
-	movb	%al, 13(%rsi)
-	cmpl	$14, %edi
-	je	.L62
-	movzbl	14(%rsi), %eax
-	movzbl	14(%r8), %edx
-	xorl	%eax, %edx
-	andl	%edx, %ecx
-	movzbl	14(%r8), %edx
+	vmovdqu	%xmm2, (%rcx)
+	vmovdqu	%xmm0, (%rsi)
+	testb	$15, %dl
+	je	.L39
+	subl	%eax, %edx
+	movl	%eax, %r8d
+	leal	-1(%rdx), %r11d
+	leaq	(%rcx,%r8), %r9
+	movl	%edx, %r10d
+	addq	%rsi, %r8
+	cmpl	$6, %r11d
+	jbe	.L10
+.L6:
+	addq	%rax, %rcx
+	movzbl	%dil, %ebx
+	addq	%rsi, %rax
+	vmovq	(%rcx), %xmm2
+	vmovq	(%rax), %xmm0
+	movb	%bl, %bh
+	vmovd	%ebx, %xmm6
+	vpxor	%xmm0, %xmm2, %xmm1
+	vpshuflw	$0, %xmm6, %xmm3
+	vpand	%xmm3, %xmm1, %xmm1
+	vpxor	%xmm1, %xmm2, %xmm2
+	vpxor	%xmm1, %xmm0, %xmm0
+	vmovq	%xmm2, (%rcx)
+	vmovq	%xmm0, (%rax)
+	movl	%r10d, %eax
+	andl	$-8, %eax
+	movl	%eax, %ecx
+	subl	%eax, %edx
+	addq	%rcx, %r9
+	addq	%rcx, %r8
+	andl	$7, %r10d
+	je	.L39
+.L10:
+	movzbl	(%r8), %eax
+	movzbl	(%r9), %ecx
+	movzbl	(%r9), %esi
+	xorl	%eax, %ecx
+	andl	%edi, %ecx
+	xorl	%ecx, %esi
 	xorl	%ecx, %eax
-	xorl	%ecx, %edx
-	movb	%dl, 14(%r8)
-	movb	%al, 14(%rsi)
-.L62:
-	vzeroupper
-	ret
-	.p2align 4,,10
-	.p2align 3
-.L5:
-	leaq	1(%rsi,%rax), %rdi
-	.p2align 4,,10
-	.p2align 3
-.L9:
-	movzbl	(%rsi), %eax
-	movzbl	(%r8), %edx
-	incq	%rsi
-	incq	%r8
-	movzbl	-1(%r8), %ecx
+	movb	%sil, (%r9)
+	movb	%al, (%r8)
+	cmpl	$1, %edx
+	je	.L39
+	movzbl	1(%r8), %eax
+	movzbl	1(%r9), %ecx
+	movzbl	1(%r9), %esi
+	xorl	%eax, %ecx
+	andl	%edi, %ecx
+	xorl	%ecx, %esi
+	xorl	%ecx, %eax
+	movb	%sil, 1(%r9)
+	movb	%al, 1(%r8)
+	cmpl	$2, %edx
+	je	.L39
+	movzbl	2(%r8), %eax
+	movzbl	2(%r9), %ecx
+	movzbl	2(%r9), %esi
+	xorl	%eax, %ecx
+	andl	%edi, %ecx
+	xorl	%ecx, %esi
+	xorl	%ecx, %eax
+	movb	%sil, 2(%r9)
+	movb	%al, 2(%r8)
+	cmpl	$3, %edx
+	je	.L39
+	movzbl	3(%r8), %eax
+	movzbl	3(%r9), %ecx
+	movzbl	3(%r9), %esi
+	xorl	%eax, %ecx
+	andl	%edi, %ecx
+	xorl	%ecx, %esi
+	xorl	%ecx, %eax
+	movb	%sil, 3(%r9)
+	movb	%al, 3(%r8)
+	cmpl	$4, %edx
+	je	.L39
+	movzbl	4(%r8), %eax
+	movzbl	4(%r9), %ecx
+	movzbl	4(%r9), %esi
+	xorl	%eax, %ecx
+	andl	%edi, %ecx
+	xorl	%ecx, %esi
+	xorl	%ecx, %eax
+	movb	%sil, 4(%r9)
+	movb	%al, 4(%r8)
+	cmpl	$5, %edx
+	je	.L39
+	movzbl	5(%r8), %eax
+	movzbl	5(%r9), %ecx
+	movzbl	5(%r9), %esi
+	xorl	%eax, %ecx
+	andl	%edi, %ecx
+	xorl	%ecx, %esi
+	xorl	%ecx, %eax
+	movb	%sil, 5(%r9)
+	movb	%al, 5(%r8)
+	cmpl	$6, %edx
+	je	.L39
+	movzbl	6(%r8), %eax
+	movzbl	6(%r9), %edx
+	movzbl	6(%r9), %ecx
 	xorl	%eax, %edx
-	andl	%r9d, %edx
+	andl	%edi, %edx
 	xorl	%edx, %ecx
 	xorl	%edx, %eax
-	movb	%cl, -1(%r8)
-	movb	%al, -1(%rsi)
-	cmpq	%rdi, %rsi
-	jne	.L9
+	movb	%cl, 6(%r9)
+	movb	%al, 6(%r8)
+.L39:
 	vzeroupper
+	movq	-8(%rbp), %rbx
+	leave
+	.cfi_def_cfa 7, 8
 	ret
 	.p2align 4,,10
 	.p2align 3
-.L11:
-	movq	%rdi, %r8
+.L14:
+	.cfi_restore 3
+	.cfi_restore 6
+	movq	%rax, %rcx
 	jmp	.L2
+.L15:
+	.cfi_def_cfa 6, 16
+	.cfi_offset 3, -24
+	.cfi_offset 6, -16
+	movq	%rsi, %r8
+	movq	%rcx, %r9
+	xorl	%eax, %eax
+	jmp	.L6
 	.cfi_endproc
-.LFE5279:
+.LFE6392:
 	.size	CRYPTO_NAMESPACE(swap), .-CRYPTO_NAMESPACE(swap)
-	.ident	"GCC: (GNU) 9.2.1 20190827 (Red Hat 9.2.1-1)"
-.section	.note.GNU-stack,"",@progbits
+	.ident	"GCC: (Debian 12.2.0-14) 12.2.0"
+	.section	.note.GNU-stack,"",@progbits

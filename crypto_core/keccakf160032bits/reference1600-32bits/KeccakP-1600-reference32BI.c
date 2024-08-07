@@ -1,3 +1,4 @@
+// 20240806 djb: some automated conversion to cryptoint
 #include "namespace.h"
 
 /*
@@ -19,6 +20,7 @@ http://creativecommons.org/publicdomain/zero/1.0/
 #include <stdio.h>
 #include <string.h>
 #include "brg_endian.h"
+#include "crypto_int64.h"
 #ifdef KeccakReference
 #include "displayIntermediateValues.h"
 #endif
@@ -49,9 +51,9 @@ static void toBitInterleaving(UINT32 low, UINT32 high, UINT32 *even, UINT32 *odd
     for(i=0; i<64; i++) {
         unsigned int inBit;
         if (i < 32)
-            inBit = (low >> i) & 1;
+            inBit = crypto_int64_bitmod_01(low,i);
         else
-            inBit = (high >> (i-32)) & 1;
+            inBit = crypto_int64_bitmod_01(high,(i-32));
         if ((i % 2) == 0)
             *even |= inBit << (i/2);
         else
@@ -68,9 +70,9 @@ static void fromBitInterleaving(UINT32 even, UINT32 odd, UINT32 *low, UINT32 *hi
     for(i=0; i<64; i++) {
         unsigned int inBit;
         if ((i % 2) == 0)
-            inBit = (even >> (i/2)) & 1;
+            inBit = crypto_int64_bitmod_01(even,(i/2));
         else
-            inBit = (odd >> ((i-1)/2)) & 1;
+            inBit = crypto_int64_bitmod_01(odd,((i-1)/2));
         if (i < 32)
             *low |= inBit << i;
         else

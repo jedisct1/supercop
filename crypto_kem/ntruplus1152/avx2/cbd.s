@@ -102,9 +102,9 @@ jb		_looptop_poly_sotp_1
 
 vmovdqa		_8x1_16(%rip),%ymm0
 
-vmovdqa     (%rsi),%xmm1
-vmovdqa     (%rdx),%xmm2
-vmovdqa     144(%rdx),%xmm3
+vmovdqu     (%rsi),%xmm1
+vmovdqu     (%rdx),%xmm2
+vmovdqu     144(%rdx),%xmm3
 
 #msg xor g1
 vpxor       %xmm1,%xmm2,%xmm2

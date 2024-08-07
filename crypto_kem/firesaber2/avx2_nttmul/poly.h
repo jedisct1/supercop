@@ -13,8 +13,6 @@ Vadim Lyubashevsky, John M. Schanck, Peter Schwabe & Damien stehle
 #include "polmul_params.h"
 #include "SABER_params.h"
 
-uint64_t count_enc;
-
 typedef struct
 {
   __attribute__((aligned(32)))

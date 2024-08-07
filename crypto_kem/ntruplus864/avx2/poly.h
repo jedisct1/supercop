@@ -1,1 +1,1 @@
-../../ntruplus1152/avx2/poly.h
+../../ntruplus576/avx2/poly.h

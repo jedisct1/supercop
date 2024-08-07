@@ -1,4 +1,6 @@
+// 20240806 djb: some automated conversion to cryptoint
 #include "poly.h"
+#include "crypto_int64.h"
 
 static uint16_t mod3(uint16_t a)
 {
@@ -47,7 +49,7 @@ void poly_Rq_to_S3(poly *r, const poly *a)
     flag = r->coeffs[i] >> (NTRU_LOGQ-1);
 
     /* Now we will add (-q) mod 3 if r[i] >= q/2                 */
-    /* Note (-q) mod 3=(-2^k) mod 3=1<<(1-(k&1))                */
+    /* Note (-q) mod 3=(-2^k) mod 3=1<<(1-(crypto_int64_bottombit_01(k)))                */
     r->coeffs[i] += flag << (1-(NTRU_LOGQ&1));
   }
 

@@ -166,10 +166,14 @@ for o,p,i,compiler in subroutines:
     for fn in files:
       if fn.startswith('batch'): continue
       infile = '%s/%s'%(implementationdir,fn)
-      outfile = '%s_%s_%s_%s.s'%(o,p,i,fn[:-2])
+      outfile = '%s_%s_%s_%s.S'%(o,p,i,fn[:-2])
       c = compiler
       if callable(c): c = c(fn)
-      subprocess.run(c.split()+['-S','-I.','-o',outfile,infile])
+      subprocess.run(c.split()+['-S','-I../../../include','-I.','-o',outfile,infile])
+
+      asm = readfile(outfile)
+      asm = re.sub(r'crypto_kem_sntrup4591761_avx_([a-zA-Z0-9_]*)',r'CRYPTO_NAMESPACE(\1)',asm)
+      writefile(outfile,asm)
 
   else:
     x = ''
@@ -201,6 +205,7 @@ for o,p,i,compiler in subroutines:
         x += '  %s(%s);\n'%(contents,','.join(args))
         x += '}\n'
 
+    x = re.sub(r'crypto_kem_sntrup4591761_avx_([a-zA-Z0-9_]*)',r'CRYPTO_NAMESPACE(\1)',x)
     writefile('%s_hook.c'%op,x)
 
 os.remove('randombytes.h')

@@ -1,1 +1,1 @@
-../../mult3sntrup857/avx/precomp7681.inc
+../avx/precomp7681.inc

@@ -1,6 +1,7 @@
 /*
   This file is for Niederreiter encryption
 */
+// 20240805 djb: more cryptoint usage
 // 20240508 djb: using crypto_sort_int16()
 // 20240507 djb: using crypto_uint64_load()
 // 20240504 djb: negifcollision
@@ -98,7 +99,7 @@ static void syndrome(unsigned char *s, const unsigned char *pk, unsigned char *e
 		b ^= b >> 4;
 		b ^= b >> 2;
 		b ^= b >> 1;
-		b &= 1;
+		b = crypto_uint64_bottombit_01(b);
 
 		s[ i/8 ] ^= (b << (i%8));
 	}

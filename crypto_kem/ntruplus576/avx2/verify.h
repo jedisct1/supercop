@@ -1,1 +1,1 @@
-../../ntruplus1152/opt/verify.h
+../../ntruplus1152/ref/verify.h

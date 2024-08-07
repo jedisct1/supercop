@@ -1,1 +1,1 @@
-../../mult3sntrup761/round2/ntt.c
+../../mult3sntrup653/round2/ntt.c

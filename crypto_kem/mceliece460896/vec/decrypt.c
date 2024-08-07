@@ -1,6 +1,7 @@
 /*
   This file is for Niederreiter decryption
 */
+// 20240805 djb: more cryptoint usage
 // 20240503 djb: remove #ifdef KAT ... #endif
 // 20221230 djb: add linker lines
 
@@ -18,7 +19,9 @@
 #include "vec.h"
 #include "bm.h"
 
-#include <stdio.h>
+#include "crypto_int16.h"
+#include "crypto_int8.h"
+#include "crypto_int64.h"
 
 static void scaling(vec out[][GFBITS], vec inv[][GFBITS], const unsigned char *sk, vec *recv)
 {
@@ -103,16 +106,13 @@ static int weight_check(unsigned char * e, vec * error)
 	uint16_t check;
 
 	for (i = 0; i < (1 << GFBITS); i++)
-		w0 += (error[i/64] >> (i%64)) & 1;
+		w0 += crypto_int64_bitmod_01(error[i/64], i);
 
 	for (i = 0; i < SYS_N; i++)
-		w1 += (e[i/8] >> (i%8)) & 1;
+		w1 += crypto_int8_bitmod_01(e[i/8], i);
 
 	check = (w0 ^ SYS_T) | (w1 ^ SYS_T);
-	check -= 1;
-	check >>= 15;
-
-	return check;
+	return -crypto_int16_zero_mask(check);
 }
 
 static uint16_t synd_cmp(vec s0[][ GFBITS ] , vec s1[][ GFBITS ])

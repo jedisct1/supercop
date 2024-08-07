@@ -38,6 +38,6 @@ static int16_t crepmod3(int16_t a)
 **************************************************/
 void poly_crepmod3(poly *r, const poly *a)
 {
-  for(int i = 0; i < NTRUPLUS_N; i++)
-    r->coeffs[i] = crepmod3(a->coeffs[i]);
+	for(int i = 0; i < NTRUPLUS_N; i++)
+		r->coeffs[i] = crepmod3(a->coeffs[i]);
 }

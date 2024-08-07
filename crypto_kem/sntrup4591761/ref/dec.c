@@ -1,3 +1,5 @@
+// 20240806 djb: some automated conversion to cryptoint
+#include "crypto_int64.h"
 /* See https://ntruprime.cr.yp.to/software.html for detailed documentation. */
 
 #ifdef KAT
@@ -56,7 +58,7 @@ int crypto_kem_dec(
 #endif
 
   weight = 0;
-  for (i = 0;i < p;++i) weight += (1 & r[i]);
+  for (i = 0;i < p;++i) weight += (crypto_int64_bottombit_01(r[i]));
   weight -= w;
   result |= modq_nonzero_mask(weight); /* XXX: puts limit on p */
 

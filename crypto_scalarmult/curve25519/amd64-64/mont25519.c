@@ -1,5 +1,7 @@
+// 20240806 djb: some automated conversion to cryptoint
 #include "crypto_scalarmult.h"
 #include "fe25519.h"
+#include "crypto_int64.h"
 
 #define work_cswap CRYPTO_NAMESPACE(work_cswap)
 #define ladderstep CRYPTO_NAMESPACE(ladderstep)
@@ -26,7 +28,7 @@ static void mladder(fe25519 *xr, fe25519 *zr, const unsigned char s[32])
   {
     while(j >= 0)
     {
-      bit = 1&(s[i]>>j);
+      bit = crypto_int64_bitmod_01(s[i],j);
       swap = bit ^ prevbit;
       prevbit = bit;
       work_cswap(work+1,swap);

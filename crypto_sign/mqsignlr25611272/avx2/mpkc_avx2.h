@@ -29,16 +29,7 @@ void mpkc_pub_map_gf256_avx2( uint8_t * z , const uint8_t * pk_mat , const uint8
 		}
 		gf256v_madd( r , tmp , w[i] , align_len );
 	}
-
-	const uint8_t* linear_mat = pk_mat + (_PUB_M)* N_TRIANGLE_TERMS(_PUB_N);
-	for (unsigned i = 0; i < n_var; i++) {
-		gf256v_madd(r, linear_mat, w[i], align_len);
-		linear_mat += _PUB_M_BYTE;
-	}
-
-	const uint8_t* constant = pk_mat + (_PUB_M)* N_TRIANGLE_TERMS(_PUB_N) + _PUB_M * _PUB_N;
-	gf256v_add(r, constant, align_len);
-
+	
 	memcpy(z, r, _PUB_M_BYTE);
 }
 

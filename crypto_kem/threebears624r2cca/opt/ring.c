@@ -1,8 +1,10 @@
+// 20240806 djb: some automated conversion to cryptoint
 #include "namespace.h"
 /** Optimized ring arithmetic */
 #include "ring.h"
 #include "brg_endian.h" /* from Keccak Code Package */
 #include "crypto_declassify.h"
+#include "crypto_int64.h"
 
 
 /** Karatsuba inner loop */
@@ -62,7 +64,7 @@ void mac(gf_t c, const gf_t a, const gf_t b) {
     for (i=0; i<NLIMBS/2; i+=2) {
         /* Even i */
         dslimb_t accum0x=0, accum1x=0, accum2 = 0;
-        for (j=i&1; j<=i; j+=2) {
+        for (j=crypto_int64_bottombit_01(i); j<=i; j+=2) {
             limb_t a1 = a[i-j+NLIMBS/2], a0 = a[i-j];
             limb_t b0 = b[j], b1 = b[j+NLIMBS/2];
             triplemac(&accum0x,&accum1x,&accum2,a0,a1,b0,b1);

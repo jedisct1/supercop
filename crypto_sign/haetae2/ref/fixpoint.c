@@ -1,5 +1,7 @@
+// 20240806 djb: some automated conversion to cryptoint
 #include "fixpoint.h"
 #include "params.h"
+#include "crypto_int64.h"
 #include <stdint.h>
 #include <stdlib.h>
 
@@ -45,7 +47,7 @@ static void fixpoint_mul(fp96_76 *xy, const fp96_76 *x, const fp96_76 *y) {
 
 static void fixpoint_unsigned_signed_mul(fp96_76 *xy, const fp96_76 *y) {
     fp96_76 x, z;
-    uint8_t sign = (y->limb48[1] >> 63) & 1;
+    uint8_t sign = crypto_int64_bitmod_01(y->limb48[1],63);
     __copy_cneg(&x, y, sign);
     fixpoint_mul(&z, &x, xy);
     __copy_cneg(xy, &z, sign);

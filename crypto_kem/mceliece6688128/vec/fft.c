@@ -5,6 +5,7 @@
   For the implementation strategy, see
   https://eprint.iacr.org/2017/793.pdf
 */
+// 20240805 djb: more use of cryptoint
 // 20221230 djb: split these arrays into separate .c files
 // 20221230 djb: rename powers array as fft_powers
 // 20221230 djb: rename consts array as fft_consts
@@ -23,6 +24,7 @@
 #include "transpose.h"
 
 #include <stdint.h>
+#include "crypto_int64.h"
 
 /* input: in, polynomial in bitsliced form */
 /* output: in, result of applying the radix conversions on in */
@@ -104,8 +106,7 @@ static void butterflies(vec out[][ GFBITS ], vec in[][ GFBITS ])
 	{
 		for (j = 0; j < GFBITS; j++)
 		{
-			pre[i][j] = (beta[i] >> j) & 1; 
-			pre[i][j] = -pre[i][j];
+			pre[i][j] = crypto_int64_bitmod_mask(beta[i], j); 
 		}
 
 		vec_mul(pre[i], in[1], pre[i]);

@@ -1,3 +1,4 @@
+// 20240805 djb: more cryptoint usage
 // 20240508 djb: switch to vec_mul_gf_using_64
 // 20221230 djb: changed * to [...] for vec_GF_mul declaration
 
@@ -11,6 +12,7 @@
 #include "gf.h"
 
 #include <stdint.h>
+#include "crypto_int64.h"
 
 typedef uint64_t vec;
 
@@ -43,7 +45,7 @@ static inline void vec_mul_gf_using_64(vec out[ GFBITS ], vec v[ GFBITS ], gf a)
 	vec bits[GFBITS];
 
 	for (i = 0; i < GFBITS; i++)
-		bits[i] = -((a >> i) & 1);
+		bits[i] = crypto_int64_bitmod_mask(a, i);
 
 	vec_mul_asm(out, v, bits);
 }

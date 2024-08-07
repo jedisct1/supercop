@@ -1,10 +1,11 @@
 #include <immintrin.h>
 #include "crypto_verify.h"
+#include "crypto_int16.h"
 
 int crypto_verify(const unsigned char *x,const unsigned char *y)
 {
   __m256i diff = _mm256_set1_epi8(0);
-  unsigned int differentbits = 0;
+  crypto_int16 differentbits = 0;
   int i = crypto_verify_BYTES;
 
   i -= 32;
@@ -31,5 +32,5 @@ int crypto_verify(const unsigned char *x,const unsigned char *y)
   differentbits |= _mm256_extract_epi8(diff,16);
   differentbits |= _mm256_extract_epi8(diff,24);
 
-  return (1 & ((differentbits - 1) >> 8)) - 1;
+  return crypto_int16_nonzero_mask(differentbits);
 }

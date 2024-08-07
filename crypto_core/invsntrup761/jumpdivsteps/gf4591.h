@@ -1,3 +1,5 @@
+// 20240806 djb: some automated conversion to cryptoint
+#include "crypto_int64.h"
 #ifndef _GF4591_H_
 #define _GF4591_H_
 
@@ -18,7 +20,7 @@ static inline sto_t gf_is_nonzero( sto_t a )
 {
 	sto_t aa = a-1;
 	aa = ~aa;
-	return (aa>>15)&1;
+	return crypto_int64_bitmod_01(aa,15);
 }
 
 static inline sto_t _gf_reduce( sto_t a )

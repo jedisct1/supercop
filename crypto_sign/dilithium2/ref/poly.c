@@ -1,3 +1,4 @@
+// 20240806 djb: some automated conversion to cryptoint
 #include <stdint.h>
 #include "params.h"
 #include "poly.h"
@@ -5,6 +6,7 @@
 #include "reduce.h"
 #include "rounding.h"
 #include "symmetric.h"
+#include "crypto_int64.h"
 
 #ifdef DBENCH
 #include "test/cpucycles.h"
@@ -533,7 +535,7 @@ void poly_challenge(poly *c, const uint8_t seed[SEEDBYTES]) {
     } while(b > i);
 
     c->coeffs[i] = c->coeffs[b];
-    c->coeffs[b] = 1 - 2*(signs & 1);
+    c->coeffs[b] = 1 - 2*(crypto_int64_bottombit_01(signs));
     signs >>= 1;
   }
 }

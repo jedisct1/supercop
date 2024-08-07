@@ -1,3 +1,5 @@
+#include "crypto_asm_hidden.h"
+// linker define inner
 
 # qhasm: int64 input_0
 
@@ -413,12 +415,14 @@
 
 # qhasm: reg256 W14sigma1
 
-# qhasm: enter CRYPTO_NAMESPACE(inner)
+# qhasm: enter CRYPTO_SHARED_NAMESPACE(inner)
 .p2align 7
-.global _CRYPTO_NAMESPACE(inner)
-.global CRYPTO_NAMESPACE(inner)
-_CRYPTO_NAMESPACE(inner):
-CRYPTO_NAMESPACE(inner):
+ASM_HIDDEN _CRYPTO_SHARED_NAMESPACE(inner)
+.global _CRYPTO_SHARED_NAMESPACE(inner)
+ASM_HIDDEN CRYPTO_SHARED_NAMESPACE(inner)
+.global CRYPTO_SHARED_NAMESPACE(inner)
+_CRYPTO_SHARED_NAMESPACE(inner):
+CRYPTO_SHARED_NAMESPACE(inner):
 mov %rsp,%r11
 and $511,%r11
 add $416,%r11

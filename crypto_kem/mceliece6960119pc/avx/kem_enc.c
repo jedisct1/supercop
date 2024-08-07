@@ -1,3 +1,4 @@
+// 20240805 djb: more mask usage
 // 20230102 djb: rename encrypt() as pke_encrypt()
 // 20221230 djb: add linker lines
 // 20221230 djb: split out of operations.c
@@ -14,23 +15,20 @@
 
 #include <stdint.h>
 #include <string.h>
+#include "crypto_int8.h"
 
 /* check if the padding bits of pk are all zero */
 static int check_pk_padding(const unsigned char * pk)
 {
 	unsigned char b;
-	int i, ret;
+	int i;
 
 	b = 0;
 	for (i = 0; i < PK_NROWS; i++)
 		b |= pk[i*PK_ROW_BYTES + PK_ROW_BYTES-1];
 
 	b >>= (PK_NCOLS % 8);
-	b -= 1;
-	b >>= 7;
-	ret = b;
-
-	return ret-1;
+	return crypto_int8_nonzero_mask(b);
 }
 
 int operation_enc(

@@ -1,3 +1,4 @@
+// 20240805 djb: more cryptoint usage
 // 20240508 djb: eliminated unused vec128_copy, vec128_or_reduce
 // 20240508 djb: split out of vec128.h
 
@@ -7,6 +8,7 @@
 #include "params.h"
 #include "gf.h"
 #include "vec128.h"
+#include "crypto_int64.h"
 
 #define vec128_mul_asm CRYPTO_SHARED_NAMESPACE(vec128_mul_asm)
 #define vec128_mul_GF CRYPTO_NAMESPACE(vec128_mul_GF)
@@ -37,7 +39,7 @@ static inline void vec128_mul_gf(vec128 out[ GFBITS ], vec128 v[ GFBITS ], gf a)
 
 	for (i = 0; i < GFBITS; i++)
 	{
-		b = -((a >> i) & 1);
+		b = crypto_int64_bitmod_mask(a, i);
 		bits[i] = vec128_set2x(b, b);
 	}
 
@@ -52,7 +54,7 @@ static inline void vec_mul_gf(uint64_t out[ GFBITS ], uint64_t v[ GFBITS ], gf a
 	vec128 x[GFBITS], y[GFBITS], z[GFBITS];
 
 	for (i = 0; i < GFBITS; i++)
-		bits[i] = -((a >> i) & 1);
+		bits[i] = crypto_int64_bitmod_mask(a, i);
 
 	for (i = 0; i < GFBITS; i++)
 	{

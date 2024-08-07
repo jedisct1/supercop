@@ -11,12 +11,12 @@
 extern  "C" {
 #endif
 
-#define mqsc_pubmap mpkc_pub_map_gf256
+#define mqrr_pubmap mpkc_pub_map_gf256
 
 
-int mqrr_sign(uint8_t* signature, const sk_mqrr* sk, const uint8_t* sk_seed, const uint8_t* m, const uint32_t mlen, const uint8_t* ss);
+int mqrr_sign(uint8_t* signature, const sk_mqrr* sk, const uint8_t* m, const uint32_t mlen);
 
-int mqsc_verify(const uint8_t* m, const uint32_t mlen, const uint8_t* signature, const uint8_t* pk);
+int mqrr_verify(const uint8_t* m, const uint32_t mlen, const uint8_t* signature, const uint8_t* pk);
 
 
 #ifdef  __cplusplus

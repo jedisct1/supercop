@@ -111,10 +111,10 @@ static inline int RansDecInit(RansState* r, uint8_t** pptr)
     uint32_t x;
     uint8_t* ptr = *pptr;
 
-    x  = ptr[0] << 0;
-    x |= ptr[1] << 8;
-    x |= ptr[2] << 16;
-    x |= ptr[3] << 24;
+    x  = (uint32_t)ptr[0] << 0;
+    x |= (uint32_t)ptr[1] << 8;
+    x |= (uint32_t)ptr[2] << 16;
+    x |= (uint32_t)ptr[3] << 24;
     if (x < RANS_BYTE_L || (RANS_BYTE_L << 8) <= x )
         return 1; // initial state out of range
 

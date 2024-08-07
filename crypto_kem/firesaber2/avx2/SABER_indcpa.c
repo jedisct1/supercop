@@ -10,58 +10,9 @@
 #include "randombytes.h"
 #include "fips202.h"
 
-#define h1 4 //2^(EQ-EP-1)
 
-#define h2 ( (1<<(SABER_EP-2)) - (1<<(SABER_EP-SABER_ET-1)) + (1<<(SABER_EQ-SABER_EP-1)) )
-
-
-
-
-
-uint64_t mask_ar[4]={~(0UL)};
-__m256i mask_load;
-__m256i floor_round;
-__m256i H1_avx;	
-__m256i H2_avx;
 
 void POL2MSG(uint16_t *message_dec_unpacked, unsigned char *message_dec);
-
-/*--------------------------------------------------------------------------------------
-	This routine loads the constant values for Toom-Cook multiplication 
-----------------------------------------------------------------------------------------*/
-void load_values(){
-
-	int64_t i;
-
-	int64_t inv3=43691;
-	int64_t inv9=36409;
-	int64_t inv15=61167;
-
-	int64_t int45=45;
-	int64_t int30=30;
-	int64_t int0=0;
-
-
-	int16_t inv3_avx_load[16],inv9_avx_load[16],inv15_avx_load[16],int45_avx_load[16],int30_avx_load[16],int0_avx_load[16];
-
-	for(i=0;i<16;i++){
-		inv3_avx_load[i]=inv3;
-		inv9_avx_load[i]=inv9;
-		inv15_avx_load[i]=inv15;
-		int45_avx_load[i]=int45;
-		int30_avx_load[i]=int30;
-		int0_avx_load[i]=int0;
-	}
-
-	inv3_avx = _mm256_loadu_si256 ((__m256i const *) (&inv3_avx_load));
-	inv9_avx = _mm256_loadu_si256 ((__m256i const *) (&inv9_avx_load));
-	inv15_avx = _mm256_loadu_si256 ((__m256i const *) (&inv15_avx_load));
-	int45_avx = _mm256_loadu_si256 ((__m256i const *) (&int45_avx_load));
-	int30_avx = _mm256_loadu_si256 ((__m256i const *) (&int30_avx_load));
-	int0_avx = _mm256_loadu_si256 ((__m256i const *) (&int0_avx_load));
-	mask = _mm256_loadu_si256 ((__m256i const *)mask_ar);	
-}
-
 
 
 /*-----------------------------------------------------------------------------------
@@ -165,19 +116,11 @@ void indcpa_kem_keypair(unsigned char *pk, unsigned char *sk)
   //__m256i acc[2*SABER_N/16];
 
 
-  mask_ar[0]=~(0UL);mask_ar[1]=~(0UL);mask_ar[2]=~(0UL);mask_ar[3]=~(0UL);
-  mask_load = _mm256_loadu_si256 ((__m256i const *)mask_ar);
-
   mod=_mm256_set1_epi16(SABER_Q-1);
-  floor_round=_mm256_set1_epi16(4);
-
-  H1_avx=_mm256_set1_epi16(h1);
 
   __m256i b_bucket[NUM_POLY][SCHB_N*4];
 
 //--------------AVX declaration ends------------------
-
-   load_values();
 
 
   randombytes(seed, SABER_SEEDBYTES);
@@ -266,7 +209,6 @@ void indcpa_kem_enc(unsigned char *message_received, unsigned char *noiseseed, c
 
 	unsigned char msk_c[SABER_SCALEBYTES_KEM];
 
-	uint64_t CLOCK1, CLOCK2;
 	//--------------AVX declaration------------------
 	
 	  __m256i sk_avx[SABER_K][SABER_N/16];
@@ -280,22 +222,14 @@ void indcpa_kem_enc(unsigned char *message_received, unsigned char *noiseseed, c
 
           __m256i message_avx[SABER_N/16];
 		
-	  mask_ar[0]=~(0UL);mask_ar[1]=~(0UL);mask_ar[2]=~(0UL);mask_ar[3]=~(0UL);
-	  mask_load = _mm256_loadu_si256 ((__m256i const *)mask_ar);
-
 	  mod=_mm256_set1_epi16(SABER_Q-1);
 	  mod_p=_mm256_set1_epi16(SABER_P-1);
 
 	  
 
-	floor_round=_mm256_set1_epi16(4);
-
-	H1_avx=_mm256_set1_epi16(h1);
- 
 	__m256i b_bucket[NUM_POLY][SCHB_N*4];
 
 	//--------------AVX declaration ends------------------
-	load_values();
       
 	for(i=0;i<SABER_SEEDBYTES;i++){ // Load the seedbytes in the client seed from PK.
 		seed[i]=pk[ SABER_POLYVECCOMPRESSEDBYTES + i]; 
@@ -433,8 +367,6 @@ void indcpa_kem_dec(const unsigned char *sk, const unsigned char *ciphertext, un
 	uint8_t scale_ar[SABER_SCALEBYTES_KEM];
 	uint16_t op[SABER_N];
 
-	uint64_t CLOCK1, CLOCK2;
-
 	//--------------AVX declaration------------------
 	
 
@@ -447,17 +379,11 @@ void indcpa_kem_dec(const unsigned char *sk, const unsigned char *ciphertext, un
 	  __m256i sksv_avx[SABER_K][SABER_N/16];
 	  __m256i pksv_avx[SABER_K][SABER_N/16];
 	  
-	  mask_ar[0]=~(0UL);mask_ar[1]=~(0UL);mask_ar[2]=~(0UL);mask_ar[3]=~(0UL);
-	  mask_load = _mm256_loadu_si256 ((__m256i const *)mask_ar);
-
 	  //mod_p=_mm256_set1_epi16(SABER_P-1);
-
-	  H2_avx=_mm256_set1_epi16(h2);
 
 	  __m256i b_bucket[NUM_POLY][SCHB_N*4];
 	//--------------AVX declaration ends------------------
 	
- 	load_values();
 
 	//-------unpack the public_key
 

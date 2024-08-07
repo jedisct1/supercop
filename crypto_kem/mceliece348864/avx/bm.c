@@ -9,6 +9,7 @@
   For the implementation strategy, see
   https://eprint.iacr.org/2017/793.pdf
 */
+// 20240805 djb: more use of cryptoint
 // 20240530 djb: CRYPTO_ALIGN instead of ALIGN
 // 20240508 djb: include vec128_gf.h
 // 20240503 djb: use crypto_*_mask functions
@@ -30,7 +31,7 @@
 #include "crypto_uint64.h"
 
 #include <stdint.h>
-#include <assert.h>
+#include "crypto_int64.h"
 
 extern void update_asm(void *, gf, int);
 extern gf vec_reduce_asm(uint64_t *);
@@ -181,8 +182,8 @@ void bm(uint64_t out[ GFBITS ], vec128 in[ GFBITS ])
 
 		for (i = 0; i < GFBITS; i++) 
 		{
-			db[i][0] = (d >> i) & 1; db[i][0] = -db[i][0];
-			db[i][1] = (b >> i) & 1; db[i][1] = -db[i][1];
+			db[i][0] = crypto_int64_bitmod_mask(d, i);
+			db[i][1] = crypto_int64_bitmod_mask(b, i);
 		}
 		
 		vec128_mul((vec128*) BC_tmp, (vec128*) db, (vec128*) BC);
@@ -202,7 +203,7 @@ void bm(uint64_t out[ GFBITS ], vec128 in[ GFBITS ])
 
 	c0 = gf_inv(c0);
 
-	for (i = 0; i < GFBITS; i++) { out[i] = (c0 >> i) & 1; out[i] = -out[i]; }
+	for (i = 0; i < GFBITS; i++) { out[i] = crypto_int64_bitmod_mask(c0, i); }
 
 	vec_mul_sp(out, out, &BC[0][0]);
 }

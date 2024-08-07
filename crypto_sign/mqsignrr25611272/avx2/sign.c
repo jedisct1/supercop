@@ -9,26 +9,28 @@
 
 #include "utils_hash.h"
 
-#include <rng.h>
+#include "rng.h"
 
-#if defined(_SUPERCOP_)
+#if defined(SUPERCOP)
 #include "crypto_sign.h"
 #endif
 
 
 int
-seeded_sign_keypair(unsigned char *pk, unsigned char *sk, unsigned char *sk_seed)
+crypto_sign_keypair(unsigned char *pk, unsigned char *sk)
 {
-#if defined(_MQRR_REF)||defined(_MQRR)
-	int r = generate_keypair_mqrr((pk_mqs*)pk, (sk_mqrr*)sk, sk_seed);
-#endif
+	unsigned char sk_seed[LEN_SKSEED];
+	randombytes(sk_seed, LEN_SKSEED);
 
-	return r;
+	memset(pk,0,_PUB_KEY_LEN);
+	memset(sk,0,_SEC_KEY_LEN);
+	
+	return generate_keypair_mqrr((pk_mqs*)pk, (sk_mqrr*)sk, sk_seed);
 }
 
 
 int
-seeded_sign(unsigned char *sm, unsigned long long *smlen, const unsigned char *m, unsigned long long mlen, const unsigned char *sk, const uint8_t* sk_seed, const uint8_t *ss)
+crypto_sign(unsigned char *sm, unsigned long long *smlen, const unsigned char *m, unsigned long long mlen, const unsigned char *sk)
 {
 	unsigned char digest[_HASH_LEN];
 
@@ -37,21 +39,21 @@ seeded_sign(unsigned char *sm, unsigned long long *smlen, const unsigned char *m
 	memcpy( sm , m , mlen );
 	smlen[0] = mlen + _SIGNATURE_BYTE;
 
-#if defined _MQRR
-	return mqrr_sign(sm + mlen, (sk_mqrr*)sk, sk_seed, m, (uint32_t) mlen, ss);
-#endif
+	return mqrr_sign(sm + mlen, (sk_mqrr*)sk, m, (uint32_t) mlen);
 }
 
 
 
 int
-unused_sign_open(unsigned char *m, unsigned long long *mlen,const unsigned char *sm, unsigned long long smlen,const unsigned char *pk)
+crypto_sign_open(unsigned char *m, unsigned long long *mlen,const unsigned char *sm, unsigned long long smlen,const unsigned char *pk)
 {
 	if( _SIGNATURE_BYTE > smlen ) return -1;
 
-	memcpy( m , sm , smlen-_SIGNATURE_BYTE );
+	
 	mlen[0] = smlen-_SIGNATURE_BYTE;
 	
-	return mqrr_verify(m, (uint32_t) mlen[0], sm + smlen - _SIGNATURE_BYTE, pk);
+	if (mqrr_verify(sm, (uint32_t) mlen[0], sm + smlen - _SIGNATURE_BYTE, pk)) return -1;
+memmove( m , sm , smlen-_SIGNATURE_BYTE );
+return 0;
 }
 

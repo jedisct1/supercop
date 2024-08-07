@@ -1,3 +1,4 @@
+// 20240805 djb: more cryptoint usage
 // 20240508 djb: include vec128_gf.h
 // 20221230 djb: add linker line
 
@@ -5,6 +6,7 @@
 // linker use vec128_mul_asm
 
 #include "vec128_gf.h"
+#include "crypto_int64.h"
 
 /* input: v, an element in GF(2^m)[y]/(y^96+y^10+y^9+y^6+1) in bitsliced form */
 /* input: a, an element in GF(2^m)[y]/(y^96+y^10+y^9+y^6+1) as an array of coefficients */
@@ -32,9 +34,9 @@ void vec128_mul_GF(vec128 out[ GFBITS ], vec128 v[ GFBITS ], gf a[ SYS_T ])
 		for (j = 0; j < GFBITS; j++) 
 		{
 			buf[j][2] <<= 1;
-			buf[j][2] |= buf[j][1] >> 63;
+			buf[j][2] |= crypto_int64_negative_01(buf[j][1]);
 			buf[j][1] <<= 1;
-			buf[j][1] |= buf[j][0] >> 63;
+			buf[j][1] |= crypto_int64_negative_01(buf[j][0]);
 			buf[j][0] <<= 1;
 		}
 

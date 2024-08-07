@@ -1,6 +1,8 @@
+// 20240806 djb: some automated conversion to cryptoint
 #include "owcpa.h"
 #include "poly.h"
 #include "sample.h"
+#include "crypto_int64.h"
 
 static int owcpa_check_ciphertext(const unsigned char *ciphertext)
 {
@@ -14,7 +16,7 @@ static int owcpa_check_ciphertext(const unsigned char *ciphertext)
 
   /* We have 0 <= t < 256 */
   /* Return 0 on success (t=0), 1 on failure */
-  return (int) (1&((~t + 1) >> 15));
+  return (int) (crypto_int64_bitmod_01((~t + 1),15));
 }
 
 static int owcpa_check_r(const poly *r)
@@ -35,7 +37,7 @@ static int owcpa_check_r(const poly *r)
 
   /* We have 0 <= t < 2^16. */
   /* Return 0 on success (t=0), 1 on failure */
-  return (int) (1&((~t + 1) >> 31));
+  return (int) (crypto_int64_bitmod_01((~t + 1),31));
 }
 
 

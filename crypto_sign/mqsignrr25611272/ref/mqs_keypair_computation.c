@@ -37,68 +37,20 @@ void extpk_to_pk(pk_mqs* pk, const ext_pk* extpk)
 			idx += _O;
 		}
 	}
-
-#if defined PUBMAP_QUAD_LIN
-	memcpy(pk->pk + (_PUB_M)* N_TRIANGLE_TERMS(_PUB_N), extpk->linear, _O * _PUB_N);
-#elif defined PUBMAP_QUAD_LIN_CONST
-	memcpy(pk->pk + (_PUB_M)* N_TRIANGLE_TERMS(_PUB_N) + _O * _PUB_N, extpk->constants, _O);
-#endif
 }
 
-// Choosing implementations depends on the macros: _BLAS_SSE_ and _BLAS_AVX2_
-#if defined(_BLAS_AVX2_)
-#include "mqs_keypair_computation_simd.h"
-#define cal_ext_pk_mqrr_impl			cal_ext_pk_mqrr_simd
-#define cal_ext_pk_mqrr_circA_impl		cal_ext_pk_mqrr_circA_simd
-#define cal_ext_pk_mqsr_impl			cal_ext_pk_mqsr_simd
-#define cal_ext_pk_toemq_impl			cal_ext_pk_toemq_simd
-#define cal_ext_pk_bcmq_impl			cal_ext_pk_bcmq_simd
-
-#else
-
 #define cal_ext_pk_mqrr_impl			cal_ext_pk_mqrr_ref
-#define cal_ext_pk_mqrr_circA_impl		cal_ext_pk_mqrr_circA_ref
-#define cal_ext_pk_mqsr_impl			cal_ext_pk_mqsr_ref
-#define cal_ext_pk_toemq_impl			cal_ext_pk_toemq_ref
-#define cal_ext_pk_bcmq_impl			cal_ext_pk_bcmq_ref
-// implement ref version 
 
 void cal_ext_pk_mqrr_ref(ext_pk* Qs, const sk_mqrr* Fs, const sk_mqrr* Ts)
 {
-#if defined(_MALLOC_)
-	unsigned char* tmp2 = (unsigned char*)malloc(32, _O * _V * _O);
-	unsigned char* tempQ = (unsigned char*)malloc(32, _O * _O * _O);
-#else
-	unsigned char tmp2[_O * _V * _O];
-	unsigned char tempQ[_O * _O * _O];
-#endif
-
-	// Quadratic part
 	memcpy(Qs->quad1, Fs->Fq1, _O * N_TRIANGLE_TERMS(_V));
 	memcpy(Qs->quad2, Fs->Fq2, _O * _V * _O);
-
-	memset(tmp2, 0, _O * _V * _O);
-	batch_trimat_madd(tmp2, Fs->Fq1, Ts->mat_t, _V, _V, _O, _O); // F1*T1
-	gf256v_add(Qs->quad2, tmp2, _O * _V * _O); // F1*T1 + F2
-
 	memset(Qs->quad3, 0, _O * N_TRIANGLE_TERMS(_O));
 
-	memset(tempQ, 0, _O * _O * _O);
-	batch_matTr_madd(tempQ, Ts->mat_t, _V, _V, _O, Qs->quad2, _O, _O); // T1_tr*(F1*T1 + F2)
-	UpperTrianglize(Qs->quad3, tempQ, _O, _O);
-
-	memset(tmp2, 0, _O * _V * _O);
-	batch_trimatTr_madd(tmp2, Fs->Fq1, Ts->mat_t, _V, _V, _O, _O); // F1_tr * T1
-	gf256v_add(Qs->quad2, tmp2, _O * _V * _O);
-
-#if defined(_MALLOC_)
-	free(tmp2);
-	free(tempQ);
-#endif
+	batch_trimat_madd(Qs->quad2, Fs->Fq1, Ts->mat_t, _V, _V, _O, _O);        		// F1*T1 + F2
+    batch_upper_matTr_x_mat(Qs->quad3, Ts->mat_t, _V, _V, _O, Qs->quad2, _O, _O );  // T1_tr*(F1*T1 + F2)
+    batch_trimatTr_madd(Qs->quad2, Fs->Fq1, Ts->mat_t, _V, _V, _O, _O);       		// F1_tr * T1
 }
-
-#endif 
-
 
 ///////////////////////////////////////////////////////////////////////
 

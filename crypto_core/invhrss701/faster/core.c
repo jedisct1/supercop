@@ -1,6 +1,10 @@
+// 20240807 djb: also using crypto_int32_negative_mask
+// 20240806 djb: some automated conversion to cryptoint
 /* Based on sntrup4591761/cavx/r3_recip.c. */
 
 #include "crypto_core.h"
+#include "crypto_int32.h"
+#include "crypto_int64.h"
 #include <immintrin.h>
 
 #define C 700
@@ -135,8 +139,8 @@ static void vec256_init(vec256 *G0,vec256 *G1,const small *s)
 
   for (i = 0;i < 768;++i) {
     si = srev[i+768-C];
-    g0[i] = si & 1;
-    g1[i] = (si >> 1) & 1;
+    g0[i] = crypto_int64_bottombit_01(si);
+    g1[i] = crypto_int64_bitmod_01(si,1);
   }
 
   vec256_frombits(G0,g0);
@@ -161,11 +165,6 @@ static void vec256_final(small *out,const vec256 *V0,const vec256 *V1)
   for (i = 768;i < 768+(768-C);++i) vrev[i] = 0;
 
   for (i = 0;i < 768;++i) out[i] = vrev[i+768-C];
-}
-
-static inline int negative_mask(int x)
-{
-  return x >> 31;
 }
 
 static inline void vec256_swap(vec256 *f,vec256 *g,int len,vec256 mask)
@@ -220,7 +219,7 @@ static inline void vec256_eliminate(vec256 *f0,vec256 *f1,vec256 *g0,vec256 *g1,
 
 static inline int vec256_bit0mask(vec256 *f)
 {
-  return -(_mm_cvtsi128_si32(_mm256_castsi256_si128(f[0])) & 1);
+  return crypto_int64_bottombit_mask(_mm_cvtsi128_si32(_mm256_castsi256_si128(f[0])));
 }
 
 static inline void vec256_divx_1(vec256 *f)
@@ -364,7 +363,7 @@ static int r3_recip(small *out,const small *s)
   for (loop = 0;loop < 256;++loop) {
     vec256_timesx_1(V0);
     vec256_timesx_1(V1);
-    swapmask = negative_mask(minusdelta) & vec256_bit0mask(G0);
+    swapmask = crypto_int32_negative_mask(minusdelta) & vec256_bit0mask(G0);
 
     c0 = vec256_bit0mask(F0) & vec256_bit0mask(G0);
     c1 = vec256_bit0mask(F1) ^ vec256_bit0mask(G1);
@@ -392,7 +391,7 @@ static int r3_recip(small *out,const small *s)
   for (loop = 256;loop < 512;++loop) {
     vec256_timesx_2(V0);
     vec256_timesx_2(V1);
-    swapmask = negative_mask(minusdelta) & vec256_bit0mask(G0);
+    swapmask = crypto_int32_negative_mask(minusdelta) & vec256_bit0mask(G0);
 
     c0 = vec256_bit0mask(F0) & vec256_bit0mask(G0);
     c1 = vec256_bit0mask(F1) ^ vec256_bit0mask(G1);
@@ -420,7 +419,7 @@ static int r3_recip(small *out,const small *s)
   for (loop = 512;loop < C + (C-1-512);++loop) {
     vec256_timesx_3(V0);
     vec256_timesx_3(V1);
-    swapmask = negative_mask(minusdelta) & vec256_bit0mask(G0);
+    swapmask = crypto_int32_negative_mask(minusdelta) & vec256_bit0mask(G0);
 
     c0 = vec256_bit0mask(F0) & vec256_bit0mask(G0);
     c1 = vec256_bit0mask(F1) ^ vec256_bit0mask(G1);
@@ -448,7 +447,7 @@ static int r3_recip(small *out,const small *s)
   for (loop = 512;loop > 256;--loop) {
     vec256_timesx_3(V0);
     vec256_timesx_3(V1);
-    swapmask = negative_mask(minusdelta) & vec256_bit0mask(G0);
+    swapmask = crypto_int32_negative_mask(minusdelta) & vec256_bit0mask(G0);
 
     c0 = vec256_bit0mask(F0) & vec256_bit0mask(G0);
     c1 = vec256_bit0mask(F1) ^ vec256_bit0mask(G1);
@@ -476,7 +475,7 @@ static int r3_recip(small *out,const small *s)
   for (loop = 256;loop > 0;--loop) {
     vec256_timesx_3(V0);
     vec256_timesx_3(V1);
-    swapmask = negative_mask(minusdelta) & vec256_bit0mask(G0);
+    swapmask = crypto_int32_negative_mask(minusdelta) & vec256_bit0mask(G0);
 
     c0 = vec256_bit0mask(F0) & vec256_bit0mask(G0);
     c1 = vec256_bit0mask(F1) ^ vec256_bit0mask(G1);
@@ -506,7 +505,7 @@ static int r3_recip(small *out,const small *s)
   vec256_scale(V0,V1,c0vec,c1vec);
 
   vec256_final(out,V0,V1);
-  return negative_mask(minusdelta);
+  return crypto_int32_negative_mask(minusdelta);
 }
 
 int crypto_core(unsigned char *out,const unsigned char *in,const unsigned char *kunused,const unsigned char *cunused)

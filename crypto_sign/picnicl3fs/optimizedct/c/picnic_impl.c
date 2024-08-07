@@ -1,3 +1,4 @@
+// 20240806 djb: some automated conversion to cryptoint
 /*
  *  This file is part of the optimized implementation of the Picnic signature scheme.
  *  See the accompanying documentation for complete details.
@@ -16,6 +17,7 @@
 #include "mpc_lowmc.h"
 #include "picnic_impl.h"
 #include "randomness.h"
+#include "crypto_int64.h"
 
 #include <limits.h>
 #include <math.h>
@@ -69,7 +71,7 @@ static unsigned int collapse_challenge(uint8_t* collapsed, unsigned int num_roun
 
   for (unsigned int i = 0; i < num_rounds; ++i) {
     // flip challenge bits according to spec
-    bitstream_put_bits_8(&bs, (challenge[i] >> 1) | ((challenge[i] & 1) << 1), 2);
+    bitstream_put_bits_8(&bs, (challenge[i] >> 1) | ((crypto_int64_bottombit_01(challenge[i])) << 1), 2);
   }
 
   return (bs.position + 7) / 8;
@@ -92,7 +94,7 @@ static unsigned int expand_challenge(uint8_t* challenge, unsigned int num_rounds
       return 0;
     }
     // flip challenge bits according to spec
-    challenge[i] = (ch & 1) << 1 | (ch >> 1);
+    challenge[i] = (crypto_int64_bottombit_01(ch)) << 1 | (ch >> 1);
   }
 
   const unsigned int remaining_bits = 8 - (bs.position % 8);

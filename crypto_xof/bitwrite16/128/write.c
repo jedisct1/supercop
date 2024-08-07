@@ -1,3 +1,4 @@
+// 20240805 djb: more cryptoint usage
 // 20240504 djb
 
 #include <string.h>
@@ -18,7 +19,7 @@ static inline __m128i vec128_equal_mask(crypto_uint16 x,crypto_uint16 y)
 static inline __m128i vec128_1shlmod(crypto_uint16 pos)
 {
   crypto_uint64 word64 = crypto_uint64_shlmod(1,pos);
-  crypto_uint64 mask6 = -(1&(pos>>6));
+  crypto_uint64 mask6 = crypto_int64_bitmod_mask(pos, 6);
   __m128i word128 = _mm_set_epi64x(word64&mask6,word64&~mask6);
   return word128;
 }

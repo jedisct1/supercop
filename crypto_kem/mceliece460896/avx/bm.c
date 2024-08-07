@@ -9,6 +9,7 @@
   For the implementation strategy, see
   https://eprint.iacr.org/2017/793.pdf
 */
+// 20240805 djb: more cryptoint usage
 // 20240530 djb: CRYPTO_ALIGN instead of ALIGN
 // 20240503 djb: use crypto_*_mask functions
 // 20221231 djb: ALIGN(32) for some arrays; tnx thom wiggers
@@ -28,6 +29,7 @@
 #include "crypto_uint64.h"
 
 #include <stdint.h>
+#include "crypto_int64.h"
 
 extern gf vec_reduce_asm(vec128 *);
 extern void update_asm(void *, gf, int);
@@ -180,8 +182,8 @@ void bm(vec128 *out, vec256 *in)
 
 		for (i = 0; i < GFBITS; i++) 
 		{
-			db[i][0] = vec128_setbits((d >> i) & 1);
-			db[i][1] = vec128_setbits((b >> i) & 1);
+			db[i][0] = vec128_setbits(crypto_int64_bitmod_01(d, i));
+			db[i][1] = vec128_setbits(crypto_int64_bitmod_01(b, i));
 		}
 
 		vec256_mul((vec256*) BC_tmp, (vec256*) db, (vec256*) BC);

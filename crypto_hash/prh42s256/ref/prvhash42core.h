@@ -1,3 +1,5 @@
+// 20240806 djb: some automated conversion to cryptoint
+#include "crypto_int64.h"
 /**
  * prvhash42core.h version 2.31
  *
@@ -170,8 +172,8 @@ inline uint8_t prvhash42_core2( uint8_t* const Seed0, uint8_t* const lcg0,
 	lcg += ~Seed;
 	lcg &= 3;
 	const uint8_t hs = (uint8_t) ( Seed >> 1 );
-	const uint8_t out = ( Seed ^ hs ) & 1;
-	const uint8_t ph = ( Hash ^ hs ) & 1;
+	const uint8_t out = crypto_int64_bottombit_01( Seed ^ hs );
+	const uint8_t ph = crypto_int64_bottombit_01( Hash ^ hs );
 	Seed ^= ph;
 	Hash = ph;
 

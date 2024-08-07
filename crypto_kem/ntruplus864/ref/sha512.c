@@ -1,1 +1,1 @@
-../../ntruplus1152/opt/sha512.c
+../../ntruplus1152/ref/sha512.c

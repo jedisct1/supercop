@@ -4,10 +4,12 @@
 	.globl	CRYPTO_NAMESPACE(rq_round3)
 	.type	CRYPTO_NAMESPACE(rq_round3), @function
 CRYPTO_NAMESPACE(rq_round3):
-.LFB5289:
+.LFB6402:
 	.cfi_startproc
-	vmovdqa	.LC0(%rip), %ymm2
+	movl	$10923, %edx
 	xorl	%eax, %eax
+	vmovd	%edx, %xmm2
+	vpbroadcastw	%xmm2, %ymm2
 	.p2align 4,,10
 	.p2align 3
 .L2:
@@ -21,26 +23,7 @@ CRYPTO_NAMESPACE(rq_round3):
 	vzeroupper
 	ret
 	.cfi_endproc
-.LFE5289:
+.LFE6402:
 	.size	CRYPTO_NAMESPACE(rq_round3), .-CRYPTO_NAMESPACE(rq_round3)
-	.section	.rodata.cst32,"aM",@progbits,32
-	.align 32
-.LC0:
-	.value	10923
-	.value	10923
-	.value	10923
-	.value	10923
-	.value	10923
-	.value	10923
-	.value	10923
-	.value	10923
-	.value	10923
-	.value	10923
-	.value	10923
-	.value	10923
-	.value	10923
-	.value	10923
-	.value	10923
-	.value	10923
-	.ident	"GCC: (GNU) 9.2.1 20190827 (Red Hat 9.2.1-1)"
-.section	.note.GNU-stack,"",@progbits
+	.ident	"GCC: (Debian 12.2.0-14) 12.2.0"
+	.section	.note.GNU-stack,"",@progbits

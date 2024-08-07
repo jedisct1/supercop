@@ -14,9 +14,9 @@
 #endif
 
 
-#include <rng.h>
-// the macro _SUPERCOP_ might be defined in rng.h
-#if defined(_SUPERCOP_)
+#include "rng.h"
+// the macro SUPERCOP might be defined in rng.h
+#if defined(SUPERCOP)
 #if 32 == _HASH_LEN
 #include "crypto_hash_sha256.h"
 #elif 48 == _HASH_LEN
@@ -35,19 +35,19 @@ static inline
 int _hash( unsigned char * digest , const unsigned char * m , unsigned long long mlen )
 {
 #if 32 == _HASH_LEN
-#if defined(_SUPERCOP_)
+#if defined(SUPERCOP)
 	crypto_hash_sha256(digest,m,mlen);
 #else
 	shake256(digest, _HASH_LEN, m, mlen);
 #endif
 #elif 48 == _HASH_LEN
-#if defined(_SUPERCOP_)
+#if defined(SUPERCOP)
 	crypto_hash_sha384(digest,m,mlen);
 #else
 	shake256(digest, _HASH_LEN, m, mlen);
 #endif
 #elif 64 == _HASH_LEN
-#if defined(_SUPERCOP_)
+#if defined(SUPERCOP)
 	crypto_hash_sha512(digest,m,mlen);
 #else
 	shake256(digest, _HASH_LEN, m, mlen);

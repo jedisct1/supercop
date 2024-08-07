@@ -1,1 +1,1 @@
-../avx/ntt.h
+../../mult3sntrup1013/avx/ntt.h

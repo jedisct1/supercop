@@ -1,4 +1,1 @@
-20240425 titan0 amd64 20240621 crypto_sign mqsignrr25611272/constbranchindex timecop_pass crypto_sign/mqsignrr25611272/ref gcc_-march=native_-mtune=native_-O3_-fomit-frame-pointer_-fwrapv_-fPIC_-fPIE 1 0
-20240425 titan0 amd64 20240621 crypto_sign mqsignrr25611272/constbranchindex timecop_output crypto_sign/mqsignrr25611272/ref gcc_-march=native_-mtune=native_-O3_-fomit-frame-pointer_-fwrapv_-fPIC_-fPIE cbae02b0a760c79490f4fce4717e353589eecbecb99c7b8255806a013ce844ca 256932652 60275657760 3500000000 crypto_sign/mqsignrr25611272/ref
-20240425 titan0 amd64 20240621 crypto_sign mqsignrr25611272/constbranchindex timecop_pass crypto_sign/mqsignrr25611272/ref gcc_-march=native_-mtune=native_-O3_-fomit-frame-pointer_-fwrapv_-fPIC_-fPIE 1 0
-20240425 titan0 amd64 20240621 crypto_sign mqsignrr25611272/constbranchindex timecop_output crypto_sign/mqsignrr25611272/ref gcc_-march=native_-mtune=native_-O3_-fomit-frame-pointer_-fwrapv_-fPIC_-fPIE cbae02b0a760c79490f4fce4717e353589eecbecb99c7b8255806a013ce844ca 256932652 60275657760 3500000000 crypto_sign/mqsignrr25611272/ref
+goal-constindex

@@ -15,9 +15,9 @@ extern  "C" {
 #define mqrr_pubmap mpkc_pub_map_gf256
 
 
-int mqrr_sign_ref(uint8_t* signature, const sk_mqrr* sk, const uint8_t* sk_seed, const uint8_t* _digest);
+int mqrr_sign_ref(uint8_t* signature, const sk_mqrr* sk, const uint8_t* _digest);
 
-int mqrr_sign(uint8_t* signature, const sk_mqrr* sk, const uint8_t* sk_seed, const uint8_t* m, const uint32_t mlen, const uint8_t* ss);
+int mqrr_sign(uint8_t* signature, const sk_mqrr* sk, const uint8_t* m, const uint32_t mlen);
 
 int mqrr_verify(const uint8_t* m, const uint32_t mlen, const uint8_t* signature, const uint8_t* pk);
 

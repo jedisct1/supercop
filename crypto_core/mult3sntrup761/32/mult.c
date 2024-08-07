@@ -1,3 +1,4 @@
+// 20240806 djb: some automated conversion to cryptoint
 #include "crypto_core.h"
 #include "params.h"
 
@@ -32,13 +33,13 @@ int crypto_core(unsigned char *outbytes,const unsigned char *inbytes,const unsig
 
   for (i = 0;i < p;++i) {
     small fi = inbytes[i];
-    small fi0 = fi&1;
+    small fi0 = crypto_int64_bottombit_01(fi);
     f[i] = fi0-(fi&(fi0<<1));
   }
   for (i = p;i < ppad;++i) f[i] = 0;
   for (i = 0;i < p;++i) {
     small gi = kbytes[i];
-    small gi0 = gi&1;
+    small gi0 = crypto_int64_bottombit_01(gi);
     g[i] = gi0-(gi&(gi0<<1));
   }
   for (i = p;i < ppad;++i) g[i] = 0;

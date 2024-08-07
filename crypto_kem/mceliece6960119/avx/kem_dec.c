@@ -1,3 +1,4 @@
+// 20240805 djb: more mask usage
 // 20221230 djb: add linker lines
 // 20221230 djb: split out of operations.c
 
@@ -13,19 +14,16 @@
 
 #include <stdint.h>
 #include <string.h>
+#include "crypto_int8.h"
+#include "crypto_int64.h"
 
 /* check if the padding bits of c are all zero */
 static int check_c_padding(const unsigned char * c)
 {
 	unsigned char b;
-	int ret;
 
 	b = c[ SYND_BYTES-1 ] >> (PK_NROWS % 8);
-	b -= 1;
-	b >>= 7;
-	ret = b;
-
-	return ret-1;
+	return crypto_int8_nonzero_mask(b);
 }
 
 int operation_dec(
@@ -56,7 +54,7 @@ int operation_dec(
 	m -= 1;
 	m >>= 8;
 
-	*x++ = m & 1;
+	*x++ = crypto_int64_bottombit_01(m);
 	for (i = 0; i < SYS_N/8; i++) 
 		*x++ = (~m & s[i]) | (m & e[i]);
 

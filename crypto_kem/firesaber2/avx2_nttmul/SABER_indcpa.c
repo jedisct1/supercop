@@ -25,10 +25,6 @@
 #include "fips202.h"
 
 
-#define h1 4 			//2^(EQ-EP-1)
-
-#define h2 ( (1<<(SABER_EP-2)) - (1<<(SABER_EP-SABER_ET-1)) + (1<<(SABER_EQ-SABER_EP-1)) )
-
 
 
 void GenMatrix(polyvec *a, const unsigned char *seed){

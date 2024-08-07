@@ -1,3 +1,4 @@
+// 20240806 djb: some automated conversion to cryptoint
 #include "poly.h"
 #include "decompose.h"
 #include "ntt.h"
@@ -5,8 +6,8 @@
 #include "reduce.h"
 #include "symmetric.h"
 #include <stdint.h>
-#include "crypto_uint64.h"
 #include "crypto_declassify.h"
+#include "crypto_int64.h"
 
 /*************************************************
  * Name:        poly_add
@@ -149,7 +150,7 @@ void poly_compose(poly *a, const poly *ha, const poly *la) {
     unsigned int i = 0;
 
     for (i = 0; i < N; ++i)
-        a->coeffs[i] = (ha->coeffs[i] << 8) + la->coeffs[i];
+        a->coeffs[i] = (ha->coeffs[i] * 256) + la->coeffs[i];
 }
 
 /*************************************************
@@ -164,7 +165,7 @@ void poly_lsb(poly *a0, const poly *a) {
     unsigned int i;
 
     for (i = 0; i < N; ++i)
-        a0->coeffs[i] = a->coeffs[i] & 1;
+        a0->coeffs[i] = crypto_int64_bottombit_01(a->coeffs[i]);
 }
 
 /*************************************************
@@ -172,7 +173,7 @@ void poly_lsb(poly *a0, const poly *a) {
  *
  * Description: Sample polynomial with uniformly random coefficients
  *              in [0,Q-1] by performing rejection sampling on the
- *              output stream of SHAKE256(seed|nonce)
+ *              output stream of SHAKE128(seed|nonce)
  *
  * Arguments:   - poly *a: pointer to output polynomial
  *              - const uint8_t seed[]: byte array with seed of length SEEDBYTES
@@ -303,18 +304,18 @@ void poly_challenge(poly *c, const uint8_t highbits_lsb[POLYVECK_HIGHBITS_PACKED
 
     cond = (128 - hwt);
     mask = 0xff & (cond >> 8);
-    w0 = -(buf[0] & 1);
-    mask = w0 ^ ((-(!!cond & 1)) & (mask ^ w0)); // mask = !!cond ? mask : w0
+    w0 = -(crypto_int64_bottombit_01(buf[0]));
+    mask = w0 ^ ((-(crypto_int64_bottombit_01(!!cond))) & (mask ^ w0)); // mask = !!cond ? mask : w0
     for (i = 0; i < 32; ++i) {
         buf[i] ^= mask;
-        c->coeffs[8 * i] = buf[i] & 1;
-        c->coeffs[8 * i + 1] = (buf[i] >> 1) & 1;
-        c->coeffs[8 * i + 2] = (buf[i] >> 2) & 1;
-        c->coeffs[8 * i + 3] = (buf[i] >> 3) & 1;
-        c->coeffs[8 * i + 4] = (buf[i] >> 4) & 1;
-        c->coeffs[8 * i + 5] = (buf[i] >> 5) & 1;
-        c->coeffs[8 * i + 6] = (buf[i] >> 6) & 1;
-        c->coeffs[8 * i + 7] = (buf[i] >> 7) & 1;
+        c->coeffs[8 * i] = crypto_int64_bottombit_01(buf[i]);
+        c->coeffs[8 * i + 1] = crypto_int64_bitmod_01(buf[i],1);
+        c->coeffs[8 * i + 2] = crypto_int64_bitmod_01(buf[i],2);
+        c->coeffs[8 * i + 3] = crypto_int64_bitmod_01(buf[i],3);
+        c->coeffs[8 * i + 4] = crypto_int64_bitmod_01(buf[i],4);
+        c->coeffs[8 * i + 5] = crypto_int64_bitmod_01(buf[i],5);
+        c->coeffs[8 * i + 6] = crypto_int64_bitmod_01(buf[i],6);
+        c->coeffs[8 * i + 7] = crypto_int64_bitmod_01(buf[i],7);
     }
 #endif
 }
@@ -369,7 +370,7 @@ void poly_pack_lsb(uint8_t *buf, const poly *a) {
         if ((i % 8) == 0) {
             buf[i / 8] = 0;
         }
-        buf[i / 8] |= (a->coeffs[i] & 1) << (i % 8);
+        buf[i / 8] |= (crypto_int64_bottombit_01(a->coeffs[i])) << (i % 8);
     }
 }
 
@@ -643,7 +644,7 @@ void poly_fromcrt(poly *w, const poly *u, const poly *v) {
     for (i = 0; i < N; i++) {
         xq = u->coeffs[i];
         x2 = v->coeffs[i];
-        w->coeffs[i] = xq + (Q & -((xq ^ x2) & 1));
+        w->coeffs[i] = xq + (Q & -(crypto_int64_bottombit_01(xq ^ x2)));
     }
 }
 
@@ -653,7 +654,7 @@ void poly_fromcrt0(poly *w, const poly *u) {
 
     for (i = 0; i < N; i++) {
         xq = u->coeffs[i];
-        w->coeffs[i] = xq + (Q & -(xq & 1));
+        w->coeffs[i] = xq + (Q & -(crypto_int64_bottombit_01(xq)));
     }
 }
 

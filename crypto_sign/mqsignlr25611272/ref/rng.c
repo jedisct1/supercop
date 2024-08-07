@@ -131,7 +131,6 @@ randombytes_init(unsigned char *entropy_input,
                  int security_strength)
 {
     unsigned char   seed_material[48];
-    security_strength = security_strength;	// dummy for suppress compile warning
 
     memcpy(seed_material, entropy_input, 48);
     if(personalization_string)

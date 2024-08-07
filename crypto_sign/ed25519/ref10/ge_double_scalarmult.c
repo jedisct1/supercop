@@ -1,4 +1,6 @@
+// 20240806 djb: some automated conversion to cryptoint
 #include "ge.h"
+#include "crypto_int8.h"
 
 static void slide(signed char *r,const unsigned char *a)
 {
@@ -7,7 +9,7 @@ static void slide(signed char *r,const unsigned char *a)
   int k;
 
   for (i = 0;i < 256;++i)
-    r[i] = 1 & (a[i >> 3] >> (i & 7));
+    r[i] = crypto_int8_bitmod_01(a[i >> 3],i);
 
   for (i = 0;i < 256;++i)
     if (r[i]) {

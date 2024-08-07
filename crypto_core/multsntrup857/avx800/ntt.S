@@ -1,1 +1,1 @@
-../../multsntrup761/avx800/ntt.S
+../../multsntrup1013/avx800/ntt.S

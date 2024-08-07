@@ -1,6 +1,8 @@
+// 20240806 djb: some automated conversion to cryptoint
 #include "namespace.h"
 /** Melas BCH forward error correction */
 #include "melas_fec.h"
+#include "crypto_int64.h"
 typedef uint32_t fec_gf_t;
 static const fec_gf_t F = 0x211;
 
@@ -32,7 +34,7 @@ void melas_fec_set (
 static fec_gf_t mul2(fec_gf_t a, fec_gf_t b) {
     fec_gf_t r = 0;
     for (unsigned i=0; i<9; i++) {
-        r ^= ((b>>8)&1) * a;
+        r ^= (crypto_int64_bitmod_01(b,8)) * a;
         b <<= 1;
         a = a>>2 ^ (a&3)*(F>>2);
     }
@@ -52,14 +54,14 @@ void melas_fec_correct (
     
     /* Multiply syndrome by reverse(syndrome) */
     for (i=c=0; i<27; i++) {
-        c ^= (b&1) * a;
+        c ^= (crypto_int64_bottombit_01(b)) * a;
         b >>= 1;
-        a = a>>1 ^ (a&1)*(F>>1);
+        a = a>>1 ^ (crypto_int64_bottombit_01(a))*(F>>1);
     }
     
     /* b = sqrt(half-trace(1/b)) */
     for (i=0,b=c; i<7; i++) c = mul2(b,c);
-    for (i=0,b=0; i<9; i++) b ^= ((c>>i)&1)*table[i];
+    for (i=0,b=0; i<9; i++) b ^= (crypto_int64_bitmod_01(c,i))*table[i];
 
     /* Circulate */
     for (i=0; i<452-len*8; i+=2) {

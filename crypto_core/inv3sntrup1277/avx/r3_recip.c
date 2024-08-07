@@ -6,6 +6,8 @@
 #define int8 crypto_int8
 typedef int8 small;
 
+#include "crypto_int32.h"
+
 #define p 1277
 #define ppad 1280
 #define numvec 5
@@ -142,7 +144,7 @@ static void vec256_init(vec256 *G0,vec256 *G1,const small *s)
 
   for (i = 0;i < ppad;++i) {
     si = srev[i+ppad-p];
-    g0[i] = si & 1;
+    g0[i] = -crypto_int8_bottombit_mask(si);
     g1[i] = (si >> 1) & g0[i];
   }
 
@@ -168,11 +170,6 @@ static void vec256_final(small *out,const vec256 *V0,const vec256 *V1)
   for (i = ppad;i < ppad+(ppad-p);++i) vrev[i] = 0;
 
   for (i = 0;i < p;++i) out[i] = vrev[i+ppad-p];
-}
-
-static inline int negative_mask(int x)
-{
-  return x >> 31;
 }
 
 static inline void vec256_swap(vec256 *f,vec256 *g,int len,vec256 mask)
@@ -227,7 +224,7 @@ static inline void vec256_eliminate(vec256 *f0,vec256 *f1,vec256 *g0,vec256 *g1,
 
 static inline int vec256_bit0mask(vec256 *f)
 {
-  return -(_mm_cvtsi128_si32(_mm256_castsi256_si128(f[0])) & 1);
+  return crypto_int32_bottombit_mask(_mm_cvtsi128_si32(_mm256_castsi256_si128(f[0])));
 }
 
 static inline void vec256_divx_1(vec256 *f)
@@ -485,12 +482,12 @@ int crypto_core(unsigned char *outbytes,const unsigned char *inbytes,const unsig
   F0[1] = _mm256_set1_epi32(0);
   F0[2] = _mm256_set1_epi32(0);
   F0[3] = _mm256_set1_epi32(0);
-  F0[4] = _mm256_set_epi32(0,0,0,0,2147483648,0,2147483648,0);
+  F0[4] = _mm256_set_epi32(0,0,0,0,-2147483648,0,-2147483648,0);
   F1[0] = _mm256_set1_epi32(0);
   F1[1] = _mm256_set1_epi32(0);
   F1[2] = _mm256_set1_epi32(0);
   F1[3] = _mm256_set1_epi32(0);
-  F1[4] = _mm256_set_epi32(0,0,0,0,2147483648,0,2147483648,0);
+  F1[4] = _mm256_set_epi32(0,0,0,0,-2147483648,0,-2147483648,0);
 
   V0[0] = _mm256_set1_epi32(0);
   V1[0] = _mm256_set1_epi32(0);
@@ -517,7 +514,7 @@ int crypto_core(unsigned char *outbytes,const unsigned char *inbytes,const unsig
   for (loop = 256;loop > 0;--loop) {
     vec256_timesx_1(V0);
     vec256_timesx_1(V1);
-    swapmask = negative_mask(minusdelta) & vec256_bit0mask(G0);
+    swapmask = crypto_int32_negative_mask(minusdelta) & vec256_bit0mask(G0);
 
     c0 = vec256_bit0mask(F0) & vec256_bit0mask(G0);
     c1 = vec256_bit0mask(F1) ^ vec256_bit0mask(G1);
@@ -545,7 +542,7 @@ int crypto_core(unsigned char *outbytes,const unsigned char *inbytes,const unsig
   for (loop = 256;loop > 0;--loop) {
     vec256_timesx_2(V0);
     vec256_timesx_2(V1);
-    swapmask = negative_mask(minusdelta) & vec256_bit0mask(G0);
+    swapmask = crypto_int32_negative_mask(minusdelta) & vec256_bit0mask(G0);
 
     c0 = vec256_bit0mask(F0) & vec256_bit0mask(G0);
     c1 = vec256_bit0mask(F1) ^ vec256_bit0mask(G1);
@@ -573,7 +570,7 @@ int crypto_core(unsigned char *outbytes,const unsigned char *inbytes,const unsig
   for (loop = 256;loop > 0;--loop) {
     vec256_timesx_3(V0);
     vec256_timesx_3(V1);
-    swapmask = negative_mask(minusdelta) & vec256_bit0mask(G0);
+    swapmask = crypto_int32_negative_mask(minusdelta) & vec256_bit0mask(G0);
 
     c0 = vec256_bit0mask(F0) & vec256_bit0mask(G0);
     c1 = vec256_bit0mask(F1) ^ vec256_bit0mask(G1);
@@ -601,7 +598,7 @@ int crypto_core(unsigned char *outbytes,const unsigned char *inbytes,const unsig
   for (loop = 256;loop > 0;--loop) {
     vec256_timesx_4(V0);
     vec256_timesx_4(V1);
-    swapmask = negative_mask(minusdelta) & vec256_bit0mask(G0);
+    swapmask = crypto_int32_negative_mask(minusdelta) & vec256_bit0mask(G0);
 
     c0 = vec256_bit0mask(F0) & vec256_bit0mask(G0);
     c1 = vec256_bit0mask(F1) ^ vec256_bit0mask(G1);
@@ -629,7 +626,7 @@ int crypto_core(unsigned char *outbytes,const unsigned char *inbytes,const unsig
   for (loop = 505;loop > 0;--loop) {
     vec256_timesx_5(V0);
     vec256_timesx_5(V1);
-    swapmask = negative_mask(minusdelta) & vec256_bit0mask(G0);
+    swapmask = crypto_int32_negative_mask(minusdelta) & vec256_bit0mask(G0);
 
     c0 = vec256_bit0mask(F0) & vec256_bit0mask(G0);
     c1 = vec256_bit0mask(F1) ^ vec256_bit0mask(G1);
@@ -657,7 +654,7 @@ int crypto_core(unsigned char *outbytes,const unsigned char *inbytes,const unsig
   for (loop = 256;loop > 0;--loop) {
     vec256_timesx_5(V0);
     vec256_timesx_5(V1);
-    swapmask = negative_mask(minusdelta) & vec256_bit0mask(G0);
+    swapmask = crypto_int32_negative_mask(minusdelta) & vec256_bit0mask(G0);
 
     c0 = vec256_bit0mask(F0) & vec256_bit0mask(G0);
     c1 = vec256_bit0mask(F1) ^ vec256_bit0mask(G1);
@@ -685,7 +682,7 @@ int crypto_core(unsigned char *outbytes,const unsigned char *inbytes,const unsig
   for (loop = 256;loop > 0;--loop) {
     vec256_timesx_5(V0);
     vec256_timesx_5(V1);
-    swapmask = negative_mask(minusdelta) & vec256_bit0mask(G0);
+    swapmask = crypto_int32_negative_mask(minusdelta) & vec256_bit0mask(G0);
 
     c0 = vec256_bit0mask(F0) & vec256_bit0mask(G0);
     c1 = vec256_bit0mask(F1) ^ vec256_bit0mask(G1);
@@ -713,7 +710,7 @@ int crypto_core(unsigned char *outbytes,const unsigned char *inbytes,const unsig
   for (loop = 256;loop > 0;--loop) {
     vec256_timesx_5(V0);
     vec256_timesx_5(V1);
-    swapmask = negative_mask(minusdelta) & vec256_bit0mask(G0);
+    swapmask = crypto_int32_negative_mask(minusdelta) & vec256_bit0mask(G0);
 
     c0 = vec256_bit0mask(F0) & vec256_bit0mask(G0);
     c1 = vec256_bit0mask(F1) ^ vec256_bit0mask(G1);
@@ -741,7 +738,7 @@ int crypto_core(unsigned char *outbytes,const unsigned char *inbytes,const unsig
   for (loop = 256;loop > 0;--loop) {
     vec256_timesx_5(V0);
     vec256_timesx_5(V1);
-    swapmask = negative_mask(minusdelta) & vec256_bit0mask(G0);
+    swapmask = crypto_int32_negative_mask(minusdelta) & vec256_bit0mask(G0);
 
     c0 = vec256_bit0mask(F0) & vec256_bit0mask(G0);
     c1 = vec256_bit0mask(F1) ^ vec256_bit0mask(G1);
@@ -771,6 +768,6 @@ int crypto_core(unsigned char *outbytes,const unsigned char *inbytes,const unsig
   vec256_scale(V0,V1,c0vec,c1vec);
 
   vec256_final(out,V0,V1);
-  out[p] = negative_mask(minusdelta);
+  out[p] = crypto_int32_negative_mask(minusdelta);
   return 0;
 }

@@ -15,7 +15,7 @@ CRYPTO_NAMESPACE(keypair):
 	pushq	%r13
 	.cfi_def_cfa_offset 32
 	.cfi_offset 13, -32
-	movq	%rdi, %r13
+	movq	%rsi, %r13
 	pushq	%r12
 	.cfi_def_cfa_offset 40
 	.cfi_offset 12, -40
@@ -25,56 +25,62 @@ CRYPTO_NAMESPACE(keypair):
 	pushq	%rbx
 	.cfi_def_cfa_offset 56
 	.cfi_offset 3, -56
-	movq	%rsi, %rbx
-	subq	$5400, %rsp
-	.cfi_def_cfa_offset 5456
-	leaq	16(%rsp), %r12
-	leaq	784(%rsp), %rbp
+	subq	$5416, %rsp
+	.cfi_def_cfa_offset 5472
+	movq	%rdi, 8(%rsp)
+	leaq	32(%rsp), %rbx
+	leaq	28(%rsp), %r12
+	leaq	800(%rsp), %rbp
 	.p2align 4,,10
 	.p2align 3
 .L2:
-	movq	%r12, %rdi
-	xorl	%eax, %eax
-	call	CRYPTO_NAMESPACE(small_random)@PLT
-	xorl	%eax, %eax
-	movq	%r12, %rsi
-	movq	%rbp, %rdi
-	call	CRYPTO_NAMESPACE(r3_recip)@PLT
-	testl	%eax, %eax
-	jne	.L2
-	leaq	1552(%rsp), %r14
-	leaq	3856(%rsp), %r15
-	movq	%r14, %rdi
-	call	CRYPTO_NAMESPACE(small_random_weightw)@PLT
-	leaq	2320(%rsp), %r8
-	movq	%r14, %rsi
-	xorl	%eax, %eax
-	movq	%r8, %rdi
-	movq	%r8, 8(%rsp)
-	call	CRYPTO_NAMESPACE(rq_recip3)@PLT
-	movq	8(%rsp), %r8
-	movq	%r12, %rdx
-	movq	%r15, %rdi
-	xorl	%eax, %eax
-	movq	%r8, %rsi
-	call	CRYPTO_NAMESPACE(rq_mult)@PLT
-	movq	%r15, %rsi
-	movq	%r13, %rdi
-	xorl	%eax, %eax
-	call	CRYPTO_NAMESPACE(rq_encode)@PLT
-	movq	%r14, %rsi
 	movq	%rbx, %rdi
 	xorl	%eax, %eax
+	call	CRYPTO_NAMESPACE(small_random)@PLT
+	movq	%rbx, %rsi
+	movq	%rbp, %rdi
+	xorl	%eax, %eax
+	call	CRYPTO_NAMESPACE(r3_recip)@PLT
+	movl	$4, %esi
+	movq	%r12, %rdi
+	movl	%eax, 28(%rsp)
+	call	crypto_declassify@PLT
+	movl	28(%rsp), %eax
+	testl	%eax, %eax
+	jne	.L2
+	leaq	1568(%rsp), %r12
+	leaq	2336(%rsp), %r14
+	xorl	%eax, %eax
+	movq	%r12, %rdi
+	leaq	3872(%rsp), %r15
+	call	CRYPTO_NAMESPACE(small_random_weightw)@PLT
+	movq	%r12, %rsi
+	movq	%r14, %rdi
+	xorl	%eax, %eax
+	call	CRYPTO_NAMESPACE(rq_recip3)@PLT
+	movq	%rbx, %rdx
+	movq	%r14, %rsi
+	movq	%r15, %rdi
+	xorl	%eax, %eax
+	call	CRYPTO_NAMESPACE(rq_mult)@PLT
+	movq	8(%rsp), %rbx
+	movq	%r15, %rsi
+	xorl	%eax, %eax
+	movq	%rbx, %rdi
+	call	CRYPTO_NAMESPACE(rq_encode)@PLT
+	movq	%r12, %rsi
+	movq	%r13, %rdi
+	xorl	%eax, %eax
 	call	CRYPTO_NAMESPACE(small_encode)@PLT
-	leaq	191(%rbx), %rdi
+	leaq	191(%r13), %rdi
 	movq	%rbp, %rsi
 	xorl	%eax, %eax
 	call	CRYPTO_NAMESPACE(small_encode)@PLT
-	leaq	382(%rbx), %rdi
-	movq	%r13, %rsi
+	leaq	382(%r13), %rdi
+	movq	%rbx, %rsi
 	movl	$1218, %edx
 	call	memcpy@PLT
-	addq	$5400, %rsp
+	addq	$5416, %rsp
 	.cfi_def_cfa_offset 56
 	xorl	%eax, %eax
 	popq	%rbx
@@ -93,5 +99,5 @@ CRYPTO_NAMESPACE(keypair):
 	.cfi_endproc
 .LFE10:
 	.size	CRYPTO_NAMESPACE(keypair), .-CRYPTO_NAMESPACE(keypair)
-	.ident	"GCC: (GNU) 9.2.1 20190827 (Red Hat 9.2.1-1)"
-.section	.note.GNU-stack,"",@progbits
+	.ident	"GCC: (Debian 12.2.0-14) 12.2.0"
+	.section	.note.GNU-stack,"",@progbits

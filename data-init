@@ -154,16 +154,16 @@ do
   cp -p "$top/cpuid/include"/* "$top/$abi/include/"
 done
 
-echo "=== `date` === building inttypes"
-rm -rf "$top/inttypes"
-mkdir -p "$top/inttypes"
-cp -pR inttypes/* "$top/inttypes"
-( cd "$top/inttypes" && sh do )
+echo "=== `date` === building cryptoint"
+rm -rf "$top/cryptoint"
+mkdir -p "$top/cryptoint"
+cp -pR cryptoint/* "$top/cryptoint"
+( cd "$top/cryptoint" && sh do )
 okabi \
 | while read abi
 do
-  cp -p "$top/inttypes/include/$abi"/* "$top/$abi/include/"
-  # $top/inttypes/lib/$abi/* is integrated later into libcryptoint
+  cp -p "$top/cryptoint/include/$abi"/* "$top/$abi/include/"
+  # $top/cryptoint/lib/$abi/* is integrated later into libcryptoint
 done
 
 echo "=== `date` === building cpucycles"

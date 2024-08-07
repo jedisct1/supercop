@@ -1,3 +1,4 @@
+// 20240805 djb: more cryptoint usage
 // 20221230 djb: add linker lines
 // 20221230 djb: split out of operations.c
 
@@ -13,6 +14,7 @@
 
 #include <stdint.h>
 #include <string.h>
+#include "crypto_int64.h"
 
 int operation_dec(
        unsigned char *key,
@@ -47,7 +49,7 @@ int operation_dec(
 	m -= 1;
 	m >>= 8;
 
-	*x++ = m & 1;
+	*x++ = crypto_int64_bottombit_01(m);
 	for (i = 0; i < SYS_N/8; i++) 
 		*x++ = (~m & s[i]) | (m & e[i]);
 

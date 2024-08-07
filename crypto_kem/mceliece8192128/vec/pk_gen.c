@@ -1,6 +1,7 @@
 /*
   This file is for public-key generation
 */
+// 20240805 djb: more use of cryptoint
 // 20240715 djb: more use of crypto_*_mask
 // 20240508 djb: switch to crypto_sort_int64
 // 20221231 djb: more 0 initialization to clarify data flow; tnx thom wiggers
@@ -19,6 +20,7 @@
 #include "fft.h"
 #include "crypto_declassify.h"
 #include "crypto_uint64.h"
+#include "crypto_int64.h"
 
 static crypto_uint64 uint64_is_equal_declassify(uint64_t t,uint64_t u)
 {
@@ -48,7 +50,7 @@ static void de_bitslicing(uint64_t * out, const vec in[][GFBITS])
 	for (r = 0; r < 64; r++) 
 	{ 
 		out[i*64 + r] <<= 1; 
-		out[i*64 + r] |= (in[i][j] >> r) & 1; 
+		out[i*64 + r] |= crypto_int64_bitmod_01(in[i][j], r); 
 	}
 }
 
@@ -64,14 +66,14 @@ static void to_bitslicing_2x(vec out0[][GFBITS], vec out1[][GFBITS], const uint6
 		for (r = 63; r >= 0; r--)
 		{
 			out1[i][j] <<= 1;
-			out1[i][j] |= (in[i*64 + r] >> (j + GFBITS)) & 1;
+			out1[i][j] |= crypto_int64_bitmod_01(in[i*64 + r], j + GFBITS);
 		}
         
 		for (j = GFBITS-1; j >= 0; j--)
 		for (r = 63; r >= 0; r--)
 		{
 			out0[i][GFBITS-1-j] <<= 1;
-			out0[i][GFBITS-1-j] |= (in[i*64 + r] >> j) & 1;
+			out0[i][GFBITS-1-j] |= crypto_int64_bitmod_01(in[i*64 + r], j);
 		}
 	}
 }

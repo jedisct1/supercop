@@ -1,3 +1,4 @@
+// 20240806 djb: some automated conversion to cryptoint
 #include "consts.h"
 #include "sampler.h"
 #include "fixpoint.h"
@@ -6,7 +7,8 @@
 #include <stdint.h>
 #include <immintrin.h>
 
-#include <crypto_declassify.h>
+#include "crypto_declassify.h"
+#include "crypto_int64.h"
 
 #define GAUSS_RAND (72 + 16 + 48)
 #define GAUSS_RAND_BYTES ((GAUSS_RAND + 7) / 8)
@@ -708,23 +710,23 @@ static void move_to_mem_4x(
     if (ctr[0] < len0)
     {
       _mm_storel_pd((__attribute__((__may_alias__)) double *)&r0[ctr[0]], t);
-      ctr[0] += accepted[0]&1;
+      ctr[0] += crypto_int64_bottombit_01(accepted[0]);
     }
     if (ctr[1] < len1)
     {
       _mm_storeh_pd((__attribute__((__may_alias__)) double *)&r1[ctr[1]], t);
-      ctr[1] += accepted[1]&1;
+      ctr[1] += crypto_int64_bottombit_01(accepted[1]);
     }
     t = _mm_castsi128_pd(_mm256_extracti128_si256(sc[i],1));
     if (ctr[2] < len2)
     {
       _mm_storel_pd((__attribute__((__may_alias__)) double *)&r2[ctr[2]], t);
-      ctr[2] += accepted[2]&1;
+      ctr[2] += crypto_int64_bottombit_01(accepted[2]);
     }
     if (ctr[3] < len3)
     {
       _mm_storeh_pd((__attribute__((__may_alias__)) double *)&r3[ctr[3]], t);
-      ctr[3] += accepted[3]&1;
+      ctr[3] += crypto_int64_bottombit_01(accepted[3]);
     }
 
     crypto_declassify(ctr,sizeof ctr);
@@ -740,7 +742,7 @@ void sample_gauss_N_4x(uint64_t *r0, uint64_t *r1, uint64_t *r2, uint64_t *r3,
     size_t bytecnt, i;
     ALIGNED_UINT8(CRHBYTES+2) buf[4];
     ALIGNED_UINT8(POLY_HYPERBALL_NBLOCKS_4X * STREAM256_BLOCKBYTES * 4) outbuf;
-    ALIGNED_UINT8(SHAKE256_RATE*2) outbuf2[4];
+    ALIGNED_UINT8(STREAM256_BLOCKBYTES*2) outbuf2[4];
     ALIGNED_INT64(NUM_GAUSSIANS * 4) sample_candidates;
     ALIGNED_INT64(NUM_GAUSSIANS * 4) exp;
     ALIGNED_INT64(NUM_GAUSSIANS * 4) rejection;
@@ -914,6 +916,20 @@ void sample_gauss_N_4x(uint64_t *r0, uint64_t *r1, uint64_t *r2, uint64_t *r3,
         crypto_declassify(&ctr1,sizeof ctr1);
         crypto_declassify(&ctr2,sizeof ctr2);
         crypto_declassify(&ctr3,sizeof ctr3);
+
+        if (ctr0 < len0 || ctr1 < len1 || ctr2 < len2 || ctr3 < len3)
+        {
+            size_t offset = (bytecnt / GAUSS_RAND_BYTES) * GAUSS_RAND_BYTES;
+            size_t rem_bytes = bytecnt - offset;
+            for (size_t i = 0; i < rem_bytes; i++)
+            {
+              outbuf2[0].coeffs[i] = outbuf2[0].coeffs[i + offset];
+              outbuf2[1].coeffs[i] = outbuf2[1].coeffs[i + offset];
+              outbuf2[2].coeffs[i] = outbuf2[2].coeffs[i + offset];
+              outbuf2[3].coeffs[i] = outbuf2[3].coeffs[i + offset];
+            }
+            bytecnt = rem_bytes;
+        }
     }
     renormalize(sqsum);
 }

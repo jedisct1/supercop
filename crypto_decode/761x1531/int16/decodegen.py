@@ -46,7 +46,7 @@ print('{')
 print('  int16 *R = v;')
 
 print('  long long i;')
-print('  int16 a0,a1,ri,lo,hi,s0,s1;')
+print('  int16 a0,a1,ri,lo,s0,s1;')
 
 def poke(layer,pos,contents):
   if layer == 1 and div3:
@@ -127,7 +127,7 @@ def inner(indent,inpos,m0,m1,bytes,outpos0,outpos1):
 
   while a0lower < 0:
     a0lower,a0upper = min(0,a0lower+m0),max(m0-1,a0upper)
-    stanza += indent + 'a0 += (a0>>15)&%d; /* %d...%d */\n' % (m0,a0lower,a0upper)
+    stanza += indent + 'a0 += crypto_int16_negative_mask(a0)&%d; /* %d...%d */\n' % (m0,a0lower,a0upper)
 
   if bytes == 0:
     stanza += indent + 'a1 = (ri-a0)>>%d;\n' % t
@@ -157,7 +157,7 @@ def inner(indent,inpos,m0,m1,bytes,outpos0,outpos1):
   stanza += '\n'
   stanza += indent + '/* invalid inputs might need reduction mod %d */\n' % m1
   stanza += indent + 'a1 -= %d;\n' % m1
-  stanza += indent + 'a1 += (a1>>15)&%d;\n' % m1
+  stanza += indent + 'a1 += crypto_int16_negative_mask(a1)&%d;\n' % m1
   stanza += '\n'
   stanza += indent + '%s\n' % poke(layer,outpos0,'a0')
   stanza += indent + '%s\n' % poke(layer,outpos1,'a1')
@@ -248,7 +248,7 @@ while a1upper >= q:
 
 while a1lower < 0:
   a1lower,a1upper = min(0,a1lower+q),max(a1upper,q-1)
-  stanza += '  a1 += (a1>>15)&%d; /* %d...%d */\n' % (q,a1lower,a1upper)
+  stanza += '  a1 += crypto_int16_negative_mask(a1)&%d; /* %d...%d */\n' % (q,a1lower,a1upper)
   
 stanza += '  %s\n' % poke(layer,0,'a1')
 stanzas += [stanza]

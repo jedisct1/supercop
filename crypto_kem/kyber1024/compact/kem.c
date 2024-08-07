@@ -1,7 +1,10 @@
+// 20240806 djb: some automated conversion to cryptoint
 #include <stddef.h>
 #include <stdint.h>
 #include <string.h>
 #include <libkeccak.a.headers/SimpleFIPS202.h>
+#include "crypto_int8.h"
+#include "crypto_int64.h"
 #include "crypto_uint64.h"
 #include "crypto_kem.h"
 #include "randombytes.h"
@@ -127,7 +130,7 @@ static void poly_compress(uint8_t r[KYBER_POLYCOMPRESSEDBYTES], const poly *a) {
       int16_t u = a->coeffs[8 * i + j];
       u += (u >> 15) & KYBER_Q;
       t = (((((uint32_t)u << 5) + 1664) * 40318) >> 27) & 31;
-      for (k = 0; k < 5; k++) r[(j * 5 + k) / 8] |= (1 & (t >> k)) << ((j * 5 + k) % 8);
+      for (k = 0; k < 5; k++) r[(j * 5 + k) / 8] |= (crypto_int64_bitmod_01(t,k)) << ((j * 5 + k) % 8);
     }
     r += 5;
   }
@@ -138,7 +141,7 @@ static void poly_decompress(poly *r, const uint8_t a[KYBER_POLYCOMPRESSEDBYTES])
   uint8_t t[8];
   for (i = 0; i < KYBER_N / 8; i++) {
     for (j = 0; j < 8; j++) t[j] = 0;
-    for (j = 0; j < 40; j++) t[j / 5] |= (1 & (a[i * 5 + j / 8] >> (j % 8))) << (j % 5);
+    for (j = 0; j < 40; j++) t[j / 5] |= (crypto_int8_bitmod_01(a[i * 5 + j / 8],j)) << (j % 5);
     for (j = 0; j < 8; j++) r->coeffs[i * 8 + j] = ((uint32_t)(t[j] & 31) * KYBER_Q + 16) >> 5;
   }
 }
@@ -168,7 +171,7 @@ static void poly_frommsg(poly *r, const uint8_t msg[KYBER_SYMBYTES]) {
   unsigned int i, j;
   for (i = 0; i < KYBER_N / 8; i++) {
     for (j = 0; j < 8; j++) {
-      int16_t mask = -(int16_t)((msg[i] >> j) & 1);
+      int16_t mask = -(int16_t)(crypto_int64_bitmod_01(msg[i],j));
       r->coeffs[8 * i + j] = mask & ((KYBER_Q + 1) / 2);
     }
   }
@@ -181,7 +184,7 @@ static void poly_tomsg(uint8_t msg[KYBER_SYMBYTES], const poly *a) {
     for (j = 0; j < 8; j++) {
       uint32_t t = a->coeffs[8 * i + j];
       t = (80635 * ((t << 1) + 1665)) >> 28;
-      msg[i] |= (1 & t) << j;
+      msg[i] |= (crypto_int64_bottombit_01(t)) << j;
     }
   }
 }
@@ -237,7 +240,7 @@ static void polyvec_compress(uint8_t r[KYBER_POLYVECCOMPRESSEDBYTES], const poly
         t[k] = (((((uint64_t)t[k] << 11) + 1664) * 645084) >> 31) & 0x7ff;
       }
       for (k = 0; k < 11; k++) r[k] = 0;
-      for (k = 0; k < 88; k++) r[k / 8] |= (1 & (t[k / 11] >> (k % 11))) << (k % 8);
+      for (k = 0; k < 88; k++) r[k / 8] |= (crypto_int64_bitmod_01(t[k / 11],(k % 11))) << (k % 8);
       r += 11;
     }
   }
@@ -249,7 +252,7 @@ static void polyvec_decompress(polyvec *r, const uint8_t a[KYBER_POLYVECCOMPRESS
   for (i = 0; i < KYBER_K; i++) {
     for (j = 0; j < KYBER_N / 8; j++) {
       for (k = 0; k < 8; k++) t[k] = 0;
-      for (k = 0; k < 88; k++) t[k / 11] |= (1 & (a[k / 8] >> (k % 8))) << (k % 11);
+      for (k = 0; k < 88; k++) t[k / 11] |= (crypto_int8_bitmod_01(a[k / 8],k)) << (k % 11);
       a += 11;
       for (k = 0; k < 8; k++) r->vec[i].coeffs[8 * j + k] = ((uint32_t)(t[k] & 0x7FF) * KYBER_Q + 1024) >> 11;
     }

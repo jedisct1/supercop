@@ -1,7 +1,9 @@
+// 20240806 djb: some automated conversion to cryptoint
 #define WINDOWSIZE 1 /* Should be 1,2, or 4 */
 #define WINDOWMASK ((1<<WINDOWSIZE)-1)
 
 #include "fe25519.h"
+#include "crypto_int64.h"
 
 static crypto_uint32 equal(crypto_uint32 a,crypto_uint32 b) /* 16-bit inputs */
 {
@@ -140,7 +142,7 @@ unsigned char fe25519_getparity(const fe25519 *x)
 {
   fe25519 t = *x;
   fe25519_freeze(&t);
-  return t.v[0] & 1;
+  return crypto_int64_bottombit_01(t.v[0]);
 }
 
 void fe25519_setone(fe25519 *r)

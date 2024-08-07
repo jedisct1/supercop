@@ -1,3 +1,5 @@
+#include "crypto_asm_hidden.h"
+// linker define inner
 
 # qhasm: int32 input_0
 
@@ -209,13 +211,14 @@
 
 # qhasm: stack32 o3
 
-# qhasm: pushenter CRYPTO_NAMESPACE(inner)
+# qhasm: pushenter CRYPTO_SHARED_NAMESPACE(inner)
 .p2align 2
-.global CRYPTO_NAMESPACE(inner)
-.type CRYPTO_NAMESPACE(inner),%function
+ASM_HIDDEN CRYPTO_SHARED_NAMESPACE(inner)
+.global CRYPTO_SHARED_NAMESPACE(inner)
+.type CRYPTO_SHARED_NAMESPACE(inner),%function
 .thumb
 .thumb_func
-CRYPTO_NAMESPACE(inner):
+CRYPTO_SHARED_NAMESPACE(inner):
 push {r4,r5,r6,r7,r8,r9,r10,r11,r14}
 vpush {d8-d15}
 sub.w sp,sp,#160

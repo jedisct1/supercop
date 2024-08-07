@@ -1,3 +1,4 @@
+// 20240805 djb: more cryptoint usage
 #ifndef VEC_H
 #define VEC_H
 #define vec_inv CRYPTO_NAMESPACE(vec_inv)
@@ -7,6 +8,7 @@
 #include "params.h"
 
 #include <stdint.h>
+#include "crypto_int64.h"
 
 typedef uint64_t vec;
 
@@ -57,7 +59,7 @@ static inline int vec_testz(vec a)
 	a |= a >> 2;
 	a |= a >> 1;
 
-	return (a&1)^1;
+	return (crypto_int64_bottombit_01(a))^1;
 }
 
 void vec_mul(vec *, const vec *, const vec *);

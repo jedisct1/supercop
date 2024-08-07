@@ -1,4 +1,6 @@
+// 20240806 djb: some automated conversion to cryptoint
 #include "sc25519.h"
+#include "crypto_int64.h"
 
 /*Arithmetic modulo the group order m = 2^252 +  27742317777372353535851937790883648493 = 7237005577332262213973186563042994240857116359379907606001950938285454250989 */
 
@@ -176,7 +178,7 @@ void sc25519_sub_nored(sc25519 *r, const sc25519 *x, const sc25519 *y)
   {
     t = x->v[i] - y->v[i] - b;
     r->v[i] = t & 255;
-    b = (t >> 8) & 1;
+    b = crypto_int64_bitmod_01(t,8);
   }
 }
 

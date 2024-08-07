@@ -1,3 +1,4 @@
+// 20240806 djb: some automated conversion to cryptoint
 /*
   This file is for public-key generation
 */
@@ -18,6 +19,7 @@
 #include "fft.h"
 #include "crypto_declassify.h"
 #include "crypto_int16.h"
+#include "crypto_int64.h"
 #include "crypto_uint64.h"
 
 static crypto_uint64 uint64_is_equal_declassify(uint64_t t,uint64_t u)
@@ -151,13 +153,13 @@ static void de_bitslicing(uint64_t * out, const vec128 in[][GFBITS])
 		for (r = 0; r < 64; r++)
 		{
 			out[i*128 + 0*64 + r] <<= 1;
-			out[i*128 + 0*64 + r] |= (u >> r) & 1;
+			out[i*128 + 0*64 + r] |= crypto_int64_bitmod_01(u,r);
 		}
 		u = vec128_extract(in[i][j], 1);
 		for (r = 0; r < 64; r++)
 		{
 			out[i*128 + 1*64 + r] <<= 1;
-			out[i*128 + 1*64 + r] |= (u >> r) & 1;
+			out[i*128 + 1*64 + r] |= crypto_int64_bitmod_01(u,r);
 		}
 	}
 }
@@ -175,10 +177,10 @@ static void to_bitslicing_2x(vec128 out0[][GFBITS], vec128 out1[][GFBITS], const
 		for (r = 63; r >= 0; r--)
 		{
 			u[0][k] <<= 1;
-			u[0][k] |= (in[i*128 + k*64 + r] >> (GFBITS-1-j)) & 1;
+			u[0][k] |= crypto_int64_bitmod_01(in[i*128 + k*64 + r],(GFBITS-1-j));
 
 			u[1][k] <<= 1;
-			u[1][k] |= (in[i*128 + k*64 + r] >> (j + GFBITS)) & 1;
+			u[1][k] |= crypto_int64_bitmod_01(in[i*128 + k*64 + r],(j + GFBITS));
 		}
     
 		out0[i][j] = vec128_set2x(u[0][0], u[0][1]);
@@ -397,7 +399,7 @@ int pk_gen(unsigned char * pk, const unsigned char * irr, uint32_t * perm, int16
 				vec128_cswap(&mat.v[ row ][ c ], &mat.v[ k ][ c ], mm);
 		}
 
-                if ( uint64_is_zero_declassify((mat.w[ row ][ i ] >> j) & 1) ) // return if not systematic
+                if ( uint64_is_zero_declassify(crypto_int64_bitmod_01(mat.w[ row ][ i ],j)) ) // return if not systematic
 		{
 			return -1;
 		}

@@ -5,6 +5,7 @@
   For the implementation strategy, see
   https://eprint.iacr.org/2017/793.pdf
 */
+// 20240805 djb: more use of cryptoint
 // 20221230 djb: split these arrays into separate .c files
 // 20221230 djb: rename consts array as fft_consts
 // 20221230 djb: rename s array as fft_scalars_2x
@@ -22,6 +23,7 @@
 #include "transpose.h"
 
 #include <stdint.h>
+#include "crypto_int64.h"
 
 #define vec_add(z, x, y) for (b = 0; b < GFBITS; b++) { z[b] = x[b]^y[b]; }
 
@@ -189,13 +191,13 @@ static inline void butterflies_tr(uint64_t out[][ GFBITS ], uint64_t in[][ GFBIT
 
 	//
 
-	for (j = 0; j < GFBITS; j++) { tmp[j] = (beta[0] >> j) & 1; tmp[j] = -tmp[j]; }
+	for (j = 0; j < GFBITS; j++) { tmp[j] = crypto_int64_bitmod_mask(beta[0], j); }
 
 	vec_mul(out[1], pre[0], tmp);
 
 	for (i = 1; i < 6; i++)
 	{
-		for (j = 0; j < GFBITS; j++) { tmp[j] = (beta[i] >> j) & 1; tmp[j] = -tmp[j]; }
+		for (j = 0; j < GFBITS; j++) { tmp[j] = crypto_int64_bitmod_mask(beta[i], j); }
 
 		vec_mul(tmp, pre[i], tmp);
 		vec_add(out[1], out[1], tmp);

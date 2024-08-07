@@ -1,6 +1,7 @@
 /*
   This file is for secret-key generation
 */
+// 20240805 djb: more cryptoint usage
 // 20221230 djb: add linker lines
 
 // linker define genpoly_gen
@@ -20,6 +21,7 @@
 #include "gf.h"
 #include "crypto_declassify.h"
 #include "crypto_uint16.h"
+#include "crypto_int64.h"
 
 static inline crypto_uint16 gf_is_zero_declassify(gf t)
 {
@@ -40,7 +42,7 @@ static inline gf extract_gf(uint64_t v[GFBITS][2], int idx)
 	for (i = GFBITS-1; i >= 0; i--)
 	{
 		ret <<= 1;
-		ret |= (v[i][idx/64] >> (idx&63)) & 1;
+		ret |= crypto_int64_bitmod_01(v[i][idx/64], idx);
 	}
 
 	return ret;
@@ -56,7 +58,7 @@ static inline uint64_t extract_bit(uint64_t v[GFBITS][2], int idx)
 	for (i = GFBITS-1; i >= 0; i--)
 		ret |= v[i][idx/64];
 
-	return (ret >> (idx&63)) & 1;
+	return crypto_int64_bitmod_01(ret, idx);
 }
 
 static void transpose_128x128(uint64_t (*in)[2])
@@ -129,9 +131,9 @@ int genpoly_gen(gf *out, gf *f)
 		for (i = SYS_T-1; i >= 0; i--)
 		{
 			v.d[j][1] <<= 1;
-			v.d[j][1] |= v.d[j][0] >> 63;
+			v.d[j][1] |= crypto_int64_negative_01(v.d[j][0]);
 			v.d[j][0] <<= 1;
-			v.d[j][0] |= (f[i] >> j) & 1;
+			v.d[j][0] |= crypto_int64_bitmod_01(f[i], j);
 		}
 	}
 	

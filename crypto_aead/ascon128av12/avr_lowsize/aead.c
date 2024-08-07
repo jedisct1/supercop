@@ -1,8 +1,10 @@
+// 20240806 djb: some automated conversion to cryptoint
 #include "api.h"
 #include "ascon.h"
 #include "crypto_aead.h"
 #include "permutations.h"
 #include "printstate.h"
+#include "crypto_int64.h"
 
 #if !ASCON_INLINE_MODE
 #undef forceinline
@@ -115,7 +117,7 @@ int crypto_aead_decrypt(unsigned char* m, unsigned long long* mlen,
   uint8_t r = 0;
   r |= VERIFY(s.b[3], c + clen, 8);
   r |= VERIFY(s.b[4], c + clen + 8, 8);
-  return ((((int)r - 1) >> 8) & 1) - 1;
+  return (crypto_int64_bitmod_01(((int)r - 1),8)) - 1;
 }
 
 #endif
