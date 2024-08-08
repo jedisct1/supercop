@@ -105,6 +105,19 @@ aegis128x2_absorb(const uint8_t *const src, aes_block_t *const state)
     aegis128x2_update(state, msg0, msg1);
 }
 
+static inline void
+aegis128x2_absorb2(const uint8_t *const src, aes_block_t *const state)
+{
+    aes_block_t msg0, msg1, msg2, msg3;
+
+    msg0 = AES_BLOCK_LOAD(src + 0 * AES_BLOCK_LENGTH);
+    msg1 = AES_BLOCK_LOAD(src + 1 * AES_BLOCK_LENGTH);
+    msg2 = AES_BLOCK_LOAD(src + 2 * AES_BLOCK_LENGTH);
+    msg3 = AES_BLOCK_LOAD(src + 3 * AES_BLOCK_LENGTH);
+    aegis128x2_update(state, msg0, msg1);
+    aegis128x2_update(state, msg2, msg3);
+}
+
 static void
 aegis128x2_enc(uint8_t *const dst, const uint8_t *const src, aes_block_t *const state)
 {
@@ -185,7 +198,10 @@ encrypt_detached(uint8_t *c, uint8_t *mac, size_t maclen, const uint8_t *m, size
 
     aegis128x2_init(k, npub, state);
 
-    for (i = 0; i + RATE <= adlen; i += RATE) {
+    for (i = 0; i + RATE * 2 <= adlen; i += RATE * 2) {
+        aegis128x2_absorb2(ad + i, state);
+    }
+    for (; i + RATE <= adlen; i += RATE) {
         aegis128x2_absorb(ad + i, state);
     }
     if (adlen % RATE) {
@@ -222,7 +238,10 @@ decrypt_detached(uint8_t *m, const uint8_t *c, size_t clen, const uint8_t *mac, 
 
     aegis128x2_init(k, npub, state);
 
-    for (i = 0; i + RATE <= adlen; i += RATE) {
+    for (i = 0; i + RATE * 2 <= adlen; i += RATE * 2) {
+        aegis128x2_absorb2(ad + i, state);
+    }
+    for (; i + RATE <= adlen; i += RATE) {
         aegis128x2_absorb(ad + i, state);
     }
     if (adlen % RATE) {
@@ -254,6 +273,7 @@ decrypt_detached(uint8_t *m, const uint8_t *c, size_t clen, const uint8_t *mac, 
     } else if (maclen == 32) {
         ret = crypto_verify_32(computed_mac, mac);
     }
+    crypto_declassify(&ret, sizeof ret);
     if (ret != 0 && m != NULL) {
         memset(m, 0, mlen);
     }

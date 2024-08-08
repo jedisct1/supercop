@@ -84,7 +84,6 @@ inline fn declast(#secret reg u128[6] st, #public reg u128 t,
     pad[0] = out;
     reg u64 i;
     i = left;
-    reg u64 ms;
     while (i < 16) {
         pad[u8(int) i] = 0;
         i += 1;
@@ -226,7 +225,6 @@ inline fn finalize(#secret reg u128[6] st,
             (u128)[tag_p + 16] = tag[1];
         }
     }
-    inline int i;
     for i = 0 to 6 {
         st[i] = 0;
     }
@@ -261,8 +259,6 @@ export fn _aegis256_encrypt(#public reg u64 params)
     full_blocks = full_blocks & -16;
 
     reg u64 i;
-    inline int j;
-
     i = #set0();
 
     #align while (i < full_blocks) {
@@ -293,9 +289,6 @@ export fn _aegis256_encrypt(#public reg u64 params)
 
     full_blocks = msg_len_;
     full_blocks = full_blocks & -32;
-
-    reg u64 i;
-    inline int j;
 
     i = #set0();
     #align while (i < full_blocks) {
@@ -370,8 +363,6 @@ export fn _aegis256_decrypt(#public reg u64 params)
     full_blocks = full_blocks & -16;
 
     reg u64 i;
-    inline int j;
-
     i = #set0();
     #align while (i < full_blocks) {
         st = absorb(st, (u128)[ad_p + i]);
@@ -402,9 +393,6 @@ export fn _aegis256_decrypt(#public reg u64 params)
 
     full_blocks = ct_len_;
     full_blocks = full_blocks & -32;
-
-    reg u64 i;
-    inline int j;
 
     i = #set0();
     #align while (i < full_blocks) {
@@ -456,6 +444,7 @@ export fn _aegis256_decrypt(#public reg u64 params)
     reg u128 w;
     w = st[0] ^ st[1];
     reg u128[6] x;
+    inline int j;
     for j = 2 to 6 {
         x[j] = st[0] ^ st[j];
     }
