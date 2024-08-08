@@ -5,6 +5,7 @@
 #include "api.h"
 #include "common.h"
 #include "crypto_aead.h"
+#include "crypto_declassify.h"
 #include "crypto_verify_16.h"
 #include "crypto_verify_32.h"
 #include "softaes.h"
