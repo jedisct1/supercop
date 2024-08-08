@@ -1,9 +1,11 @@
+// 20240807 djb: some conversion to cryptoint
 #ifndef _GF16_U64_H_
 #define _GF16_U64_H_
 
 #include <stdint.h>
 
 #include "gf16.h"
+#include "crypto_int64.h"
 
 #ifdef  __cplusplus
 extern  "C" {
@@ -30,8 +32,8 @@ extern  "C" {
 
 	static inline uint64_t gf4v_mul_u64(uint64_t a, unsigned char b)
 	{
-		uint64_t bit0_b = ((uint64_t)0) - ((uint64_t)(b & 1));
-		uint64_t bit1_b = ((uint64_t)0) - ((uint64_t)((b >> 1) & 1));
+		uint64_t bit0_b = crypto_int64_bottombit_mask(b);
+		uint64_t bit1_b = crypto_int64_bitmod_mask(b,1);
 		return (a & bit0_b) ^ (bit1_b & gf4v_mul_2_u64(a));
 	}
 

@@ -1,10 +1,9 @@
-// 20240806 djb: some automated conversion to cryptoint
+// 20240807 djb: some conversion to cryptoint
 #ifndef _GF16_H_
 #define _GF16_H_
 
 #include <stdint.h>
 #include "crypto_uint32.h"
-#include "crypto_int64.h"
 
 // gf4 := gf2[x]/x^2+x+1
 static inline uint8_t gf4_mul_2(uint8_t a) {
@@ -47,7 +46,7 @@ static inline uint32_t gf4v_mul_3_u32(uint32_t a) {
 
 static inline uint32_t gf4v_mul_u32(uint32_t a, uint8_t b) {
 	uint32_t bit0_b = crypto_uint32_bottombit_mask(b);
-	uint32_t bit1_b = crypto_uint32_bottombit_mask(b >> 1);
+	uint32_t bit1_b = crypto_uint32_bitmod_mask(b,1);
 	return (a & bit0_b) ^ (bit1_b & gf4v_mul_2_u32(a));
 }
 
@@ -78,7 +77,7 @@ static inline uint8_t gf16_is_nonzero(uint8_t a) {
 	unsigned a4 = a & 0xf;
 	unsigned r = ((unsigned)0) - a4;
 	r >>= 4;
-	return crypto_int64_bottombit_01(r);
+	return crypto_uint32_bottombit_01(r);
 }
 
 // gf16 := gf4[y]/y^2+y+x
@@ -210,7 +209,7 @@ static inline uint8_t gf256_is_nonzero(uint8_t a) {
 	unsigned a8 = a;
 	unsigned r = ((unsigned)0) - a8;
 	r >>= 8;
-	return crypto_int64_bottombit_01(r);
+	return crypto_uint32_bottombit_01(r);
 }
 
 // gf256 := gf16[X]/X^2+X+xy

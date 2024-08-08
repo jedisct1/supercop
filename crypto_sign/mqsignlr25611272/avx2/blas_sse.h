@@ -1,3 +1,4 @@
+// 20240807 djb: some conversion to cryptoint
 #ifndef _BLAS_SSE_H_
 #define _BLAS_SSE_H_
 
@@ -7,6 +8,7 @@
 #include "blas_config.h"
 #include "gf16_sse.h"
 #include "assert.h"
+#include "crypto_int64.h"
 
 #ifdef  __cplusplus
 extern  "C" {
@@ -244,7 +246,7 @@ void gf16v_generate_multab_sse( uint8_t * _multabs , const uint8_t * x , unsigne
 		gf16v_generate_multab_16_sse( _multabs +  i*2*16*16 , _x );
 		gf16v_generate_multab_16_sse( _multabs +  i*2*16*16 + 16*16 , _x + 16 );
 	}
-	if( n_16&1 ) {  /// n_16 is odd
+	if( crypto_int64_bottombit_01(n_16)) {  /// n_16 is odd
 		unsigned idx = n_16-1;
 
 		for(unsigned j=0;j<8;j++) _x[j] = x[ idx*8 + j];

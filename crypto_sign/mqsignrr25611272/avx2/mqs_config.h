@@ -7,7 +7,7 @@
 
 #define PUBMAP_QUAD
 
-// #define _MQS256_72_46
+#define _MQS256_112_72
 
 
 
