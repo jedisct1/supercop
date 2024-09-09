@@ -1,3 +1,4 @@
+// 20240904 djb: used gf256_is_zero
 #include "blas_comm.h"
 #include "blas.h"
 #include "blas_matrix_ref.h"
@@ -30,7 +31,7 @@ unsigned gf256mat_gauss_elim_ref(uint8_t* mat, unsigned h, unsigned w)
 
 		for (unsigned j = i + 1; j < h; j++) {
 			uint8_t* aj = mat + w * j;
-			gf256v_conditional_add(ai + i_start, !gf256_is_nonzero(ai[i]), aj + i_start, w - i_start);
+			gf256v_conditional_add(ai + i_start, gf256_is_zero(ai[i]), aj + i_start, w - i_start);
 		}
 		r8 &= gf256_is_nonzero(ai[i]);
 		uint8_t pivot = ai[i];
@@ -62,7 +63,7 @@ unsigned _gf256mat_gauss_elim_row_echelon_ref(uint8_t* mat, unsigned h, unsigned
 		for (unsigned j = i + 1; j < h; j++) {
 #endif
 			uint8_t* aj = mat + w * j;
-			gf256v_conditional_add(ai + i_start, !gf256_is_nonzero(ai[i]), aj + i_start, w - i_start);
+			gf256v_conditional_add(ai + i_start, gf256_is_zero(ai[i]), aj + i_start, w - i_start);
 		}
 		r8 &= gf256_is_nonzero(ai[i]);
 		uint8_t pivot = ai[i];

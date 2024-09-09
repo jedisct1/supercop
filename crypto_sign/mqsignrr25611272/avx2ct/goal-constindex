@@ -1,0 +1,2 @@
+20240808 titan0 amd64 20240903 crypto_sign mqsignrr25611272/constbranchindex timecop_pass crypto_sign/mqsignrr25611272/avx2ct gcc_-march=native_-mtune=native_-O3_-fomit-frame-pointer_-fwrapv_-fPIC_-fPIE 1 0
+20240808 titan0 amd64 20240903 crypto_sign mqsignrr25611272/constbranchindex timecop_output crypto_sign/mqsignrr25611272/avx2ct gcc_-march=native_-mtune=native_-O3_-fomit-frame-pointer_-fwrapv_-fPIC_-fPIE cf2bda5a7a0d4988abab9ee92b848569ffd6dc36987ca4bd2d881c83a241d1fa 82502652 11963216916 3500000000 crypto_sign/mqsignrr25611272/avx2ct

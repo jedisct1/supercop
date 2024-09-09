@@ -1,8 +1,10 @@
+// 20240904 djb: added gf256_is_zero, simplified gf256_is_nonzero
 // 20240807 djb: some conversion to cryptoint
 #ifndef _GF16_H_
 #define _GF16_H_
 
 #include <stdint.h>
+#include "crypto_uint8.h"
 #include "crypto_uint32.h"
 
 // gf4 := gf2[x]/x^2+x+1
@@ -206,10 +208,11 @@ static inline uint32_t gf16v_mul_8_u32(uint32_t a) {
 ////////////
 
 static inline uint8_t gf256_is_nonzero(uint8_t a) {
-	unsigned a8 = a;
-	unsigned r = ((unsigned)0) - a8;
-	r >>= 8;
-	return crypto_uint32_bottombit_01(r);
+	return crypto_uint8_nonzero_01(a);
+}
+
+static inline uint8_t gf256_is_zero(uint8_t a) {
+	return crypto_uint8_zero_01(a);
 }
 
 // gf256 := gf16[X]/X^2+X+xy

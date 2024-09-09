@@ -5,11 +5,17 @@
 #include "api.h"
 #include "common.h"
 #include "crypto_aead.h"
+#include "crypto_declassify.h"
 #include "crypto_verify_16.h"
 #include "crypto_verify_32.h"
 
 #ifdef __clang__
-#    pragma clang attribute push(__attribute__((target("vaes,avx512f"))), apply_to = function)
+#    if __clang_major__ >= 18
+#        pragma clang attribute push(__attribute__((target("vaes,avx512f,evex512"))), \
+                                     apply_to = function)
+#    else
+#        pragma clang attribute push(__attribute__((target("vaes,avx512f"))), apply_to = function)
+#    endif
 #elif defined(__GNUC__)
 #    pragma GCC target("vaes,avx512f")
 #endif

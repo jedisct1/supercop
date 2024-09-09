@@ -1,0 +1,1 @@
+../riscv-v-strided/trn4x4.h

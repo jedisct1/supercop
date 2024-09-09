@@ -1,3 +1,4 @@
+// 20240904 djb: eliminate some variable divisions
 #include <stdint.h>
 #include "params.h"
 #include "rounding.h"
@@ -12,21 +13,23 @@ int32_t power2round(int32_t *a0, int32_t a)  {
 }
 
 int32_t decompose(int32_t *a0, int32_t a) {
-  int32_t a1;
-  crypto_int32 eq;
+  crypto_int32 q,r,mask,bit;
 
-  a = a % Q;
-  a += Q & crypto_int32_negative_mask(a);
+  r = a; q = 0;
 
-  *a0 = a % (2 * GAMMA2);
-  *a0 -= (2*GAMMA2) & crypto_int32_smaller_mask(GAMMA2,*a0);
+  for (bit = 32;bit >= 1;bit >>= 1) {
+    mask = crypto_int32_leq_mask(bit*2*GAMMA2,r);
+    r -= (bit*2*GAMMA2)&mask;
+    q += bit&mask;
+  }
 
-  eq = crypto_int32_equal_mask(a-(*a0),Q-1);
+  mask = crypto_int32_smaller_mask(GAMMA2,r);
+  r -= (2*GAMMA2)&mask;
+  q -= mask;
 
-  a1 = ((a - (*a0)) / (2 * GAMMA2)) & ~eq;
-
-  *a0 += eq;
-  return a1;
+  mask = crypto_int32_equal_mask(q,(Q-1)/(2*GAMMA2));
+  *a0 = r+mask;
+  return q & ~mask;
 }
 
 unsigned int make_hint(int32_t a0, int32_t a1)
