@@ -194,35 +194,30 @@ static const uint32_t _aes_lut[1024] = {
     0x82c34141, 0x29b09999, 0x5a772d2d, 0x1e110f0f, 0x7bcbb0b0, 0xa8fc5454, 0x6dd6bbbb, 0x2c3a1616
 };
 
-static const uint32_t* const LUT0 = _aes_lut + 0 * 256;
-static const uint32_t* const LUT1 = _aes_lut + 1 * 256;
-static const uint32_t* const LUT2 = _aes_lut + 2 * 256;
-static const uint32_t* const LUT3 = _aes_lut + 3 * 256;
-
 static SoftAesBlock
 _encrypt(const uint8_t ix0[4], const uint8_t ix1[4], const uint8_t ix2[4], const uint8_t ix3[4])
 {
-    CRYPTO_ALIGN(64) SoftAesBlock out;
+    SoftAesBlock out;
 
-    out.w0 = LUT0[ix0[0]];
-    out.w1 = LUT0[ix0[1]];
-    out.w2 = LUT0[ix0[2]];
-    out.w3 = LUT0[ix0[3]];
+    out.w0 = _aes_lut[0 * 256 + ix0[0]];
+    out.w1 = _aes_lut[0 * 256 + ix0[1]];
+    out.w2 = _aes_lut[0 * 256 + ix0[2]];
+    out.w3 = _aes_lut[0 * 256 + ix0[3]];
 
-    out.w0 ^= LUT1[ix1[0]];
-    out.w1 ^= LUT1[ix1[1]];
-    out.w2 ^= LUT1[ix1[2]];
-    out.w3 ^= LUT1[ix1[3]];
+    out.w0 ^= _aes_lut[1 * 256 + ix1[0]];
+    out.w1 ^= _aes_lut[1 * 256 + ix1[1]];
+    out.w2 ^= _aes_lut[1 * 256 + ix1[2]];
+    out.w3 ^= _aes_lut[1 * 256 + ix1[3]];
 
-    out.w0 ^= LUT2[ix2[0]];
-    out.w1 ^= LUT2[ix2[1]];
-    out.w2 ^= LUT2[ix2[2]];
-    out.w3 ^= LUT2[ix2[3]];
+    out.w0 ^= _aes_lut[2 * 256 + ix2[0]];
+    out.w1 ^= _aes_lut[2 * 256 + ix2[1]];
+    out.w2 ^= _aes_lut[2 * 256 + ix2[2]];
+    out.w3 ^= _aes_lut[2 * 256 + ix2[3]];
 
-    out.w0 ^= LUT3[ix3[0]];
-    out.w1 ^= LUT3[ix3[1]];
-    out.w2 ^= LUT3[ix3[2]];
-    out.w3 ^= LUT3[ix3[3]];
+    out.w0 ^= _aes_lut[3 * 256 + ix3[0]];
+    out.w1 ^= _aes_lut[3 * 256 + ix3[1]];
+    out.w2 ^= _aes_lut[3 * 256 + ix3[2]];
+    out.w3 ^= _aes_lut[3 * 256 + ix3[3]];
 
     return out;
 }
@@ -321,12 +316,12 @@ _encrypt(const uint8_t ix0[4], const uint8_t ix1[4], const uint8_t ix2[4], const
 SoftAesBlock
 softaes_block_encrypt(const SoftAesBlock block, const SoftAesBlock rk)
 {
-    CRYPTO_ALIGN(64) SoftAesBlock out;
-    CRYPTO_ALIGN(64) uint8_t      ix0[4], ix1[4], ix2[4], ix3[4];
-    const uint32_t                s0 = block.w0;
-    const uint32_t                s1 = block.w1;
-    const uint32_t                s2 = block.w2;
-    const uint32_t                s3 = block.w3;
+    SoftAesBlock   out;
+    uint8_t        ix0[4], ix1[4], ix2[4], ix3[4];
+    const uint32_t s0 = block.w0;
+    const uint32_t s1 = block.w1;
+    const uint32_t s2 = block.w2;
+    const uint32_t s3 = block.w3;
 
     ix0[0] = (uint8_t) s0;
     ix0[1] = (uint8_t) s1;
