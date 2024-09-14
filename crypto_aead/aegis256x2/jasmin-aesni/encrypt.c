@@ -16,11 +16,11 @@ typedef struct Params {
     const unsigned char *npub;
 } Params;
 
-#define _aegis256_encrypt CRYPTO_NAMESPACE(_aegis256_encrypt)
-#define _aegis256_decrypt CRYPTO_NAMESPACE(_aegis256_decrypt)
+#define _aegis256x2_encrypt CRYPTO_NAMESPACE(_aegis256x2_encrypt)
+#define _aegis256x2_decrypt CRYPTO_NAMESPACE(_aegis256x2_decrypt)
 
-extern int _aegis256_encrypt(const Params *params);
-extern int _aegis256_decrypt(const Params *params);
+extern int _aegis256x2_encrypt(const Params *params);
+extern int _aegis256x2_decrypt(const Params *params);
 
 static int
 crypto_aead_encrypt_detached(unsigned char       *c,
@@ -35,7 +35,7 @@ crypto_aead_encrypt_detached(unsigned char       *c,
                              const unsigned char *k)
 {
     const Params params = { c, mlen, mac, CRYPTO_ABYTES, (unsigned char *) m, mlen, ad, adlen, k, npub };
-    return _aegis256_encrypt(&params);
+    return _aegis256x2_encrypt(&params);
 }
 
 static int
@@ -52,7 +52,7 @@ crypto_aead_decrypt_detached(unsigned char       *m,
     const Params params = {
         (unsigned char *) c, clen, (unsigned char *) mac, CRYPTO_ABYTES, m, clen, ad, adlen, k, npub
     };
-    return _aegis256_decrypt(&params);
+    return _aegis256x2_decrypt(&params);
 }
 
 int
