@@ -6,9 +6,23 @@ TYPE TYPE_load(const unsigned char *S) {
   return Z;
 }
 
+TYPE TYPE_load_bigendian(const unsigned char *S) {
+  TYPE Z = 0;
+  int K;
+  for (K = N - 8;K >= 0;K -= 8)
+    Z |= ((TYPE) (*S++)) << K;
+  return Z;
+}
+
 void TYPE_store(unsigned char *S,TYPE X) {
   int K;
   for (K = 0;K < N;K += 8)
+    *S++ = X >> K;
+}
+
+void TYPE_store_bigendian(unsigned char *S,TYPE X) {
+  int K;
+  for (K = N - 8;K >= 0;K -= 8)
     *S++ = X >> K;
 }
 
@@ -29,7 +43,7 @@ SIGNED SIGNED_negative_mask(SIGNED X) {
   return Y;
 #else
   X >>= N-6;
-  X ^= SIGNED_optblocker;
+  X += SIGNED_optblocker;
   X >>= 5;
   return X;
 #endif
@@ -51,7 +65,7 @@ UNSIGNED UNSIGNED_topbit_01(UNSIGNED X) {
   return Y;
 #else
   X >>= N-6;
-  X ^= SIGNED_optblocker;
+  X += SIGNED_optblocker;
   X >>= 5;
   return X;
 #endif
@@ -92,7 +106,7 @@ TYPE TYPE_bottombit_mask(TYPE X) {
 64:  readasm("arm64; int64 X Y; Y = -(1 & (X unsigned>> 0))");
   return Y;
 #else
-  X &= 1 ^ SIGNED_optblocker;
+  X &= 1 + SIGNED_optblocker;
   return -X;
 #endif
 }
@@ -112,7 +126,7 @@ TYPE TYPE_bottombit_01(TYPE X) {
 64:  readasm("arm64; int64 X Y; Y = 1 & (X unsigned>> 0)");
   return Y;
 #else
-  X &= 1 ^ SIGNED_optblocker;
+  X &= 1 + SIGNED_optblocker;
   return X;
 #endif
 }

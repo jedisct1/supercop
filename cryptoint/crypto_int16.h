@@ -1,5 +1,5 @@
 /* auto-generated: cd cryptoint; ./autogen */
-/* cryptoint 20240806 */
+/* cryptoint 20241003 */
 
 #ifndef crypto_int16_h
 #define crypto_int16_h
@@ -22,9 +22,25 @@ crypto_int16 crypto_int16_load(const unsigned char *crypto_int16_s) {
 
 __attribute__((unused))
 static inline
+crypto_int16 crypto_int16_load_bigendian(const unsigned char *crypto_int16_s) {
+  crypto_int16 crypto_int16_z = 0;
+  crypto_int16_z |= ((crypto_int16) (*crypto_int16_s++)) << 8;
+  crypto_int16_z |= ((crypto_int16) (*crypto_int16_s++)) << 0;
+  return crypto_int16_z;
+}
+
+__attribute__((unused))
+static inline
 void crypto_int16_store(unsigned char *crypto_int16_s,crypto_int16 crypto_int16_x) {
   *crypto_int16_s++ = crypto_int16_x >> 0;
   *crypto_int16_s++ = crypto_int16_x >> 8;
+}
+
+__attribute__((unused))
+static inline
+void crypto_int16_store_bigendian(unsigned char *crypto_int16_s,crypto_int16 crypto_int16_x) {
+  *crypto_int16_s++ = crypto_int16_x >> 8;
+  *crypto_int16_s++ = crypto_int16_x >> 0;
 }
 
 __attribute__((unused))
@@ -39,7 +55,7 @@ crypto_int16 crypto_int16_negative_mask(crypto_int16 crypto_int16_x) {
   return crypto_int16_y;
 #else
   crypto_int16_x >>= 16-6;
-  crypto_int16_x ^= crypto_int16_optblocker;
+  crypto_int16_x += crypto_int16_optblocker;
   crypto_int16_x >>= 5;
   return crypto_int16_x;
 #endif
@@ -57,7 +73,7 @@ crypto_int16_unsigned crypto_int16_unsigned_topbit_01(crypto_int16_unsigned cryp
   return crypto_int16_y;
 #else
   crypto_int16_x >>= 16-6;
-  crypto_int16_x ^= crypto_int16_optblocker;
+  crypto_int16_x += crypto_int16_optblocker;
   crypto_int16_x >>= 5;
   return crypto_int16_x;
 #endif
@@ -92,7 +108,7 @@ crypto_int16 crypto_int16_bottombit_mask(crypto_int16 crypto_int16_x) {
   __asm__ ("sbfx %w0,%w1,0,1" : "=r"(crypto_int16_y) : "r"(crypto_int16_x) : );
   return crypto_int16_y;
 #else
-  crypto_int16_x &= 1 ^ crypto_int16_optblocker;
+  crypto_int16_x &= 1 + crypto_int16_optblocker;
   return -crypto_int16_x;
 #endif
 }
@@ -108,7 +124,7 @@ crypto_int16 crypto_int16_bottombit_01(crypto_int16 crypto_int16_x) {
   __asm__ ("ubfx %w0,%w1,0,1" : "=r"(crypto_int16_y) : "r"(crypto_int16_x) : );
   return crypto_int16_y;
 #else
-  crypto_int16_x &= 1 ^ crypto_int16_optblocker;
+  crypto_int16_x &= 1 + crypto_int16_optblocker;
   return crypto_int16_x;
 #endif
 }

@@ -1,6 +1,9 @@
+// 20241003 djb: using crypto_uint64_store_bigendian
+
 #include <immintrin.h>
 #include "crypto_hashblocks_sha512.h"
 #include "crypto_hash.h"
+#include "crypto_uint64.h"
 
 #define blocks crypto_hashblocks_sha512
 
@@ -53,7 +56,7 @@ int crypto_hash(unsigned char *out,const unsigned char *in,unsigned long long in
     padded[inlen] = 0x80;
 
     padded[119] = bytes >> 61;
-    *(uint64 *) (padded + 120) = __builtin_bswap64(bytes << 3);
+    crypto_uint64_store_bigendian(padded + 120,bytes << 3);
     blocks(h,padded,128);
   } else {
     store256(padded + 96,X0);
@@ -66,7 +69,7 @@ int crypto_hash(unsigned char *out,const unsigned char *in,unsigned long long in
     padded[inlen] = 0x80;
 
     padded[247] = bytes >> 61;
-    *(uint64 *) (padded + 248) = __builtin_bswap64(bytes << 3);
+    crypto_uint64_store_bigendian(padded + 248,bytes << 3);
     blocks(h,padded,256);
   }
 

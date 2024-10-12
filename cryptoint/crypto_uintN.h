@@ -1,5 +1,5 @@
 /* auto-generated: cd cryptoint; ./autogen */
-/* cryptoint 20240806 */
+/* cryptoint 20241003 */
 
 #ifndef crypto_uintN_h
 #define crypto_uintN_h
@@ -23,9 +23,27 @@ crypto_uintN crypto_uintN_load(const unsigned char *crypto_uintN_s) {
 
 __attribute__((unused))
 static inline
+crypto_uintN crypto_uintN_load_bigendian(const unsigned char *crypto_uintN_s) {
+  crypto_uintN crypto_uintN_z = 0;
+  int crypto_uintN_k;
+  for (crypto_uintN_k = N - 8;crypto_uintN_k >= 0;crypto_uintN_k -= 8)
+    crypto_uintN_z |= ((crypto_uintN) (*crypto_uintN_s++)) << crypto_uintN_k;
+  return crypto_uintN_z;
+}
+
+__attribute__((unused))
+static inline
 void crypto_uintN_store(unsigned char *crypto_uintN_s,crypto_uintN crypto_uintN_x) {
   int crypto_uintN_k;
   for (crypto_uintN_k = 0;crypto_uintN_k < N;crypto_uintN_k += 8)
+    *crypto_uintN_s++ = crypto_uintN_x >> crypto_uintN_k;
+}
+
+__attribute__((unused))
+static inline
+void crypto_uintN_store_bigendian(unsigned char *crypto_uintN_s,crypto_uintN crypto_uintN_x) {
+  int crypto_uintN_k;
+  for (crypto_uintN_k = N - 8;crypto_uintN_k >= 0;crypto_uintN_k -= 8)
     *crypto_uintN_s++ = crypto_uintN_x >> crypto_uintN_k;
 }
 
@@ -47,7 +65,7 @@ crypto_uintN_signed crypto_uintN_signed_negative_mask(crypto_uintN_signed crypto
   return crypto_uintN_y;
 #else
   crypto_uintN_x >>= N-6;
-  crypto_uintN_x ^= crypto_uintN_signed_optblocker;
+  crypto_uintN_x += crypto_uintN_signed_optblocker;
   crypto_uintN_x >>= 5;
   return crypto_uintN_x;
 #endif
@@ -71,7 +89,7 @@ crypto_uintN crypto_uintN_topbit_01(crypto_uintN crypto_uintN_x) {
   return crypto_uintN_y;
 #else
   crypto_uintN_x >>= N-6;
-  crypto_uintN_x ^= crypto_uintN_signed_optblocker;
+  crypto_uintN_x += crypto_uintN_signed_optblocker;
   crypto_uintN_x >>= 5;
   return crypto_uintN_x;
 #endif
@@ -100,7 +118,7 @@ crypto_uintN crypto_uintN_bottombit_mask(crypto_uintN crypto_uintN_x) {
 64:  readasm("arm64; int64 crypto_uintN_x crypto_uintN_y; crypto_uintN_y = -(1 & (crypto_uintN_x unsigned>> 0))");
   return crypto_uintN_y;
 #else
-  crypto_uintN_x &= 1 ^ crypto_uintN_signed_optblocker;
+  crypto_uintN_x &= 1 + crypto_uintN_signed_optblocker;
   return -crypto_uintN_x;
 #endif
 }
@@ -122,7 +140,7 @@ crypto_uintN crypto_uintN_bottombit_01(crypto_uintN crypto_uintN_x) {
 64:  readasm("arm64; int64 crypto_uintN_x crypto_uintN_y; crypto_uintN_y = 1 & (crypto_uintN_x unsigned>> 0)");
   return crypto_uintN_y;
 #else
-  crypto_uintN_x &= 1 ^ crypto_uintN_signed_optblocker;
+  crypto_uintN_x &= 1 + crypto_uintN_signed_optblocker;
   return crypto_uintN_x;
 #endif
 }

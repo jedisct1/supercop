@@ -1,5 +1,5 @@
 /* auto-generated: cd cryptoint; ./autogen */
-/* cryptoint 20240806 */
+/* cryptoint 20241003 */
 
 #ifndef crypto_uint8_h
 #define crypto_uint8_h
@@ -21,7 +21,21 @@ crypto_uint8 crypto_uint8_load(const unsigned char *crypto_uint8_s) {
 
 __attribute__((unused))
 static inline
+crypto_uint8 crypto_uint8_load_bigendian(const unsigned char *crypto_uint8_s) {
+  crypto_uint8 crypto_uint8_z = 0;
+  crypto_uint8_z |= ((crypto_uint8) (*crypto_uint8_s++)) << 0;
+  return crypto_uint8_z;
+}
+
+__attribute__((unused))
+static inline
 void crypto_uint8_store(unsigned char *crypto_uint8_s,crypto_uint8 crypto_uint8_x) {
+  *crypto_uint8_s++ = crypto_uint8_x >> 0;
+}
+
+__attribute__((unused))
+static inline
+void crypto_uint8_store_bigendian(unsigned char *crypto_uint8_s,crypto_uint8 crypto_uint8_x) {
   *crypto_uint8_s++ = crypto_uint8_x >> 0;
 }
 
@@ -37,7 +51,7 @@ crypto_uint8_signed crypto_uint8_signed_negative_mask(crypto_uint8_signed crypto
   return crypto_uint8_y;
 #else
   crypto_uint8_x >>= 8-6;
-  crypto_uint8_x ^= crypto_uint8_signed_optblocker;
+  crypto_uint8_x += crypto_uint8_signed_optblocker;
   crypto_uint8_x >>= 5;
   return crypto_uint8_x;
 #endif
@@ -55,7 +69,7 @@ crypto_uint8 crypto_uint8_topbit_01(crypto_uint8 crypto_uint8_x) {
   return crypto_uint8_y;
 #else
   crypto_uint8_x >>= 8-6;
-  crypto_uint8_x ^= crypto_uint8_signed_optblocker;
+  crypto_uint8_x += crypto_uint8_signed_optblocker;
   crypto_uint8_x >>= 5;
   return crypto_uint8_x;
 #endif
@@ -78,7 +92,7 @@ crypto_uint8 crypto_uint8_bottombit_mask(crypto_uint8 crypto_uint8_x) {
   __asm__ ("sbfx %w0,%w1,0,1" : "=r"(crypto_uint8_y) : "r"(crypto_uint8_x) : );
   return crypto_uint8_y;
 #else
-  crypto_uint8_x &= 1 ^ crypto_uint8_signed_optblocker;
+  crypto_uint8_x &= 1 + crypto_uint8_signed_optblocker;
   return -crypto_uint8_x;
 #endif
 }
@@ -94,7 +108,7 @@ crypto_uint8 crypto_uint8_bottombit_01(crypto_uint8 crypto_uint8_x) {
   __asm__ ("ubfx %w0,%w1,0,1" : "=r"(crypto_uint8_y) : "r"(crypto_uint8_x) : );
   return crypto_uint8_y;
 #else
-  crypto_uint8_x &= 1 ^ crypto_uint8_signed_optblocker;
+  crypto_uint8_x &= 1 + crypto_uint8_signed_optblocker;
   return crypto_uint8_x;
 #endif
 }

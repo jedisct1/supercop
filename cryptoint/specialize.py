@@ -37,8 +37,16 @@ for bits in 8,16,32,64:
       unrolled = '\n'.join(f'  {TYPE}_z |= (({TYPE}) (*{TYPE}_s++)) << {k};' for k in range(0,bits,8))
       contents = contents.replace(tounroll,unrolled)
 
+      tounroll = f'  int {TYPE}_k;\n  for ({TYPE}_k = {bits} - 8;{TYPE}_k >= 0;{TYPE}_k -= 8)\n    {TYPE}_z |= (({TYPE}) (*{TYPE}_s++)) << {TYPE}_k;'
+      unrolled = '\n'.join(f'  {TYPE}_z |= (({TYPE}) (*{TYPE}_s++)) << {k};' for k in reversed(range(0,bits,8)))
+      contents = contents.replace(tounroll,unrolled)
+
       tounroll = f'  int {TYPE}_k;\n  for ({TYPE}_k = 0;{TYPE}_k < {bits};{TYPE}_k += 8)\n    *{TYPE}_s++ = {TYPE}_x >> {TYPE}_k;'
       unrolled = '\n'.join(f'  *{TYPE}_s++ = {TYPE}_x >> {k};' for k in range(0,bits,8))
+      contents = contents.replace(tounroll,unrolled)
+
+      tounroll = f'  int {TYPE}_k;\n  for ({TYPE}_k = {bits} - 8;{TYPE}_k >= 0;{TYPE}_k -= 8)\n    *{TYPE}_s++ = {TYPE}_x >> {TYPE}_k;'
+      unrolled = '\n'.join(f'  *{TYPE}_s++ = {TYPE}_x >> {k};' for k in reversed(range(0,bits,8)))
       contents = contents.replace(tounroll,unrolled)
 
       f.write(contents)

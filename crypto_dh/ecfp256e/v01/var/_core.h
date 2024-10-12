@@ -129,4 +129,4 @@ extern CRYMPIX crympix;
 	} \
 }
 
-void kn_exit(sic_t *s, uni_t code);
+void kn_exit(const char *s, uni_t code);

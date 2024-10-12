@@ -44,6 +44,20 @@ vpsubw		%ymm10,%ymm13,%ymm10
 vpsubw		%ymm11,%ymm14,%ymm11
 vpsubw		%ymm12,%ymm15,%ymm12
 
+#reduce2
+vpmulhw		%ymm1,%ymm7,%ymm13
+vpmulhw		%ymm1,%ymm8,%ymm14
+vpmulhw		%ymm1,%ymm9,%ymm15
+vpsraw		$10,%ymm13,%ymm13
+vpsraw		$10,%ymm14,%ymm14
+vpsraw		$10,%ymm15,%ymm15
+vpmullw		%ymm0,%ymm13,%ymm13
+vpmullw		%ymm0,%ymm14,%ymm14
+vpmullw		%ymm0,%ymm15,%ymm15
+vpsubw		%ymm13,%ymm7,%ymm7
+vpsubw		%ymm14,%ymm8,%ymm8
+vpsubw		%ymm15,%ymm9,%ymm9
+
 #shuffle
 vpslld		$16,%ymm8,%ymm13
 vpslld		$16,%ymm10,%ymm14
@@ -86,20 +100,6 @@ vpmulhw		%ymm0,%ymm12,%ymm12
 vpsubw		%ymm10,%ymm13,%ymm10
 vpsubw		%ymm11,%ymm14,%ymm11
 vpsubw		%ymm12,%ymm15,%ymm12
-
-#reduce2
-vpmulhw		%ymm1,%ymm7,%ymm13
-vpmulhw		%ymm1,%ymm8,%ymm14
-vpmulhw		%ymm1,%ymm9,%ymm15
-vpsraw		$10,%ymm13,%ymm13
-vpsraw		$10,%ymm14,%ymm14
-vpsraw		$10,%ymm15,%ymm15
-vpmullw		%ymm0,%ymm13,%ymm13
-vpmullw		%ymm0,%ymm14,%ymm14
-vpmullw		%ymm0,%ymm15,%ymm15
-vpsubw		%ymm13,%ymm7,%ymm7
-vpsubw		%ymm14,%ymm8,%ymm8
-vpsubw		%ymm15,%ymm9,%ymm9
 
 #shuffle
 vpsllq		$32,%ymm8,%ymm13
@@ -336,6 +336,12 @@ vpsubw		%ymm15,%ymm13,%ymm13 #alpha^-2(X-Z + w(Y-Z))
 #add
 vpaddw      %ymm9,%ymm8,%ymm11   #X+Y
 vpaddw      %ymm10,%ymm11,%ymm11 #X+Y+Z
+
+#reduce2
+vpmulhw		%ymm1,%ymm11,%ymm14
+vpsraw		$10,%ymm14,%ymm14
+vpmullw		%ymm0,%ymm14,%ymm14
+vpsubw		%ymm14,%ymm11,%ymm11
 
 #store
 vmovdqa		%ymm11,(%rdi)

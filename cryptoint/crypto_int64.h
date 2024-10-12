@@ -1,5 +1,5 @@
 /* auto-generated: cd cryptoint; ./autogen */
-/* cryptoint 20240806 */
+/* cryptoint 20241003 */
 
 #ifndef crypto_int64_h
 #define crypto_int64_h
@@ -28,6 +28,21 @@ crypto_int64 crypto_int64_load(const unsigned char *crypto_int64_s) {
 
 __attribute__((unused))
 static inline
+crypto_int64 crypto_int64_load_bigendian(const unsigned char *crypto_int64_s) {
+  crypto_int64 crypto_int64_z = 0;
+  crypto_int64_z |= ((crypto_int64) (*crypto_int64_s++)) << 56;
+  crypto_int64_z |= ((crypto_int64) (*crypto_int64_s++)) << 48;
+  crypto_int64_z |= ((crypto_int64) (*crypto_int64_s++)) << 40;
+  crypto_int64_z |= ((crypto_int64) (*crypto_int64_s++)) << 32;
+  crypto_int64_z |= ((crypto_int64) (*crypto_int64_s++)) << 24;
+  crypto_int64_z |= ((crypto_int64) (*crypto_int64_s++)) << 16;
+  crypto_int64_z |= ((crypto_int64) (*crypto_int64_s++)) << 8;
+  crypto_int64_z |= ((crypto_int64) (*crypto_int64_s++)) << 0;
+  return crypto_int64_z;
+}
+
+__attribute__((unused))
+static inline
 void crypto_int64_store(unsigned char *crypto_int64_s,crypto_int64 crypto_int64_x) {
   *crypto_int64_s++ = crypto_int64_x >> 0;
   *crypto_int64_s++ = crypto_int64_x >> 8;
@@ -37,6 +52,19 @@ void crypto_int64_store(unsigned char *crypto_int64_s,crypto_int64 crypto_int64_
   *crypto_int64_s++ = crypto_int64_x >> 40;
   *crypto_int64_s++ = crypto_int64_x >> 48;
   *crypto_int64_s++ = crypto_int64_x >> 56;
+}
+
+__attribute__((unused))
+static inline
+void crypto_int64_store_bigendian(unsigned char *crypto_int64_s,crypto_int64 crypto_int64_x) {
+  *crypto_int64_s++ = crypto_int64_x >> 56;
+  *crypto_int64_s++ = crypto_int64_x >> 48;
+  *crypto_int64_s++ = crypto_int64_x >> 40;
+  *crypto_int64_s++ = crypto_int64_x >> 32;
+  *crypto_int64_s++ = crypto_int64_x >> 24;
+  *crypto_int64_s++ = crypto_int64_x >> 16;
+  *crypto_int64_s++ = crypto_int64_x >> 8;
+  *crypto_int64_s++ = crypto_int64_x >> 0;
 }
 
 __attribute__((unused))
@@ -51,7 +79,7 @@ crypto_int64 crypto_int64_negative_mask(crypto_int64 crypto_int64_x) {
   return crypto_int64_y;
 #else
   crypto_int64_x >>= 64-6;
-  crypto_int64_x ^= crypto_int64_optblocker;
+  crypto_int64_x += crypto_int64_optblocker;
   crypto_int64_x >>= 5;
   return crypto_int64_x;
 #endif
@@ -69,7 +97,7 @@ crypto_int64_unsigned crypto_int64_unsigned_topbit_01(crypto_int64_unsigned cryp
   return crypto_int64_y;
 #else
   crypto_int64_x >>= 64-6;
-  crypto_int64_x ^= crypto_int64_optblocker;
+  crypto_int64_x += crypto_int64_optblocker;
   crypto_int64_x >>= 5;
   return crypto_int64_x;
 #endif
@@ -104,7 +132,7 @@ crypto_int64 crypto_int64_bottombit_mask(crypto_int64 crypto_int64_x) {
   __asm__ ("sbfx %0,%1,0,1" : "=r"(crypto_int64_y) : "r"(crypto_int64_x) : );
   return crypto_int64_y;
 #else
-  crypto_int64_x &= 1 ^ crypto_int64_optblocker;
+  crypto_int64_x &= 1 + crypto_int64_optblocker;
   return -crypto_int64_x;
 #endif
 }
@@ -120,7 +148,7 @@ crypto_int64 crypto_int64_bottombit_01(crypto_int64 crypto_int64_x) {
   __asm__ ("ubfx %0,%1,0,1" : "=r"(crypto_int64_y) : "r"(crypto_int64_x) : );
   return crypto_int64_y;
 #else
-  crypto_int64_x &= 1 ^ crypto_int64_optblocker;
+  crypto_int64_x &= 1 + crypto_int64_optblocker;
   return crypto_int64_x;
 #endif
 }

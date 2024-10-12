@@ -13,6 +13,13 @@ int check(TYPE x,TYPE y)
     t += ((TYPE) ((j/8)[(unsigned char *) &z])) << j;
   if (x != t) return 100;
 
+  TYPE_store_bigendian((unsigned char *) &z,x);
+  if (x != TYPE_load_bigendian((unsigned char *) &z)) return 100;
+  t = 0;
+  for (j = 0;j < N;j += 8)
+    t += ((TYPE) ((j/8)[(unsigned char *) &z])) << (N-8-j);
+  if (x != t) return 100;
+
   z = (x >> (N-1)) ? -1 : 0; if (z != TYPE_topbit_mask(x)) return 100;
   z = (x >> (N-1)) ?  1 : 0; if (z != TYPE_topbit_01(x)) return 100;
   z = (x & 1) ? -1 : 0; if (z != TYPE_bottombit_mask(x)) return 100;

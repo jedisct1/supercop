@@ -1,5 +1,5 @@
 /* auto-generated: cd cryptoint; ./autogen */
-/* cryptoint 20240806 */
+/* cryptoint 20241003 */
 
 #ifndef crypto_int8_h
 #define crypto_int8_h
@@ -21,7 +21,21 @@ crypto_int8 crypto_int8_load(const unsigned char *crypto_int8_s) {
 
 __attribute__((unused))
 static inline
+crypto_int8 crypto_int8_load_bigendian(const unsigned char *crypto_int8_s) {
+  crypto_int8 crypto_int8_z = 0;
+  crypto_int8_z |= ((crypto_int8) (*crypto_int8_s++)) << 0;
+  return crypto_int8_z;
+}
+
+__attribute__((unused))
+static inline
 void crypto_int8_store(unsigned char *crypto_int8_s,crypto_int8 crypto_int8_x) {
+  *crypto_int8_s++ = crypto_int8_x >> 0;
+}
+
+__attribute__((unused))
+static inline
+void crypto_int8_store_bigendian(unsigned char *crypto_int8_s,crypto_int8 crypto_int8_x) {
   *crypto_int8_s++ = crypto_int8_x >> 0;
 }
 
@@ -37,7 +51,7 @@ crypto_int8 crypto_int8_negative_mask(crypto_int8 crypto_int8_x) {
   return crypto_int8_y;
 #else
   crypto_int8_x >>= 8-6;
-  crypto_int8_x ^= crypto_int8_optblocker;
+  crypto_int8_x += crypto_int8_optblocker;
   crypto_int8_x >>= 5;
   return crypto_int8_x;
 #endif
@@ -55,7 +69,7 @@ crypto_int8_unsigned crypto_int8_unsigned_topbit_01(crypto_int8_unsigned crypto_
   return crypto_int8_y;
 #else
   crypto_int8_x >>= 8-6;
-  crypto_int8_x ^= crypto_int8_optblocker;
+  crypto_int8_x += crypto_int8_optblocker;
   crypto_int8_x >>= 5;
   return crypto_int8_x;
 #endif
@@ -90,7 +104,7 @@ crypto_int8 crypto_int8_bottombit_mask(crypto_int8 crypto_int8_x) {
   __asm__ ("sbfx %w0,%w1,0,1" : "=r"(crypto_int8_y) : "r"(crypto_int8_x) : );
   return crypto_int8_y;
 #else
-  crypto_int8_x &= 1 ^ crypto_int8_optblocker;
+  crypto_int8_x &= 1 + crypto_int8_optblocker;
   return -crypto_int8_x;
 #endif
 }
@@ -106,7 +120,7 @@ crypto_int8 crypto_int8_bottombit_01(crypto_int8 crypto_int8_x) {
   __asm__ ("ubfx %w0,%w1,0,1" : "=r"(crypto_int8_y) : "r"(crypto_int8_x) : );
   return crypto_int8_y;
 #else
-  crypto_int8_x &= 1 ^ crypto_int8_optblocker;
+  crypto_int8_x &= 1 + crypto_int8_optblocker;
   return crypto_int8_x;
 #endif
 }

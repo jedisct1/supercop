@@ -6,6 +6,51 @@
 #include "symmetric.h"
 
 /*************************************************
+* Name:        load32_littleendian
+*
+* Description: load 4 bytes into a 32-bit integer
+*              in little-endian order
+*
+* Arguments:   - const uint8_t *x: pointer to input byte array
+*
+* Returns 32-bit unsigned integer loaded from x
+**************************************************/
+static uint32_t load32_littleendian(const uint8_t x[4])
+{
+	uint32_t r;
+	r  = (uint32_t)x[0];
+	r |= (uint32_t)x[1] << 8;
+	r |= (uint32_t)x[2] << 16;
+	r |= (uint32_t)x[3] << 24;
+	return r;
+}
+
+/*************************************************
+* Name:        crepmod3
+*
+* Description: Compute modulus 3 operation
+*
+* Arguments: - poly *a: pointer to intput integer to be reduced
+*
+* Returns:     integer in {-1,0,1} congruent to a modulo 3.
+**************************************************/
+static int16_t crepmod3(int16_t a)
+{
+	a += (a >> 15) & NTRUPLUS_Q;
+	a -= (NTRUPLUS_Q-1)/2;
+	a += (a >> 15) & NTRUPLUS_Q;
+	a -= (NTRUPLUS_Q+1)/2;
+
+	a  = (a >> 8) + (a & 255);
+	a  = (a >> 4) + (a & 15);
+	a  = (a >> 2) + (a & 3);
+	a  = (a >> 2) + (a & 3);
+	a -= 3;
+	a += ((a + 1) >> 15) & 3;
+	return a;
+}
+
+/*************************************************
 * Name:        poly_tobytes
 *
 * Description: Serialization of a polynomial
@@ -22,13 +67,13 @@ void poly_tobytes(uint8_t r[NTRUPLUS_POLYBYTES], const poly *a)
 	{
 		for (int j = 0; j < 18; j++)
 		{
-			t[0] = a->coeffs[64*j + i];
+			t[0]  = a->coeffs[64*j + i];
 			t[0] += (t[0] >> 15) & NTRUPLUS_Q;
-			t[1] = a->coeffs[64*j + i + 16];
+			t[1]  = a->coeffs[64*j + i + 16];
 			t[1] += (t[1] >> 15) & NTRUPLUS_Q;
-			t[2] = a->coeffs[64*j + i + 32];
+			t[2]  = a->coeffs[64*j + i + 32];
 			t[2] += (t[2] >> 15) & NTRUPLUS_Q;			
-			t[3] = a->coeffs[64*j + i + 48];
+			t[3]  = a->coeffs[64*j + i + 48];
 			t[3] += (t[3] >> 15) & NTRUPLUS_Q;
 
 			r[96*j + 2*i +  0] = t[0];
@@ -76,26 +121,6 @@ void poly_frombytes(poly *r, const uint8_t a[NTRUPLUS_POLYBYTES])
 }
 
 /*************************************************
-* Name:        load32_littleendian
-*
-* Description: load 4 bytes into a 32-bit integer
-*              in little-endian order
-*
-* Arguments:   - const uint8_t *x: pointer to input byte array
-*
-* Returns 32-bit unsigned integer loaded from x
-**************************************************/
-static uint32_t load32_littleendian(const uint8_t x[4])
-{
-	uint32_t r;
-	r  = (uint32_t)x[0];
-	r |= (uint32_t)x[1] << 8;
-	r |= (uint32_t)x[2] << 16;
-	r |= (uint32_t)x[3] << 24;
-	return r;
-}
-
-/*************************************************
 * Name:        poly_cbd1
 *
 * Description: Sample a polynomial deterministically from a random,
@@ -105,7 +130,7 @@ static uint32_t load32_littleendian(const uint8_t x[4])
 *              - const uint8_t *buf: pointer to input random
 *                                     (of length NTRUPLUS_N/4 bytes)
 **************************************************/
-void poly_cbd1(poly *a, const unsigned char buf[NTRUPLUS_N/4])
+void poly_cbd1(poly *r, const unsigned char buf[NTRUPLUS_N/4])
 {
 	uint32_t t1, t2;
 
@@ -120,7 +145,7 @@ void poly_cbd1(poly *a, const unsigned char buf[NTRUPLUS_N/4])
 			{
 				for(int l = 0; l < 16; l++)
 				{
-					a->coeffs[256*i + 16*l + 2*j + k] = (t1 & 0x1) - (t2 & 0x1);
+					r->coeffs[256*i + 16*l + 2*j + k] = (t1 & 0x1) - (t2 & 0x1);
 
 					t1 >>= 1;   
 					t2 >>= 1;
@@ -138,7 +163,7 @@ void poly_cbd1(poly *a, const unsigned char buf[NTRUPLUS_N/4])
 		{
 			for(int l = 0; l < 16; l++)
 			{
-				a->coeffs[1024 + 8*l + 2*j + k] = (t1 & 0x1) - (t2 & 0x1);
+				r->coeffs[1024 + 8*l + 2*j + k] = (t1 & 0x1) - (t2 & 0x1);
 
 				t1 >>= 1;
 				t2 >>= 1;
@@ -280,24 +305,6 @@ void poly_invntt(poly *r, const poly *a)
 }
 
 /*************************************************
-* Name:        poly_basemul
-*
-* Description: Multiplication of two polynomials in NTT domain
-*
-* Arguments:   - poly *r:       pointer to output polynomial
-*              - const poly *a: pointer to first input polynomial
-*              - const poly *b: pointer to second input polynomial
-**************************************************/
-void poly_basemul(poly *r, const poly *a, const poly *b)
-{
-	for(int i = 0; i < NTRUPLUS_N/6; i++)
-	{
-		basemul(r->coeffs + 6*i, a->coeffs + 6*i, b->coeffs + 6*i, zetas[192 + i]);
-		basemul(r->coeffs + 6*i + 3, a->coeffs + 6*i + 3, b->coeffs + 6*i + 3, -zetas[192 + i]);
-	}
-}
-
-/*************************************************
 * Name:        poly_baseinv
 *
 * Description: Inverse of polynomial in NTT domain
@@ -309,42 +316,51 @@ int poly_baseinv(poly *r, const poly *a)
 {
 	int result = 0;
 
-	for(int i = 0; i < NTRUPLUS_N/6; ++i)
+	for(int i = 0; i < NTRUPLUS_N/8; ++i)
 	{
-		result += baseinv(r->coeffs + 6*i, a->coeffs + 6*i, zetas[192 + i]);
-		result += baseinv(r->coeffs + 6*i + 3, a->coeffs + 6*i + 3, -zetas[192 + i]);
+		result = baseinv(r->coeffs + 8*i, a->coeffs + 8*i, zetas[144 + i]);
+		if(result) return 1;
+		result = baseinv(r->coeffs + 8*i + 4, a->coeffs + 8*i + 4, -zetas[144 + i]);
+		if(result) return 1;
 	 }
 
-	return result;
+	return 0;
 }
 
 /*************************************************
-* Name:        poly_reduce
+* Name:        poly_basemul
 *
-* Description: Applies Barrett reduction to all coefficients of a polynomial
-*              for details of the Barrett reduction see comments in reduce.c
+* Description: Multiplication of two polynomials in NTT domain
 *
-* Arguments:   - poly *r: pointer to input/output polynomial
+* Arguments:   - poly *r:       pointer to output polynomial
+*              - const poly *a: pointer to first input polynomial
+*              - const poly *b: pointer to second input polynomial
 **************************************************/
-void poly_reduce(poly *r)
+void poly_basemul(poly *r, const poly *a, const poly *b)
 {
-	for(int i = 0; i < NTRUPLUS_N; i++)
-		r->coeffs[i] = barrett_reduce(r->coeffs[i]);
+	for(int i = 0; i < NTRUPLUS_N/8; ++i)
+	{
+		basemul(r->coeffs + 8*i, a->coeffs + 8*i, b->coeffs + 8*i, zetas[144 + i]);
+		basemul(r->coeffs + 8*i + 4, a->coeffs + 8*i + 4, b->coeffs + 8*i + 4, -zetas[144 + i]);
+	}
 }
 
 /*************************************************
-* Name:        poly_add
+* Name:        poly_basemul_add
 *
-* Description: Add two polynomials; no modular reduction is performed
+* Description: Multiplication of two polynomials in NTT domain
 *
-* Arguments: - poly *r: pointer to output polynomial
-*            - const poly *a: pointer to first input polynomial
-*            - const poly *b: pointer to second input polynomial
+* Arguments:   - poly *r:       pointer to output polynomial
+*              - const poly *a: pointer to first input polynomial
+*              - const poly *b: pointer to second input polynomial
 **************************************************/
-void poly_add(poly *r, const poly *a, const poly *b)
+void poly_basemul_add(poly *r, const poly *a, const poly *b, const poly *c)
 {
-	for(int i = 0; i < NTRUPLUS_N; ++i)
-		r->coeffs[i] = a->coeffs[i] + b->coeffs[i];
+	for(int i = 0; i < NTRUPLUS_N/8; ++i)
+	{
+		basemul_add(r->coeffs + 8*i, a->coeffs + 8*i, b->coeffs + 8*i, c->coeffs + 8*i, zetas[144 + i]);
+		basemul_add(r->coeffs + 8*i + 4, a->coeffs + 8*i + 4, b->coeffs + 8*i + 4, c->coeffs + 8*i + 4, -zetas[144 + i]);
+	}
 }
 
 /*************************************************
@@ -367,37 +383,13 @@ void poly_sub(poly *r, const poly *a, const poly *b)
 *
 * Description: Multiply polynomial by 3; no modular reduction is performed
 *
-* Arguments: - poly *r: pointer to input/output polynomial
+* Arguments: - poly *r: pointer to output polynomial
+*            - const poly *a: pointer to input polynomial
 **************************************************/
-void poly_triple(poly *r) 
+void poly_triple(poly *r, const poly *a) 
 {
 	for(int i = 0; i < NTRUPLUS_N; ++i)
-		r->coeffs[i] = 3*r->coeffs[i];
-}
-
-/*************************************************
-* Name:        crepmod3
-*
-* Description: Compute modulus 3 operation
-*
-* Arguments: - poly *a: pointer to intput integer to be reduced
-*
-* Returns:     integer in {-1,0,1} congruent to a modulo 3.
-**************************************************/
-static int16_t crepmod3(int16_t a)
-{
-	a += (a >> 15) & NTRUPLUS_Q;
-	a -= (NTRUPLUS_Q-1)/2;
-	a += (a >> 15) & NTRUPLUS_Q;
-	a -= (NTRUPLUS_Q+1)/2;
-
-	a  = (a >> 8) + (a & 255);
-	a  = (a >> 4) + (a & 15);
-	a  = (a >> 2) + (a & 3);
-	a  = (a >> 2) + (a & 3);
-	a -= 3;
-	a += ((a + 1) >> 15) & 3;
-	return a;
+		r->coeffs[i] = 3*a->coeffs[i];
 }
 
 /*************************************************

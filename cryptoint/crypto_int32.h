@@ -1,5 +1,5 @@
 /* auto-generated: cd cryptoint; ./autogen */
-/* cryptoint 20240806 */
+/* cryptoint 20241003 */
 
 #ifndef crypto_int32_h
 #define crypto_int32_h
@@ -24,11 +24,31 @@ crypto_int32 crypto_int32_load(const unsigned char *crypto_int32_s) {
 
 __attribute__((unused))
 static inline
+crypto_int32 crypto_int32_load_bigendian(const unsigned char *crypto_int32_s) {
+  crypto_int32 crypto_int32_z = 0;
+  crypto_int32_z |= ((crypto_int32) (*crypto_int32_s++)) << 24;
+  crypto_int32_z |= ((crypto_int32) (*crypto_int32_s++)) << 16;
+  crypto_int32_z |= ((crypto_int32) (*crypto_int32_s++)) << 8;
+  crypto_int32_z |= ((crypto_int32) (*crypto_int32_s++)) << 0;
+  return crypto_int32_z;
+}
+
+__attribute__((unused))
+static inline
 void crypto_int32_store(unsigned char *crypto_int32_s,crypto_int32 crypto_int32_x) {
   *crypto_int32_s++ = crypto_int32_x >> 0;
   *crypto_int32_s++ = crypto_int32_x >> 8;
   *crypto_int32_s++ = crypto_int32_x >> 16;
   *crypto_int32_s++ = crypto_int32_x >> 24;
+}
+
+__attribute__((unused))
+static inline
+void crypto_int32_store_bigendian(unsigned char *crypto_int32_s,crypto_int32 crypto_int32_x) {
+  *crypto_int32_s++ = crypto_int32_x >> 24;
+  *crypto_int32_s++ = crypto_int32_x >> 16;
+  *crypto_int32_s++ = crypto_int32_x >> 8;
+  *crypto_int32_s++ = crypto_int32_x >> 0;
 }
 
 __attribute__((unused))
@@ -43,7 +63,7 @@ crypto_int32 crypto_int32_negative_mask(crypto_int32 crypto_int32_x) {
   return crypto_int32_y;
 #else
   crypto_int32_x >>= 32-6;
-  crypto_int32_x ^= crypto_int32_optblocker;
+  crypto_int32_x += crypto_int32_optblocker;
   crypto_int32_x >>= 5;
   return crypto_int32_x;
 #endif
@@ -61,7 +81,7 @@ crypto_int32_unsigned crypto_int32_unsigned_topbit_01(crypto_int32_unsigned cryp
   return crypto_int32_y;
 #else
   crypto_int32_x >>= 32-6;
-  crypto_int32_x ^= crypto_int32_optblocker;
+  crypto_int32_x += crypto_int32_optblocker;
   crypto_int32_x >>= 5;
   return crypto_int32_x;
 #endif
@@ -96,7 +116,7 @@ crypto_int32 crypto_int32_bottombit_mask(crypto_int32 crypto_int32_x) {
   __asm__ ("sbfx %w0,%w1,0,1" : "=r"(crypto_int32_y) : "r"(crypto_int32_x) : );
   return crypto_int32_y;
 #else
-  crypto_int32_x &= 1 ^ crypto_int32_optblocker;
+  crypto_int32_x &= 1 + crypto_int32_optblocker;
   return -crypto_int32_x;
 #endif
 }
@@ -112,7 +132,7 @@ crypto_int32 crypto_int32_bottombit_01(crypto_int32 crypto_int32_x) {
   __asm__ ("ubfx %w0,%w1,0,1" : "=r"(crypto_int32_y) : "r"(crypto_int32_x) : );
   return crypto_int32_y;
 #else
-  crypto_int32_x &= 1 ^ crypto_int32_optblocker;
+  crypto_int32_x &= 1 + crypto_int32_optblocker;
   return crypto_int32_x;
 #endif
 }

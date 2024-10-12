@@ -1,0 +1,2 @@
+20240909 titan0 amd64 20241009 crypto_kem smaugt1/constbranchindex timecop_pass crypto_kem/smaugt1/ref gcc_-march=native_-mtune=native_-O3_-fomit-frame-pointer_-fwrapv_-fPIC_-fPIE 10 0
+20240909 titan0 amd64 20241009 crypto_kem smaugt1/constbranchindex timecop_output crypto_kem/smaugt1/ref gcc_-march=native_-mtune=native_-O3_-fomit-frame-pointer_-fwrapv_-fPIC_-fPIE c5745dfd0d115e253951e133d9f7c9ced6ba1bde4c13be23ed9992265adaa0ca 31925320 2270923724 3500000000 crypto_kem/smaugt1/ref

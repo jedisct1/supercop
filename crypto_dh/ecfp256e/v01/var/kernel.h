@@ -811,7 +811,7 @@ void crympix_kill();
  * @author Huseyin Hisil.
  * @date Mar 20 2004.
  **/
-void kn_exit(sic s, uni_t code);
+void kn_exit(const char *s, uni_t code);
 
 /**
  * @brief Warning for DEBUG_X modes.
@@ -821,7 +821,7 @@ void kn_exit(sic s, uni_t code);
  * @author Huseyin Hisil.
  * @date Mar 22 2007.
  **/
-void kn_warn(sic_t *s, uni_t code);
+void kn_warn(const char *s, uni_t code);
 
 /**
  * @brief Checks whether the demanded meoery is lower than predefined limits.

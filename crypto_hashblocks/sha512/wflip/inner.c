@@ -1,16 +1,10 @@
+// 20241003 djb: using crypto_uint64_*_bigendian
+
 #include "inner.h"
 
 #define uint64 crypto_uint64
-
-static uint64 load_bigendian(const unsigned char *x)
-{
-  return __builtin_bswap64(*(uint64 *) x);
-}
-
-static void store_bigendian(unsigned char *x,uint64 u)
-{
-  *(uint64 *) x = __builtin_bswap64(u);
-}
+#define load_bigendian crypto_uint64_load_bigendian
+#define store_bigendian crypto_uint64_store_bigendian
 
 #define SHR(x,c) ((x) >> (c))
 #define ROTR(x,c) (((x) >> (c)) | ((x) << (64 - (c))))

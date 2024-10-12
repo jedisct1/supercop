@@ -26,13 +26,13 @@
 #include <stdlib.h>
 #include "_core.h"
 
-void kn_exit(sic_t *s, uni_t code)
+void kn_exit(const char *s, uni_t code)
 {
 	printf("Exception occured at \"%s\", ERROR_CODE = %lu.\n", s, code);
 	exit(code);
 }
 
-void kn_warn(sic_t *s, uni_t code)
+void kn_warn(const char *s, uni_t code)
 {
 	printf("Debug warning: \"%s\"", s);
 	exit(code);

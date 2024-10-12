@@ -1,8 +1,8 @@
 .global poly_ntt
 poly_ntt:
-vmovdqa		_16xq(%rip),%ymm0
-vmovdqa	_low_mask(%rip),%ymm1
-lea		    zetas(%rip),%rdx
+vmovdqa     _16xq(%rip),%ymm0
+vmovdqa     _16xv(%rip),%ymm1
+lea         zetas(%rip),%rdx
 
 #level0
 #zetas
@@ -66,9 +66,8 @@ sub		$864,%rdi
 
 #level 1
 #load
-vmovdqa	_low_mask(%rip),%ymm1
-vmovdqu	_16xwqinv(%rip),%ymm2 #winv
-vmovdqu	_16xw(%rip),%ymm3     #w
+vmovdqu         _16xwqinv(%rip),%ymm2 #winv
+vmovdqu             _16xw(%rip),%ymm3 #w
 
 xor         %rax,%rax
 .p2align 5
@@ -286,35 +285,6 @@ vpsubw		%ymm12,%ymm8,%ymm12
 vpsubw		%ymm13,%ymm9,%ymm13
 vpsubw		%ymm14,%ymm10,%ymm14
 
-#reduce2
-vpsraw		$12,%ymm5,%ymm2
-vpsraw		$12,%ymm6,%ymm3
-vpsraw		$12,%ymm7,%ymm4
-vpand		%ymm1,%ymm5,%ymm5
-vpand		%ymm1,%ymm6,%ymm6
-vpand		%ymm1,%ymm7,%ymm7
-vpsubw		%ymm2,%ymm5,%ymm5
-vpsubw		%ymm3,%ymm6,%ymm6
-vpsubw		%ymm4,%ymm7,%ymm7
-vpsllw		$7,%ymm2,%ymm2
-vpsllw		$7,%ymm3,%ymm3
-vpsllw		$7,%ymm4,%ymm4
-vpsubw		%ymm2,%ymm5,%ymm5
-vpsubw		%ymm3,%ymm6,%ymm6
-vpsubw		%ymm4,%ymm7,%ymm7
-vpsllw		$1,%ymm2,%ymm2
-vpsllw		$1,%ymm3,%ymm3
-vpsllw		$1,%ymm4,%ymm4
-vpsubw		%ymm2,%ymm5,%ymm5
-vpsubw		%ymm3,%ymm6,%ymm6
-vpsubw		%ymm4,%ymm7,%ymm7
-vpsllw		$2,%ymm2,%ymm2
-vpsllw		$2,%ymm3,%ymm3
-vpsllw		$2,%ymm4,%ymm4
-vpaddw		%ymm2,%ymm5,%ymm5
-vpaddw		%ymm3,%ymm6,%ymm6
-vpaddw		%ymm4,%ymm7,%ymm7
-
 #update
 vpaddw		%ymm12,%ymm5,%ymm9
 vpaddw		%ymm13,%ymm6,%ymm10
@@ -401,35 +371,6 @@ vpsubw		%ymm12,%ymm8,%ymm12
 vpsubw		%ymm13,%ymm9,%ymm13
 vpsubw		%ymm14,%ymm10,%ymm14
 
-#reduce2
-vpsraw		$12,%ymm5,%ymm2
-vpsraw		$12,%ymm6,%ymm3
-vpsraw		$12,%ymm7,%ymm4
-vpand		%ymm1,%ymm5,%ymm5
-vpand		%ymm1,%ymm6,%ymm6
-vpand		%ymm1,%ymm7,%ymm7
-vpsubw		%ymm2,%ymm5,%ymm5
-vpsubw		%ymm3,%ymm6,%ymm6
-vpsubw		%ymm4,%ymm7,%ymm7
-vpsllw		$7,%ymm2,%ymm2
-vpsllw		$7,%ymm3,%ymm3
-vpsllw		$7,%ymm4,%ymm4
-vpsubw		%ymm2,%ymm5,%ymm5
-vpsubw		%ymm3,%ymm6,%ymm6
-vpsubw		%ymm4,%ymm7,%ymm7
-vpsllw		$1,%ymm2,%ymm2
-vpsllw		$1,%ymm3,%ymm3
-vpsllw		$1,%ymm4,%ymm4
-vpsubw		%ymm2,%ymm5,%ymm5
-vpsubw		%ymm3,%ymm6,%ymm6
-vpsubw		%ymm4,%ymm7,%ymm7
-vpsllw		$2,%ymm2,%ymm2
-vpsllw		$2,%ymm3,%ymm3
-vpsllw		$2,%ymm4,%ymm4
-vpaddw		%ymm2,%ymm5,%ymm5
-vpaddw		%ymm3,%ymm6,%ymm6
-vpaddw		%ymm4,%ymm7,%ymm7
-
 #update
 vpaddw		%ymm12,%ymm5,%ymm9
 vpaddw		%ymm13,%ymm6,%ymm10
@@ -437,6 +378,32 @@ vpaddw		%ymm14,%ymm7,%ymm11
 vpsubw		%ymm12,%ymm5,%ymm12
 vpsubw		%ymm13,%ymm6,%ymm13
 vpsubw		%ymm14,%ymm7,%ymm14
+
+#reduce2
+vpmulhw		%ymm1,%ymm9,%ymm3
+vpmulhw		%ymm1,%ymm10,%ymm4
+vpmulhw		%ymm1,%ymm11,%ymm5
+vpmulhw		%ymm1,%ymm12,%ymm6
+vpmulhw		%ymm1,%ymm13,%ymm7
+vpmulhw		%ymm1,%ymm14,%ymm8
+vpsraw		$10,%ymm3,%ymm3
+vpsraw		$10,%ymm4,%ymm4
+vpsraw		$10,%ymm5,%ymm5
+vpsraw		$10,%ymm6,%ymm6
+vpsraw		$10,%ymm7,%ymm7
+vpsraw		$10,%ymm8,%ymm8
+vpmullw		%ymm0,%ymm3,%ymm3
+vpmullw		%ymm0,%ymm4,%ymm4
+vpmullw		%ymm0,%ymm5,%ymm5
+vpmullw		%ymm0,%ymm6,%ymm6
+vpmullw		%ymm0,%ymm7,%ymm7
+vpmullw		%ymm0,%ymm8,%ymm8
+vpsubw		%ymm3,%ymm9,%ymm9
+vpsubw		%ymm4,%ymm10,%ymm10
+vpsubw		%ymm5,%ymm11,%ymm11
+vpsubw		%ymm6,%ymm12,%ymm12
+vpsubw		%ymm7,%ymm13,%ymm13
+vpsubw		%ymm8,%ymm14,%ymm14
 
 #store
 vmovdqa		%ymm9,(%rdi)

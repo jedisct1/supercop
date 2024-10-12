@@ -1,5 +1,5 @@
 /* auto-generated: cd cryptoint; ./autogen */
-/* cryptoint 20240806 */
+/* cryptoint 20241003 */
 
 #ifndef crypto_uint16_h
 #define crypto_uint16_h
@@ -22,9 +22,25 @@ crypto_uint16 crypto_uint16_load(const unsigned char *crypto_uint16_s) {
 
 __attribute__((unused))
 static inline
+crypto_uint16 crypto_uint16_load_bigendian(const unsigned char *crypto_uint16_s) {
+  crypto_uint16 crypto_uint16_z = 0;
+  crypto_uint16_z |= ((crypto_uint16) (*crypto_uint16_s++)) << 8;
+  crypto_uint16_z |= ((crypto_uint16) (*crypto_uint16_s++)) << 0;
+  return crypto_uint16_z;
+}
+
+__attribute__((unused))
+static inline
 void crypto_uint16_store(unsigned char *crypto_uint16_s,crypto_uint16 crypto_uint16_x) {
   *crypto_uint16_s++ = crypto_uint16_x >> 0;
   *crypto_uint16_s++ = crypto_uint16_x >> 8;
+}
+
+__attribute__((unused))
+static inline
+void crypto_uint16_store_bigendian(unsigned char *crypto_uint16_s,crypto_uint16 crypto_uint16_x) {
+  *crypto_uint16_s++ = crypto_uint16_x >> 8;
+  *crypto_uint16_s++ = crypto_uint16_x >> 0;
 }
 
 __attribute__((unused))
@@ -39,7 +55,7 @@ crypto_uint16_signed crypto_uint16_signed_negative_mask(crypto_uint16_signed cry
   return crypto_uint16_y;
 #else
   crypto_uint16_x >>= 16-6;
-  crypto_uint16_x ^= crypto_uint16_signed_optblocker;
+  crypto_uint16_x += crypto_uint16_signed_optblocker;
   crypto_uint16_x >>= 5;
   return crypto_uint16_x;
 #endif
@@ -57,7 +73,7 @@ crypto_uint16 crypto_uint16_topbit_01(crypto_uint16 crypto_uint16_x) {
   return crypto_uint16_y;
 #else
   crypto_uint16_x >>= 16-6;
-  crypto_uint16_x ^= crypto_uint16_signed_optblocker;
+  crypto_uint16_x += crypto_uint16_signed_optblocker;
   crypto_uint16_x >>= 5;
   return crypto_uint16_x;
 #endif
@@ -80,7 +96,7 @@ crypto_uint16 crypto_uint16_bottombit_mask(crypto_uint16 crypto_uint16_x) {
   __asm__ ("sbfx %w0,%w1,0,1" : "=r"(crypto_uint16_y) : "r"(crypto_uint16_x) : );
   return crypto_uint16_y;
 #else
-  crypto_uint16_x &= 1 ^ crypto_uint16_signed_optblocker;
+  crypto_uint16_x &= 1 + crypto_uint16_signed_optblocker;
   return -crypto_uint16_x;
 #endif
 }
@@ -96,7 +112,7 @@ crypto_uint16 crypto_uint16_bottombit_01(crypto_uint16 crypto_uint16_x) {
   __asm__ ("ubfx %w0,%w1,0,1" : "=r"(crypto_uint16_y) : "r"(crypto_uint16_x) : );
   return crypto_uint16_y;
 #else
-  crypto_uint16_x &= 1 ^ crypto_uint16_signed_optblocker;
+  crypto_uint16_x &= 1 + crypto_uint16_signed_optblocker;
   return crypto_uint16_x;
 #endif
 }
