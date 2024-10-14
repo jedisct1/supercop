@@ -5,6 +5,8 @@
 #define inline __inline
 #endif
 
+#define AESROUND CRYPTO_NAMESPACE(AESROUND)
+
 void AESROUND(unsigned char *out, unsigned char *in, unsigned char *rk);
 
 #define XOR128(x,y,z) {                                                                             \
@@ -19,7 +21,7 @@ void AESROUND(unsigned char *out, unsigned char *in, unsigned char *rk);
 
 // The initialization state of AEGIS
 /*The input to initialization is the 128-bit key; 128-bit IV;*/
-void aegis128_initialization(const unsigned char *key, const unsigned char *iv, unsigned char *state)
+static void aegis128_initialization(const unsigned char *key, const unsigned char *iv, unsigned char *state)
 {
         int i;
         unsigned char constant[32] = {0x0,0x1,0x01,0x02,0x03,0x05,0x08,0x0d,0x15,0x22,0x37,0x59,0x90,0xe9,0x79,0x62,0xdb,0x3d,0x18,0x55,0x6d,0xc2,0x2f,0xf1,0x20,0x11,0x31,0x42,0x73,0xb5,0x28,0xdd};
@@ -57,7 +59,7 @@ void aegis128_initialization(const unsigned char *key, const unsigned char *iv, 
 
 
 //the finalization state of AEGIS
-void aegis128_tag_generation(unsigned long long msglen, unsigned long long adlen, unsigned char maclen, unsigned char *mac, unsigned char *state)
+static void aegis128_tag_generation(unsigned long long msglen, unsigned long long adlen, unsigned char maclen, unsigned char *mac, unsigned char *state)
 {
        int i;
 
@@ -93,7 +95,7 @@ void aegis128_tag_generation(unsigned long long msglen, unsigned long long adlen
 }
 
 // one step of encryption
-inline void aegis128_enc_aut_step(const unsigned char *plaintextblk,
+static inline void aegis128_enc_aut_step(const unsigned char *plaintextblk,
        unsigned char *ciphertextblk, unsigned char *state)
 {
 
@@ -119,7 +121,7 @@ inline void aegis128_enc_aut_step(const unsigned char *plaintextblk,
 
 
 //one step of decryption
-inline void aegis128_dec_aut_step(unsigned char *plaintextblk,
+static inline void aegis128_dec_aut_step(unsigned char *plaintextblk,
        const unsigned char *ciphertextblk, unsigned char *state)
 {
          unsigned char tmp[16];

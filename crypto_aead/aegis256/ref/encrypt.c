@@ -5,6 +5,8 @@
 #define inline __inline
 #endif
 
+#define AESROUND CRYPTO_NAMESPACE(AESROUND)
+
 void AESROUND(unsigned char *out, unsigned char *in, unsigned char *rk);
 
 #define XOR128(x,y,z) {                                                                             \
@@ -17,7 +19,7 @@ void AESROUND(unsigned char *out, unsigned char *in, unsigned char *rk);
     ((unsigned long long*)(x))[1] = ((unsigned long long*)(y))[1] & ((unsigned long long*)(z))[1];  \
 }
 
-inline void aegis256_initialization(const unsigned char *key,
+static inline void aegis256_initialization(const unsigned char *key,
        const unsigned char *iv, unsigned char *state)
 {
        int i;
@@ -53,7 +55,7 @@ inline void aegis256_initialization(const unsigned char *key,
 
 
 //the finalization state of AEGIS
-void aegis256_tag_generation(unsigned long long msglen, unsigned long long adlen, unsigned char maclen, unsigned char *mac, unsigned char *state)
+static void aegis256_tag_generation(unsigned long long msglen, unsigned long long adlen, unsigned char maclen, unsigned char *mac, unsigned char *state)
 {
         int i;
 
@@ -92,7 +94,7 @@ void aegis256_tag_generation(unsigned long long msglen, unsigned long long adlen
 
 
 // one step of encryption
-inline void aegis256_enc_aut_step(const unsigned char *plaintextblk,
+static inline void aegis256_enc_aut_step(const unsigned char *plaintextblk,
        unsigned char *ciphertextblk, unsigned char *state)
 {
         unsigned char tmp[16];
@@ -119,7 +121,7 @@ inline void aegis256_enc_aut_step(const unsigned char *plaintextblk,
 
 
 //one step of decryption
-inline void aegis256_dec_aut_step(unsigned char *plaintextblk,
+static inline void aegis256_dec_aut_step(unsigned char *plaintextblk,
        const unsigned char *ciphertextblk, unsigned char *state)
 {
         unsigned char tmp[16];

@@ -10,7 +10,7 @@
 #define inline __inline
 #endif
 
-void aegis256_initialization(const unsigned char *key,
+static void aegis256_initialization(const unsigned char *key,
        const unsigned char *iv, __m128i *state)
 {
         int i;
@@ -67,7 +67,7 @@ void aegis256_initialization(const unsigned char *key,
 }
 
 
-void aegis256_tag_generation(unsigned long long msglen, unsigned long long adlen, unsigned char maclen, unsigned char *mac, __m128i *state)
+static void aegis256_tag_generation(unsigned long long msglen, unsigned long long adlen, unsigned char maclen, unsigned char *mac, __m128i *state)
 {
        int i;
 
@@ -108,7 +108,7 @@ void aegis256_tag_generation(unsigned long long msglen, unsigned long long adlen
 }
 
 
-inline void aegis256_enc_aut_step(const unsigned char *plaintextblk,
+static inline void aegis256_enc_aut_step(const unsigned char *plaintextblk,
        unsigned char *ciphertextblk, __m128i *state)
 {
         __m128i t, ct;
@@ -136,7 +136,7 @@ inline void aegis256_enc_aut_step(const unsigned char *plaintextblk,
 }
 
 
-inline void aegis256_dec_aut_step(unsigned char *plaintextblk,
+static inline void aegis256_dec_aut_step(unsigned char *plaintextblk,
        const unsigned char *ciphertextblk, __m128i *state)
 {
          __m128i t;
