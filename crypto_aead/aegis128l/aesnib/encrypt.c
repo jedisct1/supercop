@@ -277,7 +277,7 @@ int crypto_aead_decrypt(
     unsigned char plaintextblock[32], ciphertextblock[32];
     unsigned char tag[16];
     unsigned char check = 0;
-    __m128i state[8], tmp, ct0, ct1, msg0, msg1;
+    __m128i state[8], tmp, msg0, msg1;
 
     if (clen < 16) return 1; 
 
