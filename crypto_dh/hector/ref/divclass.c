@@ -1,3 +1,5 @@
+// 20241017 djb: eliminate cpucycles()
+
 /*
  * hector/src/divclass.c version 20080403
  * Peter Schwabe & Peter Birkner
@@ -6,7 +8,6 @@
 
 #include "divclass.h"
 #include "field.h"
-#include "cpucycles.h"
 #include "config.h"
 #include "wnaf.h"
 
@@ -402,7 +403,7 @@ void divclass_double(divclass rop, const divclass op)
 }
 
 // Compute the inverse of a divisor class, affine input assumed!
-inline void divclass_negaff(divclass rop, const divclass op)
+static inline void divclass_negaff(divclass rop, const divclass op)
 {
 	Kset(rop->m_U1,op->m_U1);
 	Kset(rop->m_U0,op->m_U0);

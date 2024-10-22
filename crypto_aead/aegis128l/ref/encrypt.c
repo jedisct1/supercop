@@ -5,6 +5,8 @@
 #define inline __inline
 #endif
 
+#define AESROUND CRYPTO_NAMESPACE(AESROUND)
+
 void AESROUND(unsigned char *out, unsigned char *in, unsigned char *rk);
 
 #define XOR128(x,y,z) {                                                                             \
@@ -19,7 +21,7 @@ void AESROUND(unsigned char *out, unsigned char *in, unsigned char *rk);
 
 // The initialization state of AEGIS
 /*The input to initialization is the 128-bit key; 128-bit IV;*/
-void aegis128L_initialization(const unsigned char *key, const unsigned char *iv, unsigned char *state)
+static void aegis128L_initialization(const unsigned char *key, const unsigned char *iv, unsigned char *state)
 {
        int i;
        unsigned char tmp[16];
@@ -55,7 +57,7 @@ void aegis128L_initialization(const unsigned char *key, const unsigned char *iv,
 
 
 //the finalization state of AEGIS
-void aegis128L_tag_generation(unsigned long msglen, unsigned long adlen, unsigned char maclen, unsigned char *mac, unsigned char *state)
+static void aegis128L_tag_generation(unsigned long msglen, unsigned long adlen, unsigned char maclen, unsigned char *mac, unsigned char *state)
 {
         int i;
 
@@ -97,7 +99,7 @@ void aegis128L_tag_generation(unsigned long msglen, unsigned long adlen, unsigne
 
 
 //one step of encryption
-inline void aegis128L_enc_aut_step(const unsigned char *plaintextblk,
+static inline void aegis128L_enc_aut_step(const unsigned char *plaintextblk,
        unsigned char *ciphertextblk, unsigned char *state)
 {
     unsigned char tmp[16];
@@ -130,7 +132,7 @@ inline void aegis128L_enc_aut_step(const unsigned char *plaintextblk,
 
 
 //one step of encryption
-inline void aegis128L_dec_aut_step(unsigned char *plaintextblk,
+static inline void aegis128L_dec_aut_step(unsigned char *plaintextblk,
        const unsigned char *ciphertextblk, unsigned char *state)
 {
     unsigned char tmp[16];

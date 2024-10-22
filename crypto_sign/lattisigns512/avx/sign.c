@@ -1,3 +1,5 @@
+// 20241017 djb: eliminate cpucycles()
+
 /*
  * File:   lattisigns512-20130329/sign.c
  * Author: Gim Güneysu, Tobias Oder, Thomas Pöppelmann, Peter Schwabe
@@ -9,7 +11,6 @@
 #include "poly.h"
 #include "params.h"
 #include "crypto_hash_sha512.h"
-#include "cpucycles.h"
 
 
 static void hash160(unsigned char h[20], const unsigned char *m, unsigned long long mlen)
@@ -85,7 +86,6 @@ int crypto_sign(unsigned char *sm,
 
   while(notyet)
   {
-//    t1 = cpucycles();
     cnt++;
     notyet = 0;
     
@@ -133,8 +133,6 @@ int crypto_sign(unsigned char *sm,
     poly_sub_nored(tmp, tmp, z2);
 
     notyet |= poly_cannotcompress(tmp, z2);
-//    t2 = cpucycles();
-//    printf("cycles: %llu\n",t2-t1); 
   }
   poly_smallcoeff_pack(sm+20,z1);
   poly_compress(sm+1044, tmp, z2);

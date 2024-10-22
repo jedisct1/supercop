@@ -13,6 +13,9 @@
 #include "wnaf.h"
 #include "sizes.h"
 
+divclass *generator_multiples1;
+divclass *generator_multiples2;
+
 // Include code depending on the architecture
 #if (GMP_LIMB_BITS == 32)
 #include "x86_32/generator.c"

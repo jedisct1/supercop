@@ -268,7 +268,7 @@ unsigned char TE3[1024] = {
 0xb0,0xb0,0xcb,0x7b,  0x54,0x54,0xfc,0xa8,  0xbb,0xbb,0xd6,0x6d,  0x16,0x16,0x3a,0x2c};
 
 
-void AESROUND(unsigned char *out, unsigned char *in, unsigned char *rk)
+void CRYPTO_NAMESPACE(AESROUND)(unsigned char *out, unsigned char *in, unsigned char *rk)
 {
       ((U32*)out)[0] = ((U32*)TE0)[*(in+0)]  ^ ((U32*)TE1)[*(in+5)]  ^ ((U32*)TE2)[*(in+10)] ^ ((U32*)TE3)[*(in+15)] ^ ((U32*)rk)[0];
       ((U32*)out)[1] = ((U32*)TE0)[*(in+4)]  ^ ((U32*)TE1)[*(in+9)]  ^ ((U32*)TE2)[*(in+14)] ^ ((U32*)TE3)[*(in+3)]  ^ ((U32*)rk)[1];

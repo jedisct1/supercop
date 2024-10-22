@@ -1,5 +1,9 @@
+// 20241016 djb: added __attribute__((unused))
+// 20241016 djb: removed some unused i variables
+
 #ifndef HAVE_NATIVE_ADDMUL1_1
 #define HAVE_LONGLONG_ADDMUL1_1 1
+__attribute__((unused))
 static void
 addmul1_1(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t c)
 {
@@ -19,6 +23,7 @@ addmul1_1(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t c)
 
 #ifndef HAVE_NATIVE_ADDMUL1_2
 #define HAVE_LONGLONG_ADDMUL1_2 1
+__attribute__((unused))
 static void
 addmul1_2(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t c)
 {
@@ -46,6 +51,7 @@ addmul1_2(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t c)
 
 #ifndef HAVE_NATIVE_ADDMUL1_3
 #define HAVE_LONGLONG_ADDMUL1_3 1
+__attribute__((unused))
 static void
 addmul1_3(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t c)
 {
@@ -81,6 +87,7 @@ addmul1_3(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t c)
 
 #ifndef HAVE_NATIVE_ADDMUL1_4
 #define HAVE_LONGLONG_ADDMUL1_4 1
+__attribute__((unused))
 static void
 addmul1_4(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t c)
 {
@@ -124,6 +131,7 @@ addmul1_4(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t c)
 
 #ifndef HAVE_NATIVE_ADDMUL1_5
 #define HAVE_LONGLONG_ADDMUL1_5 1
+__attribute__((unused))
 static void
 addmul1_5(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t c)
 {
@@ -175,6 +183,7 @@ addmul1_5(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t c)
 
 #ifndef HAVE_NATIVE_ADDMUL1_6
 #define HAVE_LONGLONG_ADDMUL1_6 1
+__attribute__((unused))
 static void
 addmul1_6(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t c)
 {
@@ -234,6 +243,7 @@ addmul1_6(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t c)
 
 #ifndef HAVE_NATIVE_ADDMUL1_7
 #define HAVE_LONGLONG_ADDMUL1_7 1
+__attribute__((unused))
 static void
 addmul1_7(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t c)
 {
@@ -301,6 +311,7 @@ addmul1_7(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t c)
 
 #ifndef HAVE_NATIVE_ADDMUL1_8
 #define HAVE_LONGLONG_ADDMUL1_8 1
+__attribute__((unused))
 static void
 addmul1_8(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t c)
 {
@@ -376,6 +387,7 @@ addmul1_8(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t c)
 
 #ifndef HAVE_NATIVE_ADDMUL1_9
 #define HAVE_LONGLONG_ADDMUL1_9 1
+__attribute__((unused))
 static void
 addmul1_9(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t c)
 {
@@ -459,6 +471,7 @@ addmul1_9(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t c)
 
 #ifndef HAVE_NATIVE_MUL1_1
 #define HAVE_LONGLONG_MUL1_1 1
+__attribute__((unused))
 static void
 mul1_1(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t y)
 {
@@ -471,6 +484,7 @@ mul1_1(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t y)
 
 #ifndef HAVE_NATIVE_MUL1_2
 #define HAVE_LONGLONG_MUL1_2 1
+__attribute__((unused))
 static void
 mul1_2(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t y)
 {
@@ -483,6 +497,7 @@ mul1_2(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t y)
 
 #ifndef HAVE_NATIVE_MUL1_3
 #define HAVE_LONGLONG_MUL1_3 1
+__attribute__((unused))
 static void
 mul1_3(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t y)
 {
@@ -495,6 +510,7 @@ mul1_3(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t y)
 
 #ifndef HAVE_NATIVE_MUL1_4
 #define HAVE_LONGLONG_MUL1_4 1
+__attribute__((unused))
 static void
 mul1_4(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t y)
 {
@@ -507,6 +523,7 @@ mul1_4(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t y)
 
 #ifndef HAVE_NATIVE_MUL1_5
 #define HAVE_LONGLONG_MUL1_5 1
+__attribute__((unused))
 static void
 mul1_5(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t y)
 {
@@ -519,6 +536,7 @@ mul1_5(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t y)
 
 #ifndef HAVE_NATIVE_MUL1_6
 #define HAVE_LONGLONG_MUL1_6 1
+__attribute__((unused))
 static void
 mul1_6(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t y)
 {
@@ -531,6 +549,7 @@ mul1_6(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t y)
 
 #ifndef HAVE_NATIVE_MUL1_7
 #define HAVE_LONGLONG_MUL1_7 1
+__attribute__((unused))
 static void
 mul1_7(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t y)
 {
@@ -543,6 +562,7 @@ mul1_7(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t y)
 
 #ifndef HAVE_NATIVE_MUL1_8
 #define HAVE_LONGLONG_MUL1_8 1
+__attribute__((unused))
 static void
 mul1_8(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t y)
 {
@@ -555,6 +575,7 @@ mul1_8(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t y)
 
 #ifndef HAVE_NATIVE_MUL1_9
 #define HAVE_LONGLONG_MUL1_9 1
+__attribute__((unused))
 static void
 mul1_9(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t y)
 {
@@ -567,6 +588,7 @@ mul1_9(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t y)
 
 #ifndef HAVE_NATIVE_SHORTMUL_1
 #define HAVE_LONGLONG_SHORTMUL_1 1
+__attribute__((unused))
 static void
 shortmul_1(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 {
@@ -579,6 +601,7 @@ shortmul_1(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 
 #ifndef HAVE_NATIVE_SHORTMUL_2
 #define HAVE_LONGLONG_SHORTMUL_2 1
+__attribute__((unused))
 static void
 shortmul_2(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 {
@@ -593,6 +616,7 @@ shortmul_2(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 
 #ifndef HAVE_NATIVE_SHORTMUL_3
 #define HAVE_LONGLONG_SHORTMUL_3 1
+__attribute__((unused))
 static void
 shortmul_3(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 {
@@ -609,6 +633,7 @@ shortmul_3(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 
 #ifndef HAVE_NATIVE_SHORTMUL_4
 #define HAVE_LONGLONG_SHORTMUL_4 1
+__attribute__((unused))
 static void
 shortmul_4(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 {
@@ -627,6 +652,7 @@ shortmul_4(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 
 #ifndef HAVE_NATIVE_SHORTMUL_5
 #define HAVE_LONGLONG_SHORTMUL_5 1
+__attribute__((unused))
 static void
 shortmul_5(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 {
@@ -647,6 +673,7 @@ shortmul_5(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 
 #ifndef HAVE_NATIVE_SHORTMUL_6
 #define HAVE_LONGLONG_SHORTMUL_6 1
+__attribute__((unused))
 static void
 shortmul_6(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 {
@@ -669,6 +696,7 @@ shortmul_6(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 
 #ifndef HAVE_NATIVE_SHORTMUL_7
 #define HAVE_LONGLONG_SHORTMUL_7 1
+__attribute__((unused))
 static void
 shortmul_7(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 {
@@ -693,6 +721,7 @@ shortmul_7(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 
 #ifndef HAVE_NATIVE_SHORTMUL_8
 #define HAVE_LONGLONG_SHORTMUL_8 1
+__attribute__((unused))
 static void
 shortmul_8(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 {
@@ -719,6 +748,7 @@ shortmul_8(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 
 #ifndef HAVE_NATIVE_SHORTMUL_9
 #define HAVE_LONGLONG_SHORTMUL_9 1
+__attribute__((unused))
 static void
 shortmul_9(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 {
@@ -747,6 +777,7 @@ shortmul_9(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 
 #ifndef HAVE_NATIVE_MUL_1
 #define HAVE_LONGLONG_MUL_1 1
+__attribute__((unused))
 static void
 mul_1(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 {
@@ -759,6 +790,7 @@ mul_1(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 
 #ifndef HAVE_NATIVE_MUL_2
 #define HAVE_LONGLONG_MUL_2 1
+__attribute__((unused))
 static void
 mul_2(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 {
@@ -772,6 +804,7 @@ mul_2(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 
 #ifndef HAVE_NATIVE_MUL_3
 #define HAVE_LONGLONG_MUL_3 1
+__attribute__((unused))
 static void
 mul_3(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 {
@@ -786,6 +819,7 @@ mul_3(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 
 #ifndef HAVE_NATIVE_MUL_4
 #define HAVE_LONGLONG_MUL_4 1
+__attribute__((unused))
 static void
 mul_4(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 {
@@ -801,6 +835,7 @@ mul_4(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 
 #ifndef HAVE_NATIVE_MUL_5
 #define HAVE_LONGLONG_MUL_5 1
+__attribute__((unused))
 static void
 mul_5(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 {
@@ -817,6 +852,7 @@ mul_5(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 
 #ifndef HAVE_NATIVE_MUL_6
 #define HAVE_LONGLONG_MUL_6 1
+__attribute__((unused))
 static void
 mul_6(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 {
@@ -834,6 +870,7 @@ mul_6(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 
 #ifndef HAVE_NATIVE_MUL_7
 #define HAVE_LONGLONG_MUL_7 1
+__attribute__((unused))
 static void
 mul_7(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 {
@@ -852,6 +889,7 @@ mul_7(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 
 #ifndef HAVE_NATIVE_MUL_8
 #define HAVE_LONGLONG_MUL_8 1
+__attribute__((unused))
 static void
 mul_8(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 {
@@ -871,6 +909,7 @@ mul_8(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 
 #ifndef HAVE_NATIVE_MUL_9
 #define HAVE_LONGLONG_MUL_9 1
+__attribute__((unused))
 static void
 mul_9(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 {
@@ -891,6 +930,7 @@ mul_9(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 
 #ifndef HAVE_NATIVE_SQR_1
 #define HAVE_LONGLONG_SQR_1 1
+__attribute__((unused))
 static void
 sqr_1(mp_limb_t *z, const mp_limb_t *x)
 {
@@ -908,6 +948,7 @@ sqr_1(mp_limb_t *z, const mp_limb_t *x)
 
 #ifndef HAVE_NATIVE_SQR_2
 #define HAVE_LONGLONG_SQR_2 1
+__attribute__((unused))
 static void
 sqr_2(mp_limb_t *z, const mp_limb_t *x)
 {
@@ -927,6 +968,7 @@ sqr_2(mp_limb_t *z, const mp_limb_t *x)
 
 #ifndef HAVE_NATIVE_SQR_3
 #define HAVE_LONGLONG_SQR_3 1
+__attribute__((unused))
 static void
 sqr_3(mp_limb_t *z, const mp_limb_t *x)
 {
@@ -948,6 +990,7 @@ sqr_3(mp_limb_t *z, const mp_limb_t *x)
 
 #ifndef HAVE_NATIVE_SQR_4
 #define HAVE_LONGLONG_SQR_4 1
+__attribute__((unused))
 static void
 sqr_4(mp_limb_t *z, const mp_limb_t *x)
 {
@@ -971,6 +1014,7 @@ sqr_4(mp_limb_t *z, const mp_limb_t *x)
 
 #ifndef HAVE_NATIVE_SQR_5
 #define HAVE_LONGLONG_SQR_5 1
+__attribute__((unused))
 static void
 sqr_5(mp_limb_t *z, const mp_limb_t *x)
 {
@@ -996,6 +1040,7 @@ sqr_5(mp_limb_t *z, const mp_limb_t *x)
 
 #ifndef HAVE_NATIVE_SQR_6
 #define HAVE_LONGLONG_SQR_6 1
+__attribute__((unused))
 static void
 sqr_6(mp_limb_t *z, const mp_limb_t *x)
 {
@@ -1023,6 +1068,7 @@ sqr_6(mp_limb_t *z, const mp_limb_t *x)
 
 #ifndef HAVE_NATIVE_SQR_7
 #define HAVE_LONGLONG_SQR_7 1
+__attribute__((unused))
 static void
 sqr_7(mp_limb_t *z, const mp_limb_t *x)
 {
@@ -1052,6 +1098,7 @@ sqr_7(mp_limb_t *z, const mp_limb_t *x)
 
 #ifndef HAVE_NATIVE_SQR_8
 #define HAVE_LONGLONG_SQR_8 1
+__attribute__((unused))
 static void
 sqr_8(mp_limb_t *z, const mp_limb_t *x)
 {
@@ -1083,6 +1130,7 @@ sqr_8(mp_limb_t *z, const mp_limb_t *x)
 
 #ifndef HAVE_NATIVE_SQR_9
 #define HAVE_LONGLONG_SQR_9 1
+__attribute__((unused))
 static void
 sqr_9(mp_limb_t *z, const mp_limb_t *x)
 {
@@ -1116,6 +1164,7 @@ sqr_9(mp_limb_t *z, const mp_limb_t *x)
 
 #ifndef HAVE_NATIVE_ADD_1
 #define HAVE_LONGLONG_ADD_1 1
+__attribute__((unused))
 static void
 add_1(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 {
@@ -1134,6 +1183,7 @@ add_1(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 
 #ifndef HAVE_NATIVE_ADD_2
 #define HAVE_LONGLONG_ADD_2 1
+__attribute__((unused))
 static void
 add_2(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 {
@@ -1159,6 +1209,7 @@ add_2(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 
 #ifndef HAVE_NATIVE_ADD_3
 #define HAVE_LONGLONG_ADD_3 1
+__attribute__((unused))
 static void
 add_3(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 {
@@ -1191,6 +1242,7 @@ add_3(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 
 #ifndef HAVE_NATIVE_ADD_4
 #define HAVE_LONGLONG_ADD_4 1
+__attribute__((unused))
 static void
 add_4(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 {
@@ -1230,6 +1282,7 @@ add_4(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 
 #ifndef HAVE_NATIVE_ADD_5
 #define HAVE_LONGLONG_ADD_5 1
+__attribute__((unused))
 static void
 add_5(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 {
@@ -1276,6 +1329,7 @@ add_5(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 
 #ifndef HAVE_NATIVE_ADD_6
 #define HAVE_LONGLONG_ADD_6 1
+__attribute__((unused))
 static void
 add_6(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 {
@@ -1329,6 +1383,7 @@ add_6(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 
 #ifndef HAVE_NATIVE_ADD_7
 #define HAVE_LONGLONG_ADD_7 1
+__attribute__((unused))
 static void
 add_7(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 {
@@ -1389,6 +1444,7 @@ add_7(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 
 #ifndef HAVE_NATIVE_ADD_8
 #define HAVE_LONGLONG_ADD_8 1
+__attribute__((unused))
 static void
 add_8(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 {
@@ -1456,6 +1512,7 @@ add_8(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 
 #ifndef HAVE_NATIVE_ADD_9
 #define HAVE_LONGLONG_ADD_9 1
+__attribute__((unused))
 static void
 add_9(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 {
@@ -1530,6 +1587,7 @@ add_9(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 
 #ifndef HAVE_NATIVE_SUB_1
 #define HAVE_LONGLONG_SUB_1 1
+__attribute__((unused))
 static void
 sub_1(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 {
@@ -1548,6 +1606,7 @@ sub_1(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 
 #ifndef HAVE_NATIVE_SUB_2
 #define HAVE_LONGLONG_SUB_2 1
+__attribute__((unused))
 static void
 sub_2(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 {
@@ -1573,6 +1632,7 @@ sub_2(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 
 #ifndef HAVE_NATIVE_SUB_3
 #define HAVE_LONGLONG_SUB_3 1
+__attribute__((unused))
 static void
 sub_3(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 {
@@ -1605,6 +1665,7 @@ sub_3(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 
 #ifndef HAVE_NATIVE_SUB_4
 #define HAVE_LONGLONG_SUB_4 1
+__attribute__((unused))
 static void
 sub_4(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 {
@@ -1644,6 +1705,7 @@ sub_4(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 
 #ifndef HAVE_NATIVE_SUB_5
 #define HAVE_LONGLONG_SUB_5 1
+__attribute__((unused))
 static void
 sub_5(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 {
@@ -1690,6 +1752,7 @@ sub_5(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 
 #ifndef HAVE_NATIVE_SUB_6
 #define HAVE_LONGLONG_SUB_6 1
+__attribute__((unused))
 static void
 sub_6(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 {
@@ -1743,6 +1806,7 @@ sub_6(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 
 #ifndef HAVE_NATIVE_SUB_7
 #define HAVE_LONGLONG_SUB_7 1
+__attribute__((unused))
 static void
 sub_7(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 {
@@ -1803,6 +1867,7 @@ sub_7(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 
 #ifndef HAVE_NATIVE_SUB_8
 #define HAVE_LONGLONG_SUB_8 1
+__attribute__((unused))
 static void
 sub_8(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 {
@@ -1870,6 +1935,7 @@ sub_8(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 
 #ifndef HAVE_NATIVE_SUB_9
 #define HAVE_LONGLONG_SUB_9 1
+__attribute__((unused))
 static void
 sub_9(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 {
@@ -1944,6 +2010,7 @@ sub_9(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 
 #ifndef HAVE_NATIVE_MOD_1
 #define HAVE_LONGLONG_MOD_1 1
+__attribute__((unused))
 static void
 mod_1(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *p)
 {
@@ -1958,6 +2025,7 @@ mod_1(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *p)
 
 #ifndef HAVE_NATIVE_MOD_2
 #define HAVE_LONGLONG_MOD_2 1
+__attribute__((unused))
 static void
 mod_2(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *p)
 {
@@ -1972,6 +2040,7 @@ mod_2(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *p)
 
 #ifndef HAVE_NATIVE_MOD_3
 #define HAVE_LONGLONG_MOD_3 1
+__attribute__((unused))
 static void
 mod_3(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *p)
 {
@@ -1986,6 +2055,7 @@ mod_3(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *p)
 
 #ifndef HAVE_NATIVE_MOD_4
 #define HAVE_LONGLONG_MOD_4 1
+__attribute__((unused))
 static void
 mod_4(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *p)
 {
@@ -2000,6 +2070,7 @@ mod_4(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *p)
 
 #ifndef HAVE_NATIVE_MOD_5
 #define HAVE_LONGLONG_MOD_5 1
+__attribute__((unused))
 static void
 mod_5(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *p)
 {
@@ -2014,6 +2085,7 @@ mod_5(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *p)
 
 #ifndef HAVE_NATIVE_MOD_6
 #define HAVE_LONGLONG_MOD_6 1
+__attribute__((unused))
 static void
 mod_6(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *p)
 {
@@ -2028,6 +2100,7 @@ mod_6(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *p)
 
 #ifndef HAVE_NATIVE_MOD_7
 #define HAVE_LONGLONG_MOD_7 1
+__attribute__((unused))
 static void
 mod_7(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *p)
 {
@@ -2042,6 +2115,7 @@ mod_7(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *p)
 
 #ifndef HAVE_NATIVE_MOD_8
 #define HAVE_LONGLONG_MOD_8 1
+__attribute__((unused))
 static void
 mod_8(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *p)
 {
@@ -2056,6 +2130,7 @@ mod_8(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *p)
 
 #ifndef HAVE_NATIVE_MOD_9
 #define HAVE_LONGLONG_MOD_9 1
+__attribute__((unused))
 static void
 mod_9(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *p)
 {
@@ -2070,6 +2145,7 @@ mod_9(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *p)
 
 #ifndef HAVE_NATIVE_CMP_1
 #define HAVE_LONGLONG_CMP_1 1
+__attribute__((unused))
 static int
 cmp_1(const mp_limb_t *x, const mp_limb_t *y)
 {
@@ -2086,6 +2162,7 @@ cmp_1(const mp_limb_t *x, const mp_limb_t *y)
 
 #ifndef HAVE_NATIVE_CMP_2
 #define HAVE_LONGLONG_CMP_2 1
+__attribute__((unused))
 static int
 cmp_2(const mp_limb_t *x, const mp_limb_t *y)
 {
@@ -2102,6 +2179,7 @@ cmp_2(const mp_limb_t *x, const mp_limb_t *y)
 
 #ifndef HAVE_NATIVE_CMP_3
 #define HAVE_LONGLONG_CMP_3 1
+__attribute__((unused))
 static int
 cmp_3(const mp_limb_t *x, const mp_limb_t *y)
 {
@@ -2118,6 +2196,7 @@ cmp_3(const mp_limb_t *x, const mp_limb_t *y)
 
 #ifndef HAVE_NATIVE_CMP_4
 #define HAVE_LONGLONG_CMP_4 1
+__attribute__((unused))
 static int
 cmp_4(const mp_limb_t *x, const mp_limb_t *y)
 {
@@ -2134,6 +2213,7 @@ cmp_4(const mp_limb_t *x, const mp_limb_t *y)
 
 #ifndef HAVE_NATIVE_CMP_5
 #define HAVE_LONGLONG_CMP_5 1
+__attribute__((unused))
 static int
 cmp_5(const mp_limb_t *x, const mp_limb_t *y)
 {
@@ -2150,6 +2230,7 @@ cmp_5(const mp_limb_t *x, const mp_limb_t *y)
 
 #ifndef HAVE_NATIVE_CMP_6
 #define HAVE_LONGLONG_CMP_6 1
+__attribute__((unused))
 static int
 cmp_6(const mp_limb_t *x, const mp_limb_t *y)
 {
@@ -2166,6 +2247,7 @@ cmp_6(const mp_limb_t *x, const mp_limb_t *y)
 
 #ifndef HAVE_NATIVE_CMP_7
 #define HAVE_LONGLONG_CMP_7 1
+__attribute__((unused))
 static int
 cmp_7(const mp_limb_t *x, const mp_limb_t *y)
 {
@@ -2182,6 +2264,7 @@ cmp_7(const mp_limb_t *x, const mp_limb_t *y)
 
 #ifndef HAVE_NATIVE_CMP_8
 #define HAVE_LONGLONG_CMP_8 1
+__attribute__((unused))
 static int
 cmp_8(const mp_limb_t *x, const mp_limb_t *y)
 {
@@ -2198,6 +2281,7 @@ cmp_8(const mp_limb_t *x, const mp_limb_t *y)
 
 #ifndef HAVE_NATIVE_CMP_9
 #define HAVE_LONGLONG_CMP_9 1
+__attribute__((unused))
 static int
 cmp_9(const mp_limb_t *x, const mp_limb_t *y)
 {
@@ -2214,6 +2298,7 @@ cmp_9(const mp_limb_t *x, const mp_limb_t *y)
 
 #ifndef HAVE_NATIVE_REDC_1
 #define HAVE_LONGLONG_REDC_1 1
+__attribute__((unused))
 static void
 redc_1(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *mip, const mp_limb_t *p) 
 {
@@ -2233,6 +2318,7 @@ redc_1(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *mip, const mp_limb_t *
 
 #ifndef HAVE_NATIVE_REDC_2
 #define HAVE_LONGLONG_REDC_2 1
+__attribute__((unused))
 static void
 redc_2(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *mip, const mp_limb_t *p) 
 {
@@ -2252,6 +2338,7 @@ redc_2(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *mip, const mp_limb_t *
 
 #ifndef HAVE_NATIVE_REDC_3
 #define HAVE_LONGLONG_REDC_3 1
+__attribute__((unused))
 static void
 redc_3(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *mip, const mp_limb_t *p) 
 {
@@ -2271,6 +2358,7 @@ redc_3(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *mip, const mp_limb_t *
 
 #ifndef HAVE_NATIVE_REDC_4
 #define HAVE_LONGLONG_REDC_4 1
+__attribute__((unused))
 static void
 redc_4(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *mip, const mp_limb_t *p) 
 {
@@ -2290,6 +2378,7 @@ redc_4(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *mip, const mp_limb_t *
 
 #ifndef HAVE_NATIVE_REDC_5
 #define HAVE_LONGLONG_REDC_5 1
+__attribute__((unused))
 static void
 redc_5(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *mip, const mp_limb_t *p) 
 {
@@ -2309,6 +2398,7 @@ redc_5(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *mip, const mp_limb_t *
 
 #ifndef HAVE_NATIVE_REDC_6
 #define HAVE_LONGLONG_REDC_6 1
+__attribute__((unused))
 static void
 redc_6(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *mip, const mp_limb_t *p) 
 {
@@ -2328,6 +2418,7 @@ redc_6(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *mip, const mp_limb_t *
 
 #ifndef HAVE_NATIVE_REDC_7
 #define HAVE_LONGLONG_REDC_7 1
+__attribute__((unused))
 static void
 redc_7(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *mip, const mp_limb_t *p) 
 {
@@ -2347,6 +2438,7 @@ redc_7(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *mip, const mp_limb_t *
 
 #ifndef HAVE_NATIVE_REDC_8
 #define HAVE_LONGLONG_REDC_8 1
+__attribute__((unused))
 static void
 redc_8(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *mip, const mp_limb_t *p) 
 {
@@ -2366,6 +2458,7 @@ redc_8(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *mip, const mp_limb_t *
 
 #ifndef HAVE_NATIVE_REDC_9
 #define HAVE_LONGLONG_REDC_9 1
+__attribute__((unused))
 static void
 redc_9(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *mip, const mp_limb_t *p) 
 {
@@ -2385,6 +2478,7 @@ redc_9(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *mip, const mp_limb_t *
 
 #ifndef HAVE_NATIVE_MGY_ENCODE_1
 #define HAVE_LONGLONG_MGY_ENCODE_1 1
+__attribute__((unused))
 static void
 mgy_encode_1(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *p) 
 {
@@ -2400,6 +2494,7 @@ mgy_encode_1(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *p)
 
 #ifndef HAVE_NATIVE_MGY_ENCODE_2
 #define HAVE_LONGLONG_MGY_ENCODE_2 1
+__attribute__((unused))
 static void
 mgy_encode_2(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *p) 
 {
@@ -2415,6 +2510,7 @@ mgy_encode_2(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *p)
 
 #ifndef HAVE_NATIVE_MGY_ENCODE_3
 #define HAVE_LONGLONG_MGY_ENCODE_3 1
+__attribute__((unused))
 static void
 mgy_encode_3(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *p) 
 {
@@ -2430,6 +2526,7 @@ mgy_encode_3(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *p)
 
 #ifndef HAVE_NATIVE_MGY_ENCODE_4
 #define HAVE_LONGLONG_MGY_ENCODE_4 1
+__attribute__((unused))
 static void
 mgy_encode_4(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *p) 
 {
@@ -2445,6 +2542,7 @@ mgy_encode_4(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *p)
 
 #ifndef HAVE_NATIVE_MGY_ENCODE_5
 #define HAVE_LONGLONG_MGY_ENCODE_5 1
+__attribute__((unused))
 static void
 mgy_encode_5(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *p) 
 {
@@ -2460,6 +2558,7 @@ mgy_encode_5(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *p)
 
 #ifndef HAVE_NATIVE_MGY_ENCODE_6
 #define HAVE_LONGLONG_MGY_ENCODE_6 1
+__attribute__((unused))
 static void
 mgy_encode_6(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *p) 
 {
@@ -2475,6 +2574,7 @@ mgy_encode_6(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *p)
 
 #ifndef HAVE_NATIVE_MGY_ENCODE_7
 #define HAVE_LONGLONG_MGY_ENCODE_7 1
+__attribute__((unused))
 static void
 mgy_encode_7(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *p) 
 {
@@ -2490,6 +2590,7 @@ mgy_encode_7(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *p)
 
 #ifndef HAVE_NATIVE_MGY_ENCODE_8
 #define HAVE_LONGLONG_MGY_ENCODE_8 1
+__attribute__((unused))
 static void
 mgy_encode_8(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *p) 
 {
@@ -2505,6 +2606,7 @@ mgy_encode_8(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *p)
 
 #ifndef HAVE_NATIVE_MGY_ENCODE_9
 #define HAVE_LONGLONG_MGY_ENCODE_9 1
+__attribute__((unused))
 static void
 mgy_encode_9(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *p) 
 {
@@ -2520,11 +2622,11 @@ mgy_encode_9(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *p)
 
 #ifndef HAVE_NATIVE_MGY_DECODE_1
 #define HAVE_LONGLONG_MGY_DECODE_1 1
+__attribute__((unused))
 static void
 mgy_decode_1(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *invR, const mp_limb_t *p) 
 {
   mp_limb_t t[2];
-  int i;
   mul_1(t, x, invR);
   mod_1(z, t, p);
 }
@@ -2532,11 +2634,11 @@ mgy_decode_1(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *invR, const mp_l
 
 #ifndef HAVE_NATIVE_MGY_DECODE_2
 #define HAVE_LONGLONG_MGY_DECODE_2 1
+__attribute__((unused))
 static void
 mgy_decode_2(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *invR, const mp_limb_t *p) 
 {
   mp_limb_t t[4];
-  int i;
   mul_2(t, x, invR);
   mod_2(z, t, p);
 }
@@ -2544,11 +2646,11 @@ mgy_decode_2(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *invR, const mp_l
 
 #ifndef HAVE_NATIVE_MGY_DECODE_3
 #define HAVE_LONGLONG_MGY_DECODE_3 1
+__attribute__((unused))
 static void
 mgy_decode_3(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *invR, const mp_limb_t *p) 
 {
   mp_limb_t t[6];
-  int i;
   mul_3(t, x, invR);
   mod_3(z, t, p);
 }
@@ -2556,11 +2658,11 @@ mgy_decode_3(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *invR, const mp_l
 
 #ifndef HAVE_NATIVE_MGY_DECODE_4
 #define HAVE_LONGLONG_MGY_DECODE_4 1
+__attribute__((unused))
 static void
 mgy_decode_4(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *invR, const mp_limb_t *p) 
 {
   mp_limb_t t[8];
-  int i;
   mul_4(t, x, invR);
   mod_4(z, t, p);
 }
@@ -2568,11 +2670,11 @@ mgy_decode_4(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *invR, const mp_l
 
 #ifndef HAVE_NATIVE_MGY_DECODE_5
 #define HAVE_LONGLONG_MGY_DECODE_5 1
+__attribute__((unused))
 static void
 mgy_decode_5(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *invR, const mp_limb_t *p) 
 {
   mp_limb_t t[10];
-  int i;
   mul_5(t, x, invR);
   mod_5(z, t, p);
 }
@@ -2580,11 +2682,11 @@ mgy_decode_5(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *invR, const mp_l
 
 #ifndef HAVE_NATIVE_MGY_DECODE_6
 #define HAVE_LONGLONG_MGY_DECODE_6 1
+__attribute__((unused))
 static void
 mgy_decode_6(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *invR, const mp_limb_t *p) 
 {
   mp_limb_t t[12];
-  int i;
   mul_6(t, x, invR);
   mod_6(z, t, p);
 }
@@ -2592,11 +2694,11 @@ mgy_decode_6(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *invR, const mp_l
 
 #ifndef HAVE_NATIVE_MGY_DECODE_7
 #define HAVE_LONGLONG_MGY_DECODE_7 1
+__attribute__((unused))
 static void
 mgy_decode_7(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *invR, const mp_limb_t *p) 
 {
   mp_limb_t t[14];
-  int i;
   mul_7(t, x, invR);
   mod_7(z, t, p);
 }
@@ -2604,11 +2706,11 @@ mgy_decode_7(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *invR, const mp_l
 
 #ifndef HAVE_NATIVE_MGY_DECODE_8
 #define HAVE_LONGLONG_MGY_DECODE_8 1
+__attribute__((unused))
 static void
 mgy_decode_8(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *invR, const mp_limb_t *p) 
 {
   mp_limb_t t[16];
-  int i;
   mul_8(t, x, invR);
   mod_8(z, t, p);
 }
@@ -2616,11 +2718,11 @@ mgy_decode_8(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *invR, const mp_l
 
 #ifndef HAVE_NATIVE_MGY_DECODE_9
 #define HAVE_LONGLONG_MGY_DECODE_9 1
+__attribute__((unused))
 static void
 mgy_decode_9(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *invR, const mp_limb_t *p) 
 {
   mp_limb_t t[18];
-  int i;
   mul_9(t, x, invR);
   mod_9(z, t, p);
 }
@@ -2628,6 +2730,7 @@ mgy_decode_9(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *invR, const mp_l
 
 #ifndef HAVE_NATIVE_SHIFTS_1
 #define HAVE_LONGLONG_SHIFTS_1 1
+__attribute__((unused))
 static inline void lshift_1(mp_limb_t *a, int cnt) {
   int i;
   int dnt = GMP_NUMB_BITS - cnt;
@@ -2640,6 +2743,7 @@ static inline void lshift_1(mp_limb_t *a, int cnt) {
   }
 }
 
+__attribute__((unused))
 static inline void long_lshift_1(mp_limb_t *a, int off, int cnt) {
   int i;
   int dnt = GMP_NUMB_BITS - cnt;
@@ -2661,6 +2765,7 @@ static inline void long_lshift_1(mp_limb_t *a, int off, int cnt) {
 }
 
 
+__attribute__((unused))
 static inline void rshift_1(mp_limb_t *a, int cnt) {
   int i;
   int dnt = GMP_NUMB_BITS - cnt;
@@ -2674,6 +2779,7 @@ static inline void rshift_1(mp_limb_t *a, int cnt) {
 }
 
 
+__attribute__((unused))
 static inline void long_rshift_1(mp_limb_t *a, int off, int cnt) {
   int i;
   int dnt = GMP_NUMB_BITS - cnt;
@@ -2697,6 +2803,7 @@ static inline void long_rshift_1(mp_limb_t *a, int off, int cnt) {
 
 #ifndef HAVE_NATIVE_SHIFTS_2
 #define HAVE_LONGLONG_SHIFTS_2 1
+__attribute__((unused))
 static inline void lshift_2(mp_limb_t *a, int cnt) {
   int i;
   int dnt = GMP_NUMB_BITS - cnt;
@@ -2709,6 +2816,7 @@ static inline void lshift_2(mp_limb_t *a, int cnt) {
   }
 }
 
+__attribute__((unused))
 static inline void long_lshift_2(mp_limb_t *a, int off, int cnt) {
   int i;
   int dnt = GMP_NUMB_BITS - cnt;
@@ -2730,6 +2838,7 @@ static inline void long_lshift_2(mp_limb_t *a, int off, int cnt) {
 }
 
 
+__attribute__((unused))
 static inline void rshift_2(mp_limb_t *a, int cnt) {
   int i;
   int dnt = GMP_NUMB_BITS - cnt;
@@ -2743,6 +2852,7 @@ static inline void rshift_2(mp_limb_t *a, int cnt) {
 }
 
 
+__attribute__((unused))
 static inline void long_rshift_2(mp_limb_t *a, int off, int cnt) {
   int i;
   int dnt = GMP_NUMB_BITS - cnt;
@@ -2766,6 +2876,7 @@ static inline void long_rshift_2(mp_limb_t *a, int off, int cnt) {
 
 #ifndef HAVE_NATIVE_SHIFTS_3
 #define HAVE_LONGLONG_SHIFTS_3 1
+__attribute__((unused))
 static inline void lshift_3(mp_limb_t *a, int cnt) {
   int i;
   int dnt = GMP_NUMB_BITS - cnt;
@@ -2778,6 +2889,7 @@ static inline void lshift_3(mp_limb_t *a, int cnt) {
   }
 }
 
+__attribute__((unused))
 static inline void long_lshift_3(mp_limb_t *a, int off, int cnt) {
   int i;
   int dnt = GMP_NUMB_BITS - cnt;
@@ -2799,6 +2911,7 @@ static inline void long_lshift_3(mp_limb_t *a, int off, int cnt) {
 }
 
 
+__attribute__((unused))
 static inline void rshift_3(mp_limb_t *a, int cnt) {
   int i;
   int dnt = GMP_NUMB_BITS - cnt;
@@ -2812,6 +2925,7 @@ static inline void rshift_3(mp_limb_t *a, int cnt) {
 }
 
 
+__attribute__((unused))
 static inline void long_rshift_3(mp_limb_t *a, int off, int cnt) {
   int i;
   int dnt = GMP_NUMB_BITS - cnt;
@@ -2835,6 +2949,7 @@ static inline void long_rshift_3(mp_limb_t *a, int off, int cnt) {
 
 #ifndef HAVE_NATIVE_SHIFTS_4
 #define HAVE_LONGLONG_SHIFTS_4 1
+__attribute__((unused))
 static inline void lshift_4(mp_limb_t *a, int cnt) {
   int i;
   int dnt = GMP_NUMB_BITS - cnt;
@@ -2847,6 +2962,7 @@ static inline void lshift_4(mp_limb_t *a, int cnt) {
   }
 }
 
+__attribute__((unused))
 static inline void long_lshift_4(mp_limb_t *a, int off, int cnt) {
   int i;
   int dnt = GMP_NUMB_BITS - cnt;
@@ -2868,6 +2984,7 @@ static inline void long_lshift_4(mp_limb_t *a, int off, int cnt) {
 }
 
 
+__attribute__((unused))
 static inline void rshift_4(mp_limb_t *a, int cnt) {
   int i;
   int dnt = GMP_NUMB_BITS - cnt;
@@ -2881,6 +2998,7 @@ static inline void rshift_4(mp_limb_t *a, int cnt) {
 }
 
 
+__attribute__((unused))
 static inline void long_rshift_4(mp_limb_t *a, int off, int cnt) {
   int i;
   int dnt = GMP_NUMB_BITS - cnt;
@@ -2904,6 +3022,7 @@ static inline void long_rshift_4(mp_limb_t *a, int off, int cnt) {
 
 #ifndef HAVE_NATIVE_SHIFTS_5
 #define HAVE_LONGLONG_SHIFTS_5 1
+__attribute__((unused))
 static inline void lshift_5(mp_limb_t *a, int cnt) {
   int i;
   int dnt = GMP_NUMB_BITS - cnt;
@@ -2916,6 +3035,7 @@ static inline void lshift_5(mp_limb_t *a, int cnt) {
   }
 }
 
+__attribute__((unused))
 static inline void long_lshift_5(mp_limb_t *a, int off, int cnt) {
   int i;
   int dnt = GMP_NUMB_BITS - cnt;
@@ -2937,6 +3057,7 @@ static inline void long_lshift_5(mp_limb_t *a, int off, int cnt) {
 }
 
 
+__attribute__((unused))
 static inline void rshift_5(mp_limb_t *a, int cnt) {
   int i;
   int dnt = GMP_NUMB_BITS - cnt;
@@ -2950,6 +3071,7 @@ static inline void rshift_5(mp_limb_t *a, int cnt) {
 }
 
 
+__attribute__((unused))
 static inline void long_rshift_5(mp_limb_t *a, int off, int cnt) {
   int i;
   int dnt = GMP_NUMB_BITS - cnt;
@@ -2973,6 +3095,7 @@ static inline void long_rshift_5(mp_limb_t *a, int off, int cnt) {
 
 #ifndef HAVE_NATIVE_SHIFTS_6
 #define HAVE_LONGLONG_SHIFTS_6 1
+__attribute__((unused))
 static inline void lshift_6(mp_limb_t *a, int cnt) {
   int i;
   int dnt = GMP_NUMB_BITS - cnt;
@@ -2985,6 +3108,7 @@ static inline void lshift_6(mp_limb_t *a, int cnt) {
   }
 }
 
+__attribute__((unused))
 static inline void long_lshift_6(mp_limb_t *a, int off, int cnt) {
   int i;
   int dnt = GMP_NUMB_BITS - cnt;
@@ -3006,6 +3130,7 @@ static inline void long_lshift_6(mp_limb_t *a, int off, int cnt) {
 }
 
 
+__attribute__((unused))
 static inline void rshift_6(mp_limb_t *a, int cnt) {
   int i;
   int dnt = GMP_NUMB_BITS - cnt;
@@ -3019,6 +3144,7 @@ static inline void rshift_6(mp_limb_t *a, int cnt) {
 }
 
 
+__attribute__((unused))
 static inline void long_rshift_6(mp_limb_t *a, int off, int cnt) {
   int i;
   int dnt = GMP_NUMB_BITS - cnt;
@@ -3042,6 +3168,7 @@ static inline void long_rshift_6(mp_limb_t *a, int off, int cnt) {
 
 #ifndef HAVE_NATIVE_SHIFTS_7
 #define HAVE_LONGLONG_SHIFTS_7 1
+__attribute__((unused))
 static inline void lshift_7(mp_limb_t *a, int cnt) {
   int i;
   int dnt = GMP_NUMB_BITS - cnt;
@@ -3054,6 +3181,7 @@ static inline void lshift_7(mp_limb_t *a, int cnt) {
   }
 }
 
+__attribute__((unused))
 static inline void long_lshift_7(mp_limb_t *a, int off, int cnt) {
   int i;
   int dnt = GMP_NUMB_BITS - cnt;
@@ -3075,6 +3203,7 @@ static inline void long_lshift_7(mp_limb_t *a, int off, int cnt) {
 }
 
 
+__attribute__((unused))
 static inline void rshift_7(mp_limb_t *a, int cnt) {
   int i;
   int dnt = GMP_NUMB_BITS - cnt;
@@ -3088,6 +3217,7 @@ static inline void rshift_7(mp_limb_t *a, int cnt) {
 }
 
 
+__attribute__((unused))
 static inline void long_rshift_7(mp_limb_t *a, int off, int cnt) {
   int i;
   int dnt = GMP_NUMB_BITS - cnt;
@@ -3111,6 +3241,7 @@ static inline void long_rshift_7(mp_limb_t *a, int off, int cnt) {
 
 #ifndef HAVE_NATIVE_SHIFTS_8
 #define HAVE_LONGLONG_SHIFTS_8 1
+__attribute__((unused))
 static inline void lshift_8(mp_limb_t *a, int cnt) {
   int i;
   int dnt = GMP_NUMB_BITS - cnt;
@@ -3123,6 +3254,7 @@ static inline void lshift_8(mp_limb_t *a, int cnt) {
   }
 }
 
+__attribute__((unused))
 static inline void long_lshift_8(mp_limb_t *a, int off, int cnt) {
   int i;
   int dnt = GMP_NUMB_BITS - cnt;
@@ -3144,6 +3276,7 @@ static inline void long_lshift_8(mp_limb_t *a, int off, int cnt) {
 }
 
 
+__attribute__((unused))
 static inline void rshift_8(mp_limb_t *a, int cnt) {
   int i;
   int dnt = GMP_NUMB_BITS - cnt;
@@ -3157,6 +3290,7 @@ static inline void rshift_8(mp_limb_t *a, int cnt) {
 }
 
 
+__attribute__((unused))
 static inline void long_rshift_8(mp_limb_t *a, int off, int cnt) {
   int i;
   int dnt = GMP_NUMB_BITS - cnt;
@@ -3180,6 +3314,7 @@ static inline void long_rshift_8(mp_limb_t *a, int off, int cnt) {
 
 #ifndef HAVE_NATIVE_SHIFTS_9
 #define HAVE_LONGLONG_SHIFTS_9 1
+__attribute__((unused))
 static inline void lshift_9(mp_limb_t *a, int cnt) {
   int i;
   int dnt = GMP_NUMB_BITS - cnt;
@@ -3192,6 +3327,7 @@ static inline void lshift_9(mp_limb_t *a, int cnt) {
   }
 }
 
+__attribute__((unused))
 static inline void long_lshift_9(mp_limb_t *a, int off, int cnt) {
   int i;
   int dnt = GMP_NUMB_BITS - cnt;
@@ -3213,6 +3349,7 @@ static inline void long_lshift_9(mp_limb_t *a, int off, int cnt) {
 }
 
 
+__attribute__((unused))
 static inline void rshift_9(mp_limb_t *a, int cnt) {
   int i;
   int dnt = GMP_NUMB_BITS - cnt;
@@ -3226,6 +3363,7 @@ static inline void rshift_9(mp_limb_t *a, int cnt) {
 }
 
 
+__attribute__((unused))
 static inline void long_rshift_9(mp_limb_t *a, int off, int cnt) {
   int i;
   int dnt = GMP_NUMB_BITS - cnt;
@@ -3249,6 +3387,7 @@ static inline void long_rshift_9(mp_limb_t *a, int off, int cnt) {
 
 #ifndef HAVE_NATIVE_INVMOD1
 #define HAVE_LONGLONG_INVMOD_1 1
+__attribute__((unused))
 static int
 invmod_1(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *p) {
   mp_limb_t a, b, u, v, fix;
@@ -3309,6 +3448,7 @@ invmod_1(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *p) {
 
 #ifndef HAVE_NATIVE_INVMOD2
 #define HAVE_LONGLONG_INVMOD_2 1
+__attribute__((unused))
 static int
 invmod_2(mp_limb_t *res, const mp_limb_t *x, const mp_limb_t *p) {
   mp_limb_t u[2], v[2], a[2], b[2], fix[2];
@@ -3422,6 +3562,7 @@ invmod_2(mp_limb_t *res, const mp_limb_t *x, const mp_limb_t *p) {
 
 #ifndef HAVE_NATIVE_INVMOD3
 #define HAVE_LONGLONG_INVMOD_3 1
+__attribute__((unused))
 static int
 invmod_3(mp_limb_t *res, const mp_limb_t *x, const mp_limb_t *p) {
   mp_limb_t u[3], v[3], a[3], b[3], fix[3];
@@ -3535,6 +3676,7 @@ invmod_3(mp_limb_t *res, const mp_limb_t *x, const mp_limb_t *p) {
 
 #ifndef HAVE_NATIVE_INVMOD4
 #define HAVE_LONGLONG_INVMOD_4 1
+__attribute__((unused))
 static int
 invmod_4(mp_limb_t *res, const mp_limb_t *x, const mp_limb_t *p) {
   mp_limb_t u[4], v[4], a[4], b[4], fix[4];
@@ -3648,6 +3790,7 @@ invmod_4(mp_limb_t *res, const mp_limb_t *x, const mp_limb_t *p) {
 
 #ifndef HAVE_NATIVE_INVMOD5
 #define HAVE_LONGLONG_INVMOD_5 1
+__attribute__((unused))
 static int
 invmod_5(mp_limb_t *res, const mp_limb_t *x, const mp_limb_t *p) {
   mp_limb_t u[5], v[5], a[5], b[5], fix[5];
@@ -3761,6 +3904,7 @@ invmod_5(mp_limb_t *res, const mp_limb_t *x, const mp_limb_t *p) {
 
 #ifndef HAVE_NATIVE_INVMOD6
 #define HAVE_LONGLONG_INVMOD_6 1
+__attribute__((unused))
 static int
 invmod_6(mp_limb_t *res, const mp_limb_t *x, const mp_limb_t *p) {
   mp_limb_t u[6], v[6], a[6], b[6], fix[6];
@@ -3874,6 +4018,7 @@ invmod_6(mp_limb_t *res, const mp_limb_t *x, const mp_limb_t *p) {
 
 #ifndef HAVE_NATIVE_INVMOD7
 #define HAVE_LONGLONG_INVMOD_7 1
+__attribute__((unused))
 static int
 invmod_7(mp_limb_t *res, const mp_limb_t *x, const mp_limb_t *p) {
   mp_limb_t u[7], v[7], a[7], b[7], fix[7];
@@ -3987,6 +4132,7 @@ invmod_7(mp_limb_t *res, const mp_limb_t *x, const mp_limb_t *p) {
 
 #ifndef HAVE_NATIVE_INVMOD8
 #define HAVE_LONGLONG_INVMOD_8 1
+__attribute__((unused))
 static int
 invmod_8(mp_limb_t *res, const mp_limb_t *x, const mp_limb_t *p) {
   mp_limb_t u[8], v[8], a[8], b[8], fix[8];
@@ -4100,6 +4246,7 @@ invmod_8(mp_limb_t *res, const mp_limb_t *x, const mp_limb_t *p) {
 
 #ifndef HAVE_NATIVE_INVMOD9
 #define HAVE_LONGLONG_INVMOD_9 1
+__attribute__((unused))
 static int
 invmod_9(mp_limb_t *res, const mp_limb_t *x, const mp_limb_t *p) {
   mp_limb_t u[9], v[9], a[9], b[9], fix[9];

@@ -18,8 +18,7 @@ inline fn update2(#secret reg u128[6] st, #secret reg u128 m, #secret
                   reg u128 st5)
      -> #secret reg u128[6]
 {
-    reg u128 t;
-    t = st[0] ^ m;
+    reg u128 t = st[0] ^ m;
     st[5] = #VAESENC(st[4], st5);
     st[4] = #VAESENC(st[3], st[4]);
     st[3] = #VAESENC(st[2], st[3]);
@@ -82,8 +81,7 @@ inline fn declast(#secret reg u128[6] st, #public reg u128 t,
 
     stack u128[1] pad;
     pad[0] = out;
-    reg u64 i;
-    i = left;
+    reg u64 i = left;
     while (i < 16) {
         pad[u8(int) i] = 0;
         i += 1;
@@ -132,47 +130,20 @@ inline fn init(#public reg u64 key_p, #public reg u64 nonce_p)
     return st;
 }
 
-inline fn reject_weak(#secret reg u128[6] st)
-    -> #secret reg u64
-{
-    reg u128 w;
-    w = st[0] ^ st[1];
-    reg u128[6] x;
-    inline int i;
-    for i = 2 to 6 {
-        x[i] = st[0] ^ st[i];
-    }
-    for i = 2 to 6 {
-        w |= x[i];
-    }
-    reg u128 zero;
-    zero = #set0_128();
-    w = #VPCMPEQ_2u64(w, zero);
-    reg u64 ret;
-    ret = #VPMOVMSKB_u128u64(w);
-    ret += 1;
-    ret >>= 16;
-    ret = -ret;
-
-    return ret;
-}
-
 inline fn finalize(#secret reg u128[6] st,
                    #public reg u64 tag_p, #public  reg u8 tag_len,
                    #public reg u64 ad_len, #public reg u64 msg_len,
                    #public inline bool verify)
     -> #secret reg u64
 {
-    reg u64 ret;
-    ret = reject_weak(st);
+    reg u64 ret = #set0();
 
     stack u64[2] sizes;
     ad_len <<= 3;
     msg_len <<= 3;
     sizes[0] = ad_len;
     sizes[1] = msg_len;
-    reg u128 t;
-    t = st[3] ^ sizes[u128 0];
+    reg u128 t = st[3] ^ sizes[u128 0];
 
     inline int i;
     for i = 0 to 7 {
@@ -191,12 +162,10 @@ inline fn finalize(#secret reg u128[6] st,
             reg u128 valid;
             valid = (u128)[tag_p];
             valid = #VPCMPEQ_2u64(valid, tag);
-            reg u64 ret0;
-            ret0 = #VPMOVMSKB_u128u64(valid);
-            ret0 += 1;
-            ret0 >>= 16;
-            ret0 -= 1;
-            ret |= ret0;
+            ret = #VPMOVMSKB_u128u64(valid);
+            ret += 1;
+            ret >>= 16;
+            ret -= 1;
         } else {
             (u128)[tag_p] = tag;
         }
@@ -214,12 +183,10 @@ inline fn finalize(#secret reg u128[6] st,
             valid[0] = #VPCMPEQ_2u64(valid[0], tag[0]);
             valid[1] = #VPCMPEQ_2u64(valid[1], tag[1]);
             valid[0] &= valid[1];
-            reg u64 ret0;
-            ret0 = #VPMOVMSKB_u128u64(valid[0]);
-            ret0 += 1;
-            ret0 >>= 16;
-            ret0 -= 1;
-            ret |= ret0;
+            ret = #VPMOVMSKB_u128u64(valid[0]);
+            ret += 1;
+            ret >>= 16;
+            ret -= 1;
         } else {
             (u128)[tag_p] = tag[0];
             (u128)[tag_p + 16] = tag[1];
@@ -258,8 +225,7 @@ export fn _aegis256_encrypt(#public reg u64 params)
     full_blocks = ad_len_;
     full_blocks = full_blocks & -16;
 
-    reg u64 i;
-    i = #set0();
+    reg u64 i = #set0();
 
     #align while (i < full_blocks) {
         st = absorb(st, (u128)[ad_p + i]);
@@ -273,8 +239,7 @@ export fn _aegis256_encrypt(#public reg u64 params)
         ad_p += i;
 
         stack u128[1] pad;
-        reg u128 zero;
-        zero = #set0_128();
+        reg u128 zero = #set0_128();
         pad[0] = zero;
 
         i = #set0();
@@ -308,8 +273,7 @@ export fn _aegis256_encrypt(#public reg u64 params)
         ct_p += i;
 
         stack u128[1] pad;
-        reg u128 zero;
-        zero = #set0_128();
+        reg u128 zero = #set0_128();
         pad[0] = zero;
 
         i = #set0();
@@ -329,8 +293,7 @@ export fn _aegis256_encrypt(#public reg u64 params)
 
     // finalize
 
-    reg u64 ret;
-    ret = finalize(st, tag_p, tag_len, ad_len_, msg_len_, false);
+    reg u64 ret = finalize(st, tag_p, tag_len, ad_len_, msg_len_, false);
 
     return ret;
 }
@@ -362,8 +325,7 @@ export fn _aegis256_decrypt(#public reg u64 params)
     full_blocks = ad_len_;
     full_blocks = full_blocks & -16;
 
-    reg u64 i;
-    i = #set0();
+    reg u64 i = #set0();
     #align while (i < full_blocks) {
         st = absorb(st, (u128)[ad_p + i]);
         i += 16;
@@ -376,8 +338,7 @@ export fn _aegis256_decrypt(#public reg u64 params)
         ad_p += i;
 
         stack u128[1] pad;
-        reg u128 zero;
-        zero = #set0_128();
+        reg u128 zero = #set0_128();
         pad[0] = zero;
 
         i = #set0();
@@ -417,8 +378,7 @@ export fn _aegis256_decrypt(#public reg u64 params)
         ct_p += i;
 
         #flexible stack u128[1] pad;
-        reg u128 zero;
-        zero = #set0_128();
+        reg u128 zero = #set0_128();
         pad[0] = zero;
 
         i = #set0();
@@ -439,31 +399,9 @@ export fn _aegis256_decrypt(#public reg u64 params)
         }
     }
 
-    // reject weak states
-
-    reg u128 w;
-    w = st[0] ^ st[1];
-    reg u128[6] x;
-    inline int j;
-    for j = 2 to 6 {
-        x[j] = st[0] ^ st[j];
-    }
-    for j = 2 to 6 {
-        w |= x[j];
-    }
-    reg u128 zero;
-    zero = #set0_128();
-    w = #VPCMPEQ_2u64(w, zero);
-    reg u64 ret0;
-    ret0 = #VPMOVMSKB_u128u64(w);
-    ret0 += 1;
-    ret0 >>= 16;
-    ret0 = -ret0;
-
     // finalize
 
-    reg u64 ret;
-    ret = finalize(st, tag_p, tag_len, ad_len_, ct_len_, true);
+    reg u64 ret = finalize(st, tag_p, tag_len, ad_len_, ct_len_, true);
 
     return ret;
 }

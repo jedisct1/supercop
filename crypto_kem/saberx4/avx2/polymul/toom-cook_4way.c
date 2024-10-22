@@ -1,3 +1,5 @@
+// 20241017 djb: eliminate cpucycles()
+
 /*
 Cleaned version for step by step approach look into the _debug file
 */
@@ -22,7 +24,6 @@ void batch_64coefficient_multiplications_new(__m256i* a, __m256i* b_bucket, __m2
 
 
 
-		//CLOCK1=cpucycles();
 		
 		//------------------AVX evaluation for 1st poly-----------------------
 
@@ -159,12 +160,8 @@ void batch_64coefficient_multiplications_new(__m256i* a, __m256i* b_bucket, __m2
 		
 	
 
-		//CLOCK2=cpucycles();
-		//CLOCK_EVAL=CLOCK_EVAL+(CLOCK2-CLOCK1);
-		//printf("\nTime for multiplication : %llu\n", CLOCK2-CLOCK1);
 
 
-		//CLOCK1=cpucycles();
 		//-----------------Forward transposes--------------------------------------
 			transpose_n1(a_bucket);
 			transpose_n1(a_bucket+16);
@@ -215,8 +212,6 @@ void batch_64coefficient_multiplications_new(__m256i* a, __m256i* b_bucket, __m2
 			*/
 		//-----------------Reverse transposes ends---------------------------------
 
-		//CLOCK2=cpucycles();
-		//CLOCK_MULT=CLOCK_MULT+(CLOCK2-CLOCK1);
 
 		//KARA_interpol(c_bucket, result_final0, result_final1, result_final2, result_final3, result_final4, result_final5, result_final6);
 		
@@ -351,7 +346,6 @@ void KARA_interpol(__m256i *c_bucket, __m256i* result_final0, __m256i* result_fi
 
 		__m256i temp, c6_avx, c7_avx, c8_avx, c20_avx, c21_avx, c22_avx, c23_avx, c24_avx;
 
-		//CLOCK1=cpucycles();
 
 		   //------------------------AVX interpolation for 1st poly external-------------------		
 			
@@ -819,9 +813,6 @@ void KARA_interpol(__m256i *c_bucket, __m256i* result_final0, __m256i* result_fi
 
 		   //------------------------AVX interpolation for 7th poly ends--------------
 
-		//CLOCK2=cpucycles();
-		//CLOCK_INTER=CLOCK_INTER+(CLOCK2-CLOCK1);
-		//printf("\nTime for interpolation : %llu\n", CLOCK2-CLOCK1);
 
 
 
@@ -841,7 +832,6 @@ void toom_cook_4way_avx_n1(__m256i* a_avx,__m256i* b_bucket, __m256i *c_bucket, 
 
 // EVALUATION
 
-	//CLOCK1=cpucycles();
 
 	for (i=0; i<small_len_avx; i++){
 		r0_avx=a_avx[i];
@@ -869,9 +859,6 @@ void toom_cook_4way_avx_n1(__m256i* a_avx,__m256i* b_bucket, __m256i *c_bucket, 
 		aw_avx[i]= r3_avx;
 	}
 
-
-	//CLOCK2=cpucycles();
-	//CLOCK_TC_EVAL=CLOCK_TC_EVAL+(CLOCK2-CLOCK1);
 
 	batch_64coefficient_multiplications_new(aw_avx, b_bucket, c_bucket, f);//New
 
@@ -926,7 +913,6 @@ void TC_interpol(__m256i *c_bucket, __m256i* res_avx){
 
 	__m256i res_avx_output[2*AVX_N1];
 
-	//CLOCK1=cpucycles();
 
 	
 	transpose_n1(c_bucket);
@@ -1008,8 +994,6 @@ void TC_interpol(__m256i *c_bucket, __m256i* res_avx){
 		}
 	}
 
-	//CLOCK2=cpucycles();
-	//CLOCK_TC_INTER=CLOCK_TC_INTER+(CLOCK2-CLOCK1);
 
 	// Reduction by X^256 + 1
 	for(i=0; i<16; i++)

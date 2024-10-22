@@ -12,6 +12,13 @@
 #include "curve.h"
 #include "generator.h"
 
+Kfield K;
+Kelt f3;
+Kelt f0;
+mpz_t p;
+size_t size_of_p;
+Kelt dummyelts[NUMBER_OF_DUMMYELTS];
+
 void init_all()
 {
 	// Field Initialisation:

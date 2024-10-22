@@ -1,8 +1,6 @@
 #include <stdint.h>
 #include <string.h>
 
-#define SOFTAES_STRIDE 1
-
 #if !defined(__cplusplus) && (!defined(__STDC_VERSION__) || __STDC_VERSION__ < 199901L)
 #    ifdef _MSC_VER
 #        define inline __inline

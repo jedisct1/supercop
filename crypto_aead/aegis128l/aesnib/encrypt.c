@@ -11,7 +11,7 @@
 
 // The initialization state of AEGIS
 /*The input to initialization is the 128-bit key; 128-bit IV;*/
-void aegis128L_initialization(const unsigned char *key, const unsigned char *iv, __m128i *state)
+static void aegis128L_initialization(const unsigned char *key, const unsigned char *iv, __m128i *state)
 {
        int i;
 
@@ -47,7 +47,7 @@ void aegis128L_initialization(const unsigned char *key, const unsigned char *iv,
 }
 
 //the finalization state of AEGIS
-void aegis128L_tag_generation(unsigned long long msglen, unsigned long long adlen, unsigned char maclen, unsigned char *mac, __m128i *state)
+static void aegis128L_tag_generation(unsigned long long msglen, unsigned long long adlen, unsigned char maclen, unsigned char *mac, __m128i *state)
 {
        int i;
 
@@ -96,7 +96,7 @@ void aegis128L_tag_generation(unsigned long long msglen, unsigned long long adle
 
 
 //one step of encryption
-void aegis128L_enc_aut_step(const unsigned char *plaintextblk, unsigned char *ciphertextblk, __m128i *state)
+static void aegis128L_enc_aut_step(const unsigned char *plaintextblk, unsigned char *ciphertextblk, __m128i *state)
 {
         __m128i ct0,ct1;
         __m128i tmp;
@@ -131,7 +131,7 @@ void aegis128L_enc_aut_step(const unsigned char *plaintextblk, unsigned char *ci
 
 
 //one step of decryption
-void aegis128L_dec_aut_step(unsigned char *plaintextblk,
+static void aegis128L_dec_aut_step(unsigned char *plaintextblk,
        const unsigned char *ciphertextblk, __m128i *state)
 {
         __m128i msg0 = _mm_loadu_si128((__m128i*)ciphertextblk);
@@ -277,7 +277,7 @@ int crypto_aead_decrypt(
     unsigned char plaintextblock[32], ciphertextblock[32];
     unsigned char tag[16];
     unsigned char check = 0;
-    __m128i state[8], tmp, ct0, ct1, msg0, msg1;
+    __m128i state[8], tmp, msg0, msg1;
 
     if (clen < 16) return 1; 
 

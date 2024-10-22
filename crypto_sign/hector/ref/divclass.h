@@ -43,9 +43,6 @@ void divclass_mixadd(divclass rop, const divclass op1, const divclass op2);
 // Double a divisor class:
 void divclass_double(divclass rop, const divclass op);
 
-// Invert a divisor class:
-inline void divclass_neg(divclass rop, const divclass op);
-
 // Compute multiple of a divisor class:
 void divclass_multiply(divclass rop, const divclass op, mpz_t scalar);
 

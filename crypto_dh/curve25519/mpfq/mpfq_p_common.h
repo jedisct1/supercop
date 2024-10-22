@@ -1,3 +1,5 @@
+// 20241016 djb: __attribute__((unused))
+
 #ifndef _MPFQ_P_COMMON_H_
 #define _MPFQ_P_COMMON_H_
 
@@ -24,6 +26,7 @@ static void mpn_normalize(mp_limb_t * dst, int * pnlimbs)
 		(*pnlimbs)--;
 	}
 }
+__attribute__((unused))
 static void mpn2mpz(__mpz_struct * dst, mp_limb_t * src, size_t nlimbs)
 {
 	if (dst->_mp_alloc < nlimbs) {

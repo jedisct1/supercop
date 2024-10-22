@@ -11,8 +11,8 @@
 #include "divclass.h"
 
 // Generator of the subgroup of prime order:
-divclass *generator_multiples1;
-divclass *generator_multiples2;
+extern divclass *generator_multiples1;
+extern divclass *generator_multiples2;
 
 // define alias for the generator
 #define GENERATOR (*(generator_multiples1 + 1))

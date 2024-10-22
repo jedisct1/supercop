@@ -1,5 +1,6 @@
 #include <stddef.h>
 
+#include "api.h"
 #include "crypto_aead.h"
 
 typedef struct Params {
@@ -15,10 +16,13 @@ typedef struct Params {
     const unsigned char *npub;
 } Params;
 
-extern void _aegis128l_encrypt(const Params *params);
-extern int  _aegis128l_decrypt(const Params *params);
+#define _aegis128l_encrypt CRYPTO_NAMESPACE(_aegis128l_encrypt)
+#define _aegis128l_decrypt CRYPTO_NAMESPACE(_aegis128l_decrypt)
 
-int
+extern int _aegis128l_encrypt(const Params *params);
+extern int _aegis128l_decrypt(const Params *params);
+
+static int
 crypto_aead_encrypt_detached(unsigned char       *c,
                              unsigned char       *mac,
                              unsigned long long  *maclen_p,
@@ -30,12 +34,11 @@ crypto_aead_encrypt_detached(unsigned char       *c,
                              const unsigned char *npub,
                              const unsigned char *k)
 {
-    const Params params = { c, mlen, mac, 16, (unsigned char *) m, mlen, ad, adlen, k, npub };
-    _aegis128l_encrypt(&params);
-    return 0;
+    const Params params = { c, mlen, mac, CRYPTO_ABYTES, (unsigned char *) m, mlen, ad, adlen, k, npub };
+    return _aegis128l_encrypt(&params);
 }
 
-int
+static int
 crypto_aead_decrypt_detached(unsigned char       *m,
                              unsigned char       *nsec,
                              const unsigned char *c,
@@ -47,7 +50,7 @@ crypto_aead_decrypt_detached(unsigned char       *m,
                              const unsigned char *k)
 {
     const Params params = {
-        (unsigned char *) c, clen, (unsigned char *) mac, 16, m, clen, ad, adlen, k, npub
+        (unsigned char *) c, clen, (unsigned char *) mac, CRYPTO_ABYTES, m, clen, ad, adlen, k, npub
     };
     return _aegis128l_decrypt(&params);
 }
@@ -65,12 +68,11 @@ crypto_aead_encrypt(unsigned char       *c,
 {
     (void) nsec;
 
-    crypto_aead_encrypt_detached(c, c + mlen, NULL, m, mlen, ad, adlen, NULL, npub, k);
-
     if (clen_p != NULL) {
-        *clen_p = mlen + 16;
+        *clen_p = mlen + CRYPTO_ABYTES;
     }
-    return 0;
+    return crypto_aead_encrypt_detached(
+        c, c + mlen, NULL, m, mlen, ad, adlen, NULL, npub, k);
 }
 
 int
@@ -84,16 +86,14 @@ crypto_aead_decrypt(unsigned char       *m,
                     const unsigned char *npub,
                     const unsigned char *k)
 {
-    int ret;
-
     (void) nsec;
 
-    if (clen < 16) {
+    if (clen < CRYPTO_ABYTES) {
         return -1;
     }
-    ret = crypto_aead_decrypt_detached(m, NULL, c, clen - 16, c + clen - 16, ad, adlen, npub, k);
     if (mlen_p != NULL) {
-        *mlen_p = clen - 16;
+        *mlen_p = clen - CRYPTO_ABYTES;
     }
-    return ret;
+    return crypto_aead_decrypt_detached(
+        m, NULL, c, clen - CRYPTO_ABYTES, c + clen - CRYPTO_ABYTES, ad, adlen, npub, k);
 }

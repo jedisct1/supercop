@@ -1,3 +1,5 @@
+// 20241017 djb: eliminate test_*()
+
 //#define DEBUG_MODE
 
 #ifdef DEBUG_MODE
@@ -169,64 +171,3 @@ static
 int patentclaims(){
 	return 0;
 }
-
-#ifdef TEST_BOX
-void test_ckdh_hec_fp_2e128mc_bk_glv4(char *s)
-{
-	unsigned char pk1[PUBLICKEY_BYTES], pk2[PUBLICKEY_BYTES];
-	unsigned char sk1[SECRETKEY_BYTES], sk2[SECRETKEY_BYTES];
-	unsigned char ss1[SHAREDSECRET_BYTES], ss2[SHAREDSECRET_BYTES];
-	long count, i;
-
-	printf("\n//%s\n", s); fflush(stdout);
-	for(count = 0; count < 1000000000UL; count++){
-		crypto_dh_keypair(pk1, sk1);
-		crypto_dh_keypair(pk2, sk2);
-		crypto_dh(ss1, pk1, sk2);
-		crypto_dh(ss2, pk2, sk1);
-
-		for(i = 0; i < SHAREDSECRET_BYTES; i++){
-			if(ss1[i] != ss2[i]){
-				printf("Error! Secret does not match. (@ %lu)\n", count);
-				exit(1);
-			}
-		}
-
-		if((count%10000) == 0){
-			printf("%lu\n", count); fflush(stdout);
-		}
-	}
-	copyrightclaims();
-	timingattacks();
-	patentclaims();
-}
-
-void test_perf_hec_fp_2e128mc_bk_glv4(char *s)
-{
-	unsigned char pk[PUBLICKEY_BYTES], sk[SECRETKEY_BYTES], ss[SHAREDSECRET_BYTES];
-	struct timeval t_start, t_end, t_diff;
-	long long st, fn, count;
-
-	printf("\n//%s\n", s); fflush(stdout);
-	gettimeofday(&t_start, NULL);
-	st = cpucycles();
-	for(count = 0; count < TRIAL; count++){
-		crypto_dh_keypair(pk, sk);
-	}
-	fn = cpucycles();
-	gettimeofday(&t_end, NULL);
-	timersub(&t_end, &t_start, &t_diff);
-	printf("Key pair generation cycles: %lld\n", (fn - st)/TRIAL);
-	printf("Key pair generation time: %.3f msec\n", get_msec(t_diff, TRIAL, 1)); fflush(stdout);
-	gettimeofday(&t_start, NULL);
-	st = cpucycles();
-	for(count = 0; count < TRIAL; count++){
-		crypto_dh(ss, pk, sk);
-	}
-	fn = cpucycles();
-	gettimeofday(&t_end, NULL);
-	timersub(&t_end, &t_start, &t_diff);
-	printf("Secret sharing cycles: %lld\n", (fn - st)/TRIAL);
-	printf("Secret sharing time: %.3f msec\n", get_msec(t_diff, TRIAL, 1)); fflush(stdout);
-}
-#endif

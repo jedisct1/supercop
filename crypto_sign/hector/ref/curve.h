@@ -11,8 +11,8 @@
 #include <gmp.h>
 
 // Definition of the curve we are working with, curve equation is of the form y^2 + xy = x^ 5 + f3x^3 + f0
-Kelt f3;
-Kelt f0;
+extern Kelt f3;
+extern Kelt f0;
 
 // Initalisation functions setting curve parameters
 void curve_init();

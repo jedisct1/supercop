@@ -1,3 +1,4 @@
+// 20241016 djb: include time.h
 /*
  * RELIC is an Efficient LIbrary for Cryptography
  * Copyright (C) 2007-2011 RELIC Authors
@@ -31,6 +32,7 @@
 
 #include <stdlib.h>
 #include <stdint.h>
+#include <time.h>
 
 #include "relic.h"
 

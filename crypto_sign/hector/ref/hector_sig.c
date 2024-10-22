@@ -1,3 +1,5 @@
+// 20241017 djb: eliminate cpucycles() and main()
+
 /*
  * hector/src/hector_sig.c version 20080403
  * Peter Schwabe & Peter Birkner
@@ -6,7 +8,6 @@
 
 #include <stdio.h>
 #include <gmp.h>
-#include <cpucycles.h>
 
 #include "randombytes.h"
 #include "sizes.h"
@@ -206,47 +207,3 @@ int shortmessagesigned(
 	clear_all();
 	return ret ;
 }
-
-
-#ifdef MAIN
-int main(int argc, char* arv[])
-{
-	unsigned long long sklen = SECRETKEY_BYTES;
-	unsigned long long pklen = PUBLICKEY_BYTES;
-	unsigned long long smlen = SIGNATURE_BYTES;
-	unsigned long long mlen = SHORTMESSAGE_BYTES;
-
-	unsigned char sk[sklen];
-	unsigned char pk[pklen];
-	unsigned char sm[smlen];
-	unsigned char m[mlen];
-
-	int i;
-
-	unsigned long long int start, stop;
-
-	init_all();
-	clear_all();
-
-	// Initialise message with random bytes:
-	randombytes(m,SHORTMESSAGE_BYTES);
-
-	start = cpucycles();
-	// Generate first key pair:
-	keypair(sk, &sklen, pk, &pklen);
-	stop = cpucycles();
-	printf("Cycles needed for keypair: %lld\n", stop - start);
-
-	start = cpucycles();
-	signedshortmessage(sm, &smlen, m, mlen, sk, sklen);
-	stop = cpucycles();
-	printf("Cycles needed for signedshortmessage: %lld\n", stop - start);
-	
-	start = cpucycles();
-	shortmessagesigned(m, &mlen, sm, smlen, pk, pklen);	
-	stop = cpucycles();
-	printf("Cycles needed for shortmessagesigned: %lld\n", stop - start);
-
-	return 0;
-}
-#endif

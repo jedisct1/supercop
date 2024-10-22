@@ -1,3 +1,5 @@
+// 20241017 djb: eliminate cpucycles()
+
 /*
  * hector/src/common.c version 20080403
  * Peter Schwabe & Peter Birkner
@@ -10,7 +12,6 @@
 #include "conversion.h"
 #include "generator.h"
 #include "divclass.h"
-#include "cpucycles.h"
 #include "randombytes.h"
 #include "crypto_dh.h"
 
@@ -43,23 +44,16 @@ int crypto_dh_keypair(
 		unsigned char *sk
 	   )
 {
-	long long int start, stop;
 	// Initialize Curve parameters:
 	init_all();
 
-	//start = cpucycles();
 	mpz_t key;
 	mpz_init(key);
 
 	divclass Q;
 	divclass_init(Q);
-	//stop = cpucycles();
-	//printf("Cycles consumed before gen_keypair: %lld\n", stop - start);
 
-	//start = cpucycles();
 	gen_keypair(key, Q);
-	//stop = cpucycles();
-	//printf("Cycles consumed in gen_keypair: %lld\n", stop - start);
 
 	// Convert public key Q to byte array:
 	divclass_to_bytearray(pk, Q);

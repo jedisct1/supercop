@@ -1,3 +1,5 @@
+// 20241016 djb: __attribute__((unused))
+
 /*
  * Library MPFq, package mp.
  * Multiprecision routines (small number of words) for x86_64. 
@@ -8,6 +10,7 @@
 #define __MP_X86_64_H__
 
 #define HAVE_NATIVE_ADDMUL1_1 1
+__attribute__((unused))
 static void 
 addmul1_1(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t c)
 {
@@ -24,6 +27,7 @@ addmul1_1(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t c)
 }
 
 #define HAVE_NATIVE_ADDMUL1_2 1
+__attribute__((unused))
 static void
 addmul1_2(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t c)
 {
@@ -49,6 +53,7 @@ addmul1_2(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t c)
 }
 
 #define HAVE_NATIVE_ADDMUL1_3 1
+__attribute__((unused))
 static void
 addmul1_3(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t c)
 {
@@ -82,6 +87,7 @@ addmul1_3(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t c)
 }
 
 #define HAVE_NATIVE_ADDMUL1_4 1
+__attribute__((unused))
 static void
 addmul1_4(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t c)
 {
@@ -123,6 +129,7 @@ addmul1_4(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t c)
 }
 
 #define HAVE_NATIVE_ADDMUL1_5 1
+__attribute__((unused))
 static void
 addmul1_5(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t c)
 {
@@ -174,6 +181,7 @@ addmul1_5(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t c)
 }
 
 #define HAVE_NATIVE_ADDMUL1_6 1
+__attribute__((unused))
 static void
 addmul1_6(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t c)
 {
@@ -233,6 +241,7 @@ addmul1_6(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t c)
 }
 
 #define HAVE_NATIVE_ADDMUL1_7 1
+__attribute__((unused))
 static void
 addmul1_7(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t c)
 {
@@ -300,6 +309,7 @@ addmul1_7(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t c)
 }
 
 #define HAVE_NATIVE_ADDMUL1_8 1
+__attribute__((unused))
 static void
 addmul1_8(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t c)
 {
@@ -375,6 +385,7 @@ addmul1_8(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t c)
 }
 
 #define HAVE_NATIVE_ADDMUL1_9 1
+__attribute__((unused))
 static void
 addmul1_9(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t c)
 {
@@ -458,6 +469,7 @@ addmul1_9(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t c)
 }
 
 #define HAVE_NATIVE_MUL1_1 1
+__attribute__((unused))
 static void 
 mul1_1(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t c)
 {
@@ -472,6 +484,7 @@ mul1_1(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t c)
 }
 
 #define HAVE_NATIVE_MUL1_2 1
+__attribute__((unused))
 static void
 mul1_2(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t c)
 {
@@ -495,6 +508,7 @@ mul1_2(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t c)
 }
 
 #define HAVE_NATIVE_MUL1_3 1
+__attribute__((unused))
 static void
 mul1_3(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t c)
 {
@@ -525,6 +539,7 @@ mul1_3(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t c)
 }
 
 #define HAVE_NATIVE_MUL1_4 1
+__attribute__((unused))
 static void
 mul1_4(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t c)
 {
@@ -562,6 +577,7 @@ mul1_4(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t c)
 }
 
 #define HAVE_NATIVE_MUL1_5 1
+__attribute__((unused))
 static void
 mul1_5(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t c)
 {
@@ -606,6 +622,7 @@ mul1_5(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t c)
 }
 
 #define HAVE_NATIVE_MUL1_6 1
+__attribute__((unused))
 static void
 mul1_6(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t c)
 {
@@ -657,6 +674,7 @@ mul1_6(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t c)
 }
 
 #define HAVE_NATIVE_MUL1_7 1
+__attribute__((unused))
 static void
 mul1_7(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t c)
 {
@@ -715,6 +733,7 @@ mul1_7(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t c)
 }
 
 #define HAVE_NATIVE_MUL1_8 1
+__attribute__((unused))
 static void
 mul1_8(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t c)
 {
@@ -780,6 +799,7 @@ mul1_8(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t c)
 }
 
 #define HAVE_NATIVE_MUL1_9 1
+__attribute__((unused))
 static void
 mul1_9(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t c)
 {
@@ -852,6 +872,7 @@ mul1_9(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t c)
 }
 
 #define HAVE_NATIVE_ADD_1 1
+__attribute__((unused))
 static void
 add_1(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 {
@@ -859,6 +880,7 @@ add_1(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 }
 
 #define HAVE_NATIVE_ADD_2 1
+__attribute__((unused))
 static void
 add_2(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 {
@@ -876,6 +898,7 @@ add_2(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 }
 
 #define HAVE_NATIVE_ADD_3 1
+__attribute__((unused))
 static void
 add_3(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 {
@@ -897,6 +920,7 @@ add_3(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 }
 
 #define HAVE_NATIVE_ADD_4 1
+__attribute__((unused))
 static void
 add_4(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 {
@@ -922,6 +946,7 @@ add_4(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 }
 
 #define HAVE_NATIVE_ADD_5 1
+__attribute__((unused))
 static void
 add_5(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 {
@@ -954,6 +979,7 @@ add_5(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 }
 
 #define HAVE_NATIVE_ADD_6 1
+__attribute__((unused))
 static void
 add_6(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 {
@@ -990,6 +1016,7 @@ add_6(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 }
 
 #define HAVE_NATIVE_ADD_7 1
+__attribute__((unused))
 static void
 add_7(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 {
@@ -1030,6 +1057,7 @@ add_7(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 }
 
 #define HAVE_NATIVE_ADD_8 1
+__attribute__((unused))
 static void
 add_8(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 {
@@ -1074,6 +1102,7 @@ add_8(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 }
 
 #define HAVE_NATIVE_ADD_9 1
+__attribute__((unused))
 static void
 add_9(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 {
@@ -1122,6 +1151,7 @@ add_9(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 }
 
 #define HAVE_NATIVE_SUB_1 1
+__attribute__((unused))
 static void
 sub_1(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 {
@@ -1129,6 +1159,7 @@ sub_1(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 }
 
 #define HAVE_NATIVE_SUB_2 1
+__attribute__((unused))
 static void
 sub_2(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 {
@@ -1146,6 +1177,7 @@ sub_2(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 }
 
 #define HAVE_NATIVE_SUB_3 1
+__attribute__((unused))
 static void
 sub_3(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 {
@@ -1167,6 +1199,7 @@ sub_3(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 }
 
 #define HAVE_NATIVE_SUB_4 1
+__attribute__((unused))
 static void
 sub_4(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 {
@@ -1192,6 +1225,7 @@ sub_4(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 }
 
 #define HAVE_NATIVE_SUB_5 1
+__attribute__((unused))
 static void
 sub_5(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 {
@@ -1224,6 +1258,7 @@ sub_5(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 }
 
 #define HAVE_NATIVE_SUB_6 1
+__attribute__((unused))
 static void
 sub_6(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 {
@@ -1260,6 +1295,7 @@ sub_6(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 }
 
 #define HAVE_NATIVE_SUB_7 1
+__attribute__((unused))
 static void
 sub_7(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 {
@@ -1300,6 +1336,7 @@ sub_7(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 }
 
 #define HAVE_NATIVE_SUB_8 1
+__attribute__((unused))
 static void
 sub_8(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 {
@@ -1344,6 +1381,7 @@ sub_8(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 }
 
 #define HAVE_NATIVE_SUB_9 1
+__attribute__((unused))
 static void
 sub_9(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 {
@@ -1392,6 +1430,7 @@ sub_9(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 }
 
 #define HAVE_NATIVE_MUL_1 1
+__attribute__((unused))
 static void 
 mul_1(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 {
@@ -1399,6 +1438,7 @@ mul_1(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 }
 
 #define HAVE_NATIVE_MUL_2 1
+__attribute__((unused))
 static void
 mul_2(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 {
@@ -1440,6 +1480,7 @@ mul_2(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 }
 
 #define HAVE_NATIVE_MUL_3 1
+__attribute__((unused))
 static void
 mul_3(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 {
@@ -1516,6 +1557,7 @@ mul_3(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 }
 
 #define HAVE_NATIVE_MUL_4 1
+__attribute__((unused))
 static void
 mul_4(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 {
@@ -1641,6 +1683,7 @@ mul_4(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 }
 
 #define HAVE_NATIVE_MUL_5 1
+__attribute__((unused))
 static void
 mul_5(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 {
@@ -1829,6 +1872,7 @@ mul_5(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 }
 
 #define HAVE_NATIVE_MUL_6 1
+__attribute__((unused))
 static void
 mul_6(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 {
@@ -2094,6 +2138,7 @@ mul_6(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 }
 
 #define HAVE_NATIVE_MUL_7 1
+__attribute__((unused))
 static void
 mul_7(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 {
@@ -2450,6 +2495,7 @@ mul_7(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 }
 
 #define HAVE_NATIVE_MUL_8 1
+__attribute__((unused))
 static void
 mul_8(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 {
@@ -2911,6 +2957,7 @@ mul_8(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 }
 
 #define HAVE_NATIVE_MUL_9 1
+__attribute__((unused))
 static void
 mul_9(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 {
@@ -3491,6 +3538,7 @@ mul_9(mp_limb_t *z, const mp_limb_t *x, const mp_limb_t *y)
 }
 
 #define HAVE_NATIVE_SQR_1 1
+__attribute__((unused))
 static void 
 sqr_1(mp_limb_t *z, const mp_limb_t *x)
 {
@@ -3498,6 +3546,7 @@ sqr_1(mp_limb_t *z, const mp_limb_t *x)
 }
 
 #define HAVE_NATIVE_SQR_2 1
+__attribute__((unused))
 static void 
 sqr_2(mp_limb_t *z, const mp_limb_t *x)
 {
@@ -3529,6 +3578,7 @@ sqr_2(mp_limb_t *z, const mp_limb_t *x)
 } 
 
 #define HAVE_NATIVE_SQR_3 1
+__attribute__((unused))
 static void 
 sqr_3(mp_limb_t *z, const mp_limb_t *x)
 {
@@ -3583,6 +3633,7 @@ sqr_3(mp_limb_t *z, const mp_limb_t *x)
 }
 
 #define HAVE_NATIVE_SQR_4 1
+__attribute__((unused))
 static void 
 sqr_4(mp_limb_t *z, const mp_limb_t *x)
 {

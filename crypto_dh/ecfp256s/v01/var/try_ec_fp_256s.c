@@ -1,3 +1,5 @@
+// 20241017 djb: eliminate cpucycles()
+
 #include <stdio.h>
 #include "crympix.h"
 #include "finite256.h"
@@ -5,7 +7,6 @@
 
 
 #include <stdio.h>
-#include "cpucycles.h"
 
 #ifdef TEST_BOX
 #include <stdlib.h>

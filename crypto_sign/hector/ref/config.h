@@ -15,19 +15,19 @@
 #define NUMBER_OF_DUMMYELTS 40
 
 // The field
-Kfield K;
+extern Kfield K;
 
 // Definition of the curve we are working with, curve equation is of the form y^2 + xy = x^5 + f3x^ 3 + x^2 + f0
-Kelt f3;
-Kelt f0;
+extern Kelt f3;
+extern Kelt f0;
 
 // Order of the subgroup
-mpz_t p;
+extern mpz_t p;
 // Size of p in bits
-size_t size_of_p;
+extern size_t size_of_p;
 
 // Global dummy variables, to be used in divisor class addition and doubling:
-Kelt dummyelts[NUMBER_OF_DUMMYELTS];
+extern Kelt dummyelts[NUMBER_OF_DUMMYELTS];
 
 // Initalisation functions setting curve parameters
 void init_all();
