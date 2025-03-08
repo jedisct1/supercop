@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include "ecrypt-config.h"
 #include "ecrypt-machine.h"
-#include "ecrypt-portable.h"
+#include  "ecrypt-portable.h"
 
 #include "ecrypt-sync.h"
 /* #define SLOW_CODE 1 */

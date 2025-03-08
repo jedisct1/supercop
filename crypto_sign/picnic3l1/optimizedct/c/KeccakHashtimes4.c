@@ -12,11 +12,12 @@ http://creativecommons.org/publicdomain/zero/1.0/
 */
 
 #include <string.h>
+#include <stdlib.h>
 #include "KeccakHashtimes4.h"
 
 #if defined(SUPERCOP)
-#define KECCAK_FAIL FAIL
-#define KECCAK_SUCCESS SUCCESS
+#define KECCAK_FAIL EXIT_FAILURE
+#define KECCAK_SUCCESS EXIT_SUCCESS
 #endif
 
 /* ---------------------------------------------------------------- */

@@ -1,3 +1,4 @@
+// 20250302 djb: port to -Wc++-compat
 // 20240806 djb: some automated conversion to cryptoint
 #include "crypto_int8.h"
 #include "crypto_int16.h"
@@ -104,7 +105,7 @@ static inline void vectormodq_xswapeliminate(Fq *f,Fq *g,int len,const Fq f0,con
 
 int crypto_core(unsigned char *outbytes,const unsigned char *inbytes,const unsigned char *kbytes,const unsigned char *cbytes)
 {
-  small *in = (void *) inbytes;
+  small *in = (small *) inbytes;
   int loop;
   Fq out[p],f[ppad],g[ppad],v[ppad],r[ppad];
   Fq f0,g0;
@@ -174,5 +175,6 @@ int crypto_core(unsigned char *outbytes,const unsigned char *inbytes,const unsig
 
   crypto_encode_pxint16(outbytes,out);
   outbytes[2*p] = crypto_int16_nonzero_mask(delta);
+
   return 0;
 }

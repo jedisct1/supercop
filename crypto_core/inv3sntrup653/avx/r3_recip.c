@@ -1,3 +1,5 @@
+// 20250302 djb: port to -Wc++-compat
+// 20240812 djb: more cryptoint usage
 #include "crypto_core.h"
 
 #include <immintrin.h>
@@ -7,6 +9,8 @@
 typedef int8 small;
 
 #include "crypto_int32.h"
+#include "crypto_int64.h"
+#include "crypto_uint64.h"
 
 #define p 653
 #define ppad 768
@@ -144,7 +148,7 @@ static void vec256_init(vec256 *G0,vec256 *G1,const small *s)
 
   for (i = 0;i < ppad;++i) {
     si = srev[i+ppad-p];
-    g0[i] = -crypto_int8_bottombit_mask(si);
+    g0[i] = crypto_int8_bottombit_01(si);
     g1[i] = (si >> 1) & g0[i];
   }
 
@@ -248,7 +252,7 @@ static inline void vec256_divx_2(vec256 *f)
   unsigned long long low0 = _mm_cvtsi128_si64(_mm256_castsi256_si128(f0));
   unsigned long long low1 = _mm_cvtsi128_si64(_mm256_castsi256_si128(f1));
 
-  low0 = (low0 >> 1) | (low1 << 63);
+  low0 = (low0 >> 1) | crypto_uint64_shlmod(low1,63);
   low1 = low1 >> 1;
 
   f0 = _mm256_blend_epi32(f0,_mm256_set_epi64x(0,0,0,low0),0x3);
@@ -268,8 +272,8 @@ static inline void vec256_divx_3(vec256 *f)
   unsigned long long low1 = _mm_cvtsi128_si64(_mm256_castsi256_si128(f1));
   unsigned long long low2 = _mm_cvtsi128_si64(_mm256_castsi256_si128(f2));
 
-  low0 = (low0 >> 1) | (low1 << 63);
-  low1 = (low1 >> 1) | (low2 << 63);
+  low0 = (low0 >> 1) | crypto_uint64_shlmod(low1,63);
+  low1 = (low1 >> 1) | crypto_uint64_shlmod(low2,63);
   low2 = low2 >> 1;
 
   f0 = _mm256_blend_epi32(f0,_mm256_set_epi64x(0,0,0,low0),0x3);
@@ -302,7 +306,7 @@ static inline void vec256_timesx_2(vec256 *f)
   unsigned long long low0 = _mm_cvtsi128_si64(_mm256_castsi256_si128(f0));
   unsigned long long low1 = _mm_cvtsi128_si64(_mm256_castsi256_si128(f1));
 
-  low1 = (low1 << 1) | (low0 >> 63);
+  low1 = (low1 << 1) | crypto_int64_negative_01(low0);
   low0 = low0 << 1;
 
   f0 = _mm256_blend_epi32(f0,_mm256_set_epi64x(0,0,0,low0),0x3);
@@ -322,8 +326,8 @@ static inline void vec256_timesx_3(vec256 *f)
   unsigned long long low1 = *(unsigned long long *) &f1;
   unsigned long long low2 = _mm_cvtsi128_si64(_mm256_castsi256_si128(f2));
 
-  low2 = (low2 << 1) | (low1 >> 63);
-  low1 = (low1 << 1) | (low0 >> 63);
+  low2 = (low2 << 1) | crypto_int64_negative_01(low1);
+  low1 = (low1 << 1) | crypto_int64_negative_01(low0);
   low0 = low0 << 1;
 
   *(unsigned long long *) &f0 = low0;
@@ -338,8 +342,8 @@ static inline void vec256_timesx_3(vec256 *f)
 
 int crypto_core(unsigned char *outbytes,const unsigned char *inbytes,const unsigned char *kbytes,const unsigned char *cbytes)
 { 
-  small *out = (void *) outbytes;
-  small *in = (void *) inbytes;
+  small *out = (small *) outbytes;
+  small *in = (small *) inbytes;
   vec256 F0[numvec];
   vec256 F1[numvec];
   vec256 G0[numvec];
@@ -523,5 +527,6 @@ int crypto_core(unsigned char *outbytes,const unsigned char *inbytes,const unsig
 
   vec256_final(out,V0,V1);
   out[p] = crypto_int32_negative_mask(minusdelta);
+
   return 0;
 }

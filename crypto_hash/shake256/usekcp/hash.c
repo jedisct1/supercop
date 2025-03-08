@@ -1,4 +1,4 @@
-#include <libkeccak.a.headers/KeccakSpongeWidth1600.h>
+#include <libkeccak.a.headers/KeccakSponge.h>
 #include "crypto_hash.h"
 
 int crypto_hash(unsigned char *out,const unsigned char *in,unsigned long long inlen)

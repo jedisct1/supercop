@@ -1,7 +1,10 @@
 /*
+The eXtended Keccak Code Package (XKCP)
+https://github.com/XKCP/XKCP
+
 Implementation by Gilles Van Assche, hereby denoted as "the implementer".
 
-For more information, feedback or questions, please refer to our website:
+For more information, feedback or questions, please refer to the Keccak Team website:
 https://keccak.team/
 
 To the extent possible under law, the implementer has waived all copyright
@@ -21,6 +24,10 @@ Please refer to PlSnP-documentation.h for more details.
 /* expect SnP_stateSizeInBytes, SnP_stateAlignment */
 /* expect prefix */
 /* expect SnP_* */
+
+#ifndef KeccakP1600_stateSizeInBytes
+#define KeccakP1600_stateSizeInBytes 200
+#endif
 
 #define JOIN0(a, b)                     a ## b
 #define JOIN(a, b)                      JOIN0(a, b)
@@ -46,8 +53,9 @@ Please refer to PlSnP-documentation.h for more details.
     #define SnP_stateAlignment              JOIN(SnP, _statesAlignment)
 #endif
 #define PlSnP_factor ((PlSnP_targetParallelism)/(PlSnP_baseParallelism))
-#define SnP_stateOffset (((SnP_stateSizeInBytes+(SnP_stateAlignment-1))/SnP_stateAlignment)*SnP_stateAlignment)
+#define SnP_stateOffset SnP_stateSizeInBytes
 #define stateWithIndex(i) ((unsigned char *)states+((i)*SnP_stateOffset))
+#define stateWithIndexConst(i) ((const unsigned char *)states+((i)*SnP_stateOffset))
 
 #define SnP_StaticInitialize            JOIN(SnP, _StaticInitialize)
 #define SnP_Initialize                  JOIN(SnP, _Initialize)
@@ -217,7 +225,7 @@ void PlSnP_ExtractLanesAll(const void *states, unsigned char *data, unsigned int
 
     for(i=0; i<PlSnP_factor; i++) {
         #if (PlSnP_baseParallelism == 1)
-            SnP_ExtractBytes(stateWithIndex(i), data, 0, laneCount*SnP_laneLengthInBytes);
+            SnP_ExtractBytes(stateWithIndexConst(i), data, 0, laneCount*SnP_laneLengthInBytes);
         #else
             SnP_ExtractLanesAll(stateWithIndex(i), data, laneCount, laneOffset);
         #endif
@@ -240,7 +248,7 @@ void PlSnP_ExtractAndAddLanesAll(const void *states, const unsigned char *input,
 
     for(i=0; i<PlSnP_factor; i++) {
         #if (PlSnP_baseParallelism == 1)
-            SnP_ExtractAndAddBytes(stateWithIndex(i), input, output, 0, laneCount*SnP_laneLengthInBytes);
+            SnP_ExtractAndAddBytes(stateWithIndexConst(i), input, output, 0, laneCount*SnP_laneLengthInBytes);
         #else
             SnP_ExtractAndAddLanesAll(stateWithIndex(i), input, output, laneCount, laneOffset);
         #endif

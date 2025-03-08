@@ -8,7 +8,7 @@
 #include <assert.h>
 
 #include "ecrypt-sync.h"
-#include "ecrypt-portable.h"
+#include  "ecrypt-portable.h"
 #include "dragon-sboxes.c"
 
 /**

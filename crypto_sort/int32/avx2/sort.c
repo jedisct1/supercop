@@ -1186,5 +1186,5 @@ static void int32_sort(int32 *x,long long n)
 
 void crypto_sort(void *array,long long n)
 { 
-  int32_sort(array,n);
+  int32_sort((int32 *) array,n);
 }

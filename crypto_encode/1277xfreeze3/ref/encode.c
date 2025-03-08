@@ -1,3 +1,4 @@
+// 20250302 djb: port to -Wc++-compat
 #include "crypto_encode.h"
 #include "crypto_int16.h"
 #define int16 crypto_int16
@@ -18,7 +19,7 @@ static inline char F3_freeze(int16 x)
 
 void crypto_encode(unsigned char *s,const void *v)
 {
-  const int16 *r = v;
+  const int16 *r = (const int16 *) v;
 
   int i;
   for (i = 0;i < p;++i)

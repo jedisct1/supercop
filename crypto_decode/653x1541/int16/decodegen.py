@@ -22,6 +22,7 @@ if len(sys.argv) > 5: div3 = sys.argv[5]=='True'
 top = 16384
 
 print('/* auto-generated; do not edit */')
+print('/* 20250302 djb: port to -Wc++-compat */')
 print('')
 print('#include "crypto_decode.h"')
 print('#include "crypto_int16.h"')
@@ -43,7 +44,7 @@ static int16 mulhi(int16 x,int16 y)
 
 print('void crypto_decode(void *v,const unsigned char *s)')
 print('{')
-print('  int16 *R = v;')
+print('  int16 *R = (int16 *) v;')
 
 print('  long long i;')
 print('  int16 a0,a1,ri,lo,s0,s1;')

@@ -1,4 +1,5 @@
 /* auto-generated; do not edit */
+/* 20250302 djb: port to -Wc++-compat */
 
 #include <immintrin.h>
 #include "crypto_encode.h"
@@ -11,7 +12,7 @@
 
 void crypto_encode(unsigned char *out,const void *v)
 {
-  const int16 *R0 = v;
+  const int16 *R0 = (const int16 *) v;
   /* XXX: caller could overlap R with input */
   uint16 R[639];
   long i;

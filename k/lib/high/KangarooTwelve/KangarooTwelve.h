@@ -1,7 +1,12 @@
 /*
-Implementation by Ronny Van Keer, hereby denoted as "the implementer".
+The eXtended Keccak Code Package (XKCP)
+https://github.com/XKCP/XKCP
 
-For more information, feedback or questions, please refer to our website:
+KangarooTwelve, designed by Guido Bertoni, Joan Daemen, Michaël Peeters, Gilles Van Assche, Ronny Van Keer and Benoît Viguier.
+
+Implementation by Gilles Van Assche and Ronny Van Keer, hereby denoted as "the implementer".
+
+For more information, feedback or questions, please refer to the Keccak Team website:
 https://keccak.team/
 
 To the extent possible under law, the implementer has waived all copyright
@@ -12,25 +17,28 @@ http://creativecommons.org/publicdomain/zero/1.0/
 #ifndef _KangarooTwelve_h_
 #define _KangarooTwelve_h_
 
-#ifndef KeccakP1600_excluded
+#include "config.h"
+#ifdef XKCP_has_KeccakP1600
 
 #include <stddef.h>
 #include "align.h"
-#include "KeccakSpongeWidth1600.h"
+#include "TurboSHAKE.h"
 #include "Phases.h"
 
 typedef KCP_Phases KangarooTwelve_Phases;
 
 typedef struct {
-    KeccakWidth1600_12rounds_SpongeInstance queueNode;
-    KeccakWidth1600_12rounds_SpongeInstance finalNode;
+    TurboSHAKE_Instance queueNode;
+    TurboSHAKE_Instance finalNode;
     size_t fixedOutputLength;
     size_t blockNumber;
     unsigned int queueAbsorbedLen;
     KangarooTwelve_Phases phase;
+    int securityLevel;
 } KangarooTwelve_Instance;
 
 /** Extendable ouput function KangarooTwelve.
+  * @param  securityLevel   128 for KT128 or 256 for KT256
   * @param  input           Pointer to the input message (M).
   * @param  inputByteLen    The length of the input message in bytes.
   * @param  output          Pointer to the output buffer.
@@ -39,16 +47,33 @@ typedef struct {
   * @param  customByteLen   The length of the customization string in bytes.
   * @return 0 if successful, 1 otherwise.
   */
-int KangarooTwelve(const unsigned char *input, size_t inputByteLen, unsigned char *output, size_t outputByteLen, const unsigned char *customization, size_t customByteLen );
+int KangarooTwelve(int securityLevel, const unsigned char *input, size_t inputByteLen, unsigned char *output, size_t outputByteLen, const unsigned char *customization, size_t customByteLen);
+
+/**
+ * Wrapper around `KangarooTwelve` to use the 128-bit security level.
+*/
+int KT128(const unsigned char *input, size_t inputByteLen, unsigned char *output, size_t outputByteLen, const unsigned char *customization, size_t customByteLen);
+
+/**
+ * Wrapper around `KangarooTwelve` to use the 256-bit security level.
+*/
+int KT256(const unsigned char *input, size_t inputByteLen, unsigned char *output, size_t outputByteLen, const unsigned char *customization, size_t customByteLen);
 
 /**
   * Function to initialize a KangarooTwelve instance.
   * @param  ktInstance      Pointer to the instance to be initialized.
+  * @param  securityLevel   128 for KT128 or 256 for KT256
   * @param  outputByteLen   The desired number of output bytes,
   *                         or 0 for an arbitrarily-long output.
   * @return 0 if successful, 1 otherwise.
   */
-int KangarooTwelve_Initialize(KangarooTwelve_Instance *ktInstance, size_t outputByteLen);
+int KangarooTwelve_Initialize(KangarooTwelve_Instance *ktInstance, int securityLevel, size_t outputByteLen);
+
+#define KT128_Initialize(instance, outputByteLen) \
+    KangarooTwelve_Initialize((instance), 128, (outputByteLen));
+
+#define KT256_Initialize(instance, outputByteLen) \
+    KangarooTwelve_Initialize((instance), 256, (outputByteLen));
 
 /**
   * Function to give input data to be absorbed.
@@ -84,6 +109,8 @@ int KangarooTwelve_Final(KangarooTwelve_Instance *ktInstance, unsigned char *out
   */
 int KangarooTwelve_Squeeze(KangarooTwelve_Instance *ktInstance, unsigned char *output, size_t outputByteLen);
 
+#else
+#error This requires an implementation of Keccak-p[1600]
 #endif
 
 #endif

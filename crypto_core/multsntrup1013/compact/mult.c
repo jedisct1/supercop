@@ -1,3 +1,4 @@
+// 20240812 djb: more cryptoint usage
 #include "crypto_core.h"
 #include "params.h"
 
@@ -35,7 +36,7 @@ int crypto_core(unsigned char *outbytes,const unsigned char *inbytes,const unsig
   for (i = 0; i < p + p - 1; ++i) fg[i] = 0;
   for (j = 0; j < p; ++j) {
     small gjx = kbytes[j];
-    small gj0 = -crypto_int8_bottombit_mask(gjx);
+    small gj0 = crypto_int8_bottombit_01(gjx);
     int32 gj = gj0-(gjx&(gj0<<1));
     for (i = 0; i < p; ++i) fg[i + j] += f32[i] * gj;
   }
@@ -44,5 +45,6 @@ int crypto_core(unsigned char *outbytes,const unsigned char *inbytes,const unsig
   for (i = 0; i < p; ++i) h[i] = Fq_freeze(fg[i]);
 
   crypto_encode_pxint16(outbytes,h);
+
   return 0;
 }

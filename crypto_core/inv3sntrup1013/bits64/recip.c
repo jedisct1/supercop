@@ -1,3 +1,5 @@
+// 20250302 djb: port to -Wc++-compat
+// 20240812 djb: more cryptoint usage
 #include "crypto_core.h"
 
 #include "params.h"
@@ -16,12 +18,12 @@ typedef uint64 bitvec[bitvec_len];
 
 static inline int8 bitvec_bot(bitvec v)
 {
-  return -crypto_uint64_bottombit_mask(v[0]);
+  return crypto_uint64_bottombit_01(v[0]);
 }
 
 static inline int8 bitvec_get(bitvec v,int pos)
 {
-  return -crypto_uint64_bitmod_mask(v[pos>>6],pos);
+  return crypto_uint64_bitmod_01(v[pos>>6],pos);
 }
 
 static inline void bitvec_set(bitvec v,int pos,int8 bit)
@@ -40,7 +42,7 @@ static void bitvec_shiftup(bitvec v)
 {
   int i;
   for (i = bitvec_len-1;i > 0;--i)
-    v[i] = (v[i]<<1)|-crypto_int64_negative_mask(v[i-1]);
+    v[i] = (v[i]<<1)|crypto_int64_negative_01(v[i-1]);
   v[0] <<= 1;
 }
 
@@ -48,7 +50,7 @@ static void bitvec_shiftdown(bitvec v)
 {
   int i;
   for (i = 0;i < bitvec_len-1;++i)
-    v[i] = (v[i]>>1)|(crypto_uint64_bottombit_mask(v[i+1])<<63);
+    v[i] = (v[i]>>1)|(crypto_int64_shlmod(v[i+1],63));
   v[bitvec_len-1] >>= 1;
 }
 
@@ -87,9 +89,9 @@ static void bitvec_eliminate(bitvec f0,bitvec f1,bitvec g0,bitvec g1,uint64 c0,u
 
 /* byte p of output is 0 if recip succeeded; else -1 */
 int crypto_core(unsigned char *outbytes,const unsigned char *inbytes,const unsigned char *kbytes,const unsigned char *cbytes)
-{
-  int8 *out = (void *) outbytes;
-  int8 *in = (void *) inbytes;
+{ 
+  int8 *out = (int8 *) outbytes;
+  int8 *in = (int8 *) inbytes;
   bitvec f0,f1,g0,g1,v0,v1,r0,r1;
   int i,loop,delta;
   int8 sign0,sign1;
@@ -106,7 +108,7 @@ int crypto_core(unsigned char *outbytes,const unsigned char *inbytes,const unsig
   bitvec_set(f1,p,1);
   bitvec_zero(g0); bitvec_zero(g1);
   for (i = 0;i < p;++i) {
-    int8 x0 = -crypto_int8_bottombit_mask(in[i]);
+    int8 x0 = crypto_int8_bottombit_01(in[i]);
     int8 x1 = x0&(in[i]>>1);
     bitvec_set(g0,p-1-i,x0);
     bitvec_set(g1,p-1-i,x1);
@@ -152,5 +154,6 @@ int crypto_core(unsigned char *outbytes,const unsigned char *inbytes,const unsig
   }
 
   out[p] = crypto_int16_nonzero_mask(delta);
+
   return 0;
 } 

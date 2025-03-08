@@ -4,8 +4,8 @@
 
 
 typedef struct hash_ctx_s {
-    uint8_t state[KeccakP1600_stateSizeInBytes]
-        __attribute__((aligned(KeccakP1600_stateAlignment)));
+    uint8_t state[200]
+        __attribute__((aligned(8)));
     uint8_t position, squeezing;
 } hash_ctx_s, hash_ctx_t[1];
 

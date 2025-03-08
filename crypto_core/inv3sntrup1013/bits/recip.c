@@ -1,3 +1,4 @@
+// 20250302 djb: port to -Wc++-compat
 #include "crypto_core.h"
 
 #include "params.h"
@@ -78,8 +79,8 @@ static void bitvec_eliminate(bitvec f0,bitvec f1,bitvec g0,bitvec g1,const int8 
 /* byte p of output is 0 if recip succeeded; else -1 */
 int crypto_core(unsigned char *outbytes,const unsigned char *inbytes,const unsigned char *kbytes,const unsigned char *cbytes)
 {
-  int8 *out = (void *) outbytes;
-  int8 *in = (void *) inbytes;
+  int8 *out = (int8 *) outbytes;
+  int8 *in = (int8 *) inbytes;
   bitvec f0,f1,g0,g1,v0,v1,r0,r1;
   int i,loop,delta;
   int8 sign0,sign1;

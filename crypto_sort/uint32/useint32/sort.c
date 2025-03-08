@@ -7,7 +7,7 @@
 
 void crypto_sort(void *array,long long n)
 {
-  crypto_uint32 *x = array;
+  crypto_uint32 *x = (crypto_uint32 *) array;
   long long j;
   for (j = 0;j < n;++j) x[j] ^= 0x80000000;
   crypto_sort_int32(array,n);

@@ -16,7 +16,7 @@
 #ifndef ECRYPT_SYNC
 #define ECRYPT_SYNC
 
-#include "ecrypt-portable.h"
+#include  "ecrypt-portable.h"
 
 /* Cipher parameters */
 

@@ -1,4 +1,6 @@
 /* auto-generated; do not edit */
+/* 20250302 djb: port to -Wc++-compat */
+/* 20240812 djb: more cryptoint usage */
 
 #include <immintrin.h>
 #include "crypto_decode.h"
@@ -66,7 +68,7 @@ static inline __m256i ifnegaddconst(__m256i x,int16 y)
 
 void crypto_decode(void *v,const unsigned char *s)
 {
-  int16 *R0 = v;
+  int16 *R0 = (int16 *) v;
   int16 R1[507],R2[254],R3[127],R4[64],R5[32],R6[16],R7[8],R8[4],R9[2],R10[1];
   long long i;
   int16 a0,a1,a2;
@@ -78,8 +80,8 @@ void crypto_decode(void *v,const unsigned char *s)
   a1 = mulhi(a1,-78)-mulhi(mullo(a1,4305),274);
   a1 += *--s; /* -137...391 */
   a1 -= 274; /* -411...117 */
-  a1 += (a1>>15)&274; /* -137...273 */
-  a1 += (a1>>15)&274; /* 0...273 */
+  a1 += 274&crypto_int16_negative_mask(a1); /* -137...273 */
+  a1 += 274&crypto_int16_negative_mask(a1); /* 0...273 */
   R10[0] = a1;
   
   /* R10 ------> R9: reconstruct mod 1*[91]+[769] */
@@ -90,13 +92,13 @@ void crypto_decode(void *v,const unsigned char *s)
   a0 = mulhi(a0,1)-mulhi(mullo(a0,12243),91); /* -46...45 */
   a0 += s[1*i+0]; /* -46...300 */
   a0 = mulhi(a0,16)-mulhi(mullo(a0,-720),91); /* -46...45 */
-  a0 += (a0>>15)&91; /* 0...90 */
+  a0 += 91&crypto_int16_negative_mask(a0); /* 0...90 */
   a1 = (a2<<8)+s[i]-a0;
   a1 = mullo(a1,12243);
 
   /* invalid inputs might need reduction mod 769 */
   a1 -= 769;
-  a1 += (a1>>15)&769;
+  a1 += 769&crypto_int16_negative_mask(a1);
 
   R9[0] = a0;
   R9[1] = a1;
@@ -110,13 +112,13 @@ void crypto_decode(void *v,const unsigned char *s)
   a0 = mulhi(a0,64)-mulhi(mullo(a0,20696),152); /* -76...92 */
   a0 += s[1*i+0]; /* -76...347 */
   a0 = mulhi(a0,24)-mulhi(mullo(a0,-431),152); /* -77...76 */
-  a0 += (a0>>15)&152; /* 0...151 */
+  a0 += 152&crypto_int16_negative_mask(a0); /* 0...151 */
   a1 = (a2<<5)+((s[i]-a0)>>3);
   a1 = mullo(a1,-13797);
 
   /* invalid inputs might need reduction mod 1294 */
   a1 -= 1294;
-  a1 += (a1>>15)&1294;
+  a1 += 1294&crypto_int16_negative_mask(a1);
 
   R8[2] = a0;
   R8[3] = a1;
@@ -126,13 +128,13 @@ void crypto_decode(void *v,const unsigned char *s)
     a0 = mulhi(a0,64)-mulhi(mullo(a0,20696),152); /* -76...92 */
     a0 += s[1*i+0]; /* -76...347 */
     a0 = mulhi(a0,24)-mulhi(mullo(a0,-431),152); /* -77...76 */
-    a0 += (a0>>15)&152; /* 0...151 */
+    a0 += 152&crypto_int16_negative_mask(a0); /* 0...151 */
     a1 = (a2<<5)+((s[i]-a0)>>3);
     a1 = mullo(a1,-13797);
 
     /* invalid inputs might need reduction mod 152 */
     a1 -= 152;
-    a1 += (a1>>15)&152;
+    a1 += 152&crypto_int16_negative_mask(a1);
 
     R8[2*i] = a0;
     R8[2*i+1] = a1;
@@ -146,14 +148,14 @@ void crypto_decode(void *v,const unsigned char *s)
   a0 = mulhi(a0,-92)-mulhi(mullo(a0,-19628),197); /* -122...98 */
   a0 += s[1*i+0]; /* -122...353 */
   a0 -= 197; /* -319..>156 */
-  a0 += (a0>>15)&197; /* -122...196 */
-  a0 += (a0>>15)&197; /* 0...196 */
+  a0 += 197&crypto_int16_negative_mask(a0); /* -122...196 */
+  a0 += 197&crypto_int16_negative_mask(a0); /* 0...196 */
   a1 = (a2<<8)+s[i]-a0;
   a1 = mullo(a1,32269);
 
   /* invalid inputs might need reduction mod 1681 */
   a1 -= 1681;
-  a1 += (a1>>15)&1681;
+  a1 += 1681&crypto_int16_negative_mask(a1);
 
   R7[6] = a0;
   R7[7] = a1;
@@ -163,14 +165,14 @@ void crypto_decode(void *v,const unsigned char *s)
     a0 = mulhi(a0,-92)-mulhi(mullo(a0,-19628),197); /* -122...98 */
     a0 += s[1*i+0]; /* -122...353 */
     a0 -= 197; /* -319..>156 */
-    a0 += (a0>>15)&197; /* -122...196 */
-    a0 += (a0>>15)&197; /* 0...196 */
+    a0 += 197&crypto_int16_negative_mask(a0); /* -122...196 */
+    a0 += 197&crypto_int16_negative_mask(a0); /* 0...196 */
     a1 = (a2<<8)+s[i]-a0;
     a1 = mullo(a1,32269);
 
     /* invalid inputs might need reduction mod 197 */
     a1 -= 197;
-    a1 += (a1>>15)&197;
+    a1 += 197&crypto_int16_negative_mask(a1);
 
     R7[2*i] = a0;
     R7[2*i+1] = a1;
@@ -183,13 +185,13 @@ void crypto_decode(void *v,const unsigned char *s)
   a2 = a0 = R7[7];
   a0 = mulhi(a0,-1678)-mulhi(mullo(a0,-4679),3586); /* -2213...1793 */
   a0 += s[1*i+0]; /* -2213...2048 */
-  a0 += (a0>>15)&3586; /* 0...3585 */
+  a0 += 3586&crypto_int16_negative_mask(a0); /* 0...3585 */
   a1 = (a2<<7)+((s[i]-a0)>>1);
   a1 = mullo(a1,-1791);
 
   /* invalid inputs might need reduction mod 120 */
   a1 -= 120;
-  a1 += (a1>>15)&120;
+  a1 += 120&crypto_int16_negative_mask(a1);
 
   R6[14] = a0;
   R6[15] = a1;
@@ -200,13 +202,13 @@ void crypto_decode(void *v,const unsigned char *s)
     a0 += s[2*i+1]; /* -2213...2048 */
     a0 = mulhi(a0,-1678)-mulhi(mullo(a0,-4679),3586); /* -1846...1849 */
     a0 += s[2*i+0]; /* -1846...2104 */
-    a0 += (a0>>15)&3586; /* 0...3585 */
+    a0 += 3586&crypto_int16_negative_mask(a0); /* 0...3585 */
     a1 = (a2<<15)+(s[2*i+1]<<7)+((s[2*i]-a0)>>1);
     a1 = mullo(a1,-1791);
 
     /* invalid inputs might need reduction mod 3586 */
     a1 -= 3586;
-    a1 += (a1>>15)&3586;
+    a1 += 3586&crypto_int16_negative_mask(a1);
 
     R6[2*i] = a0;
     R6[2*i+1] = a1;
@@ -221,13 +223,13 @@ void crypto_decode(void *v,const unsigned char *s)
   a0 += s[2*i+1]; /* -539...734 */
   a0 = mulhi(a0,-238)-mulhi(mullo(a0,-17513),958); /* -482...480 */
   a0 += s[2*i+0]; /* -482...735 */
-  a0 += (a0>>15)&958; /* 0...957 */
+  a0 += 958&crypto_int16_negative_mask(a0); /* 0...957 */
   a1 = (a2<<15)+(s[2*i+1]<<7)+((s[2*i]-a0)>>1);
   a1 = mullo(a1,-1505);
 
   /* invalid inputs might need reduction mod 8200 */
   a1 -= 8200;
-  a1 += (a1>>15)&8200;
+  a1 += 8200&crypto_int16_negative_mask(a1);
 
   R5[30] = a0;
   R5[31] = a1;
@@ -236,13 +238,13 @@ void crypto_decode(void *v,const unsigned char *s)
     a2 = a0 = R6[i];
     a0 = mulhi(a0,-238)-mulhi(mullo(a0,-17513),958); /* -539...479 */
     a0 += s[1*i+0]; /* -539...734 */
-    a0 += (a0>>15)&958; /* 0...957 */
+    a0 += 958&crypto_int16_negative_mask(a0); /* 0...957 */
     a1 = (a2<<7)+((s[i]-a0)>>1);
     a1 = mullo(a1,-1505);
 
     /* invalid inputs might need reduction mod 958 */
     a1 -= 958;
-    a1 += (a1>>15)&958;
+    a1 += 958&crypto_int16_negative_mask(a1);
 
     R5[2*i] = a0;
     R5[2*i+1] = a1;
@@ -255,13 +257,13 @@ void crypto_decode(void *v,const unsigned char *s)
   a2 = a0 = R5[31];
   a0 = mulhi(a0,538)-mulhi(mullo(a0,-2118),7921); /* -3961...4095 */
   a0 += s[1*i+0]; /* -3961...4350 */
-  a0 += (a0>>15)&7921; /* 0...7920 */
+  a0 += 7921&crypto_int16_negative_mask(a0); /* 0...7920 */
   a1 = (a2<<8)+s[i]-a0;
   a1 = mullo(a1,4625);
 
   /* invalid inputs might need reduction mod 265 */
   a1 -= 265;
-  a1 += (a1>>15)&265;
+  a1 += 265&crypto_int16_negative_mask(a1);
 
   R4[62] = a0;
   R4[63] = a1;
@@ -339,13 +341,13 @@ void crypto_decode(void *v,const unsigned char *s)
   a0 += s[2*i+1]; /* -1228...1462 */
   a0 = mulhi(a0,-84)-mulhi(mullo(a0,-6950),2414); /* -1209...1208 */
   a0 += s[2*i+0]; /* -1209...1463 */
-  a0 += (a0>>15)&2414; /* 0...2413 */
+  a0 += 2414&crypto_int16_negative_mask(a0); /* 0...2413 */
   a1 = (a2<<15)+(s[2*i+1]<<7)+((s[2*i]-a0)>>1);
   a1 = mullo(a1,6407);
 
   /* invalid inputs might need reduction mod 7177 */
   a1 -= 7177;
-  a1 += (a1>>15)&7177;
+  a1 += 7177&crypto_int16_negative_mask(a1);
 
   R2[252] = a0;
   R2[253] = a1;

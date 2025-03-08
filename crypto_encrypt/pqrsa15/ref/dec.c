@@ -1,5 +1,5 @@
 #include <stdlib.h>
-#include <libkeccak.a.headers/KeccakSpongeWidth1600.h>
+#include <libkeccak.a.headers/KeccakSponge.h>
 #include "randombytes.h"
 #include "gmp_import.h"
 #include "gmp_export.h"

@@ -17,10 +17,6 @@
 void HashUpdate(HashInstance* ctx, const uint8_t* data, size_t byteLen)
 {
     HashReturn ret = Keccak_HashUpdate(ctx, data, byteLen * 8);
-
-    if (ret != SUCCESS) {
-        assert(!"Keccak_HashUpdate failed");
-    }
 }
 
 void HashInit(HashInstance* ctx, paramset_t* params, uint8_t hashPrefix)
@@ -40,18 +36,11 @@ void HashInit(HashInstance* ctx, paramset_t* params, uint8_t hashPrefix)
 void HashFinal(HashInstance* ctx)
 {
     HashReturn ret = Keccak_HashFinal(ctx, NULL);
-
-    if (ret != SUCCESS) {
-    }
 }
-
 
 void HashSqueeze(HashInstance* ctx, uint8_t* digest, size_t byteLen)
 {
     HashReturn ret = Keccak_HashSqueeze(ctx, digest, byteLen * 8);
-
-    if (ret != SUCCESS) {
-    }
 }
 
 uint16_t toLittleEndian(uint16_t x)

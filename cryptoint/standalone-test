@@ -1,0 +1,27 @@
+#!/bin/sh -e
+
+# usage: ./standalone-test
+# or:    ./standalone-test gcc -Os
+
+case $# in
+  0)
+    c='gcc -O3'
+    ;;
+  *)
+    c="$@"
+esac
+
+for bits in 8 16 32 64
+do
+  for sign in int uint
+  do
+    target="$sign""$bits"
+    echo "=== `date` === testing crypto_$target under $c..." >&2
+    rm -f crypto_$target test-$target.c test-$target.o ${target}_optblocker.o
+    sed -e s/TYPE/crypto_$target/g -e s/N/$bits/g < test.c > test-$target.c
+    $c -c ${target}_optblocker.c || continue
+    $c -Dsign_is_$sign -o crypto_$target test-$target.c ${target}_optblocker.o || continue
+    $DEVICE ./crypto_$target 1 0 || continue
+    echo "=== `date` === passed crypto_$target under $c" >&2
+  done
+done

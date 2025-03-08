@@ -1,7 +1,12 @@
 /*
+The eXtended Keccak Code Package (XKCP)
+https://github.com/XKCP/XKCP
+
+Kravatte, designed by Guido Bertoni, Joan Daemen, Seth Hoffert, Michaël Peeters, Gilles Van Assche and Ronny Van Keer.
+
 Implementation by Ronny Van Keer, hereby denoted as "the implementer".
 
-For more information, feedback or questions, please refer to our website:
+For more information, feedback or questions, please refer to the Keccak Team website:
 https://keccak.team/
 
 To the extent possible under law, the implementer has waived all copyright
@@ -12,7 +17,8 @@ http://creativecommons.org/publicdomain/zero/1.0/
 #ifndef _KravatteModes_h_
 #define _KravatteModes_h_
 
-#ifndef KeccakP1600_excluded
+#include "config.h"
+#ifdef XKCP_has_KeccakP1600
 
 #include <stddef.h>
 #include <stdint.h>
@@ -234,6 +240,8 @@ int Kravatte_WBCAE_Encipher(Kravatte_Instance *kvwInstance, BitSequence *plainte
 int Kravatte_WBCAE_Decipher(Kravatte_Instance *kvwInstance, const BitSequence *ciphertext, BitSequence *plaintext, BitLength dataBitLen, 
                         const BitSequence *AD, BitLength ADBitLen);
 
+#else
+#error This requires an implementation of Keccak-p[1600]
 #endif
 
 #endif

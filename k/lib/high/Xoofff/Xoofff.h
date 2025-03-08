@@ -1,7 +1,12 @@
 /*
+The eXtended Keccak Code Package (XKCP)
+https://github.com/XKCP/XKCP
+
+Xoofff, designed by Joan Daemen, Seth Hoffert, Gilles Van Assche and Ronny Van Keer.
+
 Implementation by Ronny Van Keer, hereby denoted as "the implementer".
 
-For more information, feedback or questions, please refer to our website:
+For more information, feedback or questions, please refer to the Keccak Team website:
 https://keccak.team/
 
 To the extent possible under law, the implementer has waived all copyright
@@ -12,7 +17,8 @@ http://creativecommons.org/publicdomain/zero/1.0/
 #ifndef _Xoofff_h_
 #define _Xoofff_h_
 
-#ifndef Xoodoo_excluded
+#include "config.h"
+#ifdef XKCP_has_Xoodoo
 
 #include <stddef.h>
 #include <stdint.h>
@@ -43,44 +49,35 @@ typedef enum
     EXPANDED,
 } Xoofff_Phases;
 
-#include "Xoodoo-times16-SnP.h"
-#include "Xoodoo-times8-SnP.h"
-#include "Xoodoo-times4-SnP.h"
-#include "Xoodoo-SnP.h"
-#if !defined(Xoodootimes16_isFallback)
+#if defined(XKCP_has_Xoodootimes16)
     #define XoodooMaxParallellism   16
-    #define Xoofff_Alignment        Xoodootimes16_statesAlignment
+    #define XoodooAlignment         64
     #if defined(Xoodootimes16_FastXoofff_supported)
         #define    Xoofff_AddIs    Xooffftimes16_AddIs
     #endif
-#elif !defined(Xoodootimes8_isFallback)
+#elif defined(XKCP_has_Xoodootimes8)
     #define XoodooMaxParallellism   8
-    #define Xoofff_Alignment        Xoodootimes8_statesAlignment
+    #define XoodooAlignment         32
     #if defined(Xoodootimes8_FastXoofff_supported)
         #define    Xoofff_AddIs    Xooffftimes8_AddIs
     #endif
-#elif !defined(Xoodootimes4_isFallback)
+#elif defined(XKCP_has_Xoodootimes4)
     #define XoodooMaxParallellism   4
-    #define Xoofff_Alignment        Xoodootimes4_statesAlignment
+    #define XoodooAlignment         16
     #if defined(Xoodootimes4_FastXoofff_supported)
         #define    Xoofff_AddIs    Xooffftimes4_AddIs
     #endif
 #else
     #define XoodooMaxParallellism   1
-    #define Xoofff_Alignment        Xoodoo_stateAlignment
+    #define XoodooAlignment         4
 #endif
 
-ALIGN(Xoofff_Alignment) typedef struct
-{
-    unsigned char a[SnP_widthInBytes];
-} Xoofff_AlignedArray;
-
 typedef struct {
-    Xoofff_AlignedArray k;
-    Xoofff_AlignedArray kRoll;
-    Xoofff_AlignedArray xAccu;
-    Xoofff_AlignedArray yAccu;
-    Xoofff_AlignedArray queue;      /* input/output queue buffer */
+    ALIGN(XoodooAlignment) uint8_t k[48];
+    ALIGN(XoodooAlignment) uint8_t kRoll[48];
+    ALIGN(XoodooAlignment) uint8_t xAccu[48];
+    ALIGN(XoodooAlignment) uint8_t yAccu[48];
+    ALIGN(XoodooAlignment) uint8_t queue[48];     /* input/output queue buffer */
     BitLength queueOffset;          /* current offset in queue */
     Xoofff_Phases phase;
 } Xoofff_Instance;
@@ -128,6 +125,8 @@ int Xoofff_Expand(Xoofff_Instance *xpInstance, BitSequence *output, BitLength ou
   */
 int Xoofff(Xoofff_Instance *xpInstance, const BitSequence *input, BitLength inputBitLen, BitSequence *output, BitLength outputBitLen, int flags);
 
+#else
+#error This requires an implementation of Xoodoo
 #endif
 
 #endif

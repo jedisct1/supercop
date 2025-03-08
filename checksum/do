@@ -2,6 +2,15 @@
 
 mkdir bin
 
+echo "=== `date` === Trying usesha256sum..." >&2
+case `echo hello | ./usesha256sum || :` in
+  5891b5b522d5df086d0ff0b110fbd9d21bb4fc7163af34d08286a2e846f6be03)
+    echo "=== `date` === Success." >&2
+    cp usesha256sum bin/adequatechecksum
+    exit 0
+    ;;
+esac
+
 (
   echo sha256
 ) | (
@@ -10,25 +19,26 @@ mkdir bin
     okabi | (
       while read abi
       do
-        okc-$abi | (
-          while read c
-          do
-            echo "=== `date` === Trying $n.c with $c..." >&2
-            rm -f adequatechecksum.c
+	okc-$abi | (
+	  while read c
+	  do
+	    echo "=== `date` === Trying $n.c with $c..." >&2
+	    rm -f adequatechecksum.c
 	    cp $n.c adequatechecksum.c || continue
-            $c -o adequatechecksum adequatechecksum.c || continue
+	    $c -o adequatechecksum adequatechecksum.c || continue
 	    case `echo hello | ./adequatechecksum || :` in
 	      5891b5b522d5df086d0ff0b110fbd9d21bb4fc7163af34d08286a2e846f6be03)
-	        ;;
-              *)
-	        continue
 		;;
-            esac
+	      *)
+		continue
+		;;
+	    esac
+	    echo "=== `date` === Success." >&2
 	    cp adequatechecksum bin/adequatechecksum
-            exit 0
-          done
-          exit 111
-        ) && exit 0
+	    exit 0
+	  done
+	  exit 111
+	) && exit 0
       done
       exit 111
     ) && exit 0

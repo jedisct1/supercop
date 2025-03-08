@@ -15,10 +15,10 @@ okabi | (
 
             echo "=== `date` === $abi testing crypto_$target under $c..." >&2
             rm -f crypto_$target test-$target.c test-$target.o ${target}_optblocker.o
-            sed -e s/TYPE/crypto_$target/g -e s/N/$bits/g < test-$sign.c > test-$target.c
+            sed -e s/TYPE/crypto_$target/g -e s/N/$bits/g < test.c > test-$target.c
             $c -c ${target}_optblocker.c || continue
-            $c -o crypto_$target test-$target.c ${target}_optblocker.o || continue
-            ./crypto_$target 1 0 || continue
+            $c -Dsign_is_$sign -o crypto_$target test-$target.c ${target}_optblocker.o || continue
+            $DEVICE ./crypto_$target 1 0 || continue
 
             echo "=== `date` === $abi passed crypto_$target under $c" >&2
             mkdir -p lib/$abi

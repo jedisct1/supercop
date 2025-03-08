@@ -1,7 +1,12 @@
 /*
+The eXtended Keccak Code Package (XKCP)
+https://github.com/XKCP/XKCP
+
+Xoofff, designed by Joan Daemen, Seth Hoffert, Gilles Van Assche and Ronny Van Keer.
+
 Implementation by Ronny Van Keer, hereby denoted as "the implementer".
 
-For more information, feedback or questions, please refer to our website:
+For more information, feedback or questions, please refer to the Keccak Team website:
 https://keccak.team/
 
 To the extent possible under law, the implementer has waived all copyright
@@ -9,10 +14,7 @@ and related or neighboring rights to the source code in this file.
 http://creativecommons.org/publicdomain/zero/1.0/
 */
 
-#ifndef Xoodoo_excluded
-
 #include <string.h>
-#include <assert.h>
 #include "brg_endian.h"
 #include "Xoofff.h"
 #include "XoofffModes.h"
@@ -61,7 +63,7 @@ static BitLength XoofffWBC_Split(BitLength n)
         for (x = 1; (BitLength)(1 << x) < q; ++x)
             ; /* empty */
         --x;
-        nL = (q - (1 << x)) * XoofffWBC_b - XoofffWBC_l;
+        nL = (q - (BitLength)(1 << x)) * XoofffWBC_b - XoofffWBC_l;
     }
     return nL;
 }
@@ -95,8 +97,8 @@ int XoofffWBC_Encipher(Xoofff_Instance *xp, const BitSequence *plaintext, BitSeq
     /* L = L + Fk(R || 1 . W) */
     if (Xoofff_Compress(xp, W, WBitLen, Xoofff_FlagInit | Xoofff_FlagLastPart) != 0)
         return 1;
-    memcpy(HkW, xp->xAccu.a, SnP_widthInBytes);
-    memcpy(kRollAfterHkW, xp->kRoll.a+Xoofff_RollOffset, Xoofff_RollSizeInBytes);
+    memcpy(HkW, xp->xAccu, SnP_widthInBytes);
+    memcpy(kRollAfterHkW, xp->kRoll+Xoofff_RollOffset, Xoofff_RollSizeInBytes);
     numberOfBitsInLastByte = nR & 7;
     lastByte[0] = (numberOfBitsInLastByte != 0) ? Rp[nR/8] : 0;
     if (nR0 == nR) {
@@ -118,8 +120,8 @@ int XoofffWBC_Encipher(Xoofff_Instance *xp, const BitSequence *plaintext, BitSeq
     Xoofff_AddIs(Lc, Lp, nL);
 
     /* R = R + Fk(L || 0 . W) */
-    memcpy(xp->kRoll.a+Xoofff_RollOffset, kRollAfterHkW, Xoofff_RollSizeInBytes);
-    memcpy(xp->xAccu.a, HkW, SnP_widthInBytes);
+    memcpy(xp->kRoll+Xoofff_RollOffset, kRollAfterHkW, Xoofff_RollSizeInBytes);
+    memcpy(xp->xAccu, HkW, SnP_widthInBytes);
     if (Xoofff_Compress(xp, Lc, nL, Xoofff_FlagNone) != 0)
         return 1;
     lastByte[0] = 0;
@@ -168,8 +170,8 @@ int XoofffWBC_Decipher(Xoofff_Instance *xp, const BitSequence *ciphertext, BitSe
     /* R = R + Fk(L || 0 . W) */
     if (Xoofff_Compress(xp, W, WBitLen, Xoofff_FlagInit | Xoofff_FlagLastPart) != 0)
         return 1;
-    memcpy(HkW, xp->xAccu.a, SnP_widthInBytes);
-    memcpy(kRollAfterHkW, xp->kRoll.a+Xoofff_RollOffset, Xoofff_RollSizeInBytes);
+    memcpy(HkW, xp->xAccu, SnP_widthInBytes);
+    memcpy(kRollAfterHkW, xp->kRoll+Xoofff_RollOffset, Xoofff_RollSizeInBytes);
     if (Xoofff_Compress(xp, L0, nL0, Xoofff_FlagNone) != 0) /* compress L0 */
         return 1;
     if (Xoofff_Compress(xp, Lc + nL0 / 8, nL - nL0, Xoofff_FlagNone) != 0)  /* compress rest of L */
@@ -180,8 +182,8 @@ int XoofffWBC_Decipher(Xoofff_Instance *xp, const BitSequence *ciphertext, BitSe
     Xoofff_AddIs(Rp, Rc, nR);
 
     /* L = L + Fk(R || 1 . W) */
-    memcpy(xp->kRoll.a+Xoofff_RollOffset, kRollAfterHkW, Xoofff_RollSizeInBytes);
-    memcpy(xp->xAccu.a, HkW, SnP_widthInBytes);
+    memcpy(xp->kRoll+Xoofff_RollOffset, kRollAfterHkW, Xoofff_RollSizeInBytes);
+    memcpy(xp->xAccu, HkW, SnP_widthInBytes);
     if (Xoofff_Compress(xp, Rp, nR - numberOfBitsInLastByte, Xoofff_FlagNone) != 0)
         return 1;
     lastByte[0] = (numberOfBitsInLastByte != 0) ? Rp[nR/8] : 0;
@@ -370,7 +372,7 @@ static int XoofffSANSE_AddToHistory(XoofffSANSE_Instance *xp, const BitSequence 
     else { /* dataBitLen too big to hold everything in last byte */
         unsigned int bitsLeft;
 
-        bitsLeft = 8 - dataBitLen;
+        bitsLeft = 8 - (unsigned int)dataBitLen;
         lastByte[0] = (BitSequence)((*data & ((1 << dataBitLen) - 1)) | ((appendix & ((1 << bitsLeft) - 1)) << dataBitLen));
         appendixLen -= bitsLeft;
         appendix >>= bitsLeft;
@@ -479,5 +481,3 @@ int XoofffSANSE_Unwrap(XoofffSANSE_Instance *xp, const BitSequence *ciphertext, 
     /* else return P */
     return 0;
 }
-
-#endif

@@ -23,6 +23,8 @@ f0 = [f0i&1 for f0i in f0]
 # ---------- utility functions
 
 out = """\
+// 20250302 djb: port to -Wc++-compat
+// 20240812 djb: more cryptoint usage
 #include "crypto_core.h"
 
 #include <immintrin.h>
@@ -32,6 +34,8 @@ out = """\
 typedef int8 small;
 
 #include "crypto_int32.h"
+#include "crypto_int64.h"
+#include "crypto_uint64.h"
 
 #define p P
 #define ppad PPAD
@@ -169,7 +173,7 @@ static void vec256_init(vec256 *G0,vec256 *G1,const small *s)
 
   for (i = 0;i < ppad;++i) {
     si = srev[i+ppad-p];
-    g0[i] = -crypto_int8_bottombit_mask(si);
+    g0[i] = crypto_int8_bottombit_01(si);
     g1[i] = (si >> 1) & g0[i];
   }
 
@@ -269,7 +273,7 @@ for j in range(1,numvec+1):
     if i == j-1:
       out += '  low%d = low%d >> 1;\n' % (i,i)
     else:
-      out += '  low%d = (low%d >> 1) | (low%d << 63);\n' % (i,i,i+1)
+      out += '  low%d = (low%d >> 1) | crypto_uint64_shlmod(low%d,63);\n' % (i,i,i+1)
   out += '\n'
   for i in range(j):
     out += '  f%d = _mm256_blend_epi32(f%d,_mm256_set_epi64x(0,0,0,low%d),0x3);\n' % (i,i,i)
@@ -297,7 +301,7 @@ for j in range(1,numvec+1):
     if i == 0:
       out += '  low%d = low%d << 1;\n' % (i,i)
     else:
-      out += '  low%d = (low%d << 1) | (low%d >> 63);\n' % (i,i,i-1)
+      out += '  low%d = (low%d << 1) | crypto_int64_negative_01(low%d);\n' % (i,i,i-1)
   out += '\n'
   for i in range(j):
     if (j,i) in [(3,0),(3,1)]: # XXX: search through subsets for optimal timings
@@ -315,8 +319,8 @@ for j in range(1,numvec+1):
 out += """
 int crypto_core(unsigned char *outbytes,const unsigned char *inbytes,const unsigned char *kbytes,const unsigned char *cbytes)
 { 
-  small *out = (void *) outbytes;
-  small *in = (void *) inbytes;
+  small *out = (small *) outbytes;
+  small *in = (small *) inbytes;
   vec256 F0[numvec];
   vec256 F1[numvec];
   vec256 G0[numvec];
@@ -414,6 +418,7 @@ out += """
 
   vec256_final(out,V0,V1);
   out[p] = crypto_int32_negative_mask(minusdelta);
+
   return 0;
 }\
 """

@@ -1,3 +1,4 @@
+// 20250302 djb: port to -Wc++-compat
 #include <immintrin.h>
 #include "crypto_encode.h"
 #include "crypto_int16.h"
@@ -7,7 +8,7 @@
 
 void crypto_encode(unsigned char *s,const void *v)
 {
-  const int16 *r = v;
+  const int16 *r = (const int16 *) v;
 
   int i = p-16;
   for (;;) {

@@ -1,7 +1,12 @@
 /*
+The eXtended Keccak Code Package (XKCP)
+https://github.com/XKCP/XKCP
+
+Keccak, designed by Guido Bertoni, Joan Daemen, Michaël Peeters and Gilles Van Assche.
+
 Implementation by Gilles Van Assche, hereby denoted as "the implementer".
 
-For more information, feedback or questions, please refer to our website:
+For more information, feedback or questions, please refer to the Keccak Team website:
 https://keccak.team/
 
 To the extent possible under law, the implementer has waived all copyright
@@ -49,7 +54,7 @@ int SpongePRG_Feed(SpongePRG_Instance *instance, const unsigned char *input, uns
     unsigned int rhoInBytes = (instance->duplex.rate-2)/8;
     int error = 0;
 
-    while( !error && ((DuplexGetInputIndex(&instance->duplex) + inputByteLen) >= rhoInBytes)) {
+    while( !error && (inputByteLen >= rhoInBytes - DuplexGetInputIndex(&instance->duplex))) {
         unsigned int localSize = rhoInBytes - DuplexGetInputIndex(&instance->duplex);
         error |= DuplexingFeedPartialInput(&instance->duplex, input, localSize);
         error |= Duplexing(&instance->duplex, 0, 0, 0, 0, 0x01);

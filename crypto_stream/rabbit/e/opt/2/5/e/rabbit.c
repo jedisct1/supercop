@@ -23,7 +23,7 @@
 /******************************************************************************/
 
 #include "ecrypt-sync.h"
-#include "ecrypt-portable.h"
+#include  "ecrypt-portable.h"
 
 #if defined(__GNUC__) && defined(__i386__)
 #define RABBIT_GCC 1

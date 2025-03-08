@@ -1,7 +1,12 @@
 /*
+The eXtended Keccak Code Package (XKCP)
+https://github.com/XKCP/XKCP
+
+Keccak, designed by Guido Bertoni, Joan Daemen, Michaël Peeters and Gilles Van Assche.
+
 Implementation by Ronny Van Keer, hereby denoted as "the implementer".
 
-For more information, feedback or questions, please refer to our website:
+For more information, feedback or questions, please refer to the Keccak Team website:
 https://keccak.team/
 
 To the extent possible under law, the implementer has waived all copyright
@@ -12,16 +17,18 @@ http://creativecommons.org/publicdomain/zero/1.0/
 #ifndef _SP800_185_h_
 #define _SP800_185_h_
 
-#include <stddef.h>
-#include "align.h"
-#include "KeccakSpongeWidth1600.h"
-#include "Phases.h"
+#include "config.h"
+#ifdef XKCP_has_KeccakP1600
 
-#ifndef KeccakP1600_excluded
+#include <stddef.h>
+#include <stdint.h>
+#include "align.h"
+#include "KeccakSponge.h"
+#include "Phases.h"
 
 #ifndef _Keccak_BitTypes_
 #define _Keccak_BitTypes_
-typedef unsigned char BitSequence;
+typedef uint8_t BitSequence;
 
 typedef size_t BitLength;
 #endif
@@ -309,9 +316,9 @@ int KMAC256_Squeeze(KMAC_Instance *kmkInstance, BitSequence *output, BitLength o
 typedef struct {
     KeccakWidth1600_SpongeInstance queueNode;
     KeccakWidth1600_SpongeInstance finalNode;
-    unsigned int fixedOutputLength;
-    unsigned int blockLen;
-    unsigned int queueAbsorbedLen;
+    size_t fixedOutputLength;
+    size_t blockLen;
+    size_t queueAbsorbedLen;
     size_t totalInputSize;
     KCP_Phases phase;
 } ParallelHash_Instance;
@@ -329,7 +336,7 @@ typedef struct {
   * @param  customBitLen    The length of the customization string in bits.
   * @return 0 if successful, 1 otherwise.
   */
-int ParallelHash128( const BitSequence *input, BitLength inputBitLen, unsigned int blockByteLen,
+int ParallelHash128( const BitSequence *input, BitLength inputBitLen, size_t blockByteLen,
         BitSequence *output, BitLength outputBitLen, const BitSequence *customization, BitLength customBitLen);
 
 /**
@@ -343,7 +350,7 @@ int ParallelHash128( const BitSequence *input, BitLength inputBitLen, unsigned i
   * @param  customBitLen    The length of the customization string in bits.
   * @return 0 if successful, 1 otherwise.
   */
-int ParallelHash128_Initialize(ParallelHash_Instance *ParallelHashInstance, unsigned int blockByteLen,
+int ParallelHash128_Initialize(ParallelHash_Instance *ParallelHashInstance, size_t blockByteLen,
         BitLength outputBitLen, const BitSequence *customization, BitLength customBitLen);
 
 /**
@@ -396,7 +403,7 @@ int ParallelHash128_Squeeze(ParallelHash_Instance *ParallelHashInstance, BitSequ
   * @param  customBitLen    The length of the customization string in bits.
   * @return 0 if successful, 1 otherwise.
   */
-int ParallelHash256( const BitSequence *input, BitLength inputBitLen, unsigned int blockByteLen,
+int ParallelHash256( const BitSequence *input, BitLength inputBitLen, size_t blockByteLen,
         BitSequence *output, BitLength outputBitLen, const BitSequence *customization, BitLength customBitLen);
 
 /**
@@ -410,7 +417,7 @@ int ParallelHash256( const BitSequence *input, BitLength inputBitLen, unsigned i
   * @param  customBitLen    The length of the customization string in bits.
   * @return 0 if successful, 1 otherwise.
   */
-int ParallelHash256_Initialize(ParallelHash_Instance *ParallelHashInstance, unsigned int blockByteLen,
+int ParallelHash256_Initialize(ParallelHash_Instance *ParallelHashInstance, size_t blockByteLen,
         BitLength outputBitLen, const BitSequence *customization, BitLength customBitLen);
 
 /**
@@ -457,7 +464,7 @@ typedef struct {
 
 typedef struct {
     /** Pointer to the tuple element data (Xn). */
-    BitSequence *input;
+    const BitSequence *input;
 
     /** The number of input bits provided in this tuple element.
      *  Only full bytes are supported, length must be a multiple of 8.
@@ -585,6 +592,8 @@ int TupleHash256_Final(TupleHash_Instance *TupleHashInstance, BitSequence * outp
   */
 int TupleHash256_Squeeze(TupleHash_Instance *TupleHashInstance, BitSequence *output, BitLength outputBitLen);
 
+#else
+#error This requires an implementation of Keccak-p[1600]
 #endif
 
 #endif

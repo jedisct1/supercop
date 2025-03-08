@@ -416,6 +416,8 @@ def data_do(cores, cmd, args):
         task = [
             'env shorthostname='
             + shorthostname
+            + ' THREAD='
+            + str(core_id)
             + ' taskset -c '
             + str(core_id)
             + ' '

@@ -6,7 +6,7 @@
 void crypto_sort(void *array,long long n)
 {
   long long top,p,q,r,i,j;
-  int32 *x = array;
+  int32 *x = (int32 *) array;
 
   if (n < 2) return;
   top = 1;

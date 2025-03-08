@@ -1,10 +1,11 @@
 <?xml version="1.0"?>
 <!--
-Implementation by the Keccak Team, namely, Guido Bertoni, Joan Daemen,
-Michaël Peeters, Gilles Van Assche and Ronny Van Keer,
-hereby denoted as "the implementer".
+The eXtended Keccak Code Package (XKCP)
+https://github.com/XKCP/XKCP
 
-For more information, feedback or questions, please refer to our website:
+Implementation by Gilles Van Assche and Ronny Van Keer, hereby denoted as "the implementer".
+
+For more information, feedback or questions, please refer to the Keccak Team website:
 https://keccak.team/
 
 To the extent possible under law, the implementer has waived all copyright
@@ -22,7 +23,7 @@ The fragments below allow to make the desired packages for SUPERCOP and eBASH
 * SHA3-384
 * SHA3-512
 * KangarooTwelve
-* Xoodyak_hash
+* Xoodyak
 -->
 
     <!-- SUPERCOP packages -->
@@ -37,7 +38,7 @@ The fragments below allow to make the desired packages for SUPERCOP and eBASH
         <c>tests/SUPERCOP/test_crypto_aead.c</c>
     </fragment>
 
-    <fragment name="crypto_hash/shake128/kcp" inherits="KeccakSpongeWidth1600">
+    <fragment name="crypto_hash/shake128/kcp" inherits="KeccakSponge">
         <c>tests/SUPERCOP/SHAKE128/SHAKE128.c</c>
         <h>tests/SUPERCOP/SHAKE128/api.h</h>
     </fragment>
@@ -46,7 +47,7 @@ The fragments below allow to make the desired packages for SUPERCOP and eBASH
         <c>tests/SUPERCOP/SHAKE128/selftest.c</c>
     </fragment>
 
-    <fragment name="crypto_hash/shake256/kcp" inherits="KeccakSpongeWidth1600">
+    <fragment name="crypto_hash/shake256/kcp" inherits="KeccakSponge">
         <c>tests/SUPERCOP/SHAKE256/SHAKE256.c</c>
         <h>tests/SUPERCOP/SHAKE256/api.h</h>
     </fragment>
@@ -55,7 +56,7 @@ The fragments below allow to make the desired packages for SUPERCOP and eBASH
         <c>tests/SUPERCOP/SHAKE256/selftest.c</c>
     </fragment>
 
-    <fragment name="crypto_hash/sha3224/kcp" inherits="KeccakSpongeWidth1600">
+    <fragment name="crypto_hash/sha3224/kcp" inherits="KeccakSponge">
         <c>tests/SUPERCOP/SHA3-224/SHA3-224.c</c>
         <h>tests/SUPERCOP/SHA3-224/api.h</h>
     </fragment>
@@ -64,7 +65,7 @@ The fragments below allow to make the desired packages for SUPERCOP and eBASH
         <c>tests/SUPERCOP/SHA3-224/selftest.c</c>
     </fragment>
 
-    <fragment name="crypto_hash/sha3256/kcp" inherits="KeccakSpongeWidth1600">
+    <fragment name="crypto_hash/sha3256/kcp" inherits="KeccakSponge">
         <c>tests/SUPERCOP/SHA3-256/SHA3-256.c</c>
         <h>tests/SUPERCOP/SHA3-256/api.h</h>
     </fragment>
@@ -73,7 +74,7 @@ The fragments below allow to make the desired packages for SUPERCOP and eBASH
         <c>tests/SUPERCOP/SHA3-256/selftest.c</c>
     </fragment>
 
-    <fragment name="crypto_hash/sha3384/kcp" inherits="KeccakSpongeWidth1600">
+    <fragment name="crypto_hash/sha3384/kcp" inherits="KeccakSponge">
         <c>tests/SUPERCOP/SHA3-384/SHA3-384.c</c>
         <h>tests/SUPERCOP/SHA3-384/api.h</h>
     </fragment>
@@ -82,7 +83,7 @@ The fragments below allow to make the desired packages for SUPERCOP and eBASH
         <c>tests/SUPERCOP/SHA3-384/selftest.c</c>
     </fragment>
 
-    <fragment name="crypto_hash/sha3512/kcp" inherits="KeccakSpongeWidth1600">
+    <fragment name="crypto_hash/sha3512/kcp" inherits="KeccakSponge">
         <c>tests/SUPERCOP/SHA3-512/SHA3-512.c</c>
         <h>tests/SUPERCOP/SHA3-512/api.h</h>
     </fragment>
@@ -106,7 +107,7 @@ The fragments below allow to make the desired packages for SUPERCOP and eBASH
     <group all="supercop">
         <product delimiter="/">
             <factor set="crypto_hash/shake128/kcp SHAKE128_SelfTest crypto_hash/shake256/kcp SHAKE256_SelfTest crypto_hash/sha3224/kcp SHA3-224_SelfTest crypto_hash/sha3256/kcp SHA3-256_SelfTest crypto_hash/sha3384/kcp SHA3-384_SelfTest crypto_hash/sha3512/kcp SHA3-512_SelfTest crypto_hash/k12/kcp KangarooTwelve_SelfTest"/>
-            <factor set="reference1600 reference1600-32bits compact1600 compact1600AVR8 inplace1600bi inplace1600ARMv6M inplace1600ARMv7M inplace1600ARMv7A optimized1600u6 optimized1600ufull optimized1600lcu6 optimized1600lcufull optimized1600lcufullshld optimized1600AsmX86-64 optimized1600AsmX86-64shld optimized1600AsmX86-64Apple optimized1600AVX2 optimized1600AVX512 optimized1600XOPu6 optimized1600XOPufull optimized1600ARMv6Mu1 optimized1600ARMv6Mu2 optimized1600ARMv7A optimized1600ARMv8A optimized1600AVR8"/>
+            <factor set="K1600-ref-64bits K1600-ref-32bits K1600-compact K1600-AVR8-compact K1600-plain-32bits-inplace K1600-ARMv6M-inplace K1600-ARMv7M-inplace K1600-ARMv7A-inplace K1600-plain-64bits-u6 K1600-plain-64bits-ua K1600-plain-64bits-lcu6 K1600-plain-64bits-lcua K1600-plain-64bits-lcua-shld K1600-x86-64 K1600-x86-64-shld K1600-x86-64-Apple K1600-AVX2 K1600-AVX512 K1600-XOP-u6 K1600-XOP-ua K1600-ARMv6M-u1 K1600-ARMv6M-u2 K1600-ARMv7A-NEON K1600-ARMv8A K1600-AVR8"/>
         </product>
     </group>
 
@@ -122,18 +123,18 @@ The fragments below allow to make the desired packages for SUPERCOP and eBASH
     </fragment>
 
     <fragment name="crypto_aead/Xoodyak_aead/kcp" inherits="Xoodyak">
-        <c>tests/SUPERCOP/Xoodyak_aead/encrypt.c</c>
-        <h>tests/SUPERCOP/Xoodyak_aead/api.h</h>
+        <c>tests/SUPERCOP/Xoodyak_aead_round3/encrypt.c</c>
+        <h>tests/SUPERCOP/Xoodyak_aead_round3/api.h</h>
     </fragment>
 
     <fragment name="Xoodyak_aead_SelfTest" inherits="crypto_aead/Xoodyak_aead/kcp crypto_aead_test">
-        <c>tests/SUPERCOP/Xoodyak_aead/selftest.c</c>
+        <c>tests/SUPERCOP/Xoodyak_aead_round3/selftest.c</c>
     </fragment>
 
     <group all="supercopXoodyak">
         <product delimiter="/">
             <factor set="crypto_hash/Xoodyak_hash/kcp Xoodyak_hash_SelfTest crypto_aead/Xoodyak_aead/kcp Xoodyak_aead_SelfTest"/>
-            <factor set="XooReference XooOptimized32 XooOptimizedARMv6M XooOptimizedARMv7M XooOptimizedSIMD128 XooOptimizedSIMD512"/>
+            <factor set="Xoodoo-ref Xoodoo-plain-ua Xoodoo-ARMv6M Xoodoo-ARMv7M Xoodoo-SSE2 Xoodoo-AVX512"/>
         </product>
     </group>
 

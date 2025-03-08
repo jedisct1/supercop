@@ -1,7 +1,12 @@
 /*
+The eXtended Keccak Code Package (XKCP)
+https://github.com/XKCP/XKCP
+
+Keccak, designed by Guido Bertoni, Joan Daemen, Michaël Peeters and Gilles Van Assche.
+
 Implementation by Ronny Van Keer, hereby denoted as "the implementer".
 
-For more information, feedback or questions, please refer to our website:
+For more information, feedback or questions, please refer to the Keccak Team website:
 https://keccak.team/
 
 To the extent possible under law, the implementer has waived all copyright
@@ -160,7 +165,7 @@ int KMAC_Initialize(KMAC_Instance *km, const BitSequence *key, BitLength keyBitL
     BitLength   keyByteLen;
     BitSequence buffer[rateInBytes];
 
-    if (cSHAKE_Initialize(&km->csi, outputBitLen, "KMAC", 4*8, customization, customBitLen) != 0)
+    if (cSHAKE_Initialize(&km->csi, outputBitLen, (const BitSequence*)"KMAC", 4*8, customization, customBitLen) != 0)
         return 1;
     km->outputBitLen = outputBitLen;
 
@@ -233,62 +238,62 @@ int KMAC(const BitSequence *key, BitLength keyBitLen, const BitSequence *input, 
 
 #define ParallelSpongeFastLoop( Parallellism ) \
     while ( inputByteLen >= Parallellism * phi->blockLen ) { \
-        ALIGN(KeccakP1600times##Parallellism##_statesAlignment) unsigned char states[KeccakP1600times##Parallellism##_statesSizeInBytes]; \
+        KeccakP1600times##Parallellism##_states states; \
         unsigned char intermediate[Parallellism*capacityInBytes]; \
-        unsigned int localBlockLen = phi->blockLen; \
+        size_t localBlockLen = phi->blockLen; \
         const unsigned char * localInput = input; \
         unsigned int i; \
-        unsigned int fastLoopOffset; \
+        size_t fastLoopOffset; \
         \
         KeccakP1600times##Parallellism##_StaticInitialize(); \
-        KeccakP1600times##Parallellism##_InitializeAll(states); \
-        fastLoopOffset = KeccakF1600times##Parallellism##_FastLoop_Absorb(states, rateInLanes, phi->blockLen / laneSize, rateInLanes, localInput, Parallellism * phi->blockLen); \
+        KeccakP1600times##Parallellism##_InitializeAll(&states); \
+        fastLoopOffset = KeccakF1600times##Parallellism##_FastLoop_Absorb(&states, rateInLanes, phi->blockLen / laneSize, rateInLanes, localInput, Parallellism * phi->blockLen); \
         localBlockLen -= fastLoopOffset; \
         localInput += fastLoopOffset; \
         for ( i = 0; i < Parallellism; ++i, localInput += phi->blockLen ) { \
-            KeccakP1600times##Parallellism##_AddBytes(states, i, localInput, 0, localBlockLen); \
-            KeccakP1600times##Parallellism##_AddByte(states, i, suffix, localBlockLen); \
-            KeccakP1600times##Parallellism##_AddByte(states, i, 0x80, rateInBytes-1); \
+            KeccakP1600times##Parallellism##_AddBytes(&states, i, localInput, 0, localBlockLen); \
+            KeccakP1600times##Parallellism##_AddByte(&states, i, suffix, localBlockLen); \
+            KeccakP1600times##Parallellism##_AddByte(&states, i, 0x80, rateInBytes-1); \
         } \
-           KeccakP1600times##Parallellism##_PermuteAll_24rounds(states); \
+        KeccakP1600times##Parallellism##_PermuteAll_24rounds(&states); \
         input += Parallellism * phi->blockLen; \
         inputByteLen -= Parallellism * phi->blockLen; \
-        KeccakP1600times##Parallellism##_ExtractLanesAll(states, intermediate, capacityInLanes, capacityInLanes ); \
+        KeccakP1600times##Parallellism##_ExtractLanesAll(&states, intermediate, capacityInLanes, capacityInLanes ); \
         if (KeccakWidth1600_SpongeAbsorb(&phi->finalNode, intermediate, Parallellism * capacityInBytes) != 0) return 1; \
     }
 
 #define ParallelSpongeLoop( Parallellism ) \
     while ( inputByteLen >= Parallellism * phi->blockLen ) { \
-        ALIGN(KeccakP1600times##Parallellism##_statesAlignment) unsigned char states[KeccakP1600times##Parallellism##_statesSizeInBytes]; \
+        KeccakP1600times##Parallellism##_states states; \
         unsigned char intermediate[Parallellism*capacityInBytes]; \
-        unsigned int localBlockLen = phi->blockLen; \
+        size_t localBlockLen = phi->blockLen; \
         const unsigned char * localInput = input; \
         unsigned int i; \
         \
         KeccakP1600times##Parallellism##_StaticInitialize(); \
-        KeccakP1600times##Parallellism##_InitializeAll(states); \
-           while(localBlockLen >= rateInBytes) { \
-               KeccakP1600times##Parallellism##_AddLanesAll(states, localInput, rateInLanes, phi->blockLen / laneSize); \
-               KeccakP1600times##Parallellism##_PermuteAll_24rounds(states); \
+        KeccakP1600times##Parallellism##_InitializeAll(&states); \
+        while(localBlockLen >= rateInBytes) { \
+            KeccakP1600times##Parallellism##_AddLanesAll(&states, localInput, rateInLanes, phi->blockLen / laneSize); \
+            KeccakP1600times##Parallellism##_PermuteAll_24rounds(&states); \
             localBlockLen -= rateInBytes; \
             localInput += rateInBytes; \
-           } \
-        for ( i = 0; i < Parallellism; ++i, localInput += phi->blockLen ) { \
-            KeccakP1600times##Parallellism##_AddBytes(states, i, localInput, 0, localBlockLen); \
-            KeccakP1600times##Parallellism##_AddByte(states, i, suffix, localBlockLen); \
-            KeccakP1600times##Parallellism##_AddByte(states, i, 0x80, rateInBytes-1); \
         } \
-           KeccakP1600times##Parallellism##_PermuteAll_24rounds(states); \
+        for ( i = 0; i < Parallellism; ++i, localInput += phi->blockLen ) { \
+            KeccakP1600times##Parallellism##_AddBytes(&states, i, localInput, 0, localBlockLen); \
+            KeccakP1600times##Parallellism##_AddByte(&states, i, suffix, localBlockLen); \
+            KeccakP1600times##Parallellism##_AddByte(&states, i, 0x80, rateInBytes-1); \
+        } \
+        KeccakP1600times##Parallellism##_PermuteAll_24rounds(&states); \
         input += Parallellism * phi->blockLen; \
         inputByteLen -= Parallellism * phi->blockLen; \
-        KeccakP1600times##Parallellism##_ExtractLanesAll(states, intermediate, capacityInLanes, capacityInLanes ); \
+        KeccakP1600times##Parallellism##_ExtractLanesAll(&states, intermediate, capacityInLanes, capacityInLanes ); \
         if (KeccakWidth1600_SpongeAbsorb(&phi->finalNode, intermediate, Parallellism * capacityInBytes) != 0) return 1; \
     }
 
-int ParallelHash_Initialize(ParallelHash_Instance *phi, unsigned int blockByteLen, 
+int ParallelHash_Initialize(ParallelHash_Instance *phi, size_t blockByteLen,
         BitLength outputBitLen, const BitSequence *customization, BitLength customBitLen)
 {
-    unsigned int t;
+    size_t t;
     unsigned char encbuf[sizeof(size_t)+1];
 
     if ( blockByteLen < laneSize)   /* blockLen must be greater than or equal to lane size */
@@ -309,7 +314,7 @@ int ParallelHash_Initialize(ParallelHash_Instance *phi, unsigned int blockByteLe
         return 1;
 
     /* Absorb string_encode("ParallelHash") */
-    if (KeccakWidth1600_SpongeAbsorb(&phi->finalNode, "\x01\x60" "ParallelHash", 14) != 0)
+    if (KeccakWidth1600_SpongeAbsorb(&phi->finalNode, (const BitSequence*)"\x01\x60" "ParallelHash", 14) != 0)
         return 1;
 
     /* Absorb string_encode(customization) */
@@ -344,7 +349,7 @@ int ParallelHash_Update(ParallelHash_Instance *phi, const BitSequence *input, Bi
     inputByteLen = inputBitLen / 8;
     if ( phi->queueAbsorbedLen != 0 ) {
         /* There is data in the queue, absorb further in queue until full */
-        unsigned int len = (inputByteLen < (phi->blockLen - phi->queueAbsorbedLen)) ? inputByteLen : (phi->blockLen - phi->queueAbsorbedLen);
+        size_t len = (inputByteLen < (phi->blockLen - phi->queueAbsorbedLen)) ? inputByteLen : (phi->blockLen - phi->queueAbsorbedLen);
         if (KeccakWidth1600_SpongeAbsorb(&phi->queueNode, input, len) != 0)
             return 1;
         input += len;
@@ -362,7 +367,7 @@ int ParallelHash_Update(ParallelHash_Instance *phi, const BitSequence *input, Bi
         }
     }
 
-    #if defined(KeccakP1600times8_implementation) && !defined(KeccakP1600times8_isFallback)
+    #if defined(KeccakP1600times8_implementation)
     #if defined(KeccakF1600times8_FastLoop_supported)
     ParallelSpongeFastLoop( 8 )
     #else
@@ -370,7 +375,7 @@ int ParallelHash_Update(ParallelHash_Instance *phi, const BitSequence *input, Bi
     #endif
     #endif
 
-    #if defined(KeccakP1600times4_implementation) && !defined(KeccakP1600times4_isFallback)
+    #if defined(KeccakP1600times4_implementation)
     #if defined(KeccakF1600times4_FastLoop_supported)
     ParallelSpongeFastLoop( 4 )
     #else
@@ -378,7 +383,7 @@ int ParallelHash_Update(ParallelHash_Instance *phi, const BitSequence *input, Bi
     #endif
     #endif
 
-    #if defined(KeccakP1600times2_implementation) && !defined(KeccakP1600times2_isFallback)
+    #if defined(KeccakP1600times2_implementation)
     #if defined(KeccakF1600times2_FastLoop_supported)
     ParallelSpongeFastLoop( 2 )
     #else
@@ -387,7 +392,7 @@ int ParallelHash_Update(ParallelHash_Instance *phi, const BitSequence *input, Bi
     #endif
 
     while ( inputByteLen > 0 ) {
-        unsigned int len = (inputByteLen < phi->blockLen) ? inputByteLen : phi->blockLen;
+        size_t len = (inputByteLen < phi->blockLen) ? inputByteLen : phi->blockLen;
         if (KeccakWidth1600_SpongeInitialize(&phi->queueNode, rate, capacity) != 0)
             return 1;
         if (KeccakWidth1600_SpongeAbsorb(&phi->queueNode, input, len) != 0)
@@ -459,7 +464,7 @@ int ParallelHash_Squeeze(ParallelHash_Instance *phi, BitSequence *output, BitLen
     return 0;
 }
 
-int ParallelHash( const BitSequence *input, BitLength inputBitLen, unsigned int blockByteLen,
+int ParallelHash( const BitSequence *input, BitLength inputBitLen, size_t blockByteLen,
         BitSequence *output, BitLength outputBitLen, const BitSequence *customization, BitLength customBitLen)
 {
     ParallelHash_Instance phi;
@@ -493,7 +498,7 @@ int ParallelHash( const BitSequence *input, BitLength inputBitLen, unsigned int 
 int TupleHash_Initialize(TupleHash_Instance *thi, BitLength outputBitLen,
         const BitSequence *customization, BitLength customBitLen)
 {
-    if (cSHAKE_Initialize(&thi->csi, outputBitLen, "TupleHash", 9*8, customization, customBitLen) != 0)
+    if (cSHAKE_Initialize(&thi->csi, outputBitLen, (const BitSequence*)"TupleHash", 9*8, customization, customBitLen) != 0)
         return 1;
     thi->outputBitLen = outputBitLen;
     return 0;

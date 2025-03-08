@@ -1,6 +1,9 @@
+// 20241028 djb: backporting cryptoint usage from lib25519
+
 #include "fe25519.h"
 #include "sc25519.h"
 #include "ge25519.h"
+#include "crypto_int8.h"
 
 /* 
  * Arithmetic on the twisted Edwards curve -x^2 + y^2 = 1 + dx^2y^2 
@@ -139,35 +142,17 @@ static void cmov_aff(ge25519_aff *r, const ge25519_aff *p, unsigned char b)
   fe25519_cmov(&r->y, &p->y, b);
 }
 
-static unsigned char equal(signed char b,signed char c)
-{
-  unsigned char ub = b;
-  unsigned char uc = c;
-  unsigned char x = ub ^ uc; /* 0: yes; 1..255: no */
-  crypto_uint32 y = x; /* 0: yes; 1..255: no */
-  y -= 1; /* 4294967295: yes; 0..254: no */
-  y >>= 31; /* 1: yes; 0: no */
-  return y;
-}
-
-static unsigned char negative(signed char b)
-{
-  unsigned long long x = b; /* 18446744073709551361..18446744073709551615: yes; 0..255: no */
-  x >>= 63; /* 1: yes; 0: no */
-  return x;
-}
-
 static void choose_t(ge25519_aff *t, unsigned long long pos, signed char b)
 {
   /* constant time */
   fe25519 v;
   *t = ge25519_base_multiples_affine[5*pos+0];
-  cmov_aff(t, &ge25519_base_multiples_affine[5*pos+1],equal(b,1) | equal(b,-1));
-  cmov_aff(t, &ge25519_base_multiples_affine[5*pos+2],equal(b,2) | equal(b,-2));
-  cmov_aff(t, &ge25519_base_multiples_affine[5*pos+3],equal(b,3) | equal(b,-3));
-  cmov_aff(t, &ge25519_base_multiples_affine[5*pos+4],equal(b,-4));
+  cmov_aff(t, &ge25519_base_multiples_affine[5*pos+1],crypto_int8_equal_01(b,1) | crypto_int8_equal_01(b,-1));
+  cmov_aff(t, &ge25519_base_multiples_affine[5*pos+2],crypto_int8_equal_01(b,2) | crypto_int8_equal_01(b,-2));
+  cmov_aff(t, &ge25519_base_multiples_affine[5*pos+3],crypto_int8_equal_01(b,3) | crypto_int8_equal_01(b,-3));
+  cmov_aff(t, &ge25519_base_multiples_affine[5*pos+4],crypto_int8_equal_01(b,-4));
   fe25519_neg(&v, &t->x);
-  fe25519_cmov(&t->x, &v, negative(b));
+  fe25519_cmov(&t->x, &v, crypto_int8_negative_01(b));
 }
 
 static void setneutral(ge25519 *r)

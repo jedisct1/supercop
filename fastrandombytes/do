@@ -26,7 +26,7 @@ mkdir -p lib/$abi
         ) > crypto_rng.h
         $c -c fastrandombytes.c $include || continue
         $c -o test test.c fastrandombytes.o $include $libs || continue
-        killafter 300 ./test > cycles || continue
+        killafter 300 $DEVICE ./test > cycles || continue
         cycles=`cat cycles`
         cyclesbest=`cat cyclesbest`
         if [ $cycles -lt $cyclesbest ]

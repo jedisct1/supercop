@@ -24,7 +24,7 @@ okabi | (
             && cp $impl.c impl.c \
             && $c -c impl.c \
             && $c -o test test.c impl.o \
-            && killafter 1 ./test \
+            && killafter 10 $DEVICE ./test \
             && mkdir -p lib/$abi \
             && cp impl.o lib/$abi/kernelrandombytes.o \
             && okar-$abi cr lib/$abi/libkernelrandombytes.a lib/$abi/kernelrandombytes.o \

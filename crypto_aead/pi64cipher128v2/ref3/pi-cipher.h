@@ -23,7 +23,7 @@
 #define PI_SIZE 64
 
 #ifdef SUPERCOP
-#include "ecrypt-portable.h"
+#include  "ecrypt-portable.h"
 typedef u8 uint8_t;
 typedef u16 uint16_t;
 typedef u32 uint32_t;

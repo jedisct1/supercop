@@ -1,6 +1,6 @@
 #!/bin/sh
 
-shorthostname=`hostname | sed 's/\..*//' | tr -cd '[a-z][A-Z][0-9]' | tr '[A-Z]' '[a-z]'`
+shorthostname=`$SSHDEVICE hostname | sed 's/\..*//' | tr -cd '[a-z][A-Z][0-9]' | tr '[A-Z]' '[a-z]'`
 export shorthostname
 
 cores=${1-1}
@@ -23,12 +23,12 @@ for x in $cccc
 do
   if taskset -c $x echo $x >/dev/null 2>&1
   then
-    taskset -c $x sh data-run &
+    env THREAD=$x taskset -c $x sh data-run &
   elif cpuset -l $x echo $x >/dev/null 2>&1
   then
-    cpuset -l $x sh data-run &
+    env THREAD=$x cpuset -l $x sh data-run &
   else
-    sh data-run &
+    env THREAD=$x sh data-run &
   fi
 done
 

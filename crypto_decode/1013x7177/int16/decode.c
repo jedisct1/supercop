@@ -1,4 +1,5 @@
 /* auto-generated; do not edit */
+/* 20250302 djb: port to -Wc++-compat */
 
 #include "crypto_decode.h"
 #include "crypto_int16.h"
@@ -18,7 +19,7 @@ static int16 mulhi(int16 x,int16 y)
 
 void crypto_decode(void *v,const unsigned char *s)
 {
-  int16 *R = v;
+  int16 *R = (int16 *) v;
   long long i;
   int16 a0,a1,ri,lo,s0,s1;
   

@@ -32,7 +32,7 @@
 #include <assert.h>
 #include <stdlib.h>
 #include "ecrypt-sync.h"
-#include "ecrypt-portable.h"
+#include  "ecrypt-portable.h"
 
 
 #define FULL_UNROLL 1                   	/* Use unrolled implementation */

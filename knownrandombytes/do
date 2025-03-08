@@ -22,7 +22,7 @@ okc-$abi | (
     ) > crypto_rng.h
     $c -c knownrandombytes.c $include || continue
     $c -o test test.c knownrandombytes.o $include $libs || continue
-    killafter 300 ./test || continue
+    killafter 300 $DEVICE ./test || continue
     echo "=== `date` === Success. Using crypto_rng_$rng with $c." >&2
     mv knownrandombytes.o lib/$abi/knownrandombytes.o
     touch done

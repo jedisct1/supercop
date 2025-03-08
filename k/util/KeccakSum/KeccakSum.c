@@ -39,6 +39,7 @@ int hexencode(const void* data_buf, size_t dataLength, char* result, size_t resu
 #define bufferSize 65536
 #define algorithm_Keccak    0
 #define algorithm_K12       1
+#define algorithm_ParallelHash  2
 
 typedef struct {
     unsigned int algorithm;
@@ -46,11 +47,13 @@ typedef struct {
     unsigned int capacity;
     unsigned int hashbitlen;
     unsigned char delimitedSuffix;
+    unsigned int blockByteLen;
 } Specifications;
 
 typedef union {
     Keccak_HashInstance keccak;
     KangarooTwelve_Instance k12;
+    ParallelHash_Instance ph;
 } Instance;
 
 int hashInitialize(Instance *instance, const Specifications *specs)
@@ -71,6 +74,28 @@ int hashInitialize(Instance *instance, const Specifications *specs)
         else
             return 0;
     }
+    else if (specs->algorithm == algorithm_ParallelHash) {
+        if (specs->capacity == 256) {
+            if (ParallelHash128_Initialize(&instance->ph, specs->blockByteLen, specs->hashbitlen, "", 0)) {
+                printf("Incorrect ParallelHash128 parameters.\n");
+                return -1;
+            }
+            else
+                return 0;
+        }
+       else if (specs->capacity == 512) {
+            if (ParallelHash256_Initialize(&instance->ph, specs->blockByteLen, specs->hashbitlen, "", 0)) {
+                printf("Incorrect ParallelHash256 parameters.\n");
+                return -1;
+            }
+            else
+                return 0;
+        }
+        else {
+            printf("Incorrect ParallelHash parameters.\n");
+            return -1;
+        }
+    }
     else
         return -1;
 }
@@ -81,6 +106,10 @@ int hashUpdate(Instance *instance, const Specifications *specs, const unsigned c
         Keccak_HashUpdate(&instance->keccak, buffer, size*8);
     else if (specs->algorithm == algorithm_K12)
         KangarooTwelve_Update(&instance->k12, buffer, size);
+    else if ((specs->algorithm == algorithm_ParallelHash) && (specs->capacity == 256))
+        ParallelHash128_Update(&instance->ph, buffer, size*8);
+    else if ((specs->algorithm == algorithm_ParallelHash) && (specs->capacity == 512))
+        ParallelHash256_Update(&instance->ph, buffer, size*8);
     return 0;
 }
 
@@ -90,6 +119,10 @@ int hashFinal(Instance *instance, const Specifications *specs, unsigned char *bu
         Keccak_HashFinal(&instance->keccak, buffer);
     else if (specs->algorithm == algorithm_K12)
         KangarooTwelve_Final(&instance->k12, buffer, "", 0);
+    else if ((specs->algorithm == algorithm_ParallelHash) && (specs->capacity == 256))
+        ParallelHash128_Final(&instance->ph, buffer);
+    else if ((specs->algorithm == algorithm_ParallelHash) && (specs->capacity == 512))
+        ParallelHash256_Final(&instance->ph, buffer);
     return 0;
 }
 
@@ -105,10 +138,15 @@ int processFile(const char *fileName, const Specifications *specs, int base64)
         printf("The requested digest length (%d bits) does not fit in the buffer.\n", specs->hashbitlen);
         return -1;
     }
-    fp = fopen(fileName, "rb");
-    if (fp == NULL) {
-        printf("File '%s' could not be opened.\n", fileName);
-        return -1;
+    if (strcmp("-", fileName) == 0) {
+        fp = stdin;
+    }
+    else {
+        fp = fopen(fileName, "rb");
+        if (fp == NULL) {
+            printf("File '%s' could not be opened.\n", fileName);
+            return -1;
+        }
     }
     if (hashInitialize(&instance, specs)) {
         fclose(fp);
@@ -119,7 +157,9 @@ int processFile(const char *fileName, const Specifications *specs, int base64)
         if (read > 0)
             hashUpdate(&instance, specs, buffer, read);
     } while(read>0);
-    fclose(fp);
+    if (fp != stdin) {
+        fclose(fp);
+    }
     hashFinal(&instance, specs, buffer);
     if (base64) {
         if (base64encode(buffer, (specs->hashbitlen+7)/8, display, bufferSize*2)) {
@@ -186,9 +226,13 @@ void printHelp()
     printf("  --no-suffix                 Use 0x01 as delimited suffix (pure Keccak)\n");
     printf("  --ethereum                  Equivalent to --sha3-256 --no-suffix\n");
     printf("  --kangarootwelve or --k12   Use KangarooTwelve\n");
+    printf("  --ph128                     Use ParallelHash128\n");
+    printf("  --ph256                     Use ParallelHash256\n");
+    printf("  -B <block size in bytes>    ParallelHash's B parameter\n");
     printf("  --string <string>           String to hash\n");
     printf("  <file name>                 File to hash\n\n");
     printf("The options are processed in order.\nBy default, it uses SHAKE128 and base64 display.\n");
+    printf("With no file names, or when file name is -, it reads standard input.\n"); 
 }
 
 int process(int argc, char* argv[])
@@ -196,6 +240,7 @@ int process(int argc, char* argv[])
     Specifications specs;
     int base64 = 1;
     int i, r;
+    int was_filename = 0;
     specs.algorithm = algorithm_Keccak;
     specs.rate = 1344;
     specs.capacity = 256;
@@ -280,6 +325,36 @@ int process(int argc, char* argv[])
             specs.hashbitlen = 264;
             base64 = 1;
         }
+        else if (strcmp("--ph128", argv[i]) == 0) {
+            specs.algorithm = algorithm_ParallelHash;
+            specs.capacity = 256;
+            specs.hashbitlen = 264;
+            specs.blockByteLen = 8192;
+            base64 = 1;
+        }
+        else if (strcmp("--ph256", argv[i]) == 0) {
+            specs.algorithm = algorithm_ParallelHash;
+            specs.capacity = 512;
+            specs.hashbitlen = 528;
+            specs.blockByteLen = 8192;
+            base64 = 1;
+        }
+        else if (strcmp("-B", argv[i]) == 0) {
+            int blockByteLen;
+            if ((i+1) >= argc) {
+                printf("Error: missing argument for -B\n");
+                return -1;
+            }
+            blockByteLen = 0;
+            if (sscanf(argv[i+1], "%d", &blockByteLen) && (blockByteLen > 0)) {
+                specs.blockByteLen = blockByteLen;
+                i++;
+            }
+            else {
+                printf("Error: argument for -B option must be a positive power of 2\n");
+                return -1;
+            }
+        }
         else if (strcmp("--string", argv[i]) == 0) {
             if ((i+1) >= argc) {
                 printf("Error: missing argument for --string\n");
@@ -299,10 +374,16 @@ int process(int argc, char* argv[])
                     return -1;
                 }
             }
+            was_filename = 1;
             r = processFile(argv[i], &specs, base64);
             if (r)
                 return r;
         }
+    }
+    if (was_filename == 0) {
+        r = processFile("-", &specs, base64);
+        if (r)
+            return r;
     }
     return 0;
 }

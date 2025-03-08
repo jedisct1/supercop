@@ -1,9 +1,10 @@
+// 20250302 djb: port to -Wc++-compat
 #include "crypto_decode.h"
 #include "crypto_uint16.h"
 
 void crypto_decode(void *v,const unsigned char *s)
 {
-  crypto_uint16 *x = v;
+  crypto_uint16 *x = (crypto_uint16 *) v;
   int i;
 
   for (i = 0;i < 953;++i) {

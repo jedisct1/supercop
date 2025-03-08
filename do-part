@@ -10,7 +10,7 @@ opfocus=${focus}_${pfocus}
 
 version=`cat version`
 project=supercop
-shorthostname=`hostname | sed 's/\..*//' | tr -cd '[a-z][A-Z][0-9]' | tr '[A-Z]' '[a-z]'`
+shorthostname=`$SSHDEVICE hostname | sed 's/\..*//' | tr -cd '[a-z][A-Z][0-9]' | tr '[A-Z]' '[a-z]'`
 
 top="`pwd`/bench/$shorthostname"
 bin="$top/bin"
@@ -123,7 +123,7 @@ then
   cp -pR "$work"/lib/* "$lib/nontimecop"
   cp -pR "$work"/include/* "$include/nontimecop"
   
-  if valgrind pwd >/dev/null 2>&1
+  if $SSHDEVICE valgrind pwd >/dev/null 2>&1
   then
     echo "=== `date` === building cpucycles for TIMECOP"
     rm -rf "$work"
@@ -189,7 +189,7 @@ do
           && make \
           && make check \
           && cp gmp.h gmpxx.h gmp-impl.h longlong.h \
-          config.h gmp-mparam.h fac_table.h fib_table.h mp_bases.h "$include/$abi" \
+          config.h gmp-mparam.h fac_table.h sieve_table.h fib_table.h mp_bases.h "$include/$abi" \
           && ( ranlib ".libs/libgmp.a" || : ) \
           && cp .libs/libgmp.a "$lib/$abi/libgmp.a" \
           && chmod 644 "$lib/$abi/libgmp.a" \
@@ -253,10 +253,10 @@ do
       mkdir -p "$work"
       cp -pR k/* "$work"
       ( cd "$work" \
-        && env CC="$c" CFLAGS="$copts" make $keccaktarget/libkeccak.a \
+        && env CC="$c" CFLAGS="$copts" make $keccaktarget/libXKCP.a \
         && mkdir -p "$include/$abi/libkeccak.a.headers" \
-        && cp bin/$keccaktarget/libkeccak.a.headers/* "$include/$abi/libkeccak.a.headers" \
-        && cp bin/$keccaktarget/libkeccak.a "$lib/$abi/libkeccak.a" \
+        && cp bin/$keccaktarget/libXKCP.a.headers/* "$include/$abi/libkeccak.a.headers" \
+        && cp bin/$keccaktarget/libXKCP.a "$lib/$abi/libkeccak.a" \
         && chmod 644 "$lib/$abi/libkeccak.a"
       ) && break || :
     done
@@ -689,7 +689,7 @@ do
               fi
               [ "$ok" = 1 ] || continue
   
-              if sh -c "killafter 3600 ./try-small $version $abi $implementationdir $compilerword"' || exit $?' >../outputs 2>../errors
+              if sh -c "killafter 3600 $DEVICE ./try-small $version $abi $implementationdir $compilerword"' || exit $?' >../outputs 2>../errors
               then
                 checksumsmall=`awk '{print $1}' < ../outputs`
                 cycles=`awk '{print $2}' < ../outputs`
@@ -726,7 +726,7 @@ do
               fi
               [ "$ok" = 1 ] || continue
   
-              if sh -c "killafter 3600 ./try $version $abi $implementationdir $compilerword"' || exit $?' >../outputs 2>../errors
+              if sh -c "killafter 3600 $DEVICE ./try $version $abi $implementationdir $compilerword"' || exit $?' >../outputs 2>../errors
               then
                 checksumbig=`awk '{print $1}' < ../outputs`
                 cycles=`awk '{print $2}' < ../outputs`
@@ -868,7 +868,7 @@ do
         echo "=== `date` === $abi $o/$p $security measuring"
   
         killafter 86400 \
-        "$work/$security/best/measure" "$version" "$abi" "$o/$p" \
+        $DEVICE "$work/$security/best/measure" "$version" "$abi" "$o/$p" \
         | while read measurement
         do
           echo "$version $shorthostname $abi $startdate $o $p/$security $measurement" >&5

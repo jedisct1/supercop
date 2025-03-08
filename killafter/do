@@ -2,6 +2,15 @@
 
 mkdir bin
 
+echo "=== `date` === Trying timeout..." >&2
+case `timeout 120 echo yes` in
+  yes)
+    cp usetimeout bin/killafter
+    echo "=== `date` === Success." >&2
+    exit 0
+    ;;
+esac
+
 (
   echo pg
 ) | (
@@ -10,18 +19,19 @@ mkdir bin
     okabi | (
       while read abi
       do
-        okc-$abi | (
-          while read c
-          do
-            echo "=== `date` === Trying $n.c with $c..." >&2
-            rm -f killafter.c
+	okc-$abi | (
+	  while read c
+	  do
+	    echo "=== `date` === Trying $n.c with $c..." >&2
+	    rm -f killafter.c
 	    cp $n.c killafter.c || continue
-            $c -o killafter killafter.c || continue
+	    $c -o killafter killafter.c || continue
 	    cp killafter bin/killafter
-            exit 0
-          done
-          exit 111
-        ) && exit 0
+	    echo "=== `date` === Success." >&2
+	    exit 0
+	  done
+	  exit 111
+	) && exit 0
       done
       exit 111
     ) && exit 0

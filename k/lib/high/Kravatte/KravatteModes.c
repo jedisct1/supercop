@@ -1,7 +1,12 @@
 /*
+The eXtended Keccak Code Package (XKCP)
+https://github.com/XKCP/XKCP
+
+Kravatte, designed by Guido Bertoni, Joan Daemen, Seth Hoffert, Michaël Peeters, Gilles Van Assche and Ronny Van Keer.
+
 Implementation by Ronny Van Keer, hereby denoted as "the implementer".
 
-For more information, feedback or questions, please refer to our website:
+For more information, feedback or questions, please refer to the Keccak Team website:
 https://keccak.team/
 
 To the extent possible under law, the implementer has waived all copyright
@@ -9,10 +14,7 @@ and related or neighboring rights to the source code in this file.
 http://creativecommons.org/publicdomain/zero/1.0/
 */
 
-#ifndef KeccakP1600_excluded
-
 #include <string.h>
-#include <assert.h>
 #include "brg_endian.h"
 #include "Kravatte.h"
 #include "KravatteModes.h"
@@ -250,7 +252,7 @@ static int Kravatte_SANSE_AddToHistory(Kravatte_SANSE_Instance *kp, const BitSeq
     else { /* dataBitLen too big to hold everything in last byte */
         unsigned int bitsLeft;
 
-        bitsLeft = 8 - dataBitLen;
+        bitsLeft = 8 - (unsigned int)dataBitLen;
         lastByte[0] = (BitSequence)((*data & ((1 << dataBitLen) - 1)) | ((appendix & ((1 << bitsLeft) - 1)) << dataBitLen));
         appendixLen -= bitsLeft;
         appendix >>= bitsLeft;
@@ -367,7 +369,7 @@ static BitLength Kravatte_WBC_Split(BitLength n)
         for (x = 1; (BitLength)(1 << x) < q; ++x)
             ; /* empty */
         --x;
-        nL = (q - (1 << x)) * Kravatte_WBC_b - Kravatte_WBC_l;
+        nL = (q - (BitLength)(1 << x)) * Kravatte_WBC_b - Kravatte_WBC_l;
     }
     return nL;
 }
@@ -401,8 +403,8 @@ int Kravatte_WBC_Encipher(Kravatte_Instance *kv, const BitSequence *plaintext, B
     /* L = L + Fk(R || 1 . W) */
     if (Kra(kv, W, WBitLen, KRAVATTE_FLAG_INIT | KRAVATTE_FLAG_LAST_PART) != 0)
         return 1;
-    memcpy(HkW, kv->xAccu.a, SnP_widthInBytes);
-    memcpy(kRollAfterHkW, kv->kRoll.a+Kravatte_RollcOffset, Kravatte_RollcSizeInBytes);
+    memcpy(HkW, kv->xAccu, SnP_widthInBytes);
+    memcpy(kRollAfterHkW, kv->kRoll+Kravatte_RollcOffset, Kravatte_RollcSizeInBytes);
     numberOfBitsInLastByte = nR & 7;
     lastByte[0] = (numberOfBitsInLastByte != 0) ? Rp[nR/8] : 0;
     if (nR0 == nR) {
@@ -424,8 +426,8 @@ int Kravatte_WBC_Encipher(Kravatte_Instance *kv, const BitSequence *plaintext, B
     memxoris(Lc, Lp, nL);
 
     /* R = R + Fk(L || 0 . W) */
-    memcpy(kv->kRoll.a+Kravatte_RollcOffset, kRollAfterHkW, Kravatte_RollcSizeInBytes);
-    memcpy(kv->xAccu.a, HkW, SnP_widthInBytes);
+    memcpy(kv->kRoll+Kravatte_RollcOffset, kRollAfterHkW, Kravatte_RollcSizeInBytes);
+    memcpy(kv->xAccu, HkW, SnP_widthInBytes);
     if (Kra(kv, Lc, nL, KRAVATTE_FLAG_NONE) != 0)
         return 1;
     lastByte[0] = 0;
@@ -474,8 +476,8 @@ int Kravatte_WBC_Decipher(Kravatte_Instance *kv, const BitSequence *ciphertext, 
     /* R = R + Fk(L || 0 . W) */
     if (Kra(kv, W, WBitLen, KRAVATTE_FLAG_INIT | KRAVATTE_FLAG_LAST_PART) != 0)
         return 1;
-    memcpy(HkW, kv->xAccu.a, SnP_widthInBytes);
-    memcpy(kRollAfterHkW, kv->kRoll.a+Kravatte_RollcOffset, Kravatte_RollcSizeInBytes);
+    memcpy(HkW, kv->xAccu, SnP_widthInBytes);
+    memcpy(kRollAfterHkW, kv->kRoll+Kravatte_RollcOffset, Kravatte_RollcSizeInBytes);
     if (Kra(kv, L0, nL0, KRAVATTE_FLAG_NONE) != 0) /* compress L0 */
         return 1;
     if (Kra(kv, Lc + nL0 / 8, nL - nL0, KRAVATTE_FLAG_NONE) != 0)  /* compress rest of L */
@@ -486,8 +488,8 @@ int Kravatte_WBC_Decipher(Kravatte_Instance *kv, const BitSequence *ciphertext, 
     memxoris(Rp, Rc, nR);
 
     /* L = L + Fk(R || 1 . W) */
-    memcpy(kv->kRoll.a+Kravatte_RollcOffset, kRollAfterHkW, Kravatte_RollcSizeInBytes);
-    memcpy(kv->xAccu.a, HkW, SnP_widthInBytes);
+    memcpy(kv->kRoll+Kravatte_RollcOffset, kRollAfterHkW, Kravatte_RollcSizeInBytes);
+    memcpy(kv->xAccu, HkW, SnP_widthInBytes);
     if (Kra(kv, Rp, nR - numberOfBitsInLastByte, KRAVATTE_FLAG_NONE) != 0)
         return 1;
     lastByte[0] = (numberOfBitsInLastByte != 0) ? Rp[nR/8] : 0;
@@ -553,5 +555,3 @@ int Kravatte_WBCAE_Decipher(Kravatte_Instance *kv, const BitSequence *ciphertext
 #undef  Rp
 #undef  Lc
 #undef  Rc
-
-#endif

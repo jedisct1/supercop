@@ -1,3 +1,4 @@
+// 20250302 djb: port to -Wc++-compat
 #include "crypto_encode_857x1723.h"
 #include "crypto_encode.h"
 #include "crypto_int16.h"
@@ -8,7 +9,7 @@
 
 void crypto_encode(unsigned char *out,const void *v)
 {
-  const int16 *a = v;
+  const int16 *a = (const int16 *) v;
   int16 x[p];
   int i;
 

@@ -274,7 +274,7 @@
 
 BEGIN_EXTERNC
     /* For KeccakWidth1600_Sponge */
-    #include <libkeccak.a.headers/KeccakSpongeWidth1600.h>
+    #include <libkeccak.a.headers/KeccakSponge.h>
 END_EXTERNC
 
 

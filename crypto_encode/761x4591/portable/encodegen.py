@@ -22,6 +22,7 @@ reading = 'R0'
 top = 16384
 
 print('/* auto-generated; do not edit */')
+print('/* 20250302 djb: port to -Wc++-compat */')
 print('')
 print('#include "crypto_encode.h"')
 print('#include "crypto_int16.h"')
@@ -34,7 +35,7 @@ print('')
 
 print('void crypto_encode(unsigned char *out,const void *v)')
 print('{')
-print('  const int16 *%s = v;' % reading)
+print('  const int16 *%s = (const int16 *) v;' % reading)
 
 if Mlen > 1:
   print('  /* XXX: caller could overlap R with input */')

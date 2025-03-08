@@ -1,7 +1,12 @@
 /*
+The eXtended Keccak Code Package (XKCP)
+https://github.com/XKCP/XKCP
+
+Kravatte, designed by Guido Bertoni, Joan Daemen, Seth Hoffert, Michaël Peeters, Gilles Van Assche and Ronny Van Keer.
+
 Implementation by Ronny Van Keer, hereby denoted as "the implementer".
 
-For more information, feedback or questions, please refer to our website:
+For more information, feedback or questions, please refer to the Keccak Team website:
 https://keccak.team/
 
 To the extent possible under law, the implementer has waived all copyright
@@ -12,7 +17,8 @@ http://creativecommons.org/publicdomain/zero/1.0/
 #ifndef _Kravatte_h_
 #define _Kravatte_h_
 
-#ifndef KeccakP1600_excluded
+#include "config.h"
+#ifdef XKCP_has_KeccakP1600
 
 #include <stddef.h>
 #include <stdint.h>
@@ -31,8 +37,6 @@ http://creativecommons.org/publicdomain/zero/1.0/
 #define KRAVATTE_FLAG_LAST_PART     2 /* If set, indicates the last part of input/output */
 #define KRAVATTE_FLAG_SHORT         4 /* If set, indicates Short-Kravatte will be performed */
 
-#define KRAVATTE_ALIGNMENT          KeccakP1600_stateAlignment
-
 typedef unsigned char BitSequence;
 typedef size_t BitLength;
 
@@ -44,17 +48,26 @@ typedef enum
     EXPANDED,
 } Kravatte_Phases;
 
-ALIGN(KRAVATTE_ALIGNMENT) typedef struct
-{
-    unsigned char a[SnP_widthInBytes];
-} Kravatte_AlignedArray;
+#if defined(XKCP_has_KeccakP1600times8)
+    #define KravatteMaxParallellism   8
+    #define KravatteAlignment         64
+#elif defined(XKCP_has_KeccakP1600times4)
+    #define KravatteMaxParallellism   4
+    #define KravatteAlignment         32
+#elif defined(XKCP_has_KeccakP1600times2)
+    #define KravatteMaxParallellism   2
+    #define KravatteAlignment         16
+#else
+    #define KravatteMaxParallellism   1
+    #define KravatteAlignment         8
+#endif
 
 typedef struct {
-    Kravatte_AlignedArray k;
-    Kravatte_AlignedArray kRoll;
-    Kravatte_AlignedArray xAccu;
-    Kravatte_AlignedArray yAccu;
-    Kravatte_AlignedArray queue;    /* input/output queue buffer */
+    ALIGN(KravatteAlignment) uint8_t k[200];
+    ALIGN(KravatteAlignment) uint8_t kRoll[200];
+    ALIGN(KravatteAlignment) uint8_t xAccu[200];
+    ALIGN(KravatteAlignment) uint8_t yAccu[200];
+    ALIGN(KravatteAlignment) uint8_t queue[200];    /* input/output queue buffer */
     BitLength queueOffset;          /* current offset in queue */
     Kravatte_Phases phase;
 } Kravatte_Instance;
@@ -102,6 +115,8 @@ int Vatte(Kravatte_Instance *kvInstance, BitSequence *output, BitLength outputBi
   */
 int Kravatte(Kravatte_Instance *kvInstance, const BitSequence *input, BitLength inputBitLen, BitSequence *output, BitLength outputBitLen, int flags);
 
+#else
+#error This requires an implementation of Keccak-p[1600]
 #endif
 
 #endif

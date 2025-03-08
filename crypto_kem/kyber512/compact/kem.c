@@ -1,8 +1,10 @@
+// 20250306 djb: port to latest XKCP
 // 20240806 djb: some automated conversion to cryptoint
 #include <stddef.h>
 #include <stdint.h>
 #include <string.h>
 #include <libkeccak.a.headers/SimpleFIPS202.h>
+#include <libkeccak.a.headers/KeccakSponge.h>
 #include "crypto_int8.h"
 #include "crypto_int64.h"
 #include "crypto_uint64.h"

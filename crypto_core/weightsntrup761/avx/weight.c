@@ -1,3 +1,4 @@
+// 20250302 djb: port to -Wc++-compat
 #include <immintrin.h>
 #include "crypto_core.h"
 
@@ -12,7 +13,7 @@
 /* out = little-endian weight of bottom bits of in */
 int crypto_core(unsigned char *outbytes,const unsigned char *inbytes,const unsigned char *kbytes,const unsigned char *cbytes)
 {
-  int8 *in = (void *) inbytes;
+  int8 *in = (int8 *) inbytes;
   int i;
   __m256i sum,sumhi;
   int16 weight;
@@ -44,5 +45,6 @@ int crypto_core(unsigned char *outbytes,const unsigned char *inbytes,const unsig
   weight += _mm256_extract_epi16(sum,8);
 
   crypto_encode_int16(outbytes,&weight);
+
   return 0;
 }

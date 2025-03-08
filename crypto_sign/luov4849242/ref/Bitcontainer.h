@@ -6,7 +6,7 @@
 #define BITCONTAINER128_H
 
 #include <stdint.h>
-#include <libkeccak.a.headers/KeccakSpongeWidth1600.h>
+#include <libkeccak.a.headers/KeccakSponge.h>
 #include "buffer.h"
 #include "keccakrng.h"
 #include "parameters.h"

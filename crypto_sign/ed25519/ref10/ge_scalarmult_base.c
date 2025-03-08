@@ -1,23 +1,8 @@
+// 20241028 djb: backporting cryptoint usage from lib25519
+
 #include "ge.h"
-#include "crypto_uint32.h"
-
-static unsigned char equal(signed char b,signed char c)
-{
-  unsigned char ub = b;
-  unsigned char uc = c;
-  unsigned char x = ub ^ uc; /* 0: yes; 1..255: no */
-  crypto_uint32 y = x; /* 0: yes; 1..255: no */
-  y -= 1; /* 4294967295: yes; 0..254: no */
-  y >>= 31; /* 1: yes; 0: no */
-  return y;
-}
-
-static unsigned char negative(signed char b)
-{
-  unsigned long long x = b; /* 18446744073709551361..18446744073709551615: yes; 0..255: no */
-  x >>= 63; /* 1: yes; 0: no */
-  return x;
-}
+#include "crypto_int8.h"
+#include "crypto_uint8.h"
 
 static void cmov(ge_precomp *t,const ge_precomp *u,unsigned char b)
 {
@@ -34,18 +19,18 @@ static const ge_precomp base[32][8] = {
 static void select(ge_precomp *t,int pos,signed char b)
 {
   ge_precomp minust;
-  unsigned char bnegative = negative(b);
+  unsigned char bnegative = crypto_int8_negative_01(b);
   unsigned char babs = b - (((-bnegative) & b) << 1);
 
   ge_precomp_0(t);
-  cmov(t,&base[pos][0],equal(babs,1));
-  cmov(t,&base[pos][1],equal(babs,2));
-  cmov(t,&base[pos][2],equal(babs,3));
-  cmov(t,&base[pos][3],equal(babs,4));
-  cmov(t,&base[pos][4],equal(babs,5));
-  cmov(t,&base[pos][5],equal(babs,6));
-  cmov(t,&base[pos][6],equal(babs,7));
-  cmov(t,&base[pos][7],equal(babs,8));
+  cmov(t,&base[pos][0],crypto_uint8_equal_01(babs,1));
+  cmov(t,&base[pos][1],crypto_uint8_equal_01(babs,2));
+  cmov(t,&base[pos][2],crypto_uint8_equal_01(babs,3));
+  cmov(t,&base[pos][3],crypto_uint8_equal_01(babs,4));
+  cmov(t,&base[pos][4],crypto_uint8_equal_01(babs,5));
+  cmov(t,&base[pos][5],crypto_uint8_equal_01(babs,6));
+  cmov(t,&base[pos][6],crypto_uint8_equal_01(babs,7));
+  cmov(t,&base[pos][7],crypto_uint8_equal_01(babs,8));
   fe_copy(minust.yplusx,t->yminusx);
   fe_copy(minust.yminusx,t->yplusx);
   fe_neg(minust.xy2d,t->xy2d);

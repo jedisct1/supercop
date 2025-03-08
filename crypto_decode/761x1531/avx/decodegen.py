@@ -23,6 +23,8 @@ todo = 'R0'
 top = 16384
 
 print('/* auto-generated; do not edit */')
+print('/* 20250302 djb: port to -Wc++-compat */')
+print('/* 20240812 djb: more cryptoint usage */')
 print('')
 print('#include <immintrin.h>')
 print('#include "crypto_decode.h"')
@@ -92,7 +94,7 @@ static inline __m256i ifnegaddconst(__m256i x,int16 y)
 
 print('void crypto_decode(void *v,const unsigned char *s)')
 print('{')
-print('  int16 *%s = v;' % todo)
+print('  int16 *%s = (int16 *) v;' % todo)
 
 tmparrays = None
 
@@ -178,7 +180,7 @@ def inner(indent,reading,inpos,m0,m1,bytes,outpos0,outpos1):
 
   while a0lower < 0:
     a0lower,a0upper = min(0,a0lower+m0),max(m0-1,a0upper)
-    stanza += indent + 'a0 += (a0>>15)&%d; /* %d...%d */\n' % (m0,a0lower,a0upper)
+    stanza += indent + 'a0 += %d&crypto_int16_negative_mask(a0); /* %d...%d */\n' % (m0,a0lower,a0upper)
 
   if bytes == 0:
     stanza += indent + 'a1 = (a2-a0)>>%d;\n' % t
@@ -208,7 +210,7 @@ def inner(indent,reading,inpos,m0,m1,bytes,outpos0,outpos1):
   stanza += '\n'
   stanza += indent + '/* invalid inputs might need reduction mod %d */\n' % m1
   stanza += indent + 'a1 -= %d;\n' % m1
-  stanza += indent + 'a1 += (a1>>15)&%d;\n' % m1
+  stanza += indent + 'a1 += %d&crypto_int16_negative_mask(a1);\n' % m1
   stanza += '\n'
   stanza += indent + '%s\n' % poke(todo,outpos0,'a0')
   stanza += indent + '%s\n' % poke(todo,outpos1,'a1')
@@ -421,7 +423,7 @@ while a1upper >= q:
 
 while a1lower < 0:
   a1lower,a1upper = min(0,a1lower+q),max(a1upper,q-1)
-  stanza += '  a1 += (a1>>15)&%d; /* %d...%d */\n' % (q,a1lower,a1upper)
+  stanza += '  a1 += %d&crypto_int16_negative_mask(a1); /* %d...%d */\n' % (q,a1lower,a1upper)
   
 stanza += '  %s\n' % poke(todo,0,'a1')
 stanzas += [stanza]

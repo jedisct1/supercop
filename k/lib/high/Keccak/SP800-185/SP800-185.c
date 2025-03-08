@@ -1,7 +1,12 @@
 /*
+The eXtended Keccak Code Package (XKCP)
+https://github.com/XKCP/XKCP
+
+Keccak, designed by Guido Bertoni, Joan Daemen, Michaël Peeters and Gilles Van Assche.
+
 Implementation by Ronny Van Keer, hereby denoted as "the implementer".
 
-For more information, feedback or questions, please refer to our website:
+For more information, feedback or questions, please refer to the Keccak Team website:
 https://keccak.team/
 
 To the extent possible under law, the implementer has waived all copyright
@@ -11,9 +16,16 @@ http://creativecommons.org/publicdomain/zero/1.0/
 
 #include <string.h>
 #include "SP800-185.h"
-#ifndef KeccakP1600timesN_excluded
+
+#ifdef XKCP_has_KeccakP1600times2
     #include "KeccakP-1600-times2-SnP.h"
+#endif
+
+#ifdef XKCP_has_KeccakP1600times4
     #include "KeccakP-1600-times4-SnP.h"
+#endif
+
+#ifdef XKCP_has_KeccakP1600times8
     #include "KeccakP-1600-times8-SnP.h"
 #endif
 

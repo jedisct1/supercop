@@ -172,6 +172,7 @@ int crypto_kem_keypair(unsigned char *pk,unsigned char *sk)
     sk[SecretKeys_bytes-1] = sksave;
     randombytes(sk+SecretKeys_bytes+PublicKeys_bytes,Small_bytes);
   }
+
   return 0;
 }
 
@@ -197,6 +198,7 @@ int crypto_kem_enc(unsigned char *c,unsigned char *k,const unsigned char *pk)
       Hash(k,x,sizeof x);
     }
   }
+
   return 0;
 }
 
@@ -239,5 +241,6 @@ int crypto_kem_dec(unsigned char *k,const unsigned char *c,const unsigned char *
     x[0] = 1+mask;
     Hash(k,x,sizeof x);
   }
+
   return 0;
 }

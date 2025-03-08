@@ -1,3 +1,4 @@
+// 20240812 djb: more cryptoint usage
 #include "ntt.h"
 #include <immintrin.h>
 #include "crypto_int8.h"
@@ -216,12 +217,12 @@ int crypto_core(unsigned char *outbytes,const unsigned char *inbytes,const unsig
 
   for (i = 0;i < p;++i) {
     int8 fi = inbytes[i];
-    int8 fi0 = -crypto_int8_bottombit_mask(fi);
+    int8 fi0 = crypto_int8_bottombit_01(fi);
     f[i] = fi0-(fi&(fi0<<1));
   }
   for (i = 0;i < p;++i) {
     int8 gi = kbytes[i];
-    int8 gi0 = -crypto_int8_bottombit_mask(gi);
+    int8 gi0 = crypto_int8_bottombit_01(gi);
     g[i] = gi0-(gi&(gi0<<1));
   }
 

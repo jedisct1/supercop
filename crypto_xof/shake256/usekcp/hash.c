@@ -1,4 +1,4 @@
-#include <libkeccak.a.headers/KeccakSpongeWidth1600.h>
+#include <libkeccak.a.headers/KeccakSponge.h>
 #include "crypto_xof.h"
 
 int crypto_xof(unsigned char *out,long long outlen,const unsigned char *in,long long inlen)

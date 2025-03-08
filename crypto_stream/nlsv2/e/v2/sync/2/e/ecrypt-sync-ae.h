@@ -10,7 +10,7 @@
 #ifndef ECRYPT_SYNC_AE
 #define ECRYPT_SYNC_AE
 
-#include "ecrypt-portable.h"
+#include  "ecrypt-portable.h"
 
 /* ------------------------------------------------------------------------- */
 

@@ -176,14 +176,14 @@ int crypto_sign_keypair(uint8_t *pk, uint8_t *sk) {
 * Description: Computes signature.
 *
 * Arguments:   - uint8_t *sig: pointer to output signature (of length CRYPTO_BYTES)
-*              - size_t *siglen: pointer to output length of signature
+*              - unsigned long long *siglen: pointer to output length of signature
 *              - uint8_t *m: pointer to message to be signed
-*              - size_t mlen: length of message
+*              - unsigned long long mlen: length of message
 *              - uint8_t *sk: pointer to bit-packed secret key
 *
 * Returns 0 (success)
 **************************************************/
-int crypto_sign_signature(uint8_t *sig, size_t *siglen, const uint8_t *m, size_t mlen, const uint8_t *sk) {
+int crypto_sign_signature(uint8_t *sig, unsigned long long *siglen, const uint8_t *m, unsigned long long mlen, const uint8_t *sk) {
   unsigned int i, n, pos;
   uint8_t seedbuf[2*SEEDBYTES + 3*CRHBYTES];
   uint8_t *rho, *tr, *key, *mu, *rhoprime;
@@ -333,16 +333,16 @@ rej:
 * Arguments:   - uint8_t *sm: pointer to output signed message (allocated
 *                             array with CRYPTO_BYTES + mlen bytes),
 *                             can be equal to m
-*              - size_t *smlen: pointer to output length of signed
+*              - unsigned long long *smlen: pointer to output length of signed
 *                               message
 *              - const uint8_t *m: pointer to message to be signed
-*              - size_t mlen: length of message
+*              - unsigned long long mlen: length of message
 *              - const uint8_t *sk: pointer to bit-packed secret key
 *
 * Returns 0 (success)
 **************************************************/
-int crypto_sign(uint8_t *sm, size_t *smlen, const uint8_t *m, size_t mlen, const uint8_t *sk) {
-  size_t i;
+int crypto_sign(uint8_t *sm, unsigned long long *smlen, const uint8_t *m, unsigned long long mlen, const uint8_t *sk) {
+  unsigned long long i;
 
   for(i = 0; i < mlen; ++i)
     sm[CRYPTO_BYTES + mlen - 1 - i] = m[mlen - 1 - i];
@@ -357,14 +357,14 @@ int crypto_sign(uint8_t *sm, size_t *smlen, const uint8_t *m, size_t mlen, const
 * Description: Verifies signature.
 *
 * Arguments:   - uint8_t *m: pointer to input signature
-*              - size_t siglen: length of signature
+*              - unsigned long long siglen: length of signature
 *              - const uint8_t *m: pointer to message
-*              - size_t mlen: length of message
+*              - unsigned long long mlen: length of message
 *              - const uint8_t *pk: pointer to bit-packed public key
 *
 * Returns 0 if signature could be verified correctly and -1 otherwise
 **************************************************/
-int crypto_sign_verify(const uint8_t *sig, size_t siglen, const uint8_t *m, size_t mlen, const uint8_t *pk) {
+int crypto_sign_verify(const uint8_t *sig, unsigned long long siglen, const uint8_t *m, unsigned long long mlen, const uint8_t *pk) {
   unsigned int i, j, pos = 0;
   /* polyw1_pack writes additional 14 bytes */
   ALIGNED_UINT8(K*POLYW1_PACKEDBYTES+14) buf;
@@ -473,15 +473,15 @@ int crypto_sign_verify(const uint8_t *sig, size_t siglen, const uint8_t *m, size
 *
 * Arguments:   - uint8_t *m: pointer to output message (allocated
 *                            array with smlen bytes), can be equal to sm
-*              - size_t *mlen: pointer to output length of message
+*              - unsigned long long *mlen: pointer to output length of message
 *              - const uint8_t *sm: pointer to signed message
-*              - size_t smlen: length of signed message
+*              - unsigned long long smlen: length of signed message
 *              - const uint8_t *pk: pointer to bit-packed public key
 *
 * Returns 0 if signed message could be verified correctly and -1 otherwise
 **************************************************/
-int crypto_sign_open(uint8_t *m, size_t *mlen, const uint8_t *sm, size_t smlen, const uint8_t *pk) {
-  size_t i;
+int crypto_sign_open(uint8_t *m, unsigned long long *mlen, const uint8_t *sm, unsigned long long smlen, const uint8_t *pk) {
+  unsigned long long i;
 
   if(smlen < CRYPTO_BYTES)
     goto badsig;

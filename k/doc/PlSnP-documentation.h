@@ -1,9 +1,10 @@
 /*
-Implementation by the Keccak Team, namely, Guido Bertoni, Joan Daemen,
-Michaël Peeters, Gilles Van Assche and Ronny Van Keer,
-hereby denoted as "the implementer".
+The eXtended Keccak Code Package (XKCP)
+https://github.com/XKCP/XKCP
 
-For more information, feedback or questions, please refer to our website:
+Implementation by Gilles Van Assche and Ronny Van Keer, hereby denoted as "the implementer".
+
+For more information, feedback or questions, please refer to the Keccak Team website:
 https://keccak.team/
 
 To the extent possible under law, the implementer has waived all copyright
@@ -199,7 +200,7 @@ void PlSnP_ExtractLanesAll(const void *states, unsigned char *data, unsigned int
   * @pre    0 ≤ @a offset < (width in bytes)
   * @pre    0 ≤ @a offset + @a length ≤ (width in bytes)
   */
-void PlSnP_ExtractAndAddBytes(const void *states, unsigned int instanceIndex,  const unsigned char *input, unsigned char *output, unsigned int offset, unsigned int length);
+void PlSnP_ExtractAndAddBytes(const void *states, unsigned int instanceIndex, const unsigned char *input, unsigned char *output, unsigned int offset, unsigned int length);
 
 /** Function to retrieve data from all the parallel states in an interleaved fashion
   * to add  (in GF(2), using bitwise exclusive-or) them to the input buffer,

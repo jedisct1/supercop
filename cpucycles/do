@@ -38,6 +38,7 @@ okabi | (
         sparc*)
           echo sparccpuinfo
           echo sparc32cpuinfo
+          echo leoncpuinfo
           ;;
         mips*)
           echo mips
@@ -93,6 +94,7 @@ okabi | (
       echo celllinux
       echo sparccpuinfo
       echo sparc32cpuinfo
+      echo leoncpuinfo
       echo mips
       echo hppapstat
       echo alpha
@@ -119,7 +121,7 @@ okabi | (
             cp $n.h cpucycles-impl.h || continue
             $c -c cpucycles-impl.c || continue
             $c -o test test.c cpucycles-impl.o || continue
-            $CPUCYCLESWRAPPER ./test || continue
+            $CPUCYCLESWRAPPER $DEVICE ./test || continue
             echo "=== `date` === Success. Using $n.c." >&2
             mkdir -p lib/$abi
             mv cpucycles-impl.o lib/$abi/cpucycles.o

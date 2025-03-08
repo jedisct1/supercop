@@ -1,5 +1,5 @@
 /*
- * crypto_encode/try.c version 20200816
+ * crypto_encode/try.c version 20250302
  * D. J. Bernstein
  * Public domain.
  */
@@ -101,16 +101,19 @@ void test(void)
     unpoison(x,xbytes);
     unpoison(y,ybytes);
     checksum(y,ybytes);
+    endianness(x,crypto_encode_ITEMS);
     output_compare(y2,y,ybytes,"crypto_encode");
     input_compare(x2,x,xbytes,"crypto_encode");
 
     double_canary(x2,x,xbytes);
     double_canary(y2,y,ybytes);
+    endianness(x2,crypto_encode_ITEMS);
     poison(x2,xbytes);
     poison(y2,ybytes);
     crypto_encode(y2,x2);
     unpoison(x2,xbytes);
     unpoison(y2,ybytes);
+    endianness(x2,crypto_encode_ITEMS);
     if (memcmp(y2,y,ybytes) != 0) fail("crypto_encode is nondeterministic");
   }
 }

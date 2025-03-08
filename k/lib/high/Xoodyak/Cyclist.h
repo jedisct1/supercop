@@ -1,7 +1,12 @@
 /*
+The eXtended Keccak Code Package (XKCP)
+https://github.com/XKCP/XKCP
+
+Xoodyak, designed by Joan Daemen, Seth Hoffert, Michaël Peeters, Gilles Van Assche and Ronny Van Keer.
+
 Implementation by Ronny Van Keer, hereby denoted as "the implementer".
 
-For more information, feedback or questions, please refer to our website:
+For more information, feedback or questions, please refer to the Keccak Team website:
 https://keccak.team/
 
 To the extent possible under law, the implementer has waived all copyright
@@ -25,10 +30,10 @@ http://creativecommons.org/publicdomain/zero/1.0/
 
 #include    <stdio.h>
 
-#define KCP_DeclareCyclistStructure(prefix, size, alignment)                    \
-            ALIGN(alignment) typedef struct prefix##_CyclistInstanceStruct {    \
-            uint8_t         state[size];                                        \
-            uint8_t         stateShadow[size];                                  \
+#define KCP_DeclareCyclistStructure(prefix, state_t)                            \
+            typedef struct prefix##_CyclistInstanceStruct {                     \
+            state_t         state;                                              \
+            state_t         stateShadow[size];                                  \
             FILE            *file;                                              \
             unsigned int    phase;                                              \
             unsigned int    mode;                                               \
@@ -38,9 +43,9 @@ http://creativecommons.org/publicdomain/zero/1.0/
 
 #else
 
-#define KCP_DeclareCyclistStructure(prefix, size, alignment)                    \
-            ALIGN(alignment) typedef struct prefix##_CyclistInstanceStruct {    \
-            uint8_t         state[size];                                        \
+#define KCP_DeclareCyclistStructure(prefix, state_t)                            \
+            typedef struct prefix##_CyclistInstanceStruct {                     \
+            state_t         state;                                              \
             unsigned int    phase;                                              \
             unsigned int    mode;                                               \
             unsigned int    Rabsorb;                                            \

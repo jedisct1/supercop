@@ -1,3 +1,4 @@
+// 20250302 djb: port to -Wc++-compat
 #include "crypto_decode.h"
 #include "crypto_uint8.h"
 #define uint8 crypto_uint8
@@ -6,7 +7,7 @@
 
 void crypto_decode(void *v,const unsigned char *s)
 {
-  uint8 *f = v;
+  uint8 *f = (uint8 *) v;
   uint8 x;
   int i;
 

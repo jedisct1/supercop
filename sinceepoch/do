@@ -2,6 +2,29 @@
 
 mkdir bin
 
+echo "=== `date` === Trying usedate..." >&2
+t1=`./usedate 2>&1`
+if echo 0"$t1" | wc -l | grep '^ *1$' >/dev/null
+then
+  if echo 0"$t1" | grep '^[0-9][0-9][0-9]*$' >/dev/null
+  then
+    sleep 2
+    t2=`./usedate 2>&1`
+    if echo 0"$t2" | wc -l | grep '^ *1$' >/dev/null
+    then
+      if echo 0"$t2" | grep '^[0-9][0-9][0-9]*$' >/dev/null
+      then
+        if [ "$t1" -lt "$t2" ]
+        then
+          cp usedate bin/sinceepoch
+          echo "=== `date` === Success." >&2
+          exit 0
+        fi
+      fi
+    fi
+  fi
+fi
+
 (
   echo time
 ) | (
@@ -10,18 +33,19 @@ mkdir bin
     okabi | (
       while read abi
       do
-        okc-$abi | (
-          while read c
-          do
-            echo "=== `date` === Trying $n.c with $c..." >&2
-            rm -f sinceepoch.c
+	okc-$abi | (
+	  while read c
+	  do
+	    echo "=== `date` === Trying $n.c with $c..." >&2
+	    rm -f sinceepoch.c
 	    cp $n.c sinceepoch.c || continue
-            $c -o sinceepoch sinceepoch.c || continue
+	    $c -o sinceepoch sinceepoch.c || continue
 	    cp sinceepoch bin/sinceepoch
-            exit 0
-          done
-          exit 111
-        ) && exit 0
+	    echo "=== `date` === Success." >&2
+	    exit 0
+	  done
+	  exit 111
+	) && exit 0
       done
       exit 111
     ) && exit 0

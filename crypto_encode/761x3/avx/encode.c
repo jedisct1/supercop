@@ -1,3 +1,4 @@
+// 20250302 djb: port to -Wc++-compat
 #include <immintrin.h>
 #include "crypto_encode.h"
 #include "crypto_uint8.h"
@@ -17,7 +18,7 @@ static const __attribute((aligned(32))) uint8 lobytes_buf[32] = {
 
 void crypto_encode(unsigned char *s,const void *v)
 {
-  const uint8 *f = v;
+  const uint8 *f = (const uint8 *) v;
   int loop;
   const uint8 *nextf = f+128-4*overshoot;
   unsigned char *nexts = s+32-overshoot;

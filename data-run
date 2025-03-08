@@ -148,7 +148,7 @@ do
 
       if [ "$t1" = gmp ]
       then
-        echo "gmp 6.2.1" >&8
+        echo "gmp 6.3.0" >&8
       fi
   
       if [ "$t1" = ntl ]
@@ -158,7 +158,7 @@ do
   
       if [ "$t1" = keccak ]
       then
-        echo "keccak 20190805" >&8
+        echo "keccak 20250220-nokravatte-noxoofff" >&8
       fi
   
       if [ "$t1" = cryptopp ]
@@ -301,7 +301,7 @@ do
               && make \
               && make check \
               && cp gmp.h gmpxx.h gmp-impl.h longlong.h \
-              config.h gmp-mparam.h fac_table.h fib_table.h mp_bases.h \
+              config.h gmp-mparam.h fac_table.h sieve_table.h fib_table.h mp_bases.h \
               "$top/$abi/include" \
               && ( ranlib ".libs/libgmp.a" || : ) \
               && cp .libs/libgmp.a "$top/$abi/lib/libgmp.a" \
@@ -361,10 +361,10 @@ do
           mkdir -p "$top/$target/work"
           cp -pR k/* "$top/$target/work"
           ( cd "$top/$target/work" \
-            && env CC="$c" CFLAGS="$copts" make $keccaktarget/libkeccak.a \
+            && env CC="$c" CFLAGS="$copts" make $keccaktarget/libXKCP.a \
             && mkdir -p "$top/$abi/include/libkeccak.a.headers" \
-            && cp bin/$keccaktarget/libkeccak.a.headers/* "$top/$abi/include/libkeccak.a.headers" \
-            && cp bin/$keccaktarget/libkeccak.a "$top/$abi/lib/libkeccak.a" \
+            && cp bin/$keccaktarget/libXKCP.a.headers/* "$top/$abi/include/libkeccak.a.headers" \
+            && cp bin/$keccaktarget/libXKCP.a "$top/$abi/lib/libkeccak.a" \
             && chmod 644 "$top/$abi/lib/libkeccak.a"
           ) && break || :
         done
@@ -694,9 +694,10 @@ do
                   -I"$top/$abi/include/$security" \
                   -c "$f" 2>&1 || rm -f OK
               ) | awk -v PREFIX="$version $shorthostname $abi $startdate $o $p/$security fromcompiler $implementationdir $compilerword $f" '
+                BEGIN { printing = 1 }
                 {
-                  if (NR > 25) { print PREFIX,"..."; exit }
-                  print PREFIX,$0
+                  if (printing && NR > 25) { print PREFIX,"..."; printing = 0 }
+                  if (printing) print PREFIX,$0
                 }
               ' >&5
             fi
@@ -740,9 +741,10 @@ do
               cp target/release/measure measure || rm -f OK
               strip try-small try measure || :
             ) | awk -v PREFIX="$version $shorthostname $abi $startdate $o $p/$security fromcompiler $implementationdir $compilerword try.$language" '
+              BEGIN { printing = 1 }
               {
-                if (NR > 25) { print PREFIX,"..."; exit }
-                print PREFIX,$0
+                if (printing && NR > 25) { print PREFIX,"..."; printing = 0 }
+                if (printing) print PREFIX,$0
               }
             ' >&5
             [ -f OK ] || exit 0
@@ -759,15 +761,16 @@ do
                 -o try-small try-small.$language try-anything.$language \
                 "lib$op.a" $trylibs 2>&1 || rm -f OK
             ) | awk -v PREFIX="$version $shorthostname $abi $startdate $o $p/$security fromcompiler $implementationdir $compilerword try.$language" '
+              BEGIN { printing = 1 }
               {
-                if (NR > 25) { print PREFIX,"..."; exit }
-                print PREFIX,$0
+                if (printing && NR > 25) { print PREFIX,"..."; printing = 0 }
+                if (printing) print PREFIX,$0
               }
             ' >&5
             [ -f OK ] || exit 0
           fi
   
-          if sh -c "killafter 3600 ./try-small $version $abi $implementationdir $compilerword"' || exit $?' >../outputs 2>../errors
+          if sh -c "killafter 3600 $DEVICE ./try-small $version $abi $implementationdir $compilerword"' || exit $?' >../outputs 2>../errors
           then
             checksumsmall=`awk '{print $1}' < ../outputs`
             cycles=`awk '{print $2}' < ../outputs`
@@ -802,15 +805,16 @@ do
                 -o try try.$language try-anything.$language \
                 "lib$op.a" $trylibs 2>&1 || rm -f OK
             ) | awk -v PREFIX="$version $shorthostname $abi $startdate $o $p/$security fromcompiler $implementationdir $compilerword try.$language" '
+              BEGIN { printing = 1 }
               {
-                if (NR > 25) { print PREFIX,"..."; exit }
-                print PREFIX,$0
+                if (printing && NR > 25) { print PREFIX,"..."; printing = 0 }
+                if (printing) print PREFIX,$0
               }
             ' >&5
             [ -f OK ] || exit 0
           fi
   
-          if sh -c "killafter 3600 ./try $version $abi $implementationdir $compilerword"' || exit $?' >../outputs 2>../errors
+          if sh -c "killafter 3600 $DEVICE ./try $version $abi $implementationdir $compilerword"' || exit $?' >../outputs 2>../errors
           then
             checksumbig=`awk '{print $1}' < ../outputs`
             cycles=`awk '{print $2}' < ../outputs`
@@ -853,9 +857,10 @@ do
                   -o try-timecop try-timecop.$language try-anything-timecop.$language \
                   "lib$op.a" $timecoptrylibs 2>&1
               ) | awk -v PREFIX="$version $shorthostname $abi $startdate $o $p/$security fromcompiler $implementationdir $compilerword try.$language" '
+                BEGIN { printing = 1 }
                 {
-                  if (NR > 25) { print PREFIX,"..."; exit }
-                  print PREFIX,$0
+                  if (printing && NR > 25) { print PREFIX,"..."; printing = 0 }
+                  if (printing) print PREFIX,$0
                 }
               ' >&5
             fi
@@ -894,9 +899,10 @@ do
                 -o measure measure.$language measure-anything.$language \
                 "lib$op.a" $measurelibs 2>&1 || rm -f OK
             ) | awk -v PREFIX="$version $shorthostname $abi $startdate $o $p/$security fromcompiler $implementationdir $compilerword measure.$language" '
+              BEGIN { printing = 1 }
               {
-                if (NR > 25) { print PREFIX,"..."; exit }
-                print PREFIX,$0
+                if (printing && NR > 25) { print PREFIX,"..."; printing = 0 }
+                if (printing) print PREFIX,$0
               }
             ' >&5
             [ -f OK ] || exit 0
@@ -1068,7 +1074,7 @@ do
           | while read source
           do
             killafter 86400 \
-            "$top/$abi/$source/compiled/measure" "$version" "$abi" "$o/$p" \
+            $DEVICE "$top/$abi/$source/compiled/measure" "$version" "$abi" "$o/$p" \
             | while read measurement
             do
               echo "$version $shorthostname $abi $startdate $o $p/$security $measurement" >&5
