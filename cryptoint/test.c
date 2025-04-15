@@ -16,6 +16,7 @@
       ); \
     return 100; \
   }
+
 #define CHECK2(z,fun,x,y)  \
   if (z != fun(x,y)) { \
     fprintf(stderr,"%s(%lld,%lld) returned %lld, expected %lld\n" \
@@ -27,7 +28,7 @@
     return 100; \
   }
 
-int check(TYPE x,TYPE y)
+int check_x(TYPE x)
 {
   TYPE z, t;
   int j;
@@ -86,14 +87,6 @@ int check(TYPE x,TYPE y)
   z = x > 0 ? -1 : 0; CHECK1(z,TYPE_positive_mask,x)
   z = x > 0 ?  1 : 0; CHECK1(z,TYPE_positive_01,x)
 #endif
-  z = x != y ? -1 : 0; CHECK2(z,TYPE_unequal_mask,x,y)
-  z = x != y ?  1 : 0; CHECK2(z,TYPE_unequal_01,x,y)
-  z = x == y ? -1 : 0; CHECK2(z,TYPE_equal_mask,x,y)
-  z = x == y ?  1 : 0; CHECK2(z,TYPE_equal_01,x,y)
-  z = x < y ? -1 : 0; CHECK2(z,TYPE_smaller_mask,x,y)
-  z = x < y ?  1 : 0; CHECK2(z,TYPE_smaller_01,x,y)
-  z = x <= y ? -1 : 0; CHECK2(z,TYPE_leq_mask,x,y)
-  z = x <= y ?  1 : 0; CHECK2(z,TYPE_leq_01,x,y)
 
   z = 0;
   for (j = 0;j < N;++j) z += 1 & (x >> j);
@@ -102,6 +95,22 @@ int check(TYPE x,TYPE y)
   z = 0;
   for (j = 0;j < N;++j) { if (1 & (x >> j)) break; ++z; }
   CHECK1(z,TYPE_bottomzeros_num,x)
+
+  return 0;
+}
+
+int check_xy(TYPE x,TYPE y)
+{
+  TYPE z, t;
+
+  z = x != y ? -1 : 0; CHECK2(z,TYPE_unequal_mask,x,y)
+  z = x != y ?  1 : 0; CHECK2(z,TYPE_unequal_01,x,y)
+  z = x == y ? -1 : 0; CHECK2(z,TYPE_equal_mask,x,y)
+  z = x == y ?  1 : 0; CHECK2(z,TYPE_equal_01,x,y)
+  z = x < y ? -1 : 0; CHECK2(z,TYPE_smaller_mask,x,y)
+  z = x < y ?  1 : 0; CHECK2(z,TYPE_smaller_01,x,y)
+  z = x <= y ? -1 : 0; CHECK2(z,TYPE_leq_mask,x,y)
+  z = x <= y ?  1 : 0; CHECK2(z,TYPE_leq_01,x,y)
 
   z = x < y ? x : y; CHECK2(z,TYPE_min,x,y)
   t = x > y ? x : y; CHECK2(t,TYPE_max,x,y)
@@ -125,34 +134,42 @@ int main(int argc,char **argv)
     x += x ^ zero;
   }
   if (x != 0) return 100;
-  x -= 1;
 #ifdef sign_is_int
+  x -= 1;
   if (x > 0) return 100;
-#else
-  if (x < 0) return 100;
 #endif
 
 #ifdef sign_is_int
-  for (x = -100;x <= 100;++x)
-    for (y = -100;y <= 100;++y)
+  for (x = -100;x <= 100;++x) {
+    if (check_x(x*one) != 0) return 100;
+    for (y = -100;y <= 100;++y) {
+      if (check_xy(x*one,y^zero) != 0) return 100;
+    }
+  }
 #else
-  for (x = 0;x <= 200;++x)
-    for (y = 0;y <= 200;++y)
+  for (x = 0;x <= 200;++x) {
+    if (check_x(x*one) != 0) return 100;
+    for (y = 0;y <= 200;++y) {
+      if (check_xy(x*one,y^zero) != 0) return 100;
+    }
+  }
 #endif
-      if (check(x*one,y^zero) != 0) return 100;
 
   x = 1;
   for (i = 0;i < N;++i) {
-    y = 1;
-    for (j = 0;j < N;++j) {
-      for (k = -3;k <= 3;++k)
+    for (k = -3;k <= 3;++k) {
+      if (check_x((k+x)*one) != 0) return 100;
+      if (check_x((k-x)*one) != 0) return 100;
+      y = 1;
+      for (j = 0;j < N;++j) {
         for (l = -3;l <= 3;++l) {
-          if (check((k+x)*one,(l+y)^zero) != 0) return 100;
-          if (check((k+x)*one,(l-y)^zero) != 0) return 100;
-          if (check((k-x)*one,(l+y)^zero) != 0) return 100;
-          if (check((k-x)*one,(l-y)^zero) != 0) return 100;
+          if (check_xy((k+x)*one,(l+y)^zero) != 0) return 100;
+          if (check_xy((k+x)*one,(l-y)^zero) != 0) return 100;
+          if (check_xy((k-x)*one,(l+y)^zero) != 0) return 100;
+          if (check_xy((k-x)*one,(l-y)^zero) != 0) return 100;
         }
-      y *= 2;
+        y *= 2;
+      }
     }
     x *= 2;
   }
@@ -165,7 +182,8 @@ int main(int argc,char **argv)
     y ^= z;
     z += x >> 5;
     y ^= x << 3;
-    if (check(x,y) != 0) return 100;
+    if (check_x(x) != 0) return 100;
+    if (check_xy(x,y) != 0) return 100;
   }
 
   return 0;

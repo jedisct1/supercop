@@ -240,12 +240,7 @@ do
   okc-$abi | head -1 \
   | while read c copts
   do
-    for keccaktarget in \
-      AVR8 \
-      ARMv8A ARMv7A ARMv7M ARMv6M \
-      KnightsLanding Haswell Bulldozer SandyBridge Nehalem \
-      asmX86-64shdl asmX86-64 \
-      generic64 generic32 reference reference32bits compact
+    for keccaktarget in `./k-targets "$abi" "$c" "$copts"`
     do
       [ -s "$lib/$abi/libkeccak.a" ] && continue
       echo "=== `date` === trying CC=$c CFLAGS=$copts TARGET=$keccaktarget"

@@ -158,7 +158,7 @@ do
   
       if [ "$t1" = keccak ]
       then
-        echo "keccak 20250220-nokravatte-noxoofff" >&8
+        echo "keccak 20250220-nokravatte-noxoofff+fixes" >&8
       fi
   
       if [ "$t1" = cryptopp ]
@@ -348,12 +348,7 @@ do
       okc-$abi | head -1 \
       | while read c copts
       do
-        for keccaktarget in \
-          AVR8 \
-          ARMv8A ARMv7A ARMv7M ARMv6M \
-          KnightsLanding Haswell Bulldozer SandyBridge Nehalem \
-          asmX86-64shdl asmX86-64 \
-          generic64 generic32 reference reference32bits compact
+        for keccaktarget in `./k-targets "$abi" "$c" "$copts"`
         do
           [ -s "$top/$abi/lib/libkeccak.a" ] && continue
           echo "=== `date` === trying CC=$c CFLAGS=$copts TARGET=$keccaktarget"

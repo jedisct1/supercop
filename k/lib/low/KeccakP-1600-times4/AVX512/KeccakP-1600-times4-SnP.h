@@ -30,6 +30,7 @@ typedef struct {
 typedef KeccakP1600times4_align512SIMD256_states KeccakP1600times4_states;
 
 #define KeccakP1600times4_implementation        "512-bit SIMD implementation (" KeccakP1600times4_implementation_config ")"
+#define KeccakP1600times4_statesSizeInBytes     800
 #define KeccakP1600times4_statesAlignment       64
 #define KeccakF1600times4_FastLoop_supported
 #define KeccakP1600times4_12rounds_FastLoop_supported

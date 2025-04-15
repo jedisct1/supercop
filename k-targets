@@ -1,0 +1,33 @@
+#!/bin/sh
+
+abi="$1"
+shift
+c="$@"
+
+case "$abi" in
+  avr*)
+    echo AVR8
+    ;;
+  aarch*)
+    echo ARMv8A
+    ;;
+  arm*)
+    $c -dM -E - </dev/null | grep __ARM_ARCH_7A__ >/dev/null && echo ARMv7A
+    $c -dM -E - </dev/null | grep __ARM_ARCH_7M__ >/dev/null && echo ARMv7M
+    $c -dM -E - </dev/null | grep __ARM_ARCH_6M__ >/dev/null && echo ARMv6M
+    $c -dM -E - </dev/null | grep __ARM_ARCH_6__ >/dev/null && echo ARMv6
+    ;;
+  amd64|x86)
+    $c -dM -E - </dev/null | grep __AVX512 >/dev/null && echo AVX512
+    $c -dM -E - </dev/null | grep __AVX2__ >/dev/null && echo AVX2
+    $c -dM -E - </dev/null | grep __XOP__ >/dev/null && echo XOP
+    $c -dM -E - </dev/null | grep __AVX__ >/dev/null && echo AVX
+    $c -dM -E - </dev/null | grep __SSSE3__ >/dev/null && echo SSSE3
+    ;;
+esac
+
+echo generic64lc
+echo generic64
+echo generic32lc
+echo generic32
+echo compact

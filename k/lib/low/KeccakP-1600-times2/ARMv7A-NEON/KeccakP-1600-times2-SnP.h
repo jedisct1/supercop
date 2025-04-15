@@ -27,6 +27,7 @@ typedef struct {
 typedef KeccakP1600times2_align256SIMD128_states KeccakP1600times2_states;
 
 #define KeccakP1600times2_implementation        "64-bit optimized ARM NEON assembler implementation"
+#define KeccakP1600times2_statesSizeInBytes     400
 #define KeccakP1600times2_statesAlignment       32
 
 void KeccakP1600times2_StaticInitialize( void );

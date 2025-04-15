@@ -31,6 +31,8 @@ typedef struct {
 typedef KeccakP1600times8_SIMD512_states KeccakP1600times8_states;
 
 #define KeccakP1600times8_implementation        "512-bit SIMD implementation (" KeccakP1600times8_implementation_config ")"
+#define KeccakP1600times8_statesSizeInBytes     1600
+#define KeccakP1600times8_statesAlignment       8
 #define KeccakF1600times8_FastLoop_supported
 #define KeccakP1600times8_12rounds_FastLoop_supported
 #define KeccakF1600times8_FastKravatte_supported
