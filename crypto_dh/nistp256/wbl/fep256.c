@@ -1,3 +1,4 @@
+// 20250922 djb: remove unused variables and functions
 /* crypto/ec/ecp_nistp256.c */
 /* Modified by Watson Ladd */
 /*
@@ -41,31 +42,6 @@ typedef int64_t s64;
 
 typedef u8 felem_bytearray[32];
 
-/* These are the parameters of P256, taken from FIPS 186-3, page 86. These
- * values are big-endian. */
-static const felem_bytearray nistp256_curve_params[5] = {
-	{0xff, 0xff, 0xff, 0xff, 0x00, 0x00, 0x00, 0x01,       /* p */
-	 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-	 0x00, 0x00, 0x00, 0x00, 0xff, 0xff, 0xff, 0xff,
-	 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff},
-	{0xff, 0xff, 0xff, 0xff, 0x00, 0x00, 0x00, 0x01,       /* a = -3 */
-	 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-	 0x00, 0x00, 0x00, 0x00, 0xff, 0xff, 0xff, 0xff,
-	 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xfc},      /* b */
-	{0x5a, 0xc6, 0x35, 0xd8, 0xaa, 0x3a, 0x93, 0xe7,
-	 0xb3, 0xeb, 0xbd, 0x55, 0x76, 0x98, 0x86, 0xbc,
-	 0x65, 0x1d, 0x06, 0xb0, 0xcc, 0x53, 0xb0, 0xf6,
-	 0x3b, 0xce, 0x3c, 0x3e, 0x27, 0xd2, 0x60, 0x4b},
-	{0x6b, 0x17, 0xd1, 0xf2, 0xe1, 0x2c, 0x42, 0x47,       /* x */
-	 0xf8, 0xbc, 0xe6, 0xe5, 0x63, 0xa4, 0x40, 0xf2,
-	 0x77, 0x03, 0x7d, 0x81, 0x2d, 0xeb, 0x33, 0xa0,
-	 0xf4, 0xa1, 0x39, 0x45, 0xd8, 0x98, 0xc2, 0x96},
-	{0x4f, 0xe3, 0x42, 0xe2, 0xfe, 0x1a, 0x7f, 0x9b,       /* y */
-	 0x8e, 0xe7, 0xeb, 0x4a, 0x7c, 0x0f, 0x9e, 0x16,
-	 0x2b, 0xce, 0x33, 0x57, 0x6b, 0x31, 0x5e, 0xce,
-	 0xcb, 0xb6, 0x40, 0x68, 0x37, 0xbf, 0x51, 0xf5}
-};
-
 /* The representation of field elements.
  * ------------------------------------
  *
@@ -95,7 +71,6 @@ typedef u64 smallfelem[NLIMBS];
 
 /* This is the value of the prime as four 64-bit words, little-endian. */
 static const u64 kPrime[4] = { 0xfffffffffffffffful, 0xffffffff, 0, 0xffffffff00000001ul };
-static const limb bottom32bits = 0xffffffff;
 static const u64 bottom63bits = 0x7ffffffffffffffful;
 
 /* bin32_to_felem takes a little-endian byte array and converts it into felem
@@ -130,14 +105,6 @@ static void smallfelem_one(smallfelem out)
 	out[3] = 0;
 	}
 
-static void smallfelem_assign(smallfelem out, const smallfelem in)
-	{
-	out[0] = in[0];
-	out[1] = in[1];
-	out[2] = in[2];
-	out[3] = in[3];
-	}
-
 static void felem_assign(felem out, const felem in)
 	{
 	out[0] = in[0];
@@ -155,15 +122,6 @@ static void felem_sum(felem out, const felem in)
 	out[3] += in[3];
 	}
 
-/* felem_small_sum sets out = out + in. */
-static void felem_small_sum(felem out, const smallfelem in)
-	{
-	out[0] += in[0];
-	out[1] += in[1];
-	out[2] += in[2];
-	out[3] += in[3];
-	}
-
 /* felem_scalar sets out = out * scalar */
 static void felem_scalar(felem out, const u64 scalar)
 	{
@@ -173,38 +131,12 @@ static void felem_scalar(felem out, const u64 scalar)
 	out[3] *= scalar;
 	}
 
-/* longfelem_scalar sets out = out * scalar */
-static void longfelem_scalar(longfelem out, const u64 scalar)
-	{
-	out[0] *= scalar;
-	out[1] *= scalar;
-	out[2] *= scalar;
-	out[3] *= scalar;
-	out[4] *= scalar;
-	out[5] *= scalar;
-	out[6] *= scalar;
-	out[7] *= scalar;
-	}
-
 #define two105m41m9 (((limb)1) << 105) - (((limb)1) << 41) - (((limb)1) << 9)
 #define two105 (((limb)1) << 105)
 #define two105m41p9 (((limb)1) << 105) - (((limb)1) << 41) + (((limb)1) << 9)
 
 /* zero105 is 0 mod p */
 static const felem zero105 = { two105m41m9, two105, two105m41p9, two105m41p9 };
-
-/* smallfelem_neg sets |out| to |-small|
- * On exit:
- *   out[i] < out[i] + 2^105
- */
-static void smallfelem_neg(felem out, const smallfelem small)
-	{
-	/* In order to prevent underflow, we subtract from 0 mod p. */
-	out[0] = zero105[0] - small[0];
-	out[1] = zero105[1] - small[1];
-	out[2] = zero105[2] - small[2];
-	out[3] = zero105[3] - small[3];
-	}
 
 /* felem_diff subtracts |in| from |out|
  * On entry:
@@ -213,81 +145,22 @@ static void smallfelem_neg(felem out, const smallfelem small)
  *   out[i] < out[i] + 2^105
  */
 static void felem_diff(felem out, const felem in)
-	{
-	/* In order to prevent underflow, we add 0 mod p before subtracting. */
-	out[0] += zero105[0];
-	out[1] += zero105[1];
-	out[2] += zero105[2];
-	out[3] += zero105[3];
+       {
+       /* In order to prevent underflow, we add 0 mod p before subtracting. */
+       out[0] += zero105[0];
+       out[1] += zero105[1];
+       out[2] += zero105[2];
+       out[3] += zero105[3];
 
-	out[0] -= in[0];
-	out[1] -= in[1];
-	out[2] -= in[2];
-	out[3] -= in[3];
-	}
+       out[0] -= in[0];
+       out[1] -= in[1];
+       out[2] -= in[2];
+       out[3] -= in[3];
+       }
 
 #define two107m43m11 (((limb)1) << 107) - (((limb)1) << 43) - (((limb)1) << 11)
 #define two107 (((limb)1) << 107)
 #define two107m43p11 (((limb)1) << 107) - (((limb)1) << 43) + (((limb)1) << 11)
-
-/* zero107 is 0 mod p */
-static const felem zero107 = { two107m43m11, two107, two107m43p11, two107m43p11 };
-
-/* An alternative felem_diff for larger inputs |in|
- * felem_diff_zero107 subtracts |in| from |out|
- * On entry:
- *   in[i] < 2^106
- * On exit:
- *   out[i] < out[i] + 2^107
- */
-static void felem_diff_zero107(felem out, const felem in)
-	{
-	/* In order to prevent underflow, we add 0 mod p before subtracting. */
-	out[0] += zero107[0];
-	out[1] += zero107[1];
-	out[2] += zero107[2];
-	out[3] += zero107[3];
-
-	out[0] -= in[0];
-	out[1] -= in[1];
-	out[2] -= in[2];
-	out[3] -= in[3];
-	}
-
-/* longfelem_diff subtracts |in| from |out|
- * On entry:
- *   in[i] < 7*2^67
- * On exit:
- *   out[i] < out[i] + 2^70 + 2^40
- */
-static void longfelem_diff(longfelem out, const longfelem in)
-	{
-	static const limb two70m8p6 = (((limb)1) << 70) - (((limb)1) << 8) + (((limb)1) << 6);
-	static const limb two70p40 = (((limb)1) << 70) + (((limb)1) << 40);
-	static const limb two70 = (((limb)1) << 70);
-	static const limb two70m40m38p6 = (((limb)1) << 70) - (((limb)1) << 40) - (((limb)1) << 38) + (((limb)1) << 6);
-	static const limb two70m6 = (((limb)1) << 70) - (((limb)1) << 6);
-
-	/* add 0 mod p to avoid underflow */
-	out[0] += two70m8p6;
-	out[1] += two70p40;
-	out[2] += two70;
-	out[3] += two70m40m38p6;
-	out[4] += two70m6;
-	out[5] += two70m6;
-	out[6] += two70m6;
-	out[7] += two70m6;
-
-	/* in[i] < 7*2^67 < 2^70 - 2^40 - 2^38 + 2^6 */
-	out[0] -= in[0];
-	out[1] -= in[1];
-	out[2] -= in[2];
-	out[3] -= in[3];
-	out[4] -= in[4];
-	out[5] -= in[5];
-	out[6] -= in[6];
-	out[7] -= in[7];
-	}
 
 #define two64m0 (((limb)1) << 64) - 1
 #define two110p32m0 (((limb)1) << 110) + (((limb)1) << 32) - 1
@@ -613,20 +486,6 @@ static void felem_mul(longfelem out, const felem in1, const felem in2)
 	smallfelem_mul(out, small1, small2);
 	}
 
-/* felem_small_mul sets |out| = |small1| * |in2|
- * On entry:
- *   small1[i] < 2^64
- *   in2[i] < 2^109
- * On exit:
- *   out[i] < 7 * 2^64 < 2^67
- */
-static void felem_small_mul(longfelem out, const smallfelem small1, const felem in2)
-	{
-	smallfelem small2;
-	felem_shrink(small2, in2);
-	smallfelem_mul(out, small1, small2);
-	}
-
 #define two100m36m4 (((limb)1) << 100) - (((limb)1) << 36) - (((limb)1) << 4)
 #define two100 (((limb)1) << 100)
 #define two100m36p4 (((limb)1) << 100) - (((limb)1) << 36) + (((limb)1) << 4)
@@ -709,33 +568,6 @@ static void felem_reduce(felem out, const longfelem in)
 	 */
 	}
 
-/* felem_reduce_zero105 converts a larger longfelem into an felem.
- * On entry:
- *   in[0] < 2^71
- * On exit:
- *   out[i] < 2^106
- */
-static void felem_reduce_zero105(felem out, const longfelem in)
-	{
-	out[0] = zero105[0] + in[0];
-	out[1] = zero105[1] + in[1];
-	out[2] = zero105[2] + in[2];
-	out[3] = zero105[3] + in[3];
-
-	felem_reduce_(out, in);
-
-	/* out[0] > 2^105 - 2^41 - 2^9 - 2^71 - 2^103 - 2^71 - 2^103 > 0
-	 * out[1] > 2^105 - 2^71 - 2^103 > 0
-	 * out[2] > 2^105 - 2^41 + 2^9 - 2^71 - 2^103 > 0
-	 * out[3] > 2^105 - 2^41 + 2^9 - 2^71 - 2^103 - 2^103 > 0
-	 *
-	 * out[0] < 2^105 + 2^71 + 2^71 + 2^103 < 2^106
-	 * out[1] < 2^105 + 2^71 + 2^71 + 2^103 < 2^106
-	 * out[2] < 2^105 + 2^71 + 2^71 + 2^71 + 2^103 < 2^106
-	 * out[3] < 2^105 + 2^71 + 2^103 + 2^71 < 2^106
-	 */
-	}
-
 /* subtract_u64 sets *result = *result - v and *carry to one if the subtraction
  * underflowed. */
 static void subtract_u64(u64* result, u64* carry, u64 v)
@@ -804,26 +636,6 @@ static void felem_contract(smallfelem out, const felem in)
 	subtract_u64(&out[3], &carry, carry);
 
 	subtract_u64(&out[3], &carry, result & kPrime[3]);
-	}
-
-static void smallfelem_square_contract(smallfelem out, const smallfelem in)
-	{
-	longfelem longtmp;
-	felem tmp;
-
-	smallfelem_square(longtmp, in);
-	felem_reduce(tmp, longtmp);
-	felem_contract(out, tmp);
-	}
-
-static void smallfelem_mul_contract(smallfelem out, const smallfelem in1, const smallfelem in2)
-	{
-	longfelem longtmp;
-	felem tmp;
-
-	smallfelem_mul(longtmp, in1, in2);
-	felem_reduce(tmp, longtmp);
-	felem_contract(out, tmp);
 	}
 
 /* felem_is_zero returns a limb with all bits set if |in| == 0 (mod p) and 0
@@ -941,39 +753,6 @@ static void felem_inv(felem out, const felem in)
 	felem_mul(tmp, ftmp2, ftmp); felem_reduce(out, tmp); /* 2^256 - 2^224 + 2^192 + 2^96 - 3 */
 	}
 
-static void smallfelem_inv_contract(smallfelem out, const smallfelem in)
-	{
-	felem tmp;
-
-	smallfelem_expand(tmp, in);
-	felem_inv(tmp, tmp);
-	felem_contract(out, tmp);
-	}
-
-/* copy_conditional copies in to out iff mask is all ones. */
-static void
-copy_conditional(felem out, const felem in, limb mask)
-	{
-	unsigned i;
-	for (i = 0; i < NLIMBS; ++i)
-		{
-		const limb tmp = mask & (in[i] ^ out[i]);
-		out[i] ^= tmp;
-		}
-	}
-
-/* copy_small_conditional copies in to out iff mask is all ones. */
-static void
-copy_small_conditional(felem out, const smallfelem in, limb mask)
-	{
-	unsigned i;
-	const u64 mask64 = mask;
-	for (i = 0; i < NLIMBS; ++i)
-		{
-		out[i] = ((limb) (in[i] & mask64)) | (out[i] & ~mask);
-		}
-	}
-
 /*************************************/
 /*Now we have to make this work with the new exposed symbols*/
 /*Note that above code uses 3 different types: longfelem, smallfelem,
@@ -1073,7 +852,6 @@ void fep256pack(unsigned char *out, fep256 *a){
 }
 
 void fep256unpack(fep256 *c, const unsigned char *in){
-  smallfelem temp;
   unsigned char little[32];
   int i;
   for(i=0; i<32; i++){

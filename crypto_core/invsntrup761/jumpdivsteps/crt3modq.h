@@ -155,19 +155,6 @@ short crt2modq_slow(short u1, short u2) {
 }
 
 
-static int crt3__inside(short u1, short u2, short u3) {
-  long long u, y1, y2, y3, P;
-  P = (long long) _P1 * (long long) _P2 * (long long) _P3;
-  y1 = ((long long) u1 * cofac1) % P;
-  y2 = ((long long) u2 * cofac2) % P;
-  y3 = ((long long) u3 * cofac3) % P;
-  u = (y1+y2+y3) % P;
-  if (u > (P>>1)) u -= P;
-  if (u < -(P>>1)) u += P;
-  if (u < 0) u = -u;
-  return((4 * u < P));
-}
-
 static inline __m256i crt2modq(__m256i u1, __m256i u2) {
   __m256i y1 = u1;
 

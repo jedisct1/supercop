@@ -315,27 +315,3 @@ void polymul_ntt768_add(__m256i *h, __m256i *g, __m256i *f )
   for(int i=0;i<n_ymm;i++) h2[i] = center_adjust2(_mm256_add_epi16(f2[i],g2[i]),v7681_16,v3840_16);
   for(int i=0;i<n_ymm;i++) h3[i] = center_adjust2(_mm256_add_epi16(f3[i],g3[i]),v10753_16,v5376_16);
 }
-
-
-
-////////////////////////////////////////////////////////
-
-
-static void polymulntt768_256x256_test(__m256i *h, __m256i *f, __m256i *g)
-{
-  __m256i tt1[3*768/16];
-  __m256i tt2[3*768/16];
-  __m256i tt3[3*768/16];
-
-  polymul_ntt768_256_prepare( tt1 , f );
-  polymul_ntt768_256_prepare( tt2 , g );
-  polymul_ntt768_mul( tt3 , tt1 , tt2 );
-  polymul_ntt768_finale( tt1 , tt3 );
-  memcpy( h , tt1 , 512*2 );
-}
-
-
-
-////////////////////////////////////////////////////////
-
-

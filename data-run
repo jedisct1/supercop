@@ -150,10 +150,15 @@ do
       then
         echo "gmp 6.3.0" >&8
       fi
-  
+
       if [ "$t1" = ntl ]
       then
         echo "ntl 11.4.4" >&8
+      fi
+
+      if [ "$t1" = s2n-bignum ]
+      then
+        echo "s2n-bignum 20250920" >&8
       fi
   
       if [ "$t1" = keccak ]
@@ -339,6 +344,36 @@ do
           && make install
         ) && break || :
       done
+      exit 0
+    fi
+
+    if [ "$t1" = s2n-bignum ]
+    then
+      rm -f "$top/$abi/lib/libs2nbignum.a"
+      rm -rf "$top/$target/work"
+      mkdir -p "$top/$target/work"
+      cp -pR s2n-bignum/* "$top/$target/work"
+      case "$abi" in
+        amd64)
+          echo "=== `date` === trying s2n-bignum/x86"
+          ( cd "$top/$target/work/x86" \
+            && make \
+            && cp libs2nbignum.a "$top/$abi/lib/libs2nbignum.a" \
+            && chmod 644 "$top/$abi/lib/libs2nbignum.a"
+          )
+          ;;
+        aarch64)
+          echo "=== `date` === trying s2n-bignum/arm"
+          ( cd "$top/$target/work/arm" \
+            && make \
+            && cp libs2nbignum.a "$top/$abi/lib/libs2nbignum.a" \
+            && chmod 644 "$top/$abi/lib/libs2nbignum.a"
+          )
+          ;;
+        *)
+          echo "=== `date` === skipping: s2n-bignum does not support $abi"
+          ;;
+      esac
       exit 0
     fi
 
@@ -530,6 +565,10 @@ do
         if grep '^ntl ' "$top/$abi/implementation/$implementationdir/sources" >/dev/null
         then
           [ -f "$top/$abi/lib/libntl.a" ] && libs="$top/$abi/lib/libntl.a $libs" && rslibs="ntl $rslibs"
+        fi
+        if grep '^s2n-bignum ' "$top/$abi/implementation/$implementationdir/sources" >/dev/null
+        then
+          [ -f "$top/$abi/lib/libs2nbignum.a" ] && libs="$top/$abi/lib/libs2nbignum.a $libs" && rslibs="s2nbignum $rslibs"
         fi
         if grep '^keccak ' "$top/$abi/implementation/$implementationdir/sources" >/dev/null
         then

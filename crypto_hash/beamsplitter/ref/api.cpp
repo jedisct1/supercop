@@ -280,10 +280,10 @@ uint64_t *state = (uint64_t *)buf;
 
     FORCE_INLINE void round( const uint64_t * m64, const uint8_t * m8, unsigned long long len )
     {
-      int index = 0;
+      unsigned long long index = 0;
       int sindex = 0;
 
-      for( int Len = len >> 3; index < Len; index++) {
+      for( unsigned long long Len = len >> 3; index < Len; index++) {
         state[sindex] += rot(m64[index] + index + 1, state[sindex] +index +1);
         if ( sindex == 1 ) {
           mix(0);

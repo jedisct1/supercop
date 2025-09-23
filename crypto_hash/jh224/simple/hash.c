@@ -199,7 +199,6 @@ int crypto_hash(unsigned char *out,const unsigned char *in,unsigned long long in
   uint64 x[8][2];
   unsigned char buffer[64];
   unsigned long long bits = inlen * 8;
-  int i;
 
   memcpy(x,iv,128);
 

@@ -34,7 +34,7 @@ __m256i _my_mm256_min_epi32(__m256i v0, __m256i v1)
 {
     __m256i l1;
     __m128i sl1, sh1, sl2, sh2;
-    __m128i max1, min1, max2, min2;
+    __m128i min1, min2;
     sl1 = _mm256_extractf128_si256(v0, 0);
     sh1 = _mm256_extractf128_si256(v0, 1);
     sl2 = _mm256_extractf128_si256(v1, 0);
@@ -50,7 +50,7 @@ __m256i _my_mm256_max_epi32(__m256i v0, __m256i v1)
 {
     __m256i h1;
     __m128i sl1, sh1, sl2, sh2;
-    __m128i max1, min1, max2, min2;
+    __m128i max1, max2;
     sl1 = _mm256_extractf128_si256(v0, 0);
     sh1 = _mm256_extractf128_si256(v0, 1);
     sl2 = _mm256_extractf128_si256(v1, 0);

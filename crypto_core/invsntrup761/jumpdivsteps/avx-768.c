@@ -583,7 +583,7 @@ static inline __m256i _mm256_loadu_reverse16(const __m256i *p)
 
 static void ntt64(int16 *f,int reps,const __m256i *qdata)
 {
-  __m256i f0,f1,f2,f3,g0,g1,g2,g3,h0,h1,h2,h3;
+  __m256i f0,f1,f2,f3,g0,g1,g2,g3,h1;
   int16 *origf = f;
   int rep;
   for (rep = 0;rep < reps;++rep) {
@@ -713,7 +713,7 @@ static void invntt64(int16 *f,int reps,const __m256i *qdata)
 {
   int rep;
   int16 *origf = f;
-  __m256i f0,f1,f2,f3,g0,g1,g2,g3,h0,h1,h2,h3;
+  __m256i f0,f1,f2,f3,g0,g1,g2,g3,h1;
   
   for (rep = 0;rep < reps;++rep) {
     f2 = _mm256_loadu_si256((__m256i *) (f + 32));
@@ -844,7 +844,7 @@ static void invntt64(int16 *f,int reps,const __m256i *qdata)
 
 static void ntt256(int16 *f,int reps,const __m256i *qdata)
 {
-  __m256i f0,f1,f2,f3,g0,g1,g2,g3,h0,h1,h2,h3;
+  __m256i f0,f1,f2,f3,g0,g1,g2,g3,h1;
   int16 *origf = f;
   int rep;
   for (rep = 0;rep < reps;++rep) {
@@ -970,7 +970,7 @@ static void invntt256(int16 *f,int reps,const __m256i *qdata)
 {
   int rep;
   int16 *origf = f;
-  __m256i f0,f1,f2,f3,g0,g1,g2,g3,h0,h1,h2,h3;
+  __m256i f0,f1,f2,f3,g0,g1,g2,g3,h1;
   
   invntt64(f,4*reps,qdata);
   for (rep = 0;rep < reps;++rep) {

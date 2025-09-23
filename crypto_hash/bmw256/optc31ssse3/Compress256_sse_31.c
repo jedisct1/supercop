@@ -250,9 +250,9 @@ static __inline __m128i r32_04sse( __m128i x128)
 	
 	/*
 	u_int32_t __attribute__ ((aligned (16)))       tmpW[20];
-	_mm_storeu_si128(&tmpW[00], ans1);
+	_mm_storeu_si128((__m128i *) &tmpW[00], ans1);
 	printf("%x, %x, %x, %x\n", tmpW[00],tmpW[01],tmpW[02],tmpW[03]);
-	_mm_storeu_si128(&tmpW[00], ans2);
+	_mm_storeu_si128((__m128i *) &tmpW[00], ans2);
 	printf("%x, %x, %x, %x\n", tmpW[00],tmpW[01],tmpW[02],tmpW[03]);
 	exit(0);
 	*/
@@ -349,20 +349,11 @@ void Compress256(u_int32_t *data32, u_int32_t *data32_end, hashState *state)
 
 	u_int32_t XL32, XH32, TempEven32, TempOdd32;
 
-	u_int32_t p_xor_d_00, p_xor_d_01, p_xor_d_02, p_xor_d_03, p_xor_d_04, p_xor_d_05, p_xor_d_06, p_xor_d_07; 
-	u_int32_t p_xor_d_08, p_xor_d_09, p_xor_d_10, p_xor_d_11, p_xor_d_12, p_xor_d_13, p_xor_d_14, p_xor_d_15;
-
 	//u_int32_t p256_00, p256_01, p256_02, p256_03, p256_04, p256_05, p256_06, p256_07;
 	//u_int32_t p256_08, p256_09, p256_10, p256_11, p256_12, p256_13, p256_14, p256_15;
 
-	u_int32_t exp_00, exp_01, exp_02, exp_03, exp_04, exp_05, exp_06, exp_07;
-	u_int32_t exp_08, exp_09, exp_10, exp_11, exp_12, exp_13, exp_14, exp_15;
-
 	u_int32_t exp_16, exp_17, exp_18, exp_19, exp_20, exp_21, exp_22, exp_23;
 	u_int32_t exp_24, exp_25, exp_26, exp_27, exp_28, exp_29, exp_30, exp_31;
-
-
-	u_int32_t t256_31, t256_32, t256_33, t256_34, t256_35, t256_36, t256_37;
 
 	//u_int32_t td32_00, td32_01, td32_02, td32_03, td32_04, td32_05, td32_06, td32_07;
 	//u_int32_t td32_08, td32_09, td32_10, td32_11, td32_12, td32_13, td32_14, td32_15;
@@ -371,15 +362,15 @@ void Compress256(u_int32_t *data32, u_int32_t *data32_end, hashState *state)
 	
 	//__m128i p256_0003 = _mm_loadu_si128(&hashState256(state)->DoublePipe[0]);
 	__m128i copyTemp = _mm_loadu_si128((__m128i *) &hashState256(state)->DoublePipe[ 0]);
-	_mm_storeu_si128(&p256[00], copyTemp);
+	_mm_storeu_si128((__m128i *) &p256[00], copyTemp);
 	
 	//__m128i p256_0407 = _mm_loadu_si128(&hashState256(state)->DoublePipe[4]);
-	copyTemp = _mm_loadu_si128(&hashState256(state)->DoublePipe[ 4]);
-	_mm_storeu_si128(&p256[04], copyTemp);
-	copyTemp = _mm_loadu_si128(&hashState256(state)->DoublePipe[ 8]);
-	_mm_storeu_si128(&p256[ 8], copyTemp);
-	copyTemp = _mm_loadu_si128(&hashState256(state)->DoublePipe[12]);
-	_mm_storeu_si128(&p256[12], copyTemp);
+	copyTemp = _mm_loadu_si128((__m128i *) &hashState256(state)->DoublePipe[ 4]);
+	_mm_storeu_si128((__m128i *) &p256[04], copyTemp);
+	copyTemp = _mm_loadu_si128((__m128i *) &hashState256(state)->DoublePipe[ 8]);
+	_mm_storeu_si128((__m128i *) &p256[ 8], copyTemp);
+	copyTemp = _mm_loadu_si128((__m128i *) &hashState256(state)->DoublePipe[12]);
+	_mm_storeu_si128((__m128i *) &p256[12], copyTemp);
 	
 	do
 	{
@@ -388,10 +379,10 @@ void Compress256(u_int32_t *data32, u_int32_t *data32_end, hashState *state)
 		
 		// Assume 16 byte aligned
 		
-		__m128i pxord0003 = _mm_xor_si128(_mm_loadu_si128(&p256[00]), _mm_loadu_si128(&data32[00]));
-		__m128i pxord0407 = _mm_xor_si128(_mm_loadu_si128(&p256[04]), _mm_loadu_si128(&data32[04]));
-		__m128i pxord0811 = _mm_xor_si128(_mm_loadu_si128(&p256[ 8]), _mm_loadu_si128(&data32[ 8]));
-		__m128i pxord1215 = _mm_xor_si128(_mm_loadu_si128(&p256[12]), _mm_loadu_si128(&data32[12]));
+		__m128i pxord0003 = _mm_xor_si128(_mm_loadu_si128((__m128i *) &p256[00]), _mm_loadu_si128((__m128i *) &data32[00]));
+		__m128i pxord0407 = _mm_xor_si128(_mm_loadu_si128((__m128i *) &p256[04]), _mm_loadu_si128((__m128i *) &data32[04]));
+		__m128i pxord0811 = _mm_xor_si128(_mm_loadu_si128((__m128i *) &p256[ 8]), _mm_loadu_si128((__m128i *) &data32[ 8]));
+		__m128i pxord1215 = _mm_xor_si128(_mm_loadu_si128((__m128i *) &p256[12]), _mm_loadu_si128((__m128i *) &data32[12]));
 
 		__m128i pxord0104 = _mm_alignr_epi8(pxord0407, pxord0003, 4);
 		__m128i pxord0508 = _mm_alignr_epi8(pxord0811, pxord0407, 4);
@@ -751,10 +742,10 @@ void Compress256(u_int32_t *data32, u_int32_t *data32_end, hashState *state)
 		exp[14]=exp_14 = tmpW[14] + p256[15];
 		exp[15]=exp_15 = tmpW[15] + p256[00];
 		*/
-		__m128i p256_0003 = _mm_loadu_si128(&p256[00]);
-		__m128i p256_0407 = _mm_loadu_si128(&p256[04]);
-		__m128i p256_0811 = _mm_loadu_si128(&p256[ 8]);
-		__m128i p256_1215 = _mm_loadu_si128(&p256[12]);
+		__m128i p256_0003 = _mm_loadu_si128((__m128i *) &p256[00]);
+		__m128i p256_0407 = _mm_loadu_si128((__m128i *) &p256[04]);
+		__m128i p256_0811 = _mm_loadu_si128((__m128i *) &p256[ 8]);
+		__m128i p256_1215 = _mm_loadu_si128((__m128i *) &p256[12]);
 		
 		__m128i p256_13141500 = _mm_alignr_epi8(p256_0003, p256_1215, 4); //  _mm_loadu_si128(&p256[01]) ++;
 		__m128i p256_0912 = _mm_alignr_epi8(p256_1215, p256_0811, 4); //  _mm_loadu_si128(&p256[09]);
@@ -767,23 +758,23 @@ void Compress256(u_int32_t *data32, u_int32_t *data32_end, hashState *state)
 		__m128i exp_0811 = _mm_add_epi32(W0811, p256_0912);
 		__m128i exp_1215 = _mm_add_epi32(W1215, p256_13141500);
 		
-		_mm_storeu_si128(&exp[00], exp_0003);
+		_mm_storeu_si128((__m128i *) &exp[00], exp_0003);
 		//exp_02 = exp[02];
 		//exp_03 = exp[03];
 		
-		_mm_storeu_si128(&exp[04], exp_0407);
+		_mm_storeu_si128((__m128i *) &exp[04], exp_0407);
 		//exp_04 = exp[04];
 		//exp_05 = exp[05];
 		//exp_06 = exp[06];
 		//exp_07 = exp[07];
 		
-		_mm_storeu_si128(&exp[ 8], exp_0811);
+		_mm_storeu_si128((__m128i *) &exp[ 8], exp_0811);
 		//exp_08 = exp[ 8];
 		//exp_09 = exp[ 9];
 		//exp_10 = exp[10];
 		//exp_11 = exp[11];
 		
-		_mm_storeu_si128(&exp[12], exp_1215);
+		_mm_storeu_si128((__m128i *) &exp[12], exp_1215);
 		//exp_12 = exp[12];
 		//exp_13 = exp[13];
 		//exp_14 = exp[14];
@@ -797,7 +788,7 @@ void Compress256(u_int32_t *data32, u_int32_t *data32_end, hashState *state)
 		TempEvenOddEvenOdd = _mm_add_epi32(TempEvenOddEvenOdd, exp_1215);
 		__m128i TempEvenEvenOddOdd = _mm_shuffle_epi32(TempEvenOddEvenOdd, _MM_SHUFFLE(1, 3, 2,0));
 		TempEvenEvenOddOdd = _mm_hadd_epi32(TempEvenEvenOddOdd, TempEvenEvenOddOdd);
-		_mm_storel_epi64(&evenOdd[0], TempEvenEvenOddOdd);
+		_mm_storel_epi64((__m128i *) &evenOdd[0], TempEvenEvenOddOdd);
 		
 		/*
 		exp_00 = (p_xor_d_05  - p_xor_d_07  + p_xor_d_10  + p_xor_d_13  + p_xor_d_14);
@@ -918,10 +909,10 @@ void Compress256(u_int32_t *data32, u_int32_t *data32_end, hashState *state)
 //		exp_16 += s32_0(exp_03);
 		
 		
-		__m128i td32_0003 = _mm_loadu_si128(&td32[00]);
-		__m128i td32_0407 = _mm_loadu_si128(&td32[04]);
-		__m128i td32_0811 = _mm_loadu_si128(&td32[ 8]);
-		__m128i td32_1215 = _mm_loadu_si128(&td32[12]);
+		__m128i td32_0003 = _mm_loadu_si128((__m128i *) &td32[00]);
+		__m128i td32_0407 = _mm_loadu_si128((__m128i *) &td32[04]);
+		__m128i td32_0811 = _mm_loadu_si128((__m128i *) &td32[ 8]);
+		__m128i td32_1215 = _mm_loadu_si128((__m128i *) &td32[12]);
 		
 		__m128i td32_1502 = _mm_alignr_epi8(td32_0003, td32_1215, 12);
 		__m128i td32_0306 = _mm_alignr_epi8(td32_0407, td32_0003, 12);
@@ -934,7 +925,7 @@ void Compress256(u_int32_t *data32, u_int32_t *data32_end, hashState *state)
 		__m128i exp_2831 = td32_1502;
 		exp_2831 = _mm_add_epi32(exp_2831, td32_1215);
 		#ifdef CONST256ARRAY
-		exp_2831 = _mm_add_epi32(exp_2831, _mm_loadu_si128(&consts256[12]));
+		exp_2831 = _mm_add_epi32(exp_2831, _mm_loadu_si128((__m128i *) &consts256[12]));
 		#else
 		exp_2831 = _mm_add_epi32(exp_2831, consts256_1215);
 		#endif
@@ -946,7 +937,7 @@ void Compress256(u_int32_t *data32, u_int32_t *data32_end, hashState *state)
 		//__m128i tmp =  _mm_loadu_si128(&p256[03]); 
 		__m128i p256_0306 =  _mm_alignr_epi8(p256_0407, p256_0003, 12); 
 		exp_2831 = _mm_xor_si128(exp_2831, p256_0306);
-		_mm_storeu_si128(&exp[28], exp_2831);
+		_mm_storeu_si128((__m128i *) &exp[28], exp_2831);
 		
 		__m128i td32_1114 = _mm_alignr_epi8(td32_1215, td32_0811, 12);
 		__m128i td32_0205 = _mm_alignr_epi8(td32_0407, td32_0003, 8);
@@ -957,7 +948,7 @@ void Compress256(u_int32_t *data32, u_int32_t *data32_end, hashState *state)
 		exp_2427 = _mm_add_epi32(exp_2427, td32_0811);
 		
 		#ifdef CONST256ARRAY
-		exp_2427 = _mm_add_epi32(exp_2427, _mm_loadu_si128(&consts256[ 8]));
+		exp_2427 = _mm_add_epi32(exp_2427, _mm_loadu_si128((__m128i *) &consts256[ 8]));
 		#else
 		exp_2427 = _mm_add_epi32(exp_2427, consts256_0811);
 		#endif
@@ -974,7 +965,7 @@ void Compress256(u_int32_t *data32, u_int32_t *data32_end, hashState *state)
 		__m128i exp_1114 = _mm_alignr_epi8(exp_1215, exp_0811, 12); 
 		//exp_2427 = _mm_add_epi32(exp_2427, r32_02sse(_mm_loadu_si128(&exp[11])));
 		exp_2427 = _mm_add_epi32(exp_2427, r32_02sse(exp_1114));
-		_mm_storeu_si128(&exp[24], exp_2427);
+		_mm_storeu_si128((__m128i *) &exp[24], exp_2427);
 
 
 		// The "((td32_12 + td32_15 - td32_06 + 0x9555554cu) ^ p256_03)" parts
@@ -983,13 +974,13 @@ void Compress256(u_int32_t *data32, u_int32_t *data32_end, hashState *state)
 		//exp_1619 = _mm_add_epi32(exp_1619, _mm_loadu_si128(&td32[00]));
 		exp_1619 = _mm_add_epi32(exp_1619, td32_0003);
 		#ifdef CONST256ARRAY
-		exp_1619 = _mm_add_epi32(exp_1619, _mm_loadu_si128(&consts256[00]));
+		exp_1619 = _mm_add_epi32(exp_1619, _mm_loadu_si128((__m128i *) &consts256[00]));
 		#else
 		exp_1619 = _mm_add_epi32(exp_1619, consts256_0003);
 		#endif
 		
 		//exp_1619 = _mm_sub_epi32(exp_1619, _mm_loadu_si128(&td32[10]));
-		exp_1619 = _mm_sub_epi32(exp_1619, _mm_unpacklo_epi64(_mm_loadl_epi64(&td32[10]),_mm_loadl_epi64(&td32[12])));
+		exp_1619 = _mm_sub_epi32(exp_1619, _mm_unpacklo_epi64(_mm_loadl_epi64((__m128i *) &td32[10]),_mm_loadl_epi64((__m128i *) &td32[12])));
 		
 		
 		//tmp =  _mm_loadu_si128(&p256[07]);
@@ -999,7 +990,7 @@ void Compress256(u_int32_t *data32, u_int32_t *data32_end, hashState *state)
 		
 		
 		exp_1619 = _mm_add_epi32(exp_1619, exp_1617); // Add in the SSE calculated part
-		_mm_storeu_si128(&exp[16], exp_1619);
+		_mm_storeu_si128((__m128i *) &exp[16], exp_1619);
 
 
 
@@ -1022,13 +1013,13 @@ void Compress256(u_int32_t *data32, u_int32_t *data32_end, hashState *state)
 		exp_2023 = _mm_add_epi32(exp_2023, td32_0407);
 		
 		#ifdef CONST256ARRAY
-		exp_2023 = _mm_add_epi32(exp_2023, _mm_loadu_si128(&consts256[04]));
+		exp_2023 = _mm_add_epi32(exp_2023, _mm_loadu_si128((__m128i *) &consts256[04]));
 		#else
 		exp_2023 = _mm_add_epi32(exp_2023, consts256_0407);
 		#endif
 		
 		//exp_2023 = _mm_sub_epi32(exp_2023, _mm_set_epi32(td32_01, td32_00, td32_15, td32_14));
-		exp_2023 = _mm_sub_epi32(exp_2023, _mm_unpacklo_epi64(_mm_loadl_epi64(&td32[14]),_mm_loadl_epi64(&td32[00])));
+		exp_2023 = _mm_sub_epi32(exp_2023, _mm_unpacklo_epi64(_mm_loadl_epi64((__m128i *) &td32[14]),_mm_loadl_epi64((__m128i *) &td32[00])));
 		
 		//tmp =  _mm_loadu_si128(&p256[11]);
 		//exp_2023 = _mm_xor_si128(exp_2023, tmp);
@@ -1046,7 +1037,7 @@ void Compress256(u_int32_t *data32, u_int32_t *data32_end, hashState *state)
 		//exp_2023 = _mm_add_epi32(exp_2023, r32_04sse(_mm_loadu_si128(&exp[11])));
 		exp_2023 = _mm_add_epi32(exp_2023, r32_04sse(exp_1114));
 		
-		_mm_storeu_si128(&exp[20], exp_2023);
+		_mm_storeu_si128((__m128i *) &exp[20], exp_2023);
 
 		
 		
@@ -1193,10 +1184,10 @@ void Compress256(u_int32_t *data32, u_int32_t *data32_end, hashState *state)
 		// r32_01 for exp_28 - exp_31
 		__m128i exp_1316 = _mm_alignr_epi8(exp_1619, exp_1215, 4);
 		exp_2831 = _mm_add_epi32(exp_2831, r32_01sse(exp_1316));
-		exp_1619 = _mm_loadu_si128(&exp[16]);
+		exp_1619 = _mm_loadu_si128((__m128i *) &exp[16]);
 		__m128i exp_1518 = _mm_alignr_epi8(exp_1619, exp_1215, 12);
 		exp_2831 = _mm_add_epi32(exp_2831, r32_02sse(exp_1518));
-		_mm_storeu_si128(&exp[28], exp_2831);
+		_mm_storeu_si128((__m128i *) &exp[28], exp_2831);
 */
 		
 		//---- 
@@ -1249,7 +1240,7 @@ void Compress256(u_int32_t *data32, u_int32_t *data32_end, hashState *state)
 		
 		
 		XL32_XH32[0] = (u_int64_t) XL32;
-		__m128i XL32SSE = _mm_loadl_epi64(&XL32_XH32[0]);
+		__m128i XL32SSE = _mm_loadl_epi64((__m128i *) &XL32_XH32[0]);
 		XL32SSE = _mm_shuffle_epi32(XL32SSE, _MM_SHUFFLE(0, 0, 0,0));
 		
 		// XL32 is completed now, build XL32_shifted for later SSE usage
@@ -1409,7 +1400,7 @@ shr(XL32,2); // 7
 		exp[31] = exp_31;
 
 		XL32_XH32[0] = (u_int64_t) XH32;
-		__m128i XH32SSE = _mm_loadl_epi64(&XL32_XH32[0]);
+		__m128i XH32SSE = _mm_loadl_epi64((__m128i *) &XL32_XH32[0]);
 		XH32SSE = _mm_shuffle_epi32(XH32SSE, _MM_SHUFFLE(0, 0, 0,0));
 		// TODO: First part (SSE too inefficient)
 		//     8x shift (XH32), 1x move
@@ -1447,10 +1438,10 @@ shr(XL32,2); // 7
 		
 		p256_0003 =  _mm_xor_si128(exp_0003, XL32SSE);
 		p256_0407 =  _mm_xor_si128(exp_0407, XL32SSE);
-		exp_2427 = _mm_loadu_si128(&exp[24]);
-		exp_2831 = _mm_loadu_si128(&exp[28]);
+		exp_2427 = _mm_loadu_si128((__m128i *) &exp[24]);
+		exp_2831 = _mm_loadu_si128((__m128i *) &exp[28]);
 		p256_0003 =  _mm_xor_si128(p256_0003, exp_2427);
-		_mm_storeu_si128(&p256[ 0], p256_0003);
+		_mm_storeu_si128((__m128i *) &p256[ 0], p256_0003);
 		//p256_0407 =  _mm_xor_si128(p256_0407, exp_2831);
 		//_mm_storeu_si128(&p256[ 4], p256_0407);
 		
@@ -1497,31 +1488,31 @@ shr(XL32,2); // 7
 		//    24 + 8 + 25 + 6 = 63
 		
 		
-		exp_1619 = _mm_loadu_si128(&exp[16]);
-		exp_2023 = _mm_loadu_si128(&exp[20]);
+		exp_1619 = _mm_loadu_si128((__m128i *) &exp[16]);
+		exp_2023 = _mm_loadu_si128((__m128i *) &exp[20]);
 		__m128i exp_23161718 = _mm_alignr_epi8(exp_1619, exp_2023, 12);
 		__m128i exp_1922 = _mm_alignr_epi8(exp_2023, exp_1619, 12);
 		
 		p256_0811 = _mm_xor_si128(exp_0811, exp_23161718);
-		p256_0811 = _mm_xor_si128(p256_0811, _mm_loadu_si128(&XL32_shifted[ 0]));
+		p256_0811 = _mm_xor_si128(p256_0811, _mm_loadu_si128((__m128i *) &XL32_shifted[ 0]));
 		p256_1215 = _mm_xor_si128(exp_1215, exp_1922);
-		p256_1215 = _mm_xor_si128(p256_1215, _mm_loadu_si128(&XL32_shifted[ 4]));
+		p256_1215 = _mm_xor_si128(p256_1215, _mm_loadu_si128((__m128i *) &XL32_shifted[ 4]));
 		
 		
 		
-		__m128i pTemp_2427 = _mm_xor_si128(exp_2427, _mm_loadu_si128(&data32[ 8]));
+		__m128i pTemp_2427 = _mm_xor_si128(exp_2427, _mm_loadu_si128((__m128i *) &data32[ 8]));
 		pTemp_2427 = _mm_xor_si128(pTemp_2427, XH32SSE);
 		p256_0811  = _mm_add_epi32(p256_0811, pTemp_2427);
 		
-		__m128i pTemp_1215 = _mm_xor_si128(exp_2831, _mm_loadu_si128(&data32[12]));
+		__m128i pTemp_1215 = _mm_xor_si128(exp_2831, _mm_loadu_si128((__m128i *) &data32[12]));
 		pTemp_1215 = _mm_xor_si128(pTemp_1215, XH32SSE);
 		p256_1215  = _mm_add_epi32(p256_1215, pTemp_1215);
 		
-		_mm_storeu_si128(&p256[12], p256_1215);
-		_mm_storeu_si128(&p256[ 8], p256_0811);
+		_mm_storeu_si128((__m128i *) &p256[12], p256_1215);
+		_mm_storeu_si128((__m128i *) &p256[ 8], p256_0811);
 		
 		
-		//__m128i temp_0811 = _mm_xor_si128(exp_0811, _mm_loadu_si128(&data32[16]));
+		//__m128i temp_0811 = _mm_xor_si128(exp_0811, _mm_loadu_si128((__m128i *) &data32[16]));
 		/*
 		p256[ 8] = rotl32(p256[04], 9) + (    XH32     ^     exp_24    ^ data32[ 8]) + (shl(XL32,8) ^ exp_23 ^ exp_08);
 		p256[ 9] = rotl32(p256[05],10) + (    XH32     ^     exp_25    ^ data32[ 9]) + (shr(XL32,6) ^ exp_16 ^ exp_09);
@@ -1558,14 +1549,14 @@ shr(XL32,2); // 7
 	}
 	while (data32 < data32_end);
 
-	copyTemp = _mm_loadu_si128(&p256[ 0]);
-	_mm_storeu_si128(&hashState256(state)->DoublePipe[ 0], copyTemp);
-	copyTemp = _mm_loadu_si128(&p256[ 4]);
-	_mm_storeu_si128(&hashState256(state)->DoublePipe[ 4], copyTemp);
-	copyTemp = _mm_loadu_si128(&p256[ 8]);
-	_mm_storeu_si128(&hashState256(state)->DoublePipe[ 8], copyTemp);
-	copyTemp = _mm_loadu_si128(&p256[12]);
-	_mm_storeu_si128(&hashState256(state)->DoublePipe[12], copyTemp);
+	copyTemp = _mm_loadu_si128((__m128i *) &p256[ 0]);
+	_mm_storeu_si128((__m128i *) &hashState256(state)->DoublePipe[ 0], copyTemp);
+	copyTemp = _mm_loadu_si128((__m128i *) &p256[ 4]);
+	_mm_storeu_si128((__m128i *) &hashState256(state)->DoublePipe[ 4], copyTemp);
+	copyTemp = _mm_loadu_si128((__m128i *) &p256[ 8]);
+	_mm_storeu_si128((__m128i *) &hashState256(state)->DoublePipe[ 8], copyTemp);
+	copyTemp = _mm_loadu_si128((__m128i *) &p256[12]);
+	_mm_storeu_si128((__m128i *) &hashState256(state)->DoublePipe[12], copyTemp);
 }
 
 #else

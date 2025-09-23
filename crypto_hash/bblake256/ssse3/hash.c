@@ -179,7 +179,6 @@ static void blake256_compress( state * state, const u8 * datablock ) {
     u32     u32[16];
     __m128i u128[4];
   } m;
-  u64 t;
 
   m.u128[0] = _mm_shuffle_epi8(_mm_loadu_si128((__m128i*)(datablock + 00)), u8to32);
   m.u128[1] = _mm_shuffle_epi8(_mm_loadu_si128((__m128i*)(datablock + 16)), u8to32);
@@ -242,7 +241,6 @@ static void blake256_compress2(
     u32     u32[16];
     __m128i u128[4];
   } xm, ym;
-  u64 t;
 
   xm.u128[0] = _mm_shuffle_epi8(_mm_loadu_si128((__m128i*)(xdatablock + 00)), u8to32);
   xm.u128[1] = _mm_shuffle_epi8(_mm_loadu_si128((__m128i*)(xdatablock + 16)), u8to32);

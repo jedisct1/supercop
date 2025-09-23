@@ -126,61 +126,6 @@ do \
 
 #include "rounds.h"
 
-//
-//#define G(r,row1,row2,row3,row4,buf1,buf2) \
-//do \
-//{ \
-//  row1 = _mm_add_epi32( _mm_add_epi32( row1, buf1), row2 ); \
-//  row4 = _mm_xor_si128( row4, row1 ); \
-//  row4 = _mm_roti_epi32(row4, -16); \
-//  row3 = _mm_add_epi32( row3, row4 );   \
-//  row2 = _mm_xor_si128( row2, row3 ); \
-//  row2 = _mm_roti_epi32(row2, -12); \
-//  row1 = _mm_add_epi32( _mm_add_epi32( row1, buf2), row2 ); \
-//  row4 = _mm_xor_si128( row4, row1 ); \
-//  row4 = _mm_roti_epi32(row4, -8); \
-//  row3 = _mm_add_epi32( row3, row4 );   \
-//  row2 = _mm_xor_si128( row2, row3 ); \
-//  row2 = _mm_roti_epi32(row2, -7); \
-//} while(0)
-//
-//#define DIAGONALIZE(r,row1,row2,row3,row4) \
-//do \
-//{ \
-//  row4 = _mm_shuffle_epi32( row4, _MM_SHUFFLE(2,1,0,3) ); \
-//  row3 = _mm_shuffle_epi32( row3, _MM_SHUFFLE(1,0,3,2) ); \
-//  row2 = _mm_shuffle_epi32( row2, _MM_SHUFFLE(0,3,2,1) ); \
-//} while(0)
-//
-//#define UNDIAGONALIZE(r,row1,row2,row3,row4) \
-//do \
-//{ \
-//  row4 = _mm_shuffle_epi32( row4, _MM_SHUFFLE(0,3,2,1) ); \
-//  row3 = _mm_shuffle_epi32( row3, _MM_SHUFFLE(1,0,3,2) ); \
-//  row2 = _mm_shuffle_epi32( row2, _MM_SHUFFLE(2,1,0,3) ); \
-//} while(0)
-//
-//#define ROUND(r) \
-//do \
-//{ \
-//  /*LOAD_MSG(r);*/ LOAD_MSG##r; \
-//  G(r,row1,row2,row3,row4,buf1,buf2); \
-//  DIAGONALIZE(r,row1,row2,row3,row4); \
-//  G(r,row1,row2,row3,row4,buf3,buf4); \
-//  UNDIAGONALIZE(r,row1,row2,row3,row4); \
-//} while(0)
-
-
-#define DEBUG(r) print_xmm((r))
-
-static void print_xmm(const __m128i xmm)
-{
-    printf("%08X %08X %08X %08X\n", 
-            _mm_extract_epi32(xmm, 3), 
-            _mm_extract_epi32(xmm, 2), 
-            _mm_extract_epi32(xmm, 1), 
-            _mm_extract_epi32(xmm, 0));
-}
 
 #endif
 

@@ -385,17 +385,16 @@ static void inv_mix_sub_columns( byte *dt, byte *st )
 
 int aes_encrypt( const byte *in, byte *out, const byte *rk )
 {
-        byte s1[AES_BYTES], r, *keys ;
-	keys = rk ;
-        copy_and_key( s1, in, keys );
+        byte s1[AES_BYTES], r;
+        copy_and_key( s1, in, rk );
 
         for( r = 1 ; r < 10 ; ++r )
         {   byte s2[AES_BYTES];
             mix_sub_columns( s2, s1 );
-            copy_and_key( s1, s2, keys + r * AES_BYTES);
+            copy_and_key( s1, s2, rk + r * AES_BYTES);
         }
         shift_sub_rows( s1 );
-        copy_and_key( out, s1, keys + r * AES_BYTES );
+        copy_and_key( out, s1, rk + r * AES_BYTES );
     return 0;
 }
 
@@ -403,16 +402,15 @@ int aes_encrypt( const byte *in, byte *out, const byte *rk )
 
 int aes_decrypt( const byte *in, byte *out, const byte *rk )
 {
-        byte s1[AES_BYTES], r, *keys;
-	keys = rk ;
-        copy_and_key( s1, in, keys + 10 * AES_BYTES );
+        byte s1[AES_BYTES], r;
+        copy_and_key( s1, in, rk + 10 * AES_BYTES );
         inv_shift_sub_rows( s1 );
 
         for( r = 10 ; --r ; )
         {   byte s2[AES_BYTES];
-            copy_and_key( s2, s1, keys + r * AES_BYTES );
+            copy_and_key( s2, s1, rk + r * AES_BYTES );
             inv_mix_sub_columns( s1, s2 );
         }
-        copy_and_key( out, s1, keys );
+        copy_and_key( out, s1, rk );
     return 0;
 }

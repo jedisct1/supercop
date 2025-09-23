@@ -53,7 +53,7 @@ int crypto_stream_xor(
     unsigned i;
     __m256i v0,v1,v2,v3,v4,v5,v6,v7,v8,v9,v10,v11;
     #if __clang__
-    __m256i s0 = _mm_broadcastsi128_si256((__m128i *)sigma);
+    __m256i s0 = _mm_broadcastsi128_si256(*(__m128i *)sigma);
     #else
     __m256i s0 = _mm256_broadcastsi128_si256(*(__m128i *)sigma);
     #endif

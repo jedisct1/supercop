@@ -556,8 +556,6 @@ __inline static void FinalCompress256(hashState *state)
 	u_int32_t td32_00, td32_01, td32_02, td32_03, td32_04, td32_05, td32_06, td32_07;
 	u_int32_t td32_08, td32_09, td32_10, td32_11, td32_12, td32_13, td32_14, td32_15;
 
-	u_int32_t rotate_t1;
-	
 	p256_00 = hashState256(state)->DoublePipe[0];
 	p256_01 = hashState256(state)->DoublePipe[1];
 	p256_02 = hashState256(state)->DoublePipe[2];

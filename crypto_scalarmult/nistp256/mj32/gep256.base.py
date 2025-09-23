@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 p = 2**256 - 2**224 + 2**192 + 2**96 - 1
 
 basepx = 0x6b17d1f2e12c4247f8bce6e563a440f277037d812deb33a0f4a13945d898c296
@@ -6,14 +8,8 @@ basepy = 0x4fe342e2fe1a7f9b8ee7eb4a7c0f9e162bce33576b315ececbb6406837bf51f5
 B = (basepx, basepy)
 
 
-def expmod(b, e, m):
-        if e == 0: return 1
-        t = expmod(b, e/2, m)**2 % p
-        if e & 1: t = (t * b) % p
-        return t
-
 def inv(x):
-        return expmod(x, p - 2, p)
+        return pow(x, p - 2, p)
 
 def add(P, Q):
         """
@@ -63,13 +59,13 @@ def radix32(r):
 
 for i in range(32):
 
-        print "{"
+        print("{")
         for j in range(1, 16):
-                 print " {"
-                 print "  {",radix32(b[j][0]),"},"
-                 print "  {",radix32(b[j][1]),"},"
-                 print " },"
-        print "},"
+                 print(" {")
+                 print("  {",radix32(b[j][0]),"},")
+                 print("  {",radix32(b[j][1]),"},")
+                 print(" },")
+        print("},")
 
         for j in range(1, 16):
                 for k in range(8):

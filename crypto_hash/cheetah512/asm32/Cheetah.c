@@ -222,7 +222,7 @@ HashReturn Update(hashState *state, const BitSequence *data, DataLength databitl
 	else{
 		totLength=databitlen/8;
 		if(totLength>=128)
-			Cheetah51232(&Te0,&T640,&state->core64, data, totLength);
+			Cheetah51232(Te,T64,&state->core64, data, totLength);
 		doneLength=databitlen/1024;
 		/*
 		while(doneLength+1<=databitlen/MBLEN){

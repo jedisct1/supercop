@@ -1,3 +1,5 @@
+// 20250922 djb: deal with gcc complaining about array vs. pointer
+
 typedef __uint128_t uint128_t;
 typedef struct {
   uint128_t c[4];
@@ -17,6 +19,6 @@ extern unsigned int fep256iszero(fep256 *a);
 
 extern void fep256cmov (fep256 *r, fep256 *x, unsigned int b);
 
-extern void fep256pack(unsigned char c[32], fep256 *r);
-extern void fep256unpack(fep256 *r, const unsigned char c[32]);
+extern void fep256pack(unsigned char *c, fep256 *r);
+extern void fep256unpack(fep256 *r, const unsigned char *c);
 

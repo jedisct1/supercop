@@ -1179,14 +1179,13 @@ HashReturn Init(hashState *state, int hashbitlen)
 
 HashReturn Update(hashState *state, const BitSequence *data, DataLength databitlen)
 {
-	u_int32_t *data32, *p256, *tdat32, *tp256;
+	u_int32_t *data32, *p256;
 	u_int32_t XL32, XH32, TempEven32, TempOdd32;
     u_int32_t p256_00, p256_01, p256_02, p256_03, p256_04, p256_05, p256_06, p256_07;
     u_int32_t p256_08, p256_09, p256_10, p256_11, p256_12, p256_13, p256_14, p256_15;
     u_int32_t p256_16, p256_17, p256_18, p256_19, p256_20, p256_21, p256_22, p256_23;
     u_int32_t p256_24, p256_25, p256_26, p256_27, p256_28, p256_29, p256_30, p256_31;
-    u_int32_t t256_16, t256_17, t256_18, t256_19, t256_20, t256_21, t256_22, t256_23;
-    u_int32_t t256_24, t256_25, t256_26, t256_27, t256_28, t256_29, t256_30, t256_31;
+    u_int32_t t256_16, t256_17, t256_18, t256_19, t256_20, t256_21;
 	u_int32_t td32_00, td32_01, td32_02, td32_03, td32_04, td32_05, td32_06, td32_07;
 	u_int32_t td32_08, td32_09, td32_10, td32_11, td32_12, td32_13, td32_14, td32_15;
 
@@ -1196,8 +1195,7 @@ HashReturn Update(hashState *state, const BitSequence *data, DataLength databitl
     u_int64_t p512_08, p512_09, p512_10, p512_11, p512_12, p512_13, p512_14, p512_15;
     u_int64_t p512_16, p512_17, p512_18, p512_19, p512_20, p512_21, p512_22, p512_23;
     u_int64_t p512_24, p512_25, p512_26, p512_27, p512_28, p512_29, p512_30, p512_31;
-    u_int64_t t512_16, t512_17, t512_18, t512_19, t512_20, t512_21, t512_22, t512_23;
-    u_int64_t t512_24, t512_25, t512_26, t512_27, t512_28, t512_29, t512_30, t512_31;
+    u_int64_t t512_16, t512_17, t512_18, t512_19, t512_20, t512_21;
 	u_int64_t td64_00, td64_01, td64_02, td64_03, td64_04, td64_05, td64_06, td64_07;
 	u_int64_t td64_08, td64_09, td64_10, td64_11, td64_12, td64_13, td64_14, td64_15;
 
@@ -1291,14 +1289,13 @@ HashReturn Update(hashState *state, const BitSequence *data, DataLength databitl
 
 HashReturn Final(hashState *state, BitSequence *hashval)
 {
-	u_int32_t *data32, *p256, *tdat32, *tp256;
+	u_int32_t *data32, *p256;
 	u_int32_t XL32, XH32, TempEven32, TempOdd32;
     u_int32_t p256_00, p256_01, p256_02, p256_03, p256_04, p256_05, p256_06, p256_07;
     u_int32_t p256_08, p256_09, p256_10, p256_11, p256_12, p256_13, p256_14, p256_15;
     u_int32_t p256_16, p256_17, p256_18, p256_19, p256_20, p256_21, p256_22, p256_23;
     u_int32_t p256_24, p256_25, p256_26, p256_27, p256_28, p256_29, p256_30, p256_31;
-    u_int32_t t256_16, t256_17, t256_18, t256_19, t256_20, t256_21, t256_22, t256_23;
-    u_int32_t t256_24, t256_25, t256_26, t256_27, t256_28, t256_29, t256_30, t256_31;
+    u_int32_t t256_16, t256_17, t256_18, t256_19, t256_20, t256_21;
 	u_int32_t td32_00, td32_01, td32_02, td32_03, td32_04, td32_05, td32_06, td32_07;
 	u_int32_t td32_08, td32_09, td32_10, td32_11, td32_12, td32_13, td32_14, td32_15;
 
@@ -1308,8 +1305,7 @@ HashReturn Final(hashState *state, BitSequence *hashval)
     u_int64_t p512_08, p512_09, p512_10, p512_11, p512_12, p512_13, p512_14, p512_15;
     u_int64_t p512_16, p512_17, p512_18, p512_19, p512_20, p512_21, p512_22, p512_23;
     u_int64_t p512_24, p512_25, p512_26, p512_27, p512_28, p512_29, p512_30, p512_31;
-    u_int64_t t512_16, t512_17, t512_18, t512_19, t512_20, t512_21, t512_22, t512_23;
-    u_int64_t t512_24, t512_25, t512_26, t512_27, t512_28, t512_29, t512_30, t512_31;
+    u_int64_t t512_16, t512_17, t512_18, t512_19, t512_20, t512_21;
 	u_int64_t td64_00, td64_01, td64_02, td64_03, td64_04, td64_05, td64_06, td64_07;
 	u_int64_t td64_08, td64_09, td64_10, td64_11, td64_12, td64_13, td64_14, td64_15;
 

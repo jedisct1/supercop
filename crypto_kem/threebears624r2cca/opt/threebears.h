@@ -21,8 +21,8 @@
  * @param[in] sk The private seed, which must be uniformly random.
  */
 void pqcrypto_kem_threebears624r2cca_impl_priv_get_pubkey (
-    uint8_t pk[PQCRYPTO_KEM_THREEBEARS624R2CCA_IMPL_PRIV_PUBLIC_KEY_BYTES],
-    const uint8_t seed[PQCRYPTO_KEM_THREEBEARS624R2CCA_IMPL_PRIV_PRIVATE_KEY_BYTES]
+    uint8_t *pk , // pkPQCRYPTO_KEM_THREEBEARS624R2CCA_IMPL_PRIV_PUBLIC_KEY_BYTES],
+    const uint8_t *seed // seedPQCRYPTO_KEM_THREEBEARS624R2CCA_IMPL_PRIV_PRIVATE_KEY_BYTES]
 );
 
 /**
@@ -33,9 +33,9 @@ void pqcrypto_kem_threebears624r2cca_impl_priv_get_pubkey (
  * @param[in] seed The private seed, which must be uniformly random.
  */
 static inline void pqcrypto_kem_threebears624r2cca_impl_priv_keygen (
-    uint8_t pk[PQCRYPTO_KEM_THREEBEARS624R2CCA_IMPL_PRIV_PUBLIC_KEY_BYTES],
-    uint8_t sk[PQCRYPTO_KEM_THREEBEARS624R2CCA_IMPL_PRIV_PRIVATE_KEY_BYTES],
-    const uint8_t seed[PQCRYPTO_KEM_THREEBEARS624R2CCA_IMPL_PRIV_KEYGEN_SEED_BYTES]
+    uint8_t *pk, // pk[PQCRYPTO_KEM_THREEBEARS624R2CCA_IMPL_PRIV_PUBLIC_KEY_BYTES],
+    uint8_t *sk, // sk[PQCRYPTO_KEM_THREEBEARS624R2CCA_IMPL_PRIV_PRIVATE_KEY_BYTES],
+    const uint8_t *seed // seed[PQCRYPTO_KEM_THREEBEARS624R2CCA_IMPL_PRIV_KEYGEN_SEED_BYTES]
 ) {
     pqcrypto_kem_threebears624r2cca_impl_priv_get_pubkey(pk,seed);
     memcpy(sk,seed,PQCRYPTO_KEM_THREEBEARS624R2CCA_IMPL_PRIV_KEYGEN_SEED_BYTES);
@@ -52,10 +52,10 @@ static inline void pqcrypto_kem_threebears624r2cca_impl_priv_keygen (
  * @param[in] seed A random seed.
  */
 void pqcrypto_kem_threebears624r2cca_impl_priv_encapsulate (
-    uint8_t shared_secret[PQCRYPTO_KEM_THREEBEARS624R2CCA_IMPL_PRIV_SHARED_SECRET_BYTES],
-    uint8_t capsule[PQCRYPTO_KEM_THREEBEARS624R2CCA_IMPL_PRIV_CAPSULE_BYTES],
-    const uint8_t pk[PQCRYPTO_KEM_THREEBEARS624R2CCA_IMPL_PRIV_PUBLIC_KEY_BYTES],
-    const uint8_t seed[PQCRYPTO_KEM_THREEBEARS624R2CCA_IMPL_PRIV_ENC_SEED_AND_IV_BYTES]
+    uint8_t *shared_secret, // shared_secret[PQCRYPTO_KEM_THREEBEARS624R2CCA_IMPL_PRIV_SHARED_SECRET_BYTES],
+    uint8_t *capsule, // capsule[PQCRYPTO_KEM_THREEBEARS624R2CCA_IMPL_PRIV_CAPSULE_BYTES],
+    const uint8_t *pk, // pk[PQCRYPTO_KEM_THREEBEARS624R2CCA_IMPL_PRIV_PUBLIC_KEY_BYTES],
+    const uint8_t *seed // seed[PQCRYPTO_KEM_THREEBEARS624R2CCA_IMPL_PRIV_ENC_SEED_AND_IV_BYTES]
 );
 
 /**
@@ -69,9 +69,9 @@ void pqcrypto_kem_threebears624r2cca_impl_priv_encapsulate (
  * @param[in] sk The private key.
  */
 void pqcrypto_kem_threebears624r2cca_impl_priv_decapsulate ( 
-    uint8_t shared_secret[PQCRYPTO_KEM_THREEBEARS624R2CCA_IMPL_PRIV_SHARED_SECRET_BYTES],
-    const uint8_t capsule[PQCRYPTO_KEM_THREEBEARS624R2CCA_IMPL_PRIV_CAPSULE_BYTES],
-    const uint8_t sk[PQCRYPTO_KEM_THREEBEARS624R2CCA_IMPL_PRIV_PRIVATE_KEY_BYTES]
+    uint8_t *shared_secret, // shared_secret[PQCRYPTO_KEM_THREEBEARS624R2CCA_IMPL_PRIV_SHARED_SECRET_BYTES],
+    const uint8_t *capsule, // capsule[PQCRYPTO_KEM_THREEBEARS624R2CCA_IMPL_PRIV_CAPSULE_BYTES],
+    const uint8_t *sk // sk[PQCRYPTO_KEM_THREEBEARS624R2CCA_IMPL_PRIV_PRIVATE_KEY_BYTES]
 );
 
 void secure_bzero (void *s,size_t size);

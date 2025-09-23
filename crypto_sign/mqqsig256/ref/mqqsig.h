@@ -157,22 +157,22 @@ as 81 uint8_ts and one non-singular matrix SInv
 given as two arrays of random permutations 
 sigma1[] and sigmaK[].
 */
-uint8_t __attribute__ ((aligned (16))) mqq_a[9*9-1+1];
+static uint8_t __attribute__ ((aligned (16))) mqq_a[9*9-1+1];
 //uint8_t *mqq_a;
-uint8_t __attribute__ ((aligned (16))) cc1[9];
-uint8_t __attribute__ ((aligned (16))) cc2[9];
+static uint8_t __attribute__ ((aligned (16))) cc1[9];
+static uint8_t __attribute__ ((aligned (16))) cc2[9];
 
 /* The matrix SInv is stored in ROM as two one-dimensional 
 arrays sigma1[] and sigmaK[] of N uint8_t's (or uint16_t's if N > 256).
 In a minimal design only ceil(log2(N))*N*2 bits are needed */
-uint_sigma __attribute__ ((aligned (16))) mqq_sigma1[N];
-uint_sigma __attribute__ ((aligned (16))) mqq_sigmaK[N];
+static uint_sigma __attribute__ ((aligned (16))) mqq_sigma1[N];
+static uint_sigma __attribute__ ((aligned (16))) mqq_sigmaK[N];
 //uint_sigma *mqq_sigma1;
 //uint_sigma *mqq_sigmaK;
 
 
 // The look-up tables for the private key. Only used if enabled with PRIVATE_KEY_LOOKUP_TABLES
-uint8_t __attribute__ ((aligned (16))) lookup_table_private_key[256*256*2];
+static uint8_t __attribute__ ((aligned (16))) lookup_table_private_key[256*256*2];
 
 
 #endif /*  MQQ_H */

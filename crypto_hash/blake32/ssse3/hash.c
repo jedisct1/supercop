@@ -67,8 +67,6 @@ static int blake32_compress( state * state, const u8 * datablock ) {
 
   
   u32 m[16]; 
-  int r;
-  u64 t;
 
   static const int sig[][16] = {
     {  0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15 } ,

@@ -339,7 +339,7 @@ int blake2b_final( blake2b_state *S, uint8_t *out, uint8_t outlen )
 /* inlen, at least, should be uint64_t. Others can be size_t. */
 int blake2b( uint8_t *out, const void *in, const void *key, const uint8_t outlen, const uint64_t inlen, uint8_t keylen )
 {
-  blake2b_state S[1];
+  blake2b_state S;
 
   /* Verify parameters */
   if ( NULL == in ) return -1;
@@ -350,15 +350,15 @@ int blake2b( uint8_t *out, const void *in, const void *key, const uint8_t outlen
 
   if( keylen > 0 )
   {
-    if( blake2b_init_key( S, outlen, key, keylen ) < 0 ) return -1;
+    if( blake2b_init_key( &S, outlen, key, keylen ) < 0 ) return -1;
   }
   else
   {
-    if( blake2b_init( S, outlen ) < 0 ) return -1;
+    if( blake2b_init( &S, outlen ) < 0 ) return -1;
   }
 
-  blake2b_update( S, ( uint8_t * )in, inlen );
-  blake2b_final( S, out, outlen );
+  blake2b_update( &S, ( uint8_t * )in, inlen );
+  blake2b_final( &S, out, outlen );
   return 0;
 }
 

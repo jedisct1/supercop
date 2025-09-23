@@ -406,31 +406,6 @@ extern int md6_full_hash( int d,                    /* hash bit length */
 #endif
 #endif
 
-
-/* Debugging and testing.
-*/
-
-/* compression hook, if defined, points to a function that is 
-** called after each compression operation.                             
-**
-** compression hook must be set *after* md6_init or md6_full_init 
-** is called.
-*/
-
-void (* compression_hook)(md6_word *C,
-			  const md6_word *Q,
-			  md6_word *K,
-			  int ell,
-			  int i,
-			  int r,
-			  int L,
-			  int z,
-			  int p,
-			  int keylen,
-			  int d,
-			  md6_word *N
-			  );
-
 /* end of #ifndef MD6_H_INCLUDED for multiple inclusion protection
 */
 #endif

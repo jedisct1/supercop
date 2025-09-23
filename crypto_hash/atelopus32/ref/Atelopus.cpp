@@ -40,8 +40,8 @@ void Atelopus::HashPrimitive(UINT const* data, UINT* res)
     UINT ar[BlockSize256];
     memcpy(ar, data, _bs4);
     // 1) Propagate differences
-    register UINT temp1, temp2;
-    register int i, k, ix, ix1, pos1, pos2, incr1, incr2;
+    UINT temp1, temp2;
+    int i, k, ix, ix1, pos1, pos2, incr1, incr2;
     for (k = 0; k < (int)_iter; k++)
     {
         if (k == 1)
@@ -113,7 +113,7 @@ void Atelopus::HashPrimitive(UINT const* data, UINT* res)
     ik = H1(KK(Atelopus::F1(_val1)) + _val2) & _size1;
     pk = H1(Atelopus::F1(_val1) ^ KK(_val2)) & _size1;
     int max = (_bs2 < _size) ? _size : (_bs2+1);
-    register bool over = false;
+    bool over = false;
     int sz = _size - _bs;
     i=0; k=pk; ix=_bs2;
     for (ix1=0; ix1<max; ix1++)
@@ -179,26 +179,26 @@ void Atelopus::HashPrimitive(UINT const* data, UINT* res)
 
 void Atelopus::Init(UINT* ar)
 {
-    register int pos1 = 0;
-    register int pos2 = _bs >> 2;
-    register int pos3 = _bs >> 1;
-    register int pos4 = pos2 + pos3;
-    register UINT val1 = _val1 ^ _bs;
-    register UINT val2 = _val2 + Atelopus::F1((BYTE)_bs);
+    int pos1 = 0;
+    int pos2 = _bs >> 2;
+    int pos3 = _bs >> 1;
+    int pos4 = pos2 + pos3;
+    UINT val1 = _val1 ^ _bs;
+    UINT val2 = _val2 + Atelopus::F1((BYTE)_bs);
     BYTE temp[4];
     temp[0] = _kk1[16]; temp[1] = _kk1[80]; temp[2] = _kk1[144]; temp[3] = _kk1[208];
-    register UINT val3;
+    UINT val3;
     val3 = Bytes2Word(temp);
     val3 ^= Atelopus::F2((BYTE)_bs);
     temp[0] = _kk1[48]; temp[1] = _kk1[112]; temp[2] = _kk1[176]; temp[3] = _kk1[240];
-    register UINT val4;
+    UINT val4;
     val4 = Bytes2Word(temp);
     val4 += (BYTE)_bs;
     UINT *pui1, *pui2, *pui3, *pui4, temp1;
     // At least 2 rounds
     int len2 = _bs<<1;
     int max = (len2 > 256) ? len2 : 256;
-    for (register int i = 0; i < max; i += 4)
+    for (int i = 0; i < max; i += 4)
     {
         pui1 = &ar[pos1]; *pui1 ^= val1; *pui1 += KK(val2);
         pui2 = &ar[pos2]; *pui2 ^= val2; *pui2 += KK(val3);
@@ -230,7 +230,7 @@ void Atelopus::Hash(BYTE const* data, BYTE* res, ULONG const& length)
     // Work buffers
     UINT ar[BlockSize256];
     UINT ar1[BlockSize256];
-    register int i;
+    int i;
     BYTE* pbytes;
     if (length <= _bs4)
     {
@@ -260,7 +260,7 @@ void Atelopus::Hash(BYTE const* data, BYTE* res, ULONG const& length)
     }
     ULONG pos = 0;
     ULONG lblocks = length / _bs4;
-    register bool init = false;
+    bool init = false;
     for (ULONG j=0; j<lblocks; j++, pos += _bs4)
     {
         if (!init)
@@ -347,7 +347,7 @@ void Atelopus::HashFile(string const& filepath, BYTE* res)
         // Work buffers
         UINT ar[BlockSize256];
         UINT ar1[BlockSize256];
-        register int i;
+        int i;
         BYTE* pbytes;
         if (length <= _bs4)
         {
@@ -378,7 +378,7 @@ void Atelopus::HashFile(string const& filepath, BYTE* res)
         }
         ULONG pos = 0;
         ULONG lblocks = length / _bs4;
-        register bool init = false;
+        bool init = false;
         for (ULONG j=0; j<lblocks; j++, pos+=_bs4)
         {
             if (!init)

@@ -1011,7 +1011,9 @@ _KeccakP1600_Permute_12rounds:
 //
     .align  8
     .globl _KeccakP1600_Permute_24rounds
+    .globl KeccakP1600_Permute_24rounds
 _KeccakP1600_Permute_24rounds:
+KeccakP1600_Permute_24rounds:
     mPushRegs
     mKeccakPermutation24
     mPopRegs

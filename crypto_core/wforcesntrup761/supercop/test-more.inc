@@ -4,7 +4,7 @@ These extra tests try a wider range of input weights.
 */
 
 {
-  long long offset,weight,i,direction;
+  long long weight,i,direction;
 
   for (weight = 0;weight <= nlen;++weight) {
     for (direction = 0;direction < 2;++direction) {

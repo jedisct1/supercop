@@ -1,12 +1,13 @@
+// 20250922 djb: more use of cryptoint (switching to little-endian en passant)
 /*
 20140918
 Jan Mojzis
 Public domain.
 */
 
-#include "uint32_pack_big.h"
-#include "uint32_unpack_big.h"
 #include "crypto_verify_32.h"
+#include "crypto_uint32.h"
+#include "crypto_uint64.h"
 #include "crypto_int64.h"
 #include "cleanup.h"
 #include "fe.h"
@@ -162,7 +163,8 @@ void fep256_sub(fe o, const fe x, const fe y) {
     for (i = 0; i < 8; ++i) {
         pb += (u64)y[i];
         a = (u64)x[i] + (u64)p[i];
-        b = a - pb; b >>= 63;
+        b = a - pb;
+        b = crypto_uint64_topbit_01(b);
         a += (b << 32) - pb;
         pb = b;
         u += a; o[i] = u & 0xffffffff; u >>= 32;
@@ -227,7 +229,7 @@ void fep256_tobytes(unsigned char *out, const fe in) {
 
     fe_copy(x, in);
     fe_reducesmall(x, p, 0);
-    for (i = 0; i < 8; ++i) uint32_pack_big(out + 28 - 4 * i, x[i]);
+    for (i = 0; i < 8; ++i) crypto_uint32_store(out + 4 * i, x[i]);
     cleanup(x);
 }
 
@@ -238,7 +240,7 @@ void fep256_frombytes(fe out, const unsigned char *in) {
 
     long long i;
 
-    for (i = 0; i < 8; ++i) out[i] = uint32_unpack_big(in + 28 - 4 * i);
+    for (i = 0; i < 8; ++i) out[i] = crypto_uint32_load(in + 4 * i);
     fe_reducesmall(out, p, 0);
 }
 

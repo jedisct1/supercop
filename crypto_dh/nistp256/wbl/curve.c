@@ -1,3 +1,4 @@
+// 20250922 djb: remove unused variable
 #include <string.h>
 #include <stdint.h>
 #include "fep256.h"
@@ -253,7 +254,6 @@ void p256dblmult_base(point *c, point *a, const unsigned char ea[32],
   int index;
   int i;
   int j;
-  int k;
   p256unpack(&bp, basep);
   p256identity(&current);
   p256identity(&table[0]);

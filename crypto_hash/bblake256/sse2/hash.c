@@ -183,7 +183,6 @@ static void blake256_compress( state * state, const u8 * datablock ) {
     u32     u32[16];
     __m128i u128[4];
   } m;
-  u64 t;
 
   m.u128[0] = LOADU(datablock +  0);
   m.u128[1] = LOADU(datablock + 16);
@@ -248,7 +247,6 @@ static void blake256_compress2(
     u32     u32[16];
     __m128i u128[4];
   } xm, ym;
-  u64 t;
 
   xm.u128[0] = LOADU(xdatablock +  0);
   xm.u128[1] = LOADU(xdatablock + 16);

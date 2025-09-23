@@ -184,7 +184,7 @@ void merger(T*& orig, uint32_t size)
     int count = 0;
     while (num!= 0) 
     {
-        if (num & 1 == 1) 
+        if (num & 1) 
         {
             break;
         } else 

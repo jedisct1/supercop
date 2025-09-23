@@ -123,9 +123,6 @@ static const LSH_ALIGNED_(32) lsh_u32 g_StepConstants[CONST_WORD_LEN * NUM_STEPS
 /* -------------------------------------------------------- */
 static const LSH_ALIGNED_(32) lsh_u32 g_BytePermInfo_L[4] = { 0x03020100, 0x06050407, 0x09080b0a, 0x0c0f0e0d };
 static const LSH_ALIGNED_(32) lsh_u32 g_BytePermInfo_R[4] = { 0x00030201, 0x05040706, 0x0a09080b, 0x0f0e0d0c };
-static const LSH_ALIGNED_(32) lsh_u32 g_MsgWordPermInfo[8] = {
-	0x0f0e0d0c, 0x0b0a0908, 0x03020100, 0x07060504, 0x1f1e1d1c, 0x13121110, 0x17161514, 0x1b1a1918
-};
 
 
 /* -------------------------------------------------------- */

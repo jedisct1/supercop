@@ -511,9 +511,9 @@ int addcandidate(  Kelt allcandidates[],
     return 0;
 }
 
-int compare(const Kelt a, const Kelt b)
+int compare(const void *ap,const void *bp)
 {
-    return Kcmp(a, b);
+    return Kcmp(ap,bp);
 }
 
 

@@ -8,6 +8,7 @@
 #include "randombytes.h"
 #include "seedexpander.h"
 
+uint64_t RBC_SQR_LOOKUP_TABLE[256];
 
 /**
  * \fn void rbc_field_init()

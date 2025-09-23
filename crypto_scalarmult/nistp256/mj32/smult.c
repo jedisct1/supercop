@@ -12,18 +12,13 @@ int crypto_scalarmult(unsigned char *q, const unsigned char *n, const unsigned c
 
     gep256 pp, qq;
     long long i;
-    int ret = -1;
 
-    if (gep256_frombytes(pp, p) != 0) goto fail;
+    int ret = gep256_frombytes(pp, p);
     gep256_scalarmult(qq, pp, n);
-    if (gep256_tobytes(q, qq) != 0) goto fail;
-    ret = 0;
-    goto cleanup;
+    ret &= ~gep256_tobytes(q, qq);
 
-fail:
-    for (i = 0; i < 64; ++i) q[i] = 0;
+    for (i = 0; i < 64; ++i) q[i] &= ~ret;
 
-cleanup:
     cleanup(pp); cleanup(qq);
     return ret;
 }
@@ -32,10 +27,10 @@ int crypto_scalarmult_base(unsigned char *q, const unsigned char *n) {
 
     gep256 qq;
     long long i;
-    int ret = -1;
+    int ret;
 
     gep256_scalarmult_base(qq, n);
-    if (gep256_tobytes(q, qq) == 0) ret = 0;
+    ret = gep256_tobytes(q, qq);
 
     cleanup(qq);
     return ret;

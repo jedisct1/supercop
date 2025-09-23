@@ -251,15 +251,6 @@ void cvt_vecx2_to_2vecs_4( __m256i * r0 , __m256i * r1 , const __m256i * vec )
   r1[3] = _mm256_permute2x128_si256( vec[6] , vec[7] , 0x31 );
 }
 
-static inline
-void mult3_64x64_inplace_karatsuba_x2( __m256i * a0 , __m256i * a1) {
-  __m256i f2_f0[8];
-
-  cvt_2vecs_to_vecx2_4( f2_f0 , a0 , a1 );
-  mult3x2_64x64_inplace_karatsuba( f2_f0 );
-  cvt_vecx2_to_2vecs_4( a0 , a1 , f2_f0 );
-}
-
 
 
 
@@ -664,35 +655,6 @@ void mult3_256x256_refined_karatsuba_x2( __m256i * a , __m256i * b)
 
 
 
-static
-void mult3_256x256_inplace_karatsuba( __m256i * a ) {
-  static const unsigned len = 8;
-  static const unsigned len_2 = 4;
-  __m256i * b = a + len;
-
-  for(unsigned i=0;i<len_2;i++){
-    __m256i tmp = a[len_2+i];
-    a[len_2+i] = b[i];
-    b[i] = tmp;
-  }
-  __m256i ab[len];
-  for(unsigned i=0;i<len;i++) {
-    ab[i] = add_r3(a[i],b[i]);
-  }
-
-  mult3_128x128_refined_karatsuba( a );
-  mult3_128x128_refined_karatsuba( b );
-  mult3_128x128_refined_karatsuba( ab );
-
-  for(unsigned i=0;i<len;i++){
-    ab[i] = _mm256_add_epi8( ab[i] , reduce_neg( _mm256_add_epi8(a[i],b[i]) ) ); // <= 4
-  }
-  for(unsigned i=0;i<len;i++){
-    a[len_2+i] = add_r3( a[len_2+i] , ab[i] );
-  }
-}
-
-
 
 //////////////////////////////////////////////////////////////////////////////
 
@@ -762,23 +724,9 @@ __m256i right_shift_1_low( __m256i a1 , __m256i a0 )
 }
 
 static inline
-__m256i right_shift_1( __m256i a0 )
-{
-  __m256i _a1l_a0h = _mm256_permute2x128_si256( a0, a0 , 0x81 );
-  return _mm256_alignr_epi8(_a1l_a0h,a0,1);
-}
-
-static inline
 __m256i right_shift_2_low( __m256i a1 , __m256i a0 )
 {
   __m256i _a1l_a0h = _mm256_permute2x128_si256( a0, a1 , 0x21 );
-  return _mm256_alignr_epi8(_a1l_a0h,a0,2);
-}
-
-static inline
-__m256i right_shift_2( __m256i a0 )
-{
-  __m256i _a1l_a0h = _mm256_permute2x128_si256( a0, a0 , 0x81 );
   return _mm256_alignr_epi8(_a1l_a0h,a0,2);
 }
 
@@ -787,27 +735,6 @@ __m256i left_shift_1_high( __m256i a1 , __m256i a0 )
 {
   __m256i _a1l_a0h = _mm256_permute2x128_si256( a0, a1 , 0x21 );
   return _mm256_alignr_epi8(a1,_a1l_a0h,15);
-}
-
-static inline
-__m256i left_shift_1( __m256i a1 )
-{
-  __m256i _a1l_a0h = _mm256_permute2x128_si256( a1, a1 , 0x28 );
-  return _mm256_alignr_epi8(a1,_a1l_a0h,15);
-}
-
-static inline
-__m256i left_shift_2_high( __m256i a1 , __m256i a0 )
-{
-  __m256i _a1l_a0h = _mm256_permute2x128_si256( a0, a1 , 0x21 );
-  return _mm256_alignr_epi8(a1,_a1l_a0h,14);
-}
-
-static inline
-__m256i left_shift_2( __m256i a1 )
-{
-  __m256i _a1l_a0h = _mm256_permute2x128_si256( a1, a1 , 0x28 );
-  return _mm256_alignr_epi8(a1,_a1l_a0h,14);
 }
 
 ///////////////////////////////////////////////////////////////////
@@ -1060,12 +987,6 @@ void mult3_768_karatsuba3( unsigned char * c , const unsigned char * a , const u
   mult3_256x256_refined_karatsuba_x2( (__m256i * )a0b0 , (__m256i * )a1b1 );
   mult3_256x256_refined_karatsuba_x2( (__m256i * )a2b2 , (__m256i * )a012b012 );
   mult3_256x256_refined_karatsuba_x2( (__m256i * )a01b01 , (__m256i * )a02b02 );
-  //mult3_256x256_inplace_karatsuba( (__m256i * )a0b0 );
-  //mult3_256x256_inplace_karatsuba( (__m256i * )a1b1 );
-  //mult3_256x256_inplace_karatsuba( (__m256i * )a2b2 );
-  //mult3_256x256_inplace_karatsuba( (__m256i * )a01b01 );
-  //mult3_256x256_inplace_karatsuba( (__m256i * )a02b02 );
-  //mult3_256x256_inplace_karatsuba( (__m256i * )a012b012 );
 
 //   (a0 + a1 X + a2 X2 )( b0 + b1 X + b2 X2 )
 // = a0b0 ( 1 - X - X2 + X3 )

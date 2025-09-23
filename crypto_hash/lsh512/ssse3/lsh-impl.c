@@ -179,9 +179,6 @@ static const LSH_ALIGNED_(32) lsh_u64 g_BytePermInfo[4][2] = {
 	0x0605040302010007, 0x0c0b0a09080f0e0d,
 	0x0201000706050403, 0x080f0e0d0c0b0a09
 };
-static const LSH_ALIGNED_(32) lsh_u64 g_MsgWordPermInfo[4] = {
-	0x0706050403020100, 0x0f0e0d0c0b0a0908, 0x1716151413121110, 0x1f1e1d1c1b1a1918
-};
 
 
 /* -------------------------------------------------------- */

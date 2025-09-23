@@ -1,3 +1,4 @@
+// 20250920 djb: remove unused variable
 /*
 20081110
 D. J. Bernstein
@@ -34,7 +35,6 @@ static void transform(hashState *state)
 HashReturn Init(hashState *state, int hashbitlen)
 {
   int i;
-  int j;
 
   if (hashbitlen < 8) return BAD_HASHBITLEN;
   if (hashbitlen > 512) return BAD_HASHBITLEN;

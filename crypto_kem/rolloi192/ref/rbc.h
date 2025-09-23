@@ -37,7 +37,7 @@ typedef rbc_poly_sparse_struct* rbc_poly_sparse;
 
 typedef rbc_poly rbc_qre;
 
-uint64_t RBC_SQR_LOOKUP_TABLE[256];
+extern uint64_t RBC_SQR_LOOKUP_TABLE[256];
 static const rbc_elt RBC_ELT_MODULUS = {0x0000000000000201, 0x0000000000008000};
 
 

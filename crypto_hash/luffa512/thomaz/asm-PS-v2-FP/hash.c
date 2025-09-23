@@ -26,7 +26,7 @@
 
 #include "crypto_hash.h"
 
-void fLuffa512(unsigned char *input, unsigned char *output, int len);
+void fLuffa512(const unsigned char *input, unsigned char *output, int len);
 
 int crypto_hash(unsigned char *out, const unsigned char *in, unsigned long long inlen) {
 	fLuffa512(in, out, inlen);

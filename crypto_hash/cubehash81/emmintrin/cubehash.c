@@ -1,3 +1,4 @@
+// 20250920 djb: remove unused variables
 /*
 20081110
 D. J. Bernstein
@@ -23,10 +24,6 @@ static void transform(hashState *state)
   __m128i y1;
   __m128i y2;
   __m128i y3;
-  __m128i y4;
-  __m128i y5;
-  __m128i y6;
-  __m128i y7;
 
   x0 = _mm_loadu_si128(0 + (__m128i *) state->x);
   x1 = _mm_loadu_si128(1 + (__m128i *) state->x);
@@ -93,7 +90,6 @@ static void transform(hashState *state)
 HashReturn Init(hashState *state, int hashbitlen)
 {
   int i;
-  int j;
 
   if (hashbitlen < 8) return BAD_HASHBITLEN;
   if (hashbitlen > 512) return BAD_HASHBITLEN;

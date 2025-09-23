@@ -11,14 +11,12 @@
 
 
 int jump32divsteps (int delta, __m256i *fi, __m256i *gi, __m256i *uvqr){
-  modq f0, g0;
   __m256i f0vec, g0vec, maskvec;
   __m256i  fl, fh, gl, gh, ul, uh, vl, vh, ql, qh, rl, rh;
   int i;
-  __m256i minusdelta_v, mask, temp, gx, ux, uy, vx, vy, qx, rx;
+  __m256i minusdelta_v, temp, ux, vx, qx, rx;
 
   minusdelta_v = _mm256_set1_epi32(-delta);
-  __m256i delta_v = _mm256_set1_epi16((int16_t)delta);
   fl = fi[0]; fh = fi[1];
   gl = gi[0]; gh = gi[1];
 
@@ -112,7 +110,7 @@ int jump32xdivsteps (int delta, __m256i *fi, __m256i *gi, __m256i *uvqr, int x){
   __m256i f0vec, g0vec, maskvec;
   __m256i  fl, fh, gl, gh, ul, uh, vl, vh, ql, qh, rl, rh;
   int i;
-  __m256i minusdelta_v, mask, temp, gx, ux, uy, vx, vy, qx, rx;
+  __m256i minusdelta_v, temp, gx, ux, vx, qx, rx;
 
   minusdelta_v = _mm256_set1_epi32(-delta);
   fl = fi[0]; fh = fi[1];

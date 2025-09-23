@@ -103,7 +103,7 @@ static inline void assertrange_x16(int16x16 f,int limit)
 /* where f,g are 1-coeff polys */
 /* input range: +-16000 */
 /* output range: +-8000 */
-inline void mult1_over65536_x16(int16x16 h[1],const int16x16 f[1],const int16x16 g[1])
+inline void mult1_over65536_x16(int16x16 *h,const int16x16 *f,const int16x16 *g)
 {
   /* 4 mul + 1 add */
 
@@ -125,7 +125,7 @@ inline void mult1_over65536_x16(int16x16 h[1],const int16x16 f[1],const int16x16
 /* where f,g are 2-coeff polys */
 /* input range: +-8000 */
 /* output range: +-8000 */
-inline void mult2_over65536_x16(int16x16 h[3],const int16x16 f[2],const int16x16 g[2])
+inline void mult2_over65536_x16(int16x16 *h,const int16x16 *f,const int16x16 *g)
 {
   /* strategy: refined Karatsuba */
   /* 13 mul + 9 add */
@@ -176,7 +176,7 @@ inline void mult2_over65536_x16(int16x16 h[3],const int16x16 f[2],const int16x16
 /* where f,g are 4-coeff polys */
 /* input range: +-4000 */
 /* output range: +-8000 */
-inline void mult4_over65536_x16(int16x16 h[7],const int16x16 f[4],const int16x16 g[4])
+inline void mult4_over65536_x16(int16x16 *h,const int16x16 *f,const int16x16 *g)
 {
   /* strategy: refined Karatsuba */
   /* 48 mul + 38 add */
@@ -214,7 +214,7 @@ inline void mult4_over65536_x16(int16x16 h[7],const int16x16 f[4],const int16x16
 /* input range: +-4000 */
 /* output range: +-4000 */
 /* h can overlap inputs */
-void mult8_nega_over65536_x16(int16x16 h[8],const int16x16 f[8],const int16x16 g[8])
+void mult8_nega_over65536_x16(int16x16 *h,const int16x16 *f,const int16x16 *g)
 {
   /* strategy: reduced refined Karatsuba */
   /* 176 mul + 159 add */

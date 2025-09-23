@@ -24,7 +24,7 @@
 
 // 32 steps of ACORN
 // the last input parameter of this function is to indicate whether it is encryption (value1) or decryption (value 0).
-void acorn128_64steps(unsigned char *state, unsigned char *plaintextbyte, unsigned char *ciphertextbyte, unsigned char cabyte, unsigned char cbbyte, unsigned char enc_dec_flag)
+void acorn128_64steps(unsigned char *state, const unsigned char *inbyte, unsigned char *outbyte, unsigned char cabyte, unsigned char cbbyte, unsigned char enc_dec_flag)
 {
     unsigned int i;
     unsigned char j,f;
@@ -83,13 +83,10 @@ void acorn128_64steps(unsigned char *state, unsigned char *plaintextbyte, unsign
 
         ksbyte = byte_12 ^ byte_154 ^ maj(byte_235, byte_61, byte_193) ^ ch(byte_230, byte_111, byte_66);
 
-        //*(ciphertextbyte+i) = *(plaintextbyte+i) ^ ksbyte;
-
-        if (enc_dec_flag == 1) *(ciphertextbyte+i) = *(plaintextbyte+i) ^ ksbyte;
-        else                   *(plaintextbyte+i) = *(ciphertextbyte+i) ^ ksbyte;
+        *(outbyte+i) = *(inbyte+i) ^ ksbyte;
 
         f = state_tem[0] ^ (~byte_107) ^ maj(byte_244, byte_23, byte_160) ^ (cabyte & byte_196) ^ (cbbyte & ksbyte);
-        f ^= *(plaintextbyte+i);
+        f ^= *((enc_dec_flag ? inbyte : outbyte) + i);
 
         state_tem[36] ^= (f << 5);
         state_tem[37] ^= (f >> 3);
@@ -104,7 +101,7 @@ void acorn128_64steps(unsigned char *state, unsigned char *plaintextbyte, unsign
 
 // 8 steps of ACORN
 // the last input parameter of this function is to indicate whether it is encryption (value1) or decryption (value 0).
-void acorn128_8steps(unsigned char *state, unsigned char *plaintextbyte, unsigned char *ciphertextbyte, unsigned char cabyte, unsigned char cbbyte, unsigned char enc_dec_flag)
+void acorn128_8steps(unsigned char *state, const unsigned char *inbyte, unsigned char *outbyte, unsigned char cabyte, unsigned char cbbyte, unsigned char enc_dec_flag)
 {
     unsigned char j,f;
     unsigned char byte_12, byte_235, byte_244, byte_23,  byte_160, byte_111, byte_66, byte_196;
@@ -157,11 +154,10 @@ void acorn128_8steps(unsigned char *state, unsigned char *plaintextbyte, unsigne
 
     ksbyte = byte_12 ^ byte_154 ^ maj(byte_235, byte_61, byte_193) ^ ch(byte_230, byte_111, byte_66);
 
-    if (enc_dec_flag == 1) *ciphertextbyte = *plaintextbyte ^ ksbyte;
-    else                   *plaintextbyte = *ciphertextbyte ^ ksbyte;
+    *outbyte = *inbyte ^ ksbyte;
 
     f = state[0] ^ (~byte_107) ^ maj(byte_244, byte_23, byte_160) ^ (cabyte & byte_196) ^ (cbbyte & ksbyte);
-    f ^= *plaintextbyte;
+    f ^= enc_dec_flag ? *inbyte : *outbyte;
 
     //shift by 8-bit positions
     state[36] ^= (f << 5);
@@ -366,12 +362,12 @@ int crypto_aead_decrypt(
 
     for (i = 0; i < (*mlen & 0xfffffffffffffff8ULL); i=i+8)
     {
-        acorn128_64steps(state, &(m[i]), &c[i], ca, cb,0);
+        acorn128_64steps(state, &(c[i]), &m[i], ca, cb,0);
     }
 
     for (i = *mlen & 0xfffffffffffffff8ULL; i < *mlen; i=i+1)
     {
-        acorn128_8steps(state, &(m[i]), &c[i], ca, cb,0);
+        acorn128_8steps(state, &(c[i]), &m[i], ca, cb,0);
     }
 
     acorn128_fixed_padding_256(state, cb);

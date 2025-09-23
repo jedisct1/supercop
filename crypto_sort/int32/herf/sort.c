@@ -130,5 +130,5 @@ static void RadixSort11(uint32 *array, uint32 *sort, uint32 elements)
 void crypto_sort(void *x,long long n)
 {
   int32 y[n];
-  RadixSort11(x,y,n);
+  RadixSort11((uint32 *) x,(uint32 *) y,n);
 }

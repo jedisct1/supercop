@@ -54,8 +54,8 @@ Please refer to PlSnP-documentation.h for more details.
 #endif
 #define PlSnP_factor ((PlSnP_targetParallelism)/(PlSnP_baseParallelism))
 #define SnP_stateOffset SnP_stateSizeInBytes
-#define stateWithIndex(i) ((unsigned char *)states+((i)*SnP_stateOffset))
-#define stateWithIndexConst(i) ((const unsigned char *)states+((i)*SnP_stateOffset))
+#define stateWithIndex(i) ((void *) ((unsigned char *)states+((i)*SnP_stateOffset)))
+#define stateWithIndexConst(i) ((void *) ((const unsigned char *)states+((i)*SnP_stateOffset)))
 
 #define SnP_StaticInitialize            JOIN(SnP, _StaticInitialize)
 #define SnP_Initialize                  JOIN(SnP, _Initialize)

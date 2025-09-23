@@ -274,8 +274,6 @@ HashReturn Update(hashState *state, const BitSequence *data, DataLength databitl
 /*pad the message, process the padded block(s), truncate the hash value H to obtain the message digest*/
 HashReturn Final(hashState *state, BitSequence *hashval) 
 {
-      unsigned int i;
-
       if ( (state->databitlen & 0x1ff) == 0 ) {
             /*pad the message when databitlen is multiple of 512 bits, then process the padded block*/
             memset(state->buffer, 0, 64);

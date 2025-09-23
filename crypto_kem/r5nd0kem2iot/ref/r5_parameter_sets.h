@@ -60,10 +60,10 @@
 #define CRYPTO_ALGNAME "R5ND_0KEM_2iot"
 
 /** The Round5 parameter set parameter values. */
-const uint32_t r5_parameter_sets[81][16];
+extern const uint32_t r5_parameter_sets[81][16];
 
 /** The names of the Round5 parameter sets. */
-const char *r5_parameter_set_names[81];
+extern const char *r5_parameter_set_names[81];
 
 /* Default ROUND5_API_TAU to 0 if not yet defined */
 #if !defined(ROUND5_API_TAU)

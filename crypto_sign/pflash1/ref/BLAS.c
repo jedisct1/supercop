@@ -267,7 +267,7 @@ void BLAS_genVec(int dim, byte *V)
 	return;
 }
 
-void BLAS_affineGF16(int dim, byte *b, byte *A, byte *x, byte *c)
+void BLAS_affineGF16(int dim, byte *b, const byte *A, byte *x, byte *c)
 {
 	int i, dim_div_2;
 	byte *y, *ytmp;
@@ -291,7 +291,7 @@ void BLAS_affineGF16(int dim, byte *b, byte *A, byte *x, byte *c)
 	return;
 }
 
-void BLAS_ivsAffineGF16(int dim, byte *b, byte *A, byte *x, byte *c)
+void BLAS_ivsAffineGF16(int dim, byte *b, const byte *A, const byte *x, const byte *c)
 {
 	int i, dim_div_2, tmp;
 	byte *y, *ytmp;
@@ -312,10 +312,11 @@ void BLAS_ivsAffineGF16(int dim, byte *b, byte *A, byte *x, byte *c)
 	return;
 }
 
-int BLAS_pLinearGF16(int dim, byte *b, byte *A, byte *y, int pSize)
+int BLAS_pLinearGF16(int dim, byte *b, const byte *A, byte *y, int pSize)
 {
 	int i, j, dim_div_2, A_dist, n_row;
-	byte *btmp, *btmp2, *Atmp, *ytmp;
+	byte *btmp, *btmp2, *ytmp;
+	const byte *Atmp;
 
 	dim_div_2 = dim >> 1;
 	memset(b, 0, sizeof(byte)*dim_div_2);
@@ -381,10 +382,11 @@ int BLAS_pLinearGF16(int dim, byte *b, byte *A, byte *y, int pSize)
 	return 0;
 }
 
-void BLAS_rLinearGF16(int dim, byte *b, byte *A, byte *y, int pSize)
+void BLAS_rLinearGF16(int dim, byte *b, const byte *A, byte *y, int pSize)
 {
 	int i, j, n_row, A_dist, dim_div_2;
-	byte *btmp, *Atmp, *ytmp;
+	byte *btmp, *ytmp;
+	const byte *Atmp;
 
 	dim_div_2 = dim >> 1;
 	n_row = dim_div_2 - ((pSize + 1) >> 1);
@@ -442,10 +444,11 @@ void BLAS_rLinearGF16(int dim, byte *b, byte *A, byte *y, int pSize)
 	return;
 }
 
-void BLAS_aLinearGF16(int dim, byte *b, byte *A, byte *y)
+void BLAS_aLinearGF16(int dim, byte *b, const byte *A, byte *y)
 {
 	int i, j, dim_div_2;
-	byte *ytmp, *btmp, *Atmp;
+	byte *ytmp, *btmp;
+	const byte *Atmp;
 
 	dim_div_2 = dim >> 1;
 	Atmp = A;

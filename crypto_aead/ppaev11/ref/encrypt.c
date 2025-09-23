@@ -8,15 +8,15 @@
 #define decAES(out,in,k) crypto_core_aes128decrypt(out,in,k,0)
 
 static inline void ull_to_block( unsigned char *, unsigned long long );
-static inline void xor_blocks(   unsigned char *, unsigned char *, unsigned char * );
+static inline void xor_blocks(   unsigned char *, const unsigned char *, const unsigned char * );
 static inline void add_blocks(   unsigned char *, unsigned char *, unsigned char * );
 static inline void subs_blocks(  unsigned char *, unsigned char *, unsigned char * );
 
-static void gen_ivs( unsigned char *, unsigned char *, unsigned char *,    unsigned char * );
-static void gen_icv( unsigned char *, unsigned char *, unsigned long long, unsigned long long, unsigned char *, unsigned char * );
-static void gtag_ad( unsigned char *, unsigned char *, unsigned long long, unsigned char *,    unsigned char * );
-static void encppae( unsigned char *, unsigned char *, unsigned char *,    unsigned char *,    unsigned char * );
-static void decppae( unsigned char *, unsigned char *, unsigned char *,    unsigned char *,    unsigned char * );
+static void gen_ivs( unsigned char *, unsigned char *, const unsigned char *,    const unsigned char * );
+static void gen_icv( unsigned char *, const unsigned char *, unsigned long long, unsigned long long, unsigned char *, unsigned char * );
+static void gtag_ad( unsigned char *, const unsigned char *, unsigned long long, unsigned char *,    unsigned char * );
+static void encppae( unsigned char *, unsigned char *, unsigned char *,    const unsigned char *,    unsigned char * );
+static void decppae( unsigned char *, unsigned char *, unsigned char *,    const unsigned char *,    unsigned char * );
 
 /* --------- ++AE CAESAR encrypt and decrypt AEAD procedures  */
 int crypto_aead_encrypt(
@@ -30,7 +30,7 @@ int crypto_aead_encrypt(
 {
    static unsigned char _k[16], _IVa[16], _IVb[16];   // space to keep preset key and to chain IVs between calls
    unsigned char icv[16], lb[16], b[16];
-   int i, w;
+   int i, w=mlen;
 
    if ( k!=0 ) {                                      // If first session call then generate fresh IVs and save key. Otherwise we just chain IVs
 	  memcpy( _k, k, 16 ); gen_ivs( _IVa, _IVb, npub, k );  // It would be the right place to preset AES key to avoid rekeying for every block
@@ -39,8 +39,10 @@ int crypto_aead_encrypt(
    gen_icv( icv, npub, mlen, adlen, _IVa, _IVb );     // Let's compute the ICV for this message
    gtag_ad( _IVa, ad, adlen, _k, icv );               // AD tag calculated on IVa (and using initial value as input)
 
-   for ( *clen = mlen + 16; mlen; mlen -= 16, m += 16, c +=16 ) {      // ++AE plaintext encryption
-      if ( (w=mlen)<16 ) {                            // it's time to padd P last block
+   *clen = mlen + 16;
+   do {
+      w = mlen;
+      if ( mlen<16 ) {                            // it's time to padd P last block
          for ( i=0; i<16; i++ ) b[(w+i)%16] = icv[i];
          memcpy( icv, b, 16 );                        // ICV = ICV>>w (w=mlen)
          memcpy( lb, m, w ); memset( lb+w, 0, 16-w );
@@ -48,7 +50,8 @@ int crypto_aead_encrypt(
          mlen = 16; m = lb;
       }
       encppae( c, _IVa, _IVb, m, _k );                // One block ++AE encryption with IVa and IVb chainning ...
-   }
+      mlen -= 16, m += 16, c +=16;
+   } while (mlen);
 
    encppae( b, _IVa, _IVb, icv, _k );                 // Let's generate the tag block ... but reduced
    memcpy( c, b+(16-w), w );                          // by the (16-w) tag/padding bytes added in previous cryptogram block
@@ -92,7 +95,7 @@ int crypto_aead_decrypt(
 }
 
 // --------- ++AE auxiliary encapsulated procedures
-static void gen_ivs( unsigned char *iva, unsigned char *ivb, unsigned char *s, unsigned char *k )
+static void gen_ivs( unsigned char *iva, unsigned char *ivb, const unsigned char *s, const unsigned char *k )
 {
    unsigned char b[16];
 
@@ -100,7 +103,7 @@ static void gen_ivs( unsigned char *iva, unsigned char *ivb, unsigned char *s, u
    encAES( iva, b, k ); encAES( ivb, iva, k );
 }
 
-static void gen_icv( unsigned char *icv,   unsigned char *npub, unsigned long long n,
+static void gen_icv( unsigned char *icv,   const unsigned char *npub, unsigned long long n,
                      unsigned long long m, unsigned char *iva,  unsigned char *ivb )
 {
    unsigned char s[16], b1[16], b2[16];
@@ -112,7 +115,7 @@ static void gen_icv( unsigned char *icv,   unsigned char *npub, unsigned long lo
    add_blocks( icv, b1, b2 );                      // ICV = (IVa xor S) + (IVb xor (N+M))
 }
 
-static void gtag_ad( unsigned char *iva, unsigned char *ad, unsigned long long adlen,
+static void gtag_ad( unsigned char *iva, const unsigned char *ad, unsigned long long adlen,
                      unsigned char *k,   unsigned char *icv )
 {
    unsigned char x[16], lb[16], b[16];
@@ -131,7 +134,7 @@ static void gtag_ad( unsigned char *iva, unsigned char *ad, unsigned long long a
 }
 
 static void encppae( unsigned char *c, unsigned char *iva, unsigned char *ivb,
-                     unsigned char *m, unsigned char *k )
+                     const unsigned char *m, unsigned char *k )
 {
    unsigned char b[16], I[16];
 
@@ -144,7 +147,7 @@ static void encppae( unsigned char *c, unsigned char *iva, unsigned char *ivb,
 }
 
 static void decppae( unsigned char *m, unsigned char *iva, unsigned char *ivb,
-                     unsigned char *c, unsigned char *k )
+                     const unsigned char *c, unsigned char *k )
 {
    unsigned char b[16], Q[16];
 
@@ -163,7 +166,7 @@ static inline void ull_to_block( unsigned char *b, unsigned long long u )
    for ( i=15; i>=0; i-- ) { b[i] = u; u >>= 8; };
 }
 
-static inline void xor_blocks( unsigned char *r, unsigned char *a, unsigned char *b )
+static inline void xor_blocks( unsigned char *r, const unsigned char *a, const unsigned char *b )
 {                                                             // r = a^b
    int i;
    for ( i=0; i<16; i++ ) r[i] = a[i] ^ b[i];

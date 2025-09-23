@@ -41,7 +41,7 @@ int csprng_seed( csprng* rng, unsigned short int seed_length, unsigned char * se
         {
             rng->state[j] ^= seed[i*csprng_seed_rate + j];
         }
-        KeccakP1600_Permute_24rounds(rng->state);
+        KeccakP1600_Permute_24rounds((void *) rng->state);
     }
 
     /* Absorb the remainder of the last input block */
@@ -49,7 +49,7 @@ int csprng_seed( csprng* rng, unsigned short int seed_length, unsigned char * se
     {
         rng->state[j] ^= seed[i*csprng_seed_rate + j];
     }
-    KeccakP1600_Permute_24rounds(rng->state);
+    KeccakP1600_Permute_24rounds((void *) rng->state);
 
     return 1;
 }
@@ -75,14 +75,14 @@ int csprng_generate( csprng* rng, unsigned int buffer_length, unsigned char * bu
         {
             buffer[i*csprng_gen_rate + j] = rng->state[j];
         }
-        KeccakP1600_Permute_24rounds(rng->state);
+        KeccakP1600_Permute_24rounds((void *) rng->state);
     }
     /* squeeze out the remaining bytes of the last output block */
     for( j = 0 ; j < buffer_length % csprng_gen_rate ; ++j )
     {
         buffer[i*csprng_gen_rate + j] = rng->state[j];
     }
-    KeccakP1600_Permute_24rounds(rng->state);
+    KeccakP1600_Permute_24rounds((void *) rng->state);
 
     return 1;
 }

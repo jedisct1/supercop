@@ -1,0 +1,66 @@
+#!/usr/bin/env python3
+
+import os
+import sys
+
+results = []
+
+def use(L):
+  global results
+  L = list(L)
+  if L not in results:
+    results += [L]
+
+subroutines_fn_done = set()
+
+def subroutines_fn(fn):
+  if fn in subroutines_fn_done: return
+  subroutines_fn_done.add(fn)
+  with open(fn) as f:
+    for line in f:
+      line = line.split()
+      if len(line) < 2: continue
+      if line[0] != '#include': continue
+      x = line[1]
+      x = x.replace('<','')
+      x = x.replace('>','')
+      x = x.replace('"','')
+      if x.endswith('.h'): x = x[:-2]
+      if x.endswith('_publicinputs'): x = x[:-len('_publicinputs')]
+      if x == 'crypto_asm_hidden': continue
+      if x.startswith('libkeccak.a.headers/'):
+        use(('keccak',))
+      if x == 'randombytes':
+        use(('crypto_stream','chacha20'))
+        use(('crypto_rng','chacha20'))
+      y = x.split('_')
+      if len(y) == 3 and y[0] == 'crypto':
+        subroutines_op(f'crypto_{y[1]}',y[2])
+
+def subroutines_opi(o,p,i):
+  for dir,subdirs,files in os.walk(f'{o}/{p}/{i}',followlinks=True):
+    for fn in files:
+      if fn.split('.')[-1] in ('h','c','s','S','cc','cpp'):
+        subroutines_fn(f'{dir}/{fn}')
+
+def subroutines_op(o,p):
+  for dir,subdirs,files in os.walk(f'{o}/{p}',followlinks=True):
+    if 'api.h' in files:
+      i = '/'.join(dir.split('/')[2:])
+      subroutines_opi(o,p,i)
+  use((o,p))
+
+use(('init',))
+
+for line in sys.stdin:
+  line = line.split()
+  if len(line) < 2: continue
+  o,p = line[:2]
+  subroutines_fn(f'{o}/try.c')
+  subroutines_fn(f'{o}/measure.c')
+  subroutines_fn(f'try-anything.c')
+  subroutines_fn(f'measure-anything.c')
+  subroutines_op(o,p)
+
+for L in results:
+  print('./do-part '+' '.join(L))

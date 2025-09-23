@@ -2,7 +2,7 @@
  *
  * Reference ISO-C11 Implementation of CROSS.
  *
- * @version 2.0 (February 2025)
+ * @version 2.2 (July 2025)
  *
  * Authors listed in alphabetical order:
  * 
@@ -35,7 +35,7 @@
 
 #pragma once
 
-#include "CROSS.h"
+#include "CROSS_struct.h"
 #include "parameters.h"
 
 #define CRYPTO_ALGNAME "CROSS"

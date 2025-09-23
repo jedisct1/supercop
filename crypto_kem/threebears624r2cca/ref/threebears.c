@@ -165,9 +165,9 @@ void encapsulate(
 
 /* Decapsulate a shared secret and return it */
 void decapsulate(
-    uint8_t shared_secret[SHARED_SECRET_BYTES],
-    const uint8_t capsule[CAPSULE_BYTES],
-    const uint8_t sk[PRIVATE_KEY_BYTES]
+    uint8_t *shared_secret,
+    const uint8_t *capsule,
+    const uint8_t *sk
 ) {
     const uint8_t *lpr_data = &capsule[GF_BYTES*DIM];
     

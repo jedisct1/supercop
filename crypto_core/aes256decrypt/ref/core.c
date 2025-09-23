@@ -54,7 +54,6 @@ static unsigned char bytesub(unsigned char c)
 {
   unsigned char f[8];
   unsigned char h[8];
-  unsigned char result;
   int i;
 
   c = invert(c);

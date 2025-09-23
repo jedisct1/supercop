@@ -2,7 +2,19 @@
 #	Assembler implementation of one round of Cheetah-256					
 #	Author: Ivica Nikolic, University of Luxembourg					
 ##########################################################################################
+// 20250920 djb: make reentrant (and pic); also eliminate ebp (fixing bug for addresses past 4GB)
 
+
+#define EXPND %rsp
+#define message -8(%rsp)
+#define length -16(%rsp)
+#define statel -24(%rsp)
+#define tbl32 -32(%rsp)
+#define tbl64 -40(%rsp)
+#define blccntr -48(%rsp)
+#define const1 -56(%rsp)
+#define const2 -64(%rsp)
+#define const3 -72(%rsp)
 
 .section .text
 .type Cheetah25664, @function
@@ -14,11 +26,18 @@ Cheetah25664:
   push %rbp
   push %rdi
   push %rsi
-  push %rsp
   push %r12
   push %r13
   push %r14
   push %r15
+
+  subq $512,%rsp
+  movq $0xf26b6fc500000000,%r15
+  movq %r15,const1
+  movq $0x3001672b00000000,%r15
+  movq %r15,const2
+  movq $0xfed7ab7600000000,%r15
+  movq %r15,const3
 
   # Save the address of the 8x32 tables
   movq %rdi,tbl32
@@ -560,7 +579,7 @@ start128:
   pxor %xmm15,%xmm7
 
   # Save the values of the state
-  movq $expnd,%rdi
+  movq EXPND,%rdi
   movq %r8,64(%rdi)
   movq %xmm0,(%rdi)
   movq %r9,72(%rdi)
@@ -1606,12 +1625,12 @@ start128:
   movzbl %al,%esi
   movl 3072(%rbp,%rsi,4),%r12d
   movzbl %ah,%esi
-  movl 2048(%ebp,%esi,4),%r13d
+  movl 2048(%rbp,%rsi,4),%r13d
   shrq $16, %rax
   movzbl %al,%edi
-  movl 1024(%ebp,%edi,4),%r15d
+  movl 1024(%rbp,%rdi,4),%r15d
   movzbl %ah,%esi
-  movl (%ebp,%esi,4),%r8d
+  movl (%rbp,%rsi,4),%r8d
 
   movzbl %bl,%esi
   xorl 3072(%rbp,%rsi,4),%r13d
@@ -1725,12 +1744,12 @@ start128:
   movzbl %al,%esi
   movl 3072(%rbp,%rsi,4),%r12d
   movzbl %ah,%esi
-  movl 2048(%ebp,%esi,4),%r13d
+  movl 2048(%rbp,%rsi,4),%r13d
   shrq $16, %rax
   movzbl %al,%edi
-  movl 1024(%ebp,%edi,4),%r15d
+  movl 1024(%rbp,%rdi,4),%r15d
   movzbl %ah,%esi
-  movl (%ebp,%esi,4),%r8d
+  movl (%rbp,%rsi,4),%r8d
 
   movzbl %bl,%esi
   xorl 3072(%rbp,%rsi,4),%r13d
@@ -1839,12 +1858,12 @@ start128:
   movzbl %al,%esi
   movl 3072(%rbp,%rsi,4),%r12d
   movzbl %ah,%esi
-  movl 2048(%ebp,%esi,4),%r13d
+  movl 2048(%rbp,%rsi,4),%r13d
   shrq $16, %rax
   movzbl %al,%edi
-  movl 1024(%ebp,%edi,4),%r15d
+  movl 1024(%rbp,%rdi,4),%r15d
   movzbl %ah,%esi
-  movl (%ebp,%esi,4),%r8d
+  movl (%rbp,%rsi,4),%r8d
 
   movzbl %bl,%esi
   xorl 3072(%rbp,%rsi,4),%r13d
@@ -1952,12 +1971,12 @@ start128:
   movzbl %al,%esi
   movl 3072(%rbp,%rsi,4),%r12d
   movzbl %ah,%esi
-  movl 2048(%ebp,%esi,4),%r13d
+  movl 2048(%rbp,%rsi,4),%r13d
   shrq $16, %rax
   movzbl %al,%edi
-  movl 1024(%ebp,%edi,4),%r15d
+  movl 1024(%rbp,%rdi,4),%r15d
   movzbl %ah,%esi
-  movl (%ebp,%esi,4),%r8d
+  movl (%rbp,%rsi,4),%r8d
 
   movzbl %bl,%esi
   xorl 3072(%rbp,%rsi,4),%r13d
@@ -2039,7 +2058,7 @@ start128:
 
 
   # Save the previous state with feedforward from the message expansion
-  movq $expnd,%rdi
+  movq EXPND,%rdi
   mov %r8,%rax
   mov %r9,%rbx
   mov %r10,%rcx
@@ -2066,12 +2085,12 @@ start128:
   movzbl %al,%esi
   movl 3072(%rbp,%rsi,4),%r12d
   movzbl %ah,%esi
-  movl 2048(%ebp,%esi,4),%r13d
+  movl 2048(%rbp,%rsi,4),%r13d
   shrq $16, %rax
   movzbl %al,%edi
-  movl 1024(%ebp,%edi,4),%r15d
+  movl 1024(%rbp,%rdi,4),%r15d
   movzbl %ah,%esi
-  movl (%ebp,%esi,4),%r8d
+  movl (%rbp,%rsi,4),%r8d
 
   movzbl %bl,%esi
   xorl 3072(%rbp,%rsi,4),%r13d
@@ -2152,7 +2171,7 @@ start128:
 ############################################################ 5-st ROUND #################################################
 
   # Save the previous state with feedforward from the message expansion
-  movq $expnd,%rdi
+  movq EXPND,%rdi
   mov %r8,%rax
   mov %r9,%rbx
   mov %r10,%rcx
@@ -2179,12 +2198,12 @@ start128:
   movzbl %al,%esi
   movl 3072(%rbp,%rsi,4),%r12d
   movzbl %ah,%esi
-  movl 2048(%ebp,%esi,4),%r13d
+  movl 2048(%rbp,%rsi,4),%r13d
   shrq $16, %rax
   movzbl %al,%edi
-  movl 1024(%ebp,%edi,4),%r15d
+  movl 1024(%rbp,%rdi,4),%r15d
   movzbl %ah,%esi
-  movl (%ebp,%esi,4),%r8d
+  movl (%rbp,%rsi,4),%r8d
 
   movzbl %bl,%esi
   xorl 3072(%rbp,%rsi,4),%r13d
@@ -2267,7 +2286,7 @@ start128:
 ############################################################ 6-st ROUND #################################################
 
   # Save the previous state with feedforward from the message expansion
-  movq $expnd,%rdi
+  movq EXPND,%rdi
   mov %r8,%rax
   mov %r9,%rbx
   mov %r10,%rcx
@@ -2295,12 +2314,12 @@ start128:
   movzbl %al,%esi
   movl 3072(%rbp,%rsi,4),%r12d
   movzbl %ah,%esi
-  movl 2048(%ebp,%esi,4),%r13d
+  movl 2048(%rbp,%rsi,4),%r13d
   shrq $16, %rax
   movzbl %al,%edi
-  movl 1024(%ebp,%edi,4),%r15d
+  movl 1024(%rbp,%rdi,4),%r15d
   movzbl %ah,%esi
-  movl (%ebp,%esi,4),%r8d
+  movl (%rbp,%rsi,4),%r8d
 
   movzbl %bl,%esi
   xorl 3072(%rbp,%rsi,4),%r13d
@@ -2381,7 +2400,7 @@ start128:
 ############################################################ 7-st ROUND #################################################
 
   # Save the previous state with feedforward from the message expansion
-  movq $expnd,%rdi
+  movq EXPND,%rdi
   mov %r8,%rax
   mov %r9,%rbx
   mov %r10,%rcx
@@ -2408,12 +2427,12 @@ start128:
   movzbl %al,%esi
   movl 3072(%rbp,%rsi,4),%r12d
   movzbl %ah,%esi
-  movl 2048(%ebp,%esi,4),%r13d
+  movl 2048(%rbp,%rsi,4),%r13d
   shrq $16, %rax
   movzbl %al,%edi
-  movl 1024(%ebp,%edi,4),%r15d
+  movl 1024(%rbp,%rdi,4),%r15d
   movzbl %ah,%esi
-  movl (%ebp,%esi,4),%r8d
+  movl (%rbp,%rsi,4),%r8d
 
   movzbl %bl,%esi
   xorl 3072(%rbp,%rsi,4),%r13d
@@ -2494,7 +2513,7 @@ start128:
 ############################################################ 8-st ROUND #################################################
 
   # Save the previous state with feedforward from the message expansion
-  movq $expnd,%rdi
+  movq EXPND,%rdi
   add $128,%rdi
   mov %r8,%rax
   mov %r9,%rbx
@@ -2522,12 +2541,12 @@ start128:
   movzbl %al,%esi
   movl 3072(%rbp,%rsi,4),%r12d
   movzbl %ah,%esi
-  movl 2048(%ebp,%esi,4),%r13d
+  movl 2048(%rbp,%rsi,4),%r13d
   shrq $16, %rax
   movzbl %al,%edi
-  movl 1024(%ebp,%edi,4),%r15d
+  movl 1024(%rbp,%rdi,4),%r15d
   movzbl %ah,%esi
-  movl (%ebp,%esi,4),%r8d
+  movl (%rbp,%rsi,4),%r8d
 
   movzbl %bl,%esi
   xorl 3072(%rbp,%rsi,4),%r13d
@@ -2611,7 +2630,7 @@ start128:
 ############################################################ 9-st ROUND #################################################
 
   # Save the previous state with feedforward from the message expansion
-  movq $expnd,%rdi
+  movq EXPND,%rdi
   add $128,%rdi
   mov %r8,%rax
   mov %r9,%rbx
@@ -2641,12 +2660,12 @@ start128:
   movzbl %al,%esi
   movl 3072(%rbp,%rsi,4),%r12d
   movzbl %ah,%esi
-  movl 2048(%ebp,%esi,4),%r13d
+  movl 2048(%rbp,%rsi,4),%r13d
   shrq $16, %rax
   movzbl %al,%edi
-  movl 1024(%ebp,%edi,4),%r15d
+  movl 1024(%rbp,%rdi,4),%r15d
   movzbl %ah,%esi
-  movl (%ebp,%esi,4),%r8d
+  movl (%rbp,%rsi,4),%r8d
 
   movzbl %bl,%esi
   xorl 3072(%rbp,%rsi,4),%r13d
@@ -2730,7 +2749,7 @@ start128:
 ############################################################ 10-st ROUND #################################################
 
   # Save the previous state with feedforward from the message expansion
-  movq $expnd,%rdi
+  movq EXPND,%rdi
   add $128,%rdi
   mov %r8,%rax
   mov %r9,%rbx
@@ -2759,12 +2778,12 @@ start128:
   movzbl %al,%esi
   movl 3072(%rbp,%rsi,4),%r12d
   movzbl %ah,%esi
-  movl 2048(%ebp,%esi,4),%r13d
+  movl 2048(%rbp,%rsi,4),%r13d
   shrq $16, %rax
   movzbl %al,%edi
-  movl 1024(%ebp,%edi,4),%r15d
+  movl 1024(%rbp,%rdi,4),%r15d
   movzbl %ah,%esi
-  movl (%ebp,%esi,4),%r8d
+  movl (%rbp,%rsi,4),%r8d
 
   movzbl %bl,%esi
   xorl 3072(%rbp,%rsi,4),%r13d
@@ -2849,7 +2868,7 @@ start128:
 
 
   # Save the previous state with feedforward from the message expansion
-  movq $expnd,%rdi
+  movq EXPND,%rdi
   add $128,%rdi
   mov %r8,%rax
   mov %r9,%rbx
@@ -2878,12 +2897,12 @@ start128:
   movzbl %al,%esi
   movl 3072(%rbp,%rsi,4),%r12d
   movzbl %ah,%esi
-  movl 2048(%ebp,%esi,4),%r13d
+  movl 2048(%rbp,%rsi,4),%r13d
   shrq $16, %rax
   movzbl %al,%edi
-  movl 1024(%ebp,%edi,4),%r15d
+  movl 1024(%rbp,%rdi,4),%r15d
   movzbl %ah,%esi
-  movl (%ebp,%esi,4),%r8d
+  movl (%rbp,%rsi,4),%r8d
 
   movzbl %bl,%esi
   xorl 3072(%rbp,%rsi,4),%r13d
@@ -2967,7 +2986,7 @@ start128:
 ############################################################ 12-st ROUND #################################################
 
   # Save the previous state with feedforward from the message expansion
-  movq $expnd,%rdi
+  movq EXPND,%rdi
   add $256,%rdi
   mov %r8,%rax
   mov %r9,%rbx
@@ -2996,12 +3015,12 @@ start128:
   movzbl %al,%esi
   movl 3072(%rbp,%rsi,4),%r12d
   movzbl %ah,%esi
-  movl 2048(%ebp,%esi,4),%r13d
+  movl 2048(%rbp,%rsi,4),%r13d
   shrq $16, %rax
   movzbl %al,%edi
-  movl 1024(%ebp,%edi,4),%r15d
+  movl 1024(%rbp,%rdi,4),%r15d
   movzbl %ah,%esi
-  movl (%ebp,%esi,4),%r8d
+  movl (%rbp,%rsi,4),%r8d
 
   movzbl %bl,%esi
   xorl 3072(%rbp,%rsi,4),%r13d
@@ -3086,7 +3105,7 @@ start128:
 
 
   # Save the previous state with feedforward from the message expansion
-  movq $expnd,%rdi
+  movq EXPND,%rdi
   add $256,%rdi
   mov %r8,%rax
   mov %r9,%rbx
@@ -3115,12 +3134,12 @@ start128:
   movzbl %al,%esi
   movl 3072(%rbp,%rsi,4),%r12d
   movzbl %ah,%esi
-  movl 2048(%ebp,%esi,4),%r13d
+  movl 2048(%rbp,%rsi,4),%r13d
   shrq $16, %rax
   movzbl %al,%edi
-  movl 1024(%ebp,%edi,4),%r15d
+  movl 1024(%rbp,%rdi,4),%r15d
   movzbl %ah,%esi
-  movl (%ebp,%esi,4),%r8d
+  movl (%rbp,%rsi,4),%r8d
 
   movzbl %bl,%esi
   xorl 3072(%rbp,%rsi,4),%r13d
@@ -3203,7 +3222,7 @@ start128:
 ############################################################ 14-st ROUND #################################################
 
   # Save the previous state with feedforward from the message expansion
-  movq $expnd,%rdi
+  movq EXPND,%rdi
   add $256,%rdi
   mov %r8,%rax
   mov %r9,%rbx
@@ -3232,12 +3251,12 @@ start128:
   movzbl %al,%esi
   movl 3072(%rbp,%rsi,4),%r12d
   movzbl %ah,%esi
-  movl 2048(%ebp,%esi,4),%r13d
+  movl 2048(%rbp,%rsi,4),%r13d
   shrq $16, %rax
   movzbl %al,%edi
-  movl 1024(%ebp,%edi,4),%r15d
+  movl 1024(%rbp,%rdi,4),%r15d
   movzbl %ah,%esi
-  movl (%ebp,%esi,4),%r8d
+  movl (%rbp,%rsi,4),%r8d
 
   movzbl %bl,%esi
   xorl 3072(%rbp,%rsi,4),%r13d
@@ -3321,7 +3340,7 @@ start128:
 
 
   # Save the previous state with feedforward from the message expansion
-  movq $expnd,%rdi
+  movq EXPND,%rdi
   add $256,%rdi
   mov %r8,%rax
   mov %r9,%rbx
@@ -3349,12 +3368,12 @@ start128:
   movzbl %al,%esi
   movl 3072(%rbp,%rsi,4),%r12d
   movzbl %ah,%esi
-  movl 2048(%ebp,%esi,4),%r13d
+  movl 2048(%rbp,%rsi,4),%r13d
   shrq $16, %rax
   movzbl %al,%edi
-  movl 1024(%ebp,%edi,4),%r15d
+  movl 1024(%rbp,%rdi,4),%r15d
   movzbl %ah,%esi
-  movl (%ebp,%esi,4),%r8d
+  movl (%rbp,%rsi,4),%r8d
 
   movzbl %bl,%esi
   xorl 3072(%rbp,%rsi,4),%r13d
@@ -3461,12 +3480,13 @@ start128:
 
 
 
+  addq $512,%rsp
+
   # Pop the old values for the registers
   pop %r15
   pop %r14
   pop %r13
   pop %r12
-  pop %rsp
   pop %rsi
   pop %rdi
   pop %rbp
@@ -3477,30 +3497,4 @@ start128:
   ret
 
 
-.section .data
-
-message:
-    .quad 0x0
-length:
-    .quad 0x0
-statel:
-    .quad 0x0
-tbl32:
-    .quad 0x0
-tbl64:
-    .quad 0x0
-expnd:
-    .fill 512
-blccntr:
-    .quad 0x0
-const1:
-    .quad 0xf26b6fc500000000
-const2:
-    .quad 0x3001672b00000000
-const3:
-    .quad 0xfed7ab7600000000
-const4:
-    .quad 0xca82c97d00000000
-const5:
-    .quad 0xfa5947f000000000
 .section	.note.GNU-stack,"",@progbits

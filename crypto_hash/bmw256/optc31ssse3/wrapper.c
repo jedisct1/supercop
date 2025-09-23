@@ -24,7 +24,7 @@
 #include <xmmintrin.h>
 #endif
 #define crypto_hash_BYTES 32
-extern Compress256(u_int32_t *data32, u_int32_t *data32_end, hashState *state);
+extern void Compress256(u_int32_t *data32, u_int32_t *data32_end, hashState *state);
 //extern void FinalCompress256(hashState *state);
 
 /* BlueMidnightWish256 initial double chaining pipe */
@@ -223,7 +223,7 @@ int crypto_hash(unsigned char *out,const unsigned char *in,unsigned long long in
 	
 	
 	data32   = (u_int32_t *)hashState256_(state).DoublePipe;
-	Compress256(data32, data32 +16, CONST32final-4); // TODO: This is a HACK...
+	Compress256(data32, data32 +16, (hashState *) (CONST32final-4)); // TODO: This is a HACK...
 	//FinalCompress256(&state);
 	
 	#ifdef __SSE__

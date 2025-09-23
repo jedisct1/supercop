@@ -2,6 +2,20 @@
 #	Assembler implementation of one round of Cheetah-512					
 #	Author: Ivica Nikolic, University of Luxembourg					
 ##########################################################################################
+// 20250920 djb: make reentrant (and pic)
+
+#define EXPND %rsp
+#define message -8(%rsp)
+#define length -16(%rsp)
+#define statel -24(%rsp)
+#define tbl32 -32(%rsp)
+#define tbl64 -40(%rsp)
+#define blccntr -48(%rsp)
+#define const1 -56(%rsp)
+#define const2 -64(%rsp)
+#define const3 -72(%rsp)
+#define const4 -80(%rsp)
+#define const5 -88(%rsp)
 
 .section .text
 .type Cheetah51264, @function
@@ -13,11 +27,22 @@ Cheetah51264:
   push %rbp
   push %rdi
   push %rsi
-  push %rsp
   push %r12
   push %r13
   push %r14
   push %r15
+
+  subq $1024,%rsp
+  movq $0xf26b6fc500000000,%r15
+  movq %r15,const1
+  movq $0x3001672b00000000,%r15
+  movq %r15,const2
+  movq $0xfed7ab7600000000,%r15
+  movq %r15,const3
+  movq $0xca82c97d00000000,%r15
+  movq %r15,const4
+  movq $0xfa5947f000000000,%r15
+  movq %r15,const5
 
   # Save the address of the 8x32 tables
   movq %rdi,tbl32
@@ -559,7 +584,7 @@ start128:
   pxor %xmm15,%xmm7
 
   # Save the values of the state
-  movq $expnd,%rdi
+  movq EXPND,%rdi
   movq %r8,64(%rdi)
   movq %xmm0,(%rdi)
   movq %r9,72(%rdi)
@@ -2962,7 +2987,7 @@ start128:
 ############################################################ 2-st ROUND #################################################
 
   # Save the previous state with feedforward from the message expansion
-  movq $expnd,%rdi
+  movq EXPND,%rdi
   mov %r8,%rax
   mov %r9,%rbx
   mov %r10,%rcx
@@ -3156,7 +3181,7 @@ start128:
 ############################################################ 3-st ROUND #################################################
 
   # Save the previous state with feedforward from the message expansion
-  movq $expnd,%rdi
+  movq EXPND,%rdi
   mov %r8,%rax
   mov %r9,%rbx
   mov %r10,%rcx
@@ -3351,7 +3376,7 @@ start128:
 
 
   # Save the previous state with feedforward from the message expansion
-  movq $expnd,%rdi
+  movq EXPND,%rdi
   add $128,%rdi
   mov %r8,%rax
   mov %r9,%rbx
@@ -3544,7 +3569,7 @@ start128:
 ############################################################ 5-st ROUND #################################################
 
   # Save the previous state with feedforward from the message expansion
-  movq $expnd,%rdi
+  movq EXPND,%rdi
   add $128,%rdi
   mov %r8,%rax
   mov %r9,%rbx
@@ -3741,7 +3766,7 @@ start128:
 ############################################################ 6-st ROUND #################################################
 
   # Save the previous state with feedforward from the message expansion
-  movq $expnd,%rdi
+  movq EXPND,%rdi
   add $256,%rdi
   mov %r8,%rax
   mov %r9,%rbx
@@ -3937,7 +3962,7 @@ start128:
 ############################################################ 7-st ROUND #################################################
 
   # Save the previous state with feedforward from the message expansion
-  movq $expnd,%rdi
+  movq EXPND,%rdi
   add $256,%rdi
   mov %r8,%rax
   mov %r9,%rbx
@@ -4131,7 +4156,7 @@ start128:
 ############################################################ 8-st ROUND #################################################
 
   # Save the previous state with feedforward from the message expansion
-  movq $expnd,%rdi
+  movq EXPND,%rdi
   add $384,%rdi
   mov %r8,%rax
   mov %r9,%rbx
@@ -4325,7 +4350,7 @@ start128:
 ############################################################ 9-st ROUND #################################################
 
   # Save the previous state with feedforward from the message expansion
-  movq $expnd,%rdi
+  movq EXPND,%rdi
   add $384,%rdi
   mov %r8,%rax
   mov %r9,%rbx
@@ -4520,7 +4545,7 @@ start128:
 ############################################################ 10-st ROUND #################################################
 
   # Save the previous state with feedforward from the message expansion
-  movq $expnd,%rdi
+  movq EXPND,%rdi
   add $512,%rdi
   mov %r8,%rax
   mov %r9,%rbx
@@ -4716,7 +4741,7 @@ start128:
 
 
   # Save the previous state with feedforward from the message expansion
-  movq $expnd,%rdi
+  movq EXPND,%rdi
   add $512,%rdi
   mov %r8,%rax
   mov %r9,%rbx
@@ -4940,12 +4965,13 @@ start128:
 
 
 
+  addq $1024,%rsp
+
   # Pop the old values for the registers
   pop %r15
   pop %r14
   pop %r13
   pop %r12
-  pop %rsp
   pop %rsi
   pop %rdi
   pop %rbp
@@ -4956,38 +4982,4 @@ start128:
   ret
 
 
-.section .data
-
-message:
-    .quad 0x0
-length:
-    .quad 0x0
-statel:
-    .quad 0x0
-tbl32:
-    .quad 0x0
-tbl64:
-    .quad 0x0
-expnd:
-    .fill 1024
-blccntr:
-    .quad 0x0
-const1:
-    .quad 0xf26b6fc500000000
-const2:
-    .quad 0x3001672b00000000
-const3:
-    .quad 0xfed7ab7600000000
-const4:
-    .quad 0xca82c97d00000000
-const5:
-    .quad 0xfa5947f000000000
-core4:
-    .quad 0x0
-core5:
-    .quad 0x0
-core6:
-    .quad 0x0
-core7:
-    .quad 0x
 .section	.note.GNU-stack,"",@progbits

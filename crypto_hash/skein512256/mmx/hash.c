@@ -1,6 +1,6 @@
 #include <stddef.h> /* size_t */
 #include <string.h> /* memcpy, memset */
-#include <mmintrin.h>
+#include <emmintrin.h>
 #include "crypto_uint8.h"
 typedef crypto_uint8 uint8;
 #include "crypto_uint32.h"

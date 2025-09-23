@@ -92,12 +92,12 @@ int SignScheme_genPubKey( byte * Ms , byte * Ms_c , byte * Mt , byte * Mt_c , by
 static byte _YHASH[L_MSG];
 static byte _YR[L_SIGN];
 static byte _YY[L_SIGN*2];
-int SignScheme_sign( byte * pri , byte * Y , int Ylen , byte * outX )
+int SignScheme_sign( const byte * pri , byte * Y , int Ylen , byte * outX )
 {
-	byte * Ms_1 = pri;
-	byte * Ms_c = pri + L_AFFMAT;
-	byte * Mt_1 = pri + L_AFFINE;
-	byte * Mt_c = pri + L_AFFINE + L_AFFMAT;
+	const byte * Ms_1 = pri;
+	const byte * Ms_c = pri + L_AFFMAT;
+	const byte * Mt_1 = pri + L_AFFINE;
+	const byte * Mt_c = pri + L_AFFINE + L_AFFMAT;
 	int i, is_continue;
 	
 	for( i=0;i<L_MSG;i++) _YHASH[i] = Y[i];
@@ -149,11 +149,11 @@ int SignScheme_PMap( byte * Ms , byte * Ms_c , byte * Mt , byte * Mt_c , byte * 
 }
 
 
-int SignScheme_GMap( byte * pub , byte * X , byte * outY )
+int SignScheme_GMap( const byte * pub , const byte * X , byte * outY )
 {
-	byte * P = pub;
-	byte * Q = P + L_pSIGN*L_MSG;
-	byte * R = Q + L_pSIGN*L_MSG;
+	const byte * P = pub;
+	const byte * Q = P + L_pSIGN*L_MSG;
+	const byte * R = Q + L_pSIGN*L_MSG;
 	int i, j, k;
 	memset( outY , 0 , sizeof(byte) * L_MSG );
 	for( i = 0 ; i < L_pSIGN ; i++ )

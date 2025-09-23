@@ -932,7 +932,7 @@ static void invntt128(int16 *f,int reps,const __m256i *qdata)
 
 static void ntt512(int16 *f,int reps,const __m256i *qdata)
 {
-  __m256i f0,f1,f2,f3,g0,g1,g2,g3,h0,h1,h2,h3;
+  __m256i f0,f1,f2,f3,g0,g1,g2,g3;
   int16 *origf = f;
   int rep;
   for (rep = 0;rep < reps;++rep) {
@@ -975,7 +975,7 @@ static void ntt512(int16 *f,int reps,const __m256i *qdata)
 
 static void ntt512_256(int16 *f,int reps,const __m256i *qdata)
 {
-  __m256i f0,f1,f2,f3,g0,g1,g2,g3,h0,h1,h2,h3;
+  __m256i f0,f1,f2,f3,g0,g1,g2,g3;
   int16 *origf = f;
   int rep;
   for (rep = 0;rep < reps;++rep) {

@@ -189,7 +189,7 @@ void lastBlockPermutation(hashState *state){
 }
 
 HashReturn Init(hashState *state, int hashbitlen){
-	int i,j;
+	int i;
 
 	state->hashbitlen=hashbitlen;
 
@@ -206,6 +206,10 @@ HashReturn Init(hashState *state, int hashbitlen){
 	return SUCCESS;
 }
 
+
+extern void Cheetah25664(const u32 *,const u64 *,u32 (*)[8],const BitSequence *,unsigned long long);
+extern void Cheetah51264(const u32 *,const u64 *,u64 (*)[8],const BitSequence *,unsigned long long);
+
 /* The hash function supports salt. Further, the zero value for the salt is taken.   */
 HashReturn Update(hashState *state, const BitSequence *data, DataLength databitlen){
 	unsigned long long doneLength=0,i;
@@ -217,7 +221,7 @@ HashReturn Update(hashState *state, const BitSequence *data, DataLength databitl
 	if(state->hashbitlen<=256){				
 		totLength=databitlen/8;
 		if(totLength>=128)			
-			Cheetah25664(&Te0,&T640,&state->core, data, totLength);
+			Cheetah25664(Te,T64,&state->core, data, totLength);
 		doneLength=totLength/128;
 		/*
 		while(doneLength+1<=databitlen/MBLEN){						
@@ -229,7 +233,7 @@ HashReturn Update(hashState *state, const BitSequence *data, DataLength databitl
 	else{
 		totLength=databitlen/8;
 		if(totLength>=128)
-			Cheetah51264(&Te0,&T640,&state->core64, data, totLength);
+			Cheetah51264(Te,T64,&state->core64, data, totLength);
 		doneLength=totLength/128;
 		/*
 		while(doneLength+1<=databitlen/MBLEN){									
@@ -252,7 +256,7 @@ HashReturn Update(hashState *state, const BitSequence *data, DataLength databitl
 
 
 HashReturn Final(hashState *state, BitSequence *hashval){
-	int i,j;	
+	int i;	
 
 	/* Padding with 1 and a number of 0s to fill the whole block.  */			
 

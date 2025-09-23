@@ -434,11 +434,6 @@ int md6_standard_compress( md6_word* C,
   /* pack components into N for compression */
   md6_pack(N,Q,K,ell,i,r,L,z,p,keylen,d,B);
 
-  /* call compression hook if it is defined. */
-  /* -- for testing and debugging.           */
-  if (compression_hook != NULL)
-    compression_hook(C,Q,K,ell,i,r,L,z,p,keylen,d,B);
-
   return md6_compress(C,N,r,A);
 }
 /* end of md6_compress.c */

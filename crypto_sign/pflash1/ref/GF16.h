@@ -82,7 +82,7 @@ byte GF_16_mul_1_to_2(byte x, byte y)
 }
 
 static inline 
-byte GF_16_getEle( int idx , byte * GF16Str )
+byte GF_16_getEle( int idx , const byte * GF16Str )
 {
 	return ((idx&0x1)? (((GF16Str[idx>>1])>>4)&0x0f) : ((GF16Str[idx>>1])&0x0f));       
 }

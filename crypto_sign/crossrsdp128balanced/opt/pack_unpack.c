@@ -2,7 +2,7 @@
  *
  * Reference ISO-C11 Implementation of CROSS.
  *
- * @version 2.0 (February 2025)
+ * @version 2.2 (July 2025)
  *
  * Authors listed in alphabetical order:
  * 
@@ -38,6 +38,9 @@
 #include "pack_unpack.h"
 
 /*Implementation of packing and unpacking of 3/7/9 bit elements into byte vectors*/
+
+/* SUPERCOP edit: generic_pack_3_bit is unused in RSDPG */
+#if Z == 7
 
 /*
  * generic_pack_3_bit()
@@ -102,6 +105,8 @@ void generic_pack_3_bit(uint8_t *out, const uint8_t *in,
     out[i*3+2]  = (in[i*8+5] >> 1) | (in[i*8+6] << 2);
   }
 }
+
+#endif
 
 /*
  * generic_pack_7_bit()
@@ -184,6 +189,9 @@ void generic_pack_7_bit(uint8_t *out, const uint8_t *in,
     out[i*7+6] |= (in[i*8+6] >> 6);
   }
 }
+
+/* SUPERCOP edit: generic_pack_9_bit is unused in RSDP */
+#if P == 509
 
 /*
  * generic_pack_9_bit()
@@ -276,6 +284,8 @@ void generic_pack_9_bit(uint8_t *out, const uint16_t *in,
   }
 }
 
+#endif
+
 /*
  * generic_pack_fp()
  *
@@ -326,6 +336,9 @@ void generic_pack_fz(uint8_t *out, const FZ_ELEM *in, const size_t outlen, const
 
 #endif
 }
+
+/* SUPERCOP edit: generic_unpack_3_bit is unused in RSDPG */
+#if Z == 7
 
 /*
  * generic_unpack_3_bit()
@@ -417,6 +430,8 @@ uint8_t generic_unpack_3_bit(uint8_t *out, const uint8_t *in,
   return is_packed_padd_ok;
 }
 
+#endif
+
 /*
  * generic_unpack_7_bit()
  *
@@ -507,6 +522,9 @@ uint8_t generic_unpack_7_bit(uint8_t *out, const uint8_t *in,
   return is_packed_padd_ok;
 }
 
+/* SUPERCOP edit: generic_unpack_9_bit is unused in RSDP */
+#if P == 509
+
 /*
  * generic_unpack_9_bit()
  *
@@ -596,6 +614,8 @@ uint8_t generic_unpack_9_bit(uint16_t *out, const uint8_t *in,
 
   return is_packed_padd_ok;
 }
+
+#endif
 
 /*
  * generic_unpack_fp()

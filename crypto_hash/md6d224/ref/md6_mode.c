@@ -420,7 +420,6 @@ int md6_full_init( md6_state *st,       /* uninitialized state to use */
   /* zero bits already there by memset; */
   /* we just need to set st->bits[1]    */
   if (L==0) st->bits[1] = c*w;     
-  compression_hook = NULL;     /* just to be sure default is "not set" */
   return MD6_SUCCESS;
 }
 

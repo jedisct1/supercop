@@ -83,9 +83,9 @@ uint64_t *ds = (uint64_t *)disco_buf;
 
     FORCE_INLINE void round( const uint64_t * m64, const uint8_t * m8, unsigned long long len )
     {
-      int index;
+      unsigned long long index;
       int sindex = 0;
-      int Len = len >> 3;
+      unsigned long long Len = len >> 3;
       uint64_t counter = 0xfaccadaccad09997;
       uint8_t counter8 = 137;
 

@@ -35,7 +35,7 @@ typedef uint8_t messageblock[64]; //2*SHA256_DIGEST_LENGTH = 64
 #include "sha256_avx1.h" 
 extern void sha256_avx(void *input_data, uint32_t digest[8], uint64_t num_blks);
                             
-union Hash {
+static union Hash {
     uint32_t digest[8];
     hashblock hash;
 } Hash;

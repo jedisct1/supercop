@@ -1,3 +1,4 @@
+// 20250922 djb: more use of cryptoint
 /*
 20140918
 Jan Mojzis
@@ -8,6 +9,8 @@ Public domain.
 #include "fe.h"
 #include "fep256.h"
 #include "gep256.h"
+
+#define equal crypto_uint32_equal_01
 
 /* b = 0x5ac635d8aa3a93e7b3ebbd55769886bc651d06b0cc53b0f63bce3c3e27d2604b  */
 static const fe paramb = {
@@ -59,19 +62,6 @@ static void select_precomp(gep256_precomp p, gep256_precomp q, crypto_uint32 b) 
 
 
 /*
-if (a == b) return 1;
-else return 0;
-*/
-static crypto_uint32 equal(crypto_uint32 a, crypto_uint32 b) {
-
-    crypto_uint32 x = a ^ b;
-    crypto_uint64 y = x;
-    y -= 1;
-    y >>= 63;
-    return y;
-}
-
-/*
 if (p == oo) return 1;
 else return 0
 */
@@ -80,7 +70,7 @@ static int isneutral(gep256 p) {
     long long i;
     crypto_uint32 x = 0;
 
-    for (i = 0; i < sizeof p; ++i) x |= ((unsigned char *)p)[i];
+    for (i = 0; i < sizeof(gep256); ++i) x |= ((unsigned char *)p)[i];
     return equal(x, 0);
 }
 
@@ -89,7 +79,7 @@ static int isneutral_precomp(gep256_precomp p) {
     long long i;
     crypto_uint32 x = 0;
 
-    for (i = 0; i < sizeof p; ++i) x |= ((unsigned char *)p)[i];
+    for (i = 0; i < sizeof(gep256_precomp); ++i) x |= ((unsigned char *)p)[i];
     return equal(x, 0);
 }
 
@@ -235,7 +225,8 @@ static int checkaffine(gep256 p) {
     fep256_sq(tmpy, p[1]);          /*  y ^ 2                   */
 
     fep256_sub(tmpx, tmpx, tmpy);   /*  y ^ 2  = x ^ 3 - 3x + b */
-    if (!fep256_isnonzero(tmpx)) ret = 0;
+
+    ret &= fep256_isnonzero(tmpx);
 
     cleanup(tmpx); cleanup(tmpy);
     return ret;
@@ -249,8 +240,7 @@ static int toaffine(gep256 p) {
 
     fe invz, tmp;
     long long i;
-
-    if (!fep256_isnonzero(p[2])) return -1;
+    int ret = fep256_isnonzero(p[2]);
 
     fep256_inv(invz, p[2]);
     fe_copy(tmp, invz);
@@ -264,17 +254,18 @@ static int toaffine(gep256 p) {
     fe_1(p[2]);
 
     cleanup(invz); cleanup(tmp);
-    return checkaffine(p);
+    ret &= checkaffine(p);
+    return ret;
 }
 
 
 int gep256_tobytes(unsigned char *out, gep256 in) {
 
-    if (toaffine(in) != 0) return -1;
+    int ret = toaffine(in);
 
     fep256_tobytes(out     , in[0]);
     fep256_tobytes(out + 32, in[1]);
-    return 0;
+    return ret;
 }
 
 int gep256_frombytes(gep256 out, const unsigned char *in) {
@@ -297,8 +288,8 @@ void gep256_scalarmult(gep256 o, gep256 q, const unsigned char *e) {
     unsigned char pos[64];
 
     for (i = 0; i < 32; ++i) {
-        pos[2 * i + 0] = (e[31 - i] >> 0) & 0x0f;
-        pos[2 * i + 1] = (e[31 - i] >> 4) & 0x0f;
+        pos[2 * i + 0] = (e[i] >> 0) & 0x0f;
+        pos[2 * i + 1] = (e[i] >> 4) & 0x0f;
     }
 
     neutral(p);
@@ -341,8 +332,8 @@ void gep256_scalarmult_base(gep256 p, const unsigned char *e) {
     neutral_precomp(t[0]);
 
     for (i = 0; i < 32; ++i) {
-        pos[2 * i + 0] = (e[31 - i] >> 0) & 0x0f;
-        pos[2 * i + 1] = (e[31 - i] >> 4) & 0x0f;
+        pos[2 * i + 0] = (e[i] >> 0) & 0x0f;
+        pos[2 * i + 1] = (e[i] >> 4) & 0x0f;
     }
 
     for (i = 1; i < 64; i += 2) {

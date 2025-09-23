@@ -20,7 +20,6 @@ extern int jump32xdivsteps(int delta, __m256i *f, __m256i *g, __m256i *buf, int 
 int jump64divsteps(int delta, __m256i *f, __m256i *g, __m256i *uvqr){
 
   __m256i buf[24], ff[4], gg[4];
-  __m256i mask, mask1, temp;
 
   delta = jump32divsteps(delta, f, g, buf);
 
@@ -58,8 +57,6 @@ int jump64xdivsteps(int delta, __m256i *f, __m256i *g, __m256i *uvqr, int t){
 
   __m256i buf[24], ff[4], gg[4];
   __m256i fx[8], gx[8];
-  __m256i mask,mask1,temp;
-  int i;
 
   memset(fx,0,sizeof(fx)); memset(gx,0,sizeof(gx));
 
@@ -130,7 +127,6 @@ extern int jump64xdivsteps(int delta, __m256i *f, __m256i *g, __m256i *buf, int 
 int jump128divsteps(int delta, __m256i *f, __m256i *g, __m256i *uvqr){
 
   __m256i buf[48], ff[8], gg[8];
-  __m256i mask, mask1, temp;
 
   delta = jump64divsteps(delta, f, g, buf);
 
@@ -176,8 +172,6 @@ int jump128xdivsteps(int delta, __m256i *f, __m256i *g, __m256i *uvqr, int t){
 
   __m256i buf[48], ff[8], gg[8];
   __m256i fx[16], gx[16];
-  __m256i mask,mask1,temp;
-  int i;
 
   memset(fx,0,sizeof(fx)); memset(gx,0,sizeof(gx));
 
@@ -268,7 +262,6 @@ extern int jump128xdivsteps(int delta, __m256i *f, __m256i *g, __m256i *buf, int
 int jump256divsteps(int delta, __m256i *f, __m256i *g, __m256i *uvqr){
 
   __m256i buf[96], ff[16], gg[16];
-  __m256i mask, mask1, temp;
 
   delta = jump128divsteps(delta, f, g, buf);
 
@@ -330,8 +323,6 @@ int jump256xdivsteps(int delta, __m256i *f, __m256i *g, __m256i *uvqr, int t){
 
   __m256i buf[96], ff[16], gg[16];
   __m256i fx[32], gx[32];
-  __m256i mask,mask1,temp;
-  int i;
 
   memset(fx,0,sizeof(fx)); memset(gx,0,sizeof(gx));
 

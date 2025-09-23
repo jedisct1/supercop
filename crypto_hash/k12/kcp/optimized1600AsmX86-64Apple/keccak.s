@@ -473,7 +473,7 @@
     .if     InlinePerm == 1
     mKeccakPermutation24
     .else
-    callq   _KeccakP1600_Permute_24rounds
+    callq   _KeccakP1600_Permute_24rounds@PLT
     .endif
     .endm
 
@@ -1099,13 +1099,13 @@ KeccakF1600_FastLoop_Absorb_VariableLaneCountLoop:
     shlq    $3, arg4
     movq    arg3, arg2                  // data pointer
     xorq    arg3, arg3                  // offset = 0
-    callq   _KeccakP1600_AddBytes   //  (void *state, const unsigned char *data, unsigned int offset, unsigned int length)
+    callq   _KeccakP1600_AddBytes@PLT   //  (void *state, const unsigned char *data, unsigned int offset, unsigned int length)
     movq    arg2, arg3                  // updated data pointer
     movq    24(%rsp), rT1a              // xor trailingBits
     xorq    rT1a, (arg1)
     popq    arg1
     pushq   arg3
-    callq   _KeccakP1600_Permute_24rounds
+    callq   _KeccakP1600_Permute_24rounds@PLT
     popq    arg3
     popq    arg2
     popq    arg4

@@ -96,21 +96,6 @@ extern "C" {
     uint8_t  last_node;
   } blake2b_state;
 
-  ALIGN( 64 ) typedef struct __blake2sp_state
-  {
-    blake2s_state S[8][1];
-    blake2s_state R[1];
-    uint8_t buf[8 * BLAKE2S_BLOCKBYTES];
-    size_t  buflen;
-  } blake2sp_state;
-
-  ALIGN( 64 ) typedef struct __blake2bp_state
-  {
-    blake2b_state S[4][1];
-    blake2b_state R[1];
-    uint8_t buf[4 * BLAKE2B_BLOCKBYTES];
-    size_t  buflen;
-  } blake2bp_state;
 #pragma pack(pop)
 
   // Streaming API
@@ -126,27 +111,9 @@ extern "C" {
   int blake2b_update( blake2b_state *S, const uint8_t *in, uint64_t inlen );
   int blake2b_final( blake2b_state *S, uint8_t *out, uint8_t outlen );
 
-  int blake2sp_init( blake2sp_state *S, const uint8_t outlen );
-  int blake2sp_init_key( blake2sp_state *S, const uint8_t outlen, const void *key, const uint8_t keylen );
-  int blake2sp_update( blake2sp_state *S, const uint8_t *in, uint64_t inlen );
-  int blake2sp_final( blake2sp_state *S, uint8_t *out, uint8_t outlen );
-
-  int blake2bp_init( blake2bp_state *S, const uint8_t outlen );
-  int blake2bp_init_key( blake2bp_state *S, const uint8_t outlen, const void *key, const uint8_t keylen );
-  int blake2bp_update( blake2bp_state *S, const uint8_t *in, uint64_t inlen );
-  int blake2bp_final( blake2bp_state *S, uint8_t *out, uint8_t outlen );
-
   // Simple API
   int blake2s( uint8_t *out, const void *in, const void *key, const uint8_t outlen, const uint64_t inlen, uint8_t keylen );
   int blake2b( uint8_t *out, const void *in, const void *key, const uint8_t outlen, const uint64_t inlen, uint8_t keylen );
-
-  int blake2sp( uint8_t *out, const void *in, const void *key, const uint8_t outlen, const uint64_t inlen, uint8_t keylen );
-  int blake2bp( uint8_t *out, const void *in, const void *key, const uint8_t outlen, const uint64_t inlen, uint8_t keylen );
-
-  static inline int blake2( uint8_t *out, const void *in, const void *key, const uint8_t outlen, const uint64_t inlen, uint8_t keylen )
-  {
-    return blake2b( out, in, key, outlen, inlen, keylen );
-  }
 
 #if defined(__cplusplus)
 }

@@ -8,7 +8,7 @@
 #define CSHAKE256_PAD 0x04 /* SHAKE would be 0x1F */
 
 static void keccakf(hash_ctx_t ctx) {
-    KeccakP1600_Permute_24rounds(ctx->state);
+    KeccakP1600_Permute_24rounds((void *) ctx->state);
     ctx->position = 0;
 }
 
@@ -20,12 +20,12 @@ void hash_update (
     assert(!ctx->squeezing);
     while (len >= (unsigned)(CSHAKE256_RATE - ctx->position)) {
         size_t cando = CSHAKE256_RATE - ctx->position;
-        KeccakP1600_AddBytes(ctx->state, in, ctx->position, cando);
+        KeccakP1600_AddBytes((void *) ctx->state, in, ctx->position, cando);
         keccakf(ctx);
         len -= cando;
         in  += cando;
     }
-    KeccakP1600_AddBytes(ctx->state, in, ctx->position, len);
+    KeccakP1600_AddBytes((void *) ctx->state, in, ctx->position, len);
     ctx->position += len;
 }
 
@@ -37,26 +37,26 @@ void hash_output (
     if (!ctx->squeezing) {
         if (ctx->position >= CSHAKE256_RATE) keccakf(ctx);
         ctx->squeezing = 1;
-        KeccakP1600_AddByte(ctx->state, CSHAKE256_PAD, ctx->position);
-        KeccakP1600_AddByte(ctx->state, 0x80, CSHAKE256_RATE-1);
+        KeccakP1600_AddByte((void *) ctx->state, CSHAKE256_PAD, ctx->position);
+        KeccakP1600_AddByte((void *) ctx->state, 0x80, CSHAKE256_RATE-1);
         keccakf(ctx);
     }
     
     while (len >= (unsigned)(CSHAKE256_RATE - ctx->position)) {
         size_t cando = CSHAKE256_RATE - ctx->position;
-        KeccakP1600_ExtractBytes(ctx->state, out, ctx->position, cando);
+        KeccakP1600_ExtractBytes((void *) ctx->state, out, ctx->position, cando);
         keccakf(ctx);
         len -= cando;
         out += cando;
     }
-    KeccakP1600_ExtractBytes(ctx->state, out, ctx->position, len);
+    KeccakP1600_ExtractBytes((void *) ctx->state, out, ctx->position, len);
     ctx->position += len;
 }
 
 static inline void hash_update_byte (hash_ctx_t ctx, uint8_t b) {
     assert(!ctx->squeezing);
     if (ctx->position >= CSHAKE256_RATE) keccakf(ctx);
-    KeccakP1600_AddByte(ctx->state, b, ctx->position);
+    KeccakP1600_AddByte((void *) ctx->state, b, ctx->position);
     ctx->position++;
 }
 
@@ -91,7 +91,7 @@ void threebears_cshake_init(hash_ctx_t ctx) {
         0xbf,0x2a,0x58,0x00,0x5c,0x7f,0xc1,0x1d,
         0xa1,0xb1,0xf3,0x75,0xa9,0xcc,0xa9,0x20
     };
-    KeccakP1600_OverwriteBytes(ctx->state, precomputed, 0, sizeof(precomputed));
+    KeccakP1600_OverwriteBytes((void *) ctx->state, precomputed, 0, sizeof(precomputed));
     ctx->position = ctx->squeezing = 0;
 }
 

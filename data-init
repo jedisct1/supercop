@@ -92,6 +92,12 @@ do
   : > "$top/$abi/cryptoint/dep"
   echo "$abi/cryptoint" >&6
 
+  mkdir -p "$top/$abi/s2n-bignum"
+  touch "$top/$abi/s2n-bignum/BUILD"
+  touch "$top/$abi/s2n-bignum/LOCK"
+  : > "$top/$abi/s2n-bignum/dep"
+  echo "$abi/s2n-bignum" >&6
+
   mkdir -p "$top/$abi/gmp"
   touch "$top/$abi/gmp/BUILD"
   touch "$top/$abi/gmp/LOCK"
@@ -294,6 +300,9 @@ do
             NTL*)
               echo gmp
               echo ntl
+              ;;
+            s2n-bignum|s2n-bignum-c89)
+              echo s2n-bignum
               ;;
             libkeccak.a.headers/*)
               echo keccak

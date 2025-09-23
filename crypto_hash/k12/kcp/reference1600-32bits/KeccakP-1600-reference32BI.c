@@ -1,3 +1,6 @@
+// 20240806 djb: some automated conversion to cryptoint
+#include "namespace.h"
+
 /*
 Implementation by the Keccak, Keyak and Ketje Teams, namely, Guido Bertoni,
 Joan Daemen, Michaël Peeters, Gilles Van Assche and Ronny Van Keer, hereby
@@ -17,6 +20,7 @@ http://creativecommons.org/publicdomain/zero/1.0/
 #include <stdio.h>
 #include <string.h>
 #include "brg_endian.h"
+#include "crypto_int64.h"
 #ifdef KeccakReference
 #include "displayIntermediateValues.h"
 #endif
@@ -38,10 +42,7 @@ static unsigned int KeccakRhoOffsets[nrLanes];
 
 /* ---------------------------------------------------------------- */
 
-void toBitInterleaving(UINT32 low, UINT32 high, UINT32 *even, UINT32 *odd);
-void fromBitInterleaving(UINT32 even, UINT32 odd, UINT32 *low, UINT32 *high);
-
-void toBitInterleaving(UINT32 low, UINT32 high, UINT32 *even, UINT32 *odd)
+static void toBitInterleaving(UINT32 low, UINT32 high, UINT32 *even, UINT32 *odd)
 {
     unsigned int i;
 
@@ -50,9 +51,9 @@ void toBitInterleaving(UINT32 low, UINT32 high, UINT32 *even, UINT32 *odd)
     for(i=0; i<64; i++) {
         unsigned int inBit;
         if (i < 32)
-            inBit = (low >> i) & 1;
+            inBit = crypto_int64_bitmod_01(low,i);
         else
-            inBit = (high >> (i-32)) & 1;
+            inBit = crypto_int64_bitmod_01(high,(i-32));
         if ((i % 2) == 0)
             *even |= inBit << (i/2);
         else
@@ -60,7 +61,7 @@ void toBitInterleaving(UINT32 low, UINT32 high, UINT32 *even, UINT32 *odd)
     }
 }
 
-void fromBitInterleaving(UINT32 even, UINT32 odd, UINT32 *low, UINT32 *high)
+static void fromBitInterleaving(UINT32 even, UINT32 odd, UINT32 *low, UINT32 *high)
 {
     unsigned int i;
 
@@ -69,9 +70,9 @@ void fromBitInterleaving(UINT32 even, UINT32 odd, UINT32 *low, UINT32 *high)
     for(i=0; i<64; i++) {
         unsigned int inBit;
         if ((i % 2) == 0)
-            inBit = (even >> (i/2)) & 1;
+            inBit = crypto_int64_bitmod_01(even,(i/2));
         else
-            inBit = (odd >> ((i-1)/2)) & 1;
+            inBit = crypto_int64_bitmod_01(odd,((i-1)/2));
         if (i < 32)
             *low |= inBit << i;
         else
@@ -145,30 +146,30 @@ static int LFSR86540(UINT8 *LFSR)
 
 static const UINT32 KeccakRoundConstants[maxNrRounds][2] =
 {
-    0x00000001, 0x00000000,
-    0x00000000, 0x00000089,
-    0x00000000, 0x8000008B,
-    0x00000000, 0x80008080,
-    0x00000001, 0x0000008B,
-    0x00000001, 0x00008000,
-    0x00000001, 0x80008088,
-    0x00000001, 0x80000082,
-    0x00000000, 0x0000000B,
-    0x00000000, 0x0000000A,
-    0x00000001, 0x00008082,
-    0x00000000, 0x00008003,
-    0x00000001, 0x0000808B,
-    0x00000001, 0x8000000B,
-    0x00000001, 0x8000008A,
-    0x00000001, 0x80000081,
-    0x00000000, 0x80000081,
-    0x00000000, 0x80000008,
-    0x00000000, 0x00000083,
-    0x00000000, 0x80008003,
-    0x00000001, 0x80008088,
-    0x00000000, 0x80000088,
-    0x00000001, 0x00008000,
-    0x00000000, 0x80008082
+    { 0x00000001, 0x00000000 },
+    { 0x00000000, 0x00000089 },
+    { 0x00000000, 0x8000008B },
+    { 0x00000000, 0x80008080 },
+    { 0x00000001, 0x0000008B },
+    { 0x00000001, 0x00008000 },
+    { 0x00000001, 0x80008088 },
+    { 0x00000001, 0x80000082 },
+    { 0x00000000, 0x0000000B },
+    { 0x00000000, 0x0000000A },
+    { 0x00000001, 0x00008082 },
+    { 0x00000000, 0x00008003 },
+    { 0x00000001, 0x0000808B },
+    { 0x00000001, 0x8000000B },
+    { 0x00000001, 0x8000008A },
+    { 0x00000001, 0x80000081 },
+    { 0x00000000, 0x80000081 },
+    { 0x00000000, 0x80000008 },
+    { 0x00000000, 0x00000083 },
+    { 0x00000000, 0x80008003 },
+    { 0x00000001, 0x80008088 },
+    { 0x00000000, 0x80000088 },
+    { 0x00000001, 0x00008000 },
+    { 0x00000000, 0x80008082 },
 };
 
 static const unsigned int KeccakRhoOffsets[nrLanes] =
@@ -430,7 +431,7 @@ void KeccakP1600_PermutationOnWords(UINT32 *state, unsigned int nrRounds)
 #define index(x, y,z) ((((x)%5)+5*((y)%5))*2 + z)
 #define ROL32(a, offset) ((offset != 0) ? ((((UINT32)a) << offset) ^ (((UINT32)a) >> (32-offset))) : a)
 
-void ROL64(UINT32 inEven, UINT32 inOdd, UINT32 *outEven, UINT32 *outOdd, unsigned int offset)
+static void ROL64(UINT32 inEven, UINT32 inOdd, UINT32 *outEven, UINT32 *outOdd, unsigned int offset)
 {
     if ((offset % 2) == 0) {
         *outEven = ROL32(inEven, offset/2);

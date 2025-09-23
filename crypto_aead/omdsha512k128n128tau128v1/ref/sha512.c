@@ -137,7 +137,7 @@ static const uint64_t K512[80] = {
  */
 void sha512_comp (hashblock res, const hashblock hash, const messageblock in)
 	{
-	const uint64_t *W=in;
+	const uint64_t *W=(void *)in;
 	uint64_t	A,E,T;
 	uint64_t	X[9+80],*F;
 	uint64_t H[8];
@@ -203,7 +203,7 @@ void sha512_comp (hashblock res, const hashblock hash, const messageblock in)
  */
 void sha512_comp (hashblock res, const hashblock hash, const messageblock in)
 	{
-	const uint64_t *W=in;
+	const uint64_t *W=(void *)in;
 	uint64_t	a,b,c,d,e,f,g,h,s0,s1,T1,T2;
 	uint64_t	X[16];
 	uint64_t  H[8];

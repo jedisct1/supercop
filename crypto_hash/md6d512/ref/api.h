@@ -1,1 +1,1 @@
-#define CRYPTO_BYTES 64
+../../md6d224/ref/api.h

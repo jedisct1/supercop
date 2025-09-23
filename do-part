@@ -233,6 +233,39 @@ done
 okabi \
 | while read abi
 do
+  [ x"$focus" = x"all" -o x"$focus" = x"used" -o x"$focus" = x"s2n-bignum" ] || continue
+  echo "=== `date` === building s2n-bignum for $abi"
+  mkdir -p "$lib/$abi"
+  mkdir -p "$include/$abi"
+
+  rm -rf "$work"
+  mkdir -p "$work"
+  cp -pR s2n-bignum/* "$work"
+
+  case "$abi" in
+    amd64)
+      ( cd "$work/x86" \
+        && make \
+        && cp libs2nbignum.a "$lib/$abi/libs2nbignum.a" \
+        && chmod 644 "$lib/$abi/libs2nbignum.a"
+      )
+      ;;
+    aarch64)
+      ( cd "$work/arm" \
+        && make \
+        && cp libs2nbignum.a "$lib/$abi/libs2nbignum.a" \
+        && chmod 644 "$lib/$abi/libs2nbignum.a"
+      )
+      ;;
+    *)
+      echo "=== `date` === skipping: s2n-bignum does not support $abi"
+      ;;
+  esac
+done
+
+okabi \
+| while read abi
+do
   [ x"$focus" = x"all" -o x"$focus" = x"used" -o x"$focus" = x"keccak" ] || continue
   echo "=== `date` === building keccak for $abi"
   mkdir -p "$lib/$abi"
@@ -337,6 +370,7 @@ do
       [ -f "$lib/$abi/libgmpxx.a" ] && libs="$lib/$abi/libgmpxx.a $libs"
       [ -f "$lib/$abi/libntl.a" ] && libs="$lib/$abi/libntl.a $libs"
       [ -f "$lib/$abi/libkeccak.a" ] && libs="$lib/$abi/libkeccak.a $libs"
+      [ -f "$lib/$abi/libs2nbignum.a" ] && libs="$lib/$abi/libs2nbignum.a $libs"
       [ -f "$lib/$abi/libcryptopp.a" ] && libs="$lib/$abi/libcryptopp.a $libs"
       [ -f "$lib/$abi/lib${project}.a" ] && libs="$lib/$abi/lib${project}.a $libs"
 
@@ -346,6 +380,7 @@ do
       [ -f "$lib/$abi/libgmp.a" ] && timecoplibs="$lib/$abi/libgmp.a $timecoplibs"
       [ -f "$lib/$abi/libgmpxx.a" ] && timecoplibs="$lib/$abi/libgmpxx.a $timecoplibs"
       [ -f "$lib/$abi/libntl.a" ] && timecoplibs="$lib/$abi/libntl.a $timecoplibs"
+      [ -f "$lib/$abi/libs2nbignum.a" ] && timecoplibs="$lib/$abi/libs2nbignum.a $timecoplibs"
       [ -f "$lib/$abi/libkeccak.a" ] && timecoplibs="$lib/$abi/libkeccak.a $timecoplibs"
       [ -f "$lib/$abi/libcryptopp.a" ] && timecoplibs="$lib/$abi/libcryptopp.a $timecoplibs"
       [ -f "$lib/$abi/lib${project}.a" ] && timecoplibs="$lib/$abi/lib${project}.a $timecoplibs"
@@ -356,6 +391,7 @@ do
       [ -f "$lib/$abi/libgmp.a" ] && rslibs="gmp $rslibs"
       [ -f "$lib/$abi/libgmpxx.a" ] && rslibs="gmpxx $rslibs"
       [ -f "$lib/$abi/libntl.a" ] && rslibs="ntl $rslibs"
+      [ -f "$lib/$abi/libs2nbignum.a" ] && rslibs="s2nbignum $rslibs"
       [ -f "$lib/$abi/libkeccak.a" ] && rslibs="keccak $rslibs"
       [ -f "$lib/$abi/libcryptopp.a" ] && rslibs="cryptopp $rslibs"
       [ -f "$lib/$abi/lib${project}.a" ] && rslibs="${project} $rslibs"
@@ -620,13 +656,13 @@ do
                     -D'CRYPTO_ALIGN(n)=__attribute__((aligned(n)))' \
                     $includes \
                     -c "$f" >../errors 2>&1 || ok=0
-                  ( if [ `wc -l < ../errors` -lt 25 ]
+                  ( if [ `wc -l < ../errors` -lt 100 ]
                     then
                       cat ../errors
                     else
-                      head ../errors
+                      head -n45 ../errors
                       echo ...
-                      tail ../errors
+                      tail -n45 ../errors
                     fi
                   ) \
                   | while read err
@@ -906,6 +942,7 @@ do
       [ -f "$lib/$abi/libgmp.a" ] && libs="$lib/$abi/libgmp.a $libs"
       [ -f "$lib/$abi/libgmpxx.a" ] && libs="$lib/$abi/libgmpxx.a $libs"
       [ -f "$lib/$abi/libntl.a" ] && libs="$lib/$abi/libntl.a $libs"
+      [ -f "$lib/$abi/libs2nbignum.a" ] && libs="$lib/$abi/libs2nbignum.a $libs"
       [ -f "$lib/$abi/libkeccak.a" ] && libs="$lib/$abi/libkeccak.a $libs"
       [ -f "$lib/$abi/libcryptopp.a" ] && libs="$lib/$abi/libcryptopp.a $libs"
       [ -f "$lib/$abi/lib${project}.a" ] && libs="$lib/$abi/lib${project}.a $libs"

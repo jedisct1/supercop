@@ -43,7 +43,7 @@
 #define CSHAKE256_PAD 0x04 /* SHAKE would be 0x1F */
 
 static void keccakf(hash_ctx_t ctx) {
-    KeccakP1600_Permute_24rounds(ctx->state);
+    KeccakP1600_Permute_24rounds((void *) ctx->state);
     ctx->position = 0;
 }
 
@@ -55,12 +55,12 @@ void hash_update (
     assert(!ctx->squeezing);
     while (len >= (unsigned)(CSHAKE256_RATE - ctx->position)) {
         size_t cando = CSHAKE256_RATE - ctx->position;
-        KeccakP1600_AddBytes(ctx->state, in, ctx->position, cando);
+        KeccakP1600_AddBytes((void *) ctx->state, in, ctx->position, cando);
         keccakf(ctx);
         len -= cando;
         in  += cando;
     }
-    KeccakP1600_AddBytes(ctx->state, in, ctx->position, len);
+    KeccakP1600_AddBytes((void *) ctx->state, in, ctx->position, len);
     ctx->position += len;
 }
 
@@ -72,19 +72,19 @@ void hash_output (
     if (!ctx->squeezing) {
         if (ctx->position >= CSHAKE256_RATE) keccakf(ctx);
         ctx->squeezing = 1;
-        KeccakP1600_AddByte(ctx->state, CSHAKE256_PAD, ctx->position);
-        KeccakP1600_AddByte(ctx->state, 0x80, CSHAKE256_RATE-1);
+        KeccakP1600_AddByte((void *) ctx->state, CSHAKE256_PAD, ctx->position);
+        KeccakP1600_AddByte((void *) ctx->state, 0x80, CSHAKE256_RATE-1);
         keccakf(ctx);
     }
     
     while (len >= (unsigned)(CSHAKE256_RATE - ctx->position)) {
         size_t cando = CSHAKE256_RATE - ctx->position;
-        KeccakP1600_ExtractBytes(ctx->state, out, ctx->position, cando);
+        KeccakP1600_ExtractBytes((void *) ctx->state, out, ctx->position, cando);
         keccakf(ctx);
         len -= cando;
         out += cando;
     }
-    KeccakP1600_ExtractBytes(ctx->state, out, ctx->position, len);
+    KeccakP1600_ExtractBytes((void *) ctx->state, out, ctx->position, len);
     ctx->position += len;
 }
 
@@ -92,7 +92,7 @@ void hash_output (
 static inline void hash_update_byte (hash_ctx_t ctx, uint8_t b) {
     assert(!ctx->squeezing);
     if (ctx->position >= CSHAKE256_RATE) keccakf(ctx);
-    KeccakP1600_AddByte(ctx->state, b, ctx->position);
+    KeccakP1600_AddByte((void *) ctx->state, b, ctx->position);
     ctx->position++;
 }
 #endif
@@ -128,7 +128,7 @@ void threebears_cshake_init(hash_ctx_t ctx) {
         0xbf,0x2a,0x58,0x00,0x5c,0x7f,0xc1,0x1d,
         0xa1,0xb1,0xf3,0x75,0xa9,0xcc,0xa9,0x20
     };
-    KeccakP1600_OverwriteBytes(ctx->state, precomputed, 0, sizeof(precomputed));
+    KeccakP1600_OverwriteBytes((void *) ctx->state, precomputed, 0, sizeof(precomputed));
     ctx->position = ctx->squeezing = 0;
 }
 
@@ -145,36 +145,36 @@ void hash_times_n(
     kv_init();
     unsigned ctx_position = ctx0->position;
     uint8_t state_transfer[HASH_STATE_BYTES] __attribute__((aligned(8)));
-    KeccakP1600_ExtractBytes(ctx0->state, state_transfer, 0, HASH_STATE_BYTES);
+    KeccakP1600_ExtractBytes((void *) ctx0->state, state_transfer, 0, HASH_STATE_BYTES);
     uint8_t ctxv[kv_state_size] __attribute__((aligned(kv_state_alignment)));
     
     unsigned i,j;
     for (j=0; j<n; j+=VECLEN) {
-        kv_broadcast(ctxv, state_transfer, 25, 0);
+        kv_broadcast((void *) ctxv, state_transfer, 25, 0);
         for (i=0; i<VECLEN; i++) {
-            kv_add_byte(ctxv, i, j+i+iv, ctx_position);
+            kv_add_byte((void *) ctxv, i, j+i+iv, ctx_position);
         }
         
         /* Do the input padding */
         unsigned position=ctx_position+1;
         if (ctx_position >= CSHAKE256_RATE) {
-            kv(ctxv);
+            kv((void *) ctxv);
             position=0;
         }
         for (unsigned i=0; i<VECLEN; i++) {
-            kv_add_byte(ctxv, i, CSHAKE256_PAD, position);
-            kv_add_byte(ctxv, i, 0x80, CSHAKE256_RATE-1);
+            kv_add_byte((void *) ctxv, i, CSHAKE256_PAD, position);
+            kv_add_byte((void *) ctxv, i, 0x80, CSHAKE256_RATE-1);
         }
     
         /* Extract */
         for (unsigned done=0; done<outlen; done+=CSHAKE256_RATE) {
-            kv(ctxv);
+            kv((void *) ctxv);
             unsigned cando = CSHAKE256_RATE;
 	    if (cando > outlen-done) cando = outlen-done;
             if (stride%8==0 && cando%8==0 && n-j>=VECLEN) {
-                kv_extract_lanes(ctxv, output+stride*j+done, cando/8, stride/8);
+                kv_extract_lanes((void *) ctxv, output+stride*j+done, cando/8, stride/8);
             } else for (unsigned i=j; i<n; i++) {
-                kv_extract_bytes(ctxv, i-j, output+done+stride*i, 0, cando);
+                kv_extract_bytes((void *) ctxv, i-j, output+done+stride*i, 0, cando);
             }
         }
     }

@@ -66,8 +66,8 @@ static inline int blake512_compress( state * state, const u8 * datablock )
   const __m128i u8to64 = _mm_set_epi8(8, 9, 10, 11, 12, 13, 14, 15, 0, 1, 2, 3, 4, 5, 6, 7);
 
   __m128i m0, m1, m2, m3, m4, m5, m6, m7;
-  __m128i t0, t1, t2, t3, t4, t5, t6, t7;
-  __m128i b0, b1, b2, b3;
+  __m128i t0, t1, t2, t3;
+  __m128i b0, b1;
 
   m0 = _mm_loadu_si128((__m128i*)(datablock +   0));
   m1 = _mm_loadu_si128((__m128i*)(datablock +  16));

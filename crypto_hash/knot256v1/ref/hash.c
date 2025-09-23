@@ -75,7 +75,6 @@ int crypto_hash(unsigned char *out, const unsigned char *in,
 	u32 size = b / 8; //32    256=4*64=4*u64
 	u32 rate1 = r1 / 8; //4
 	u32 rate2 = r2 / 8; //128/8=16
-	u32 capacity = size - rate1; //28  224/8=28
 	u64 v = inlen / rate1 + 1;
 	u32 u = CRYPTO_BYTES / rate2; //32/16=2
 

@@ -446,7 +446,7 @@ static void transpose32(__m256i x[32])
 static void mult768_mix2_m256i(__m256i h[96],const __m256i f[48],const __m256i g[24])
 {
   __m256i hkara[24][16];
-  __m256i gkara[3][32];
+  __m256i gkara[4][32]; // XXX: really using [3][32]
 #define fkara hkara
   int i;
 
@@ -565,8 +565,8 @@ static void mult768_mix2_m256i(__m256i h[96],const __m256i f[48],const __m256i g
   for (i = 3;i-- > 0;)
     transpose32(gkara[i]);
 
-  mult96x16(hkara[12],fkara[6],(__m256i *) (1 + (__m128i *) gkara));
-  mult96x16(hkara[0],fkara[0],gkara[0]);
+  mult96x16((__m256i *) (hkara+12),(__m256i *) (fkara+6),(__m256i *) (1 + (__m128i *) gkara));
+  mult96x16((__m256i *) (hkara+0),(__m256i *) (fkara+0),(__m256i *) (gkara+0));
 
   for (i = 24;i-- > 0;)
     transpose16(hkara[i]);

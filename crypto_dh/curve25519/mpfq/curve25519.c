@@ -40,11 +40,6 @@ static void ECclear(mpfq_p_25519_field k, dst_ECpoint P) {
   mpfq_p_25519_clear(k, &(P->z));
 }
 
-static void ECcopy(mpfq_p_25519_field k, dst_ECpoint Q, src_ECpoint P) {
-  mpfq_p_25519_copy(k, Q->x, P->x);
-  mpfq_p_25519_copy(k, Q->z, P->z);
-}
-
 // NB: AA is (A+2)/4 mod p, where A = 486662
 static void ECdouble(mpfq_p_25519_field k, dst_ECpoint Q, src_ECpoint P, mpfq_p_25519_src_elt AA) {
   mpfq_p_25519_elt tmp1, tmp2, tmp3, tmp4;

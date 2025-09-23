@@ -71,7 +71,7 @@ int SignScheme_genPubKey( byte * Ms , byte * Ms_c , byte * Mt , byte * Mt_c , by
  *
  * \return ret		always return 0.
  */
-int SignScheme_sign( byte * pri , byte * Y , int Ylen , byte * outX );
+int SignScheme_sign( const byte * pri , byte * Y , int Ylen , byte * outX );
 
 
 
@@ -84,7 +84,7 @@ int SignScheme_sign( byte * pri , byte * Y , int Ylen , byte * outX );
  *
  * \return ret		always return 0.
  */
-int SignScheme_GMap( byte * pub , byte * X , byte * outY );
+int SignScheme_GMap( const byte * pub , const byte * X , byte * outY );
 
 /**
  * \brief		Calculate signature outZ using secret parameters.
