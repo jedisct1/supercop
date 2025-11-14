@@ -48,6 +48,18 @@ static double osfreq(void)
   f = fopen("/proc/cpuinfo","r");
   if (f) {
     for (;;) {
+      s = fscanf(f,"CPU MHz : %lf",&result);
+      if (s > 0) break;
+      if (s == 0) s = fscanf(f,"%*[^\n]\n");
+      if (s < 0) { result = 0; break; }
+    }
+    fclose(f);
+    if (result) return 1000000.0 * result;
+  }
+
+  f = fopen("/proc/cpuinfo","r");
+  if (f) {
+    for (;;) {
       s = fscanf(f,"clock : %lf",&result);
       if (s > 0) break;
       if (s == 0) s = fscanf(f,"%*[^\n]\n");

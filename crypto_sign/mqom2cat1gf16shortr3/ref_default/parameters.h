@@ -1,0 +1,19 @@
+#ifndef __PARAMETERS_H__
+#define __PARAMETERS_H__
+
+#define MQOM2_PARAM_SECURITY 128
+#define MQOM2_PARAM_BASE_FIELD 4
+#define MQOM2_PARAM_TRADEOFF 1
+#define MQOM2_PARAM_NBROUNDS 3
+
+#define FIELDS_REF
+
+#define NO_MISALIGNED_ACCESSES
+#define USE_PRG_CACHE
+#define USE_PIOP_CACHE
+#define USE_XOF_X4
+#define USE_ENC_X8
+
+#define MQOM2_FOR_SUPERCOP
+
+#endif /* __PARAMETERS_H__ */

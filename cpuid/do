@@ -22,7 +22,7 @@ mkdir include
 	    $DEVICE ./cpuid > cpuid.out || continue
 	    echo 'static const char cpuid[] = {' > cpuid.h || continue
 	    od -t x1 -A n < cpuid.out | sed 's/ \(..\)/0x\1,/g' >> cpuid.h || continue
-	    echo '} ;' >> cpuid.h || continue
+	    echo '0} ;' >> cpuid.h || continue
 	    cp cpuid.h include/supercopcpuid.h || continue
 	    cat cpuid.out
 	    exit 0

@@ -40,6 +40,9 @@ okabi | (
           echo sparc32cpuinfo
           echo leoncpuinfo
           ;;
+        loong*)
+          echo loong64
+          ;;
         mips*)
           echo mips
           ;;
@@ -95,6 +98,7 @@ okabi | (
       echo sparccpuinfo
       echo sparc32cpuinfo
       echo leoncpuinfo
+      echo loong64
       echo mips
       echo hppapstat
       echo alpha
