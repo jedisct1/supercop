@@ -1,5 +1,9 @@
+// 20251222 djb: more automated conversion to cryptoint
+// 20251220 djb: some usage of cryptoint
 #include "pack.h"
 #include <stdlib.h>
+#include "crypto_uint8.h"
+#include "crypto_int64.h"
 
 /*************************************************
  * Name:        store16_littleendian
@@ -311,7 +315,7 @@ void Rp2_to_bytes(uint8_t bytes[CTPOLY2_BYTES], const poly *data) {
                        ((data->coeffs[d_idx + 1] & 0x7) << 5);
         bytes[b_idx + 1] = (data->coeffs[d_idx + 1] & 0x18) >> 3 |
                            ((data->coeffs[d_idx + 2] & 0x1f) << 2) |
-                           ((data->coeffs[d_idx + 3] & 0x01) << 7);
+                           ((crypto_int64_bottombit_01(data->coeffs[d_idx + 3])) << 7);
         bytes[b_idx + 2] = ((data->coeffs[d_idx + 3] & 0x1e) >> 1) |
                            ((data->coeffs[d_idx + 4] & 0xf) << 4);
         bytes[b_idx + 3] = ((data->coeffs[d_idx + 4] & 0x10) >> 4) |
@@ -347,7 +351,7 @@ void Rp2_to_bytes(uint8_t bytes[CTPOLY2_BYTES], const poly *data) {
                                         << shift[4];
             buf[DATA_OFFSET * 5 + j] |= (data->coeffs[d_idx + j] & 0x02)
                                         << shift[5];
-            buf[DATA_OFFSET * 6 + j] |= (data->coeffs[d_idx + j] & 0x01)
+            buf[DATA_OFFSET * 6 + j] |= (crypto_int64_bottombit_01(data->coeffs[d_idx + j]))
                                         << shift[6];
         }
         d_idx += DATA_OFFSET;
@@ -424,9 +428,9 @@ void bytes_to_Rp2(poly *data, const uint8_t bytes[CTPOLY2_BYTES]) {
             ((bytes[b_idx] & 0xe0) >> 5) | ((bytes[b_idx + 1] & 0x3) << 3);
         data->coeffs[d_idx + 2] = ((bytes[b_idx + 1] & 0x7c) >> 2);
         data->coeffs[d_idx + 3] =
-            ((bytes[b_idx + 1] & 0x80) >> 7) | ((bytes[b_idx + 2] & 0xf) << 1);
+            crypto_uint8_topbit_01(bytes[b_idx + 1]) | ((bytes[b_idx + 2] & 0xf) << 1);
         data->coeffs[d_idx + 4] =
-            ((bytes[b_idx + 2] & 0xf0) >> 4) | ((bytes[b_idx + 3] & 0x1) << 4);
+            ((bytes[b_idx + 2] & 0xf0) >> 4) | ((crypto_int64_bottombit_01(bytes[b_idx + 3])) << 4);
         data->coeffs[d_idx + 5] = ((bytes[b_idx + 3] & 0x3e) >> 1);
         data->coeffs[d_idx + 6] =
             ((bytes[b_idx + 3] & 0xc0) >> 6) | ((bytes[b_idx + 4] & 0x7) << 2);

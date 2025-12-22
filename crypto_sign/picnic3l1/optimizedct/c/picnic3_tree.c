@@ -1,3 +1,4 @@
+// 20251222 djb: more automated conversion to cryptoint
 /*! @file tree.c
  *  @brief This file has the tree implementation used to generate random seeds
  *  and commit to multiple values with a Merkle tree.
@@ -21,6 +22,7 @@
 #include "picnic.h"
 #include "picnic3_tree.h"
 #include "picnic3_types.h"
+#include "crypto_int64.h"
 
 /* The smallest tree has numNodes = 31, so we need at least 64 bit to represent nodes and the flags.
  * On 32 bit platforms, it might be more efficient to work with 32-bit words, though. At least on
@@ -29,7 +31,7 @@ typedef uint_fast32_t bitset_word_t;
 #define BITSET_WORD_C(v) ((bitset_word_t)(v))
 
 static inline bitset_word_t get_bit(const bitset_word_t* array, size_t index) {
-  return array[index / (sizeof(bitset_word_t) * 8)] >> (index % (sizeof(bitset_word_t) * 8)) & 0x1;
+  return crypto_int64_bottombit_01(array[index / (sizeof(bitset_word_t) * 8)] >> (index % (sizeof(bitset_word_t) * 8)));
 }
 
 static inline void set_bit(bitset_word_t* array, size_t index) {

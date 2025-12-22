@@ -1,3 +1,4 @@
+// 20251220 djb: some usage of cryptoint
 #include <stdint.h>
 
 #include "decompose.h"
@@ -680,7 +681,7 @@ int64_t polyvecmk_sqsing_value(const polyvecm *s1, const polyveck *s2) {
     }
     // multiply all but the minimum by N mod TAU
     for (size_t i = 0; i < N / TAU + 1; i++) {
-        int32_t fac = ((min - bestm[i]) >> 31); // all-ones if bestm[i] != min
+        int32_t fac = crypto_int32_negative_mask(min - bestm[i]); // all-ones if bestm[i] != min
         fac =
             (fac & (TAU)) ^
             ((~fac) & (N % TAU)); // fac = N%TAU for all != min and TAU for min

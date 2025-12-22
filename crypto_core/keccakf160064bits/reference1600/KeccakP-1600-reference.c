@@ -1,3 +1,4 @@
+// 20251222 djb: more automated conversion to cryptoint
 #include "namespace.h"
 
 /*
@@ -20,6 +21,7 @@ http://creativecommons.org/publicdomain/zero/1.0/
 #include <stdlib.h>
 #include <string.h>
 #include "brg_endian.h"
+#include "crypto_int64.h"
 #ifdef KeccakReference
 #include "displayIntermediateValues.h"
 #endif
@@ -86,7 +88,7 @@ void KeccakP1600_InitializeRhoOffsets(void)
 
 static int LFSR86540(UINT8 *LFSR)
 {
-    int result = ((*LFSR) & 0x01) != 0;
+    int result = (crypto_int64_bottombit_01(*LFSR)) != 0;
     if (((*LFSR) & 0x80) != 0)
         /* Primitive polynomial over GF(2): x^8+x^6+x^5+x^4+1 */
         (*LFSR) = ((*LFSR) << 1) ^ 0x71;

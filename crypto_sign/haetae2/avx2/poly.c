@@ -1,3 +1,5 @@
+// 20251222 djb: more automated conversion to cryptoint
+// 20251220 djb: more usage of cryptoint
 // 20240806 djb: some automated conversion to cryptoint
 #include "poly.h"
 #include "consts.h"
@@ -8,7 +10,9 @@
 #include "reduce.h"
 #include "symmetric.h"
 #include <stdint.h>
+#include "crypto_int32.h"
 #include "crypto_int64.h"
+#include "crypto_uint8.h"
 #include "crypto_uint64.h"
 #include "crypto_declassify.h"
 
@@ -120,9 +124,9 @@ void poly_reduce2q(poly *a) {
     int64_t t = (int64_t)a * DQREC;
     t >>= 32;
     t = a - t * DQ;              // -4Q <  t < 4Q
-    t += (t >> 31) & (DQ * 2);   //   0 <= t < 4Q
-    t -= ~((t - DQ) >> 31) & DQ; //   0 <= t < Q
-    t -= ~((t - Q) >> 31) & DQ;  // centered representation
+    t += crypto_int32_negative_mask(t) & (DQ * 2);   //   0 <= t < 4Q
+    t -= ~crypto_int32_negative_mask(t - DQ) & DQ; //   0 <= t < Q
+    t -= ~crypto_int32_negative_mask(t - Q) & DQ;  // centered representation
     return (int32_t)t;
 */
     for (i = 0; i < N/8; ++i)
@@ -195,8 +199,8 @@ void poly_freeze2q(poly *a) {
     int64_t t = (int64_t)a * DQREC;
     t >>= 32;
     t = a - t * DQ;              // -4Q <  t < 4Q
-    t += (t >> 31) & (DQ * 2);   //   0 <= t < 4Q
-    t -= ~((t - DQ) >> 31) & DQ; //   0 <= t < Q
+    t += crypto_int32_negative_mask(t) & (DQ * 2);   //   0 <= t < 4Q
+    t -= ~crypto_int32_negative_mask(t - DQ) & DQ; //   0 <= t < Q
     return (int32_t)t;
 */
 
@@ -632,7 +636,7 @@ void poly_pack_highbits(uint8_t *buf, const poly *a) {
     for (i = 0; i < N / 8; i++) {
         buf[9 * i + 0] = a->coeffs[8 * i + 0] & 0xff;
 
-        buf[9 * i + 1] = (a->coeffs[8 * i + 0] >> 8) & 0x01;
+        buf[9 * i + 1] = crypto_int64_bitmod_01(a->coeffs[8 * i + 0],8);
         buf[9 * i + 1] |= (a->coeffs[8 * i + 1] << 1) & 0xff;
 
         buf[9 * i + 2] = (a->coeffs[8 * i + 1] >> 7) & 0x03;
@@ -687,7 +691,7 @@ void polyq_pack(uint8_t *r, const poly *a) {
 
         r[b_idx] = (a->coeffs[d_idx] & 0xff);
         r[b_idx + 1] = ((a->coeffs[d_idx] >> 8) & 0x7f) |
-                       ((a->coeffs[d_idx + 1] & 0x1) << 7);
+                       ((crypto_int64_bottombit_01(a->coeffs[d_idx + 1])) << 7);
         r[b_idx + 2] = ((a->coeffs[d_idx + 1] >> 1) & 0xff);
         r[b_idx + 3] = ((a->coeffs[d_idx + 1] >> 9) & 0x3f) |
                        ((a->coeffs[d_idx + 2] & 0x3) << 6);
@@ -704,7 +708,7 @@ void polyq_pack(uint8_t *r, const poly *a) {
         r[b_idx + 11] = ((a->coeffs[d_idx + 5] >> 13) & 0x3) |
                         ((a->coeffs[d_idx + 6] & 0x3f) << 2);
         r[b_idx + 12] = ((a->coeffs[d_idx + 6] >> 6) & 0xff);
-        r[b_idx + 13] = ((a->coeffs[d_idx + 6] >> 14) & 0x1) |
+        r[b_idx + 13] = (crypto_int64_bitmod_01(a->coeffs[d_idx + 6],14)) |
                         (a->coeffs[d_idx + 7] & 0x7f) << 1;
         r[b_idx + 14] = ((a->coeffs[d_idx + 7] >> 7) & 0xff);
     }
@@ -734,7 +738,7 @@ void polyq_unpack(poly *r, const uint8_t *a) {
         d_idx = 8 * i;
 
         r->coeffs[d_idx] = (a[b_idx] & 0xff) | ((a[b_idx + 1] & 0x7f) << 8);
-        r->coeffs[d_idx + 1] = ((a[b_idx + 1] >> 7) & 0x1) |
+        r->coeffs[d_idx + 1] = crypto_uint8_topbit_01(a[b_idx + 1]) |
                                ((a[b_idx + 2] & 0xff) << 1) |
                                ((a[b_idx + 3] & 0x3f) << 9);
         r->coeffs[d_idx + 2] = ((a[b_idx + 3] >> 6) & 0x3) |
@@ -751,7 +755,7 @@ void polyq_unpack(poly *r, const uint8_t *a) {
                                ((a[b_idx + 11] & 0x3) << 13);
         r->coeffs[d_idx + 6] = ((a[b_idx + 11] >> 2) & 0x3f) |
                                ((a[b_idx + 12] & 0xff) << 6) |
-                               ((a[b_idx + 13] & 0x1) << 14);
+                               ((crypto_int64_bottombit_01(a[b_idx + 13])) << 14);
         r->coeffs[d_idx + 7] =
             ((a[b_idx + 13] >> 1) & 0x7f) | ((a[b_idx + 14] & 0xff) << 7);
     }
@@ -845,7 +849,7 @@ void polyeta_unpack(poly *r, const uint8_t *a) {
         r->coeffs[8 * i + 2] = ((a[3 * i + 0] >> 6) | (a[3 * i + 1] << 2)) & 7;
         r->coeffs[8 * i + 3] = (a[3 * i + 1] >> 1) & 7;
         r->coeffs[8 * i + 4] = (a[3 * i + 1] >> 4) & 7;
-        r->coeffs[8 * i + 5] = ((a[3 * i + 1] >> 7) | (a[3 * i + 2] << 1)) & 7;
+        r->coeffs[8 * i + 5] = (crypto_uint8_topbit_01(a[3 * i + 1]) | (a[3 * i + 2] << 1)) & 7;
         r->coeffs[8 * i + 6] = (a[3 * i + 2] >> 2) & 7;
         r->coeffs[8 * i + 7] = (a[3 * i + 2] >> 5) & 7;
 
@@ -912,7 +916,7 @@ void poly2eta_unpack(poly *r, const uint8_t *a) {
         r->coeffs[8 * i + 2] = ((a[3 * i + 0] >> 6) | (a[3 * i + 1] << 2)) & 7;
         r->coeffs[8 * i + 3] = (a[3 * i + 1] >> 1) & 7;
         r->coeffs[8 * i + 4] = (a[3 * i + 1] >> 4) & 7;
-        r->coeffs[8 * i + 5] = ((a[3 * i + 1] >> 7) | (a[3 * i + 2] << 1)) & 7;
+        r->coeffs[8 * i + 5] = (crypto_uint8_topbit_01(a[3 * i + 1]) | (a[3 * i + 2] << 1)) & 7;
         r->coeffs[8 * i + 6] = (a[3 * i + 2] >> 2) & 7;
         r->coeffs[8 * i + 7] = (a[3 * i + 2] >> 5) & 7;
 

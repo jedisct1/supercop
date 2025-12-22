@@ -1,7 +1,9 @@
+// 20251222 djb: more automated conversion to cryptoint
 #ifndef __FIELDS_H__
 #define __FIELDS_H__
 
 #include "common.h"
+#include "crypto_int64.h"
 
 #ifndef _concat3
 #define _concat3(a, b, c) a ## b ## c
@@ -238,7 +240,7 @@ static inline uint8_t get_gray_code_bit_position(uint16_t i) {
     uint32_t diff = g1 ^ g2;
 
 	uint8_t index = 0;
-    while ((diff & 1) == 0) {
+    while ((crypto_int64_bottombit_01(diff)) == 0) {
         diff >>= 1;
         index++;
     }

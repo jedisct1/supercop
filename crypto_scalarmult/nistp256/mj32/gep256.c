@@ -1,3 +1,4 @@
+// 20251222 djb: more automated conversion to cryptoint
 // 20250922 djb: more use of cryptoint
 /*
 20140918
@@ -9,6 +10,7 @@ Public domain.
 #include "fe.h"
 #include "fep256.h"
 #include "gep256.h"
+#include "crypto_int64.h"
 
 #define equal crypto_uint32_equal_01
 
@@ -299,7 +301,7 @@ void gep256_scalarmult(gep256 o, gep256 q, const unsigned char *e) {
     copy(t[1], q);
     dbl(t[2], t[1]);
     for (i = 3; i < 16; ++i) {
-        if ((i & 1) == 0) dbl(t[i], t[i / 2]);
+        if ((crypto_int64_bottombit_01(i)) == 0) dbl(t[i], t[i / 2]);
         else gep256_add(t[i], t[i - 1], q);
     }
 

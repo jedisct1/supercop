@@ -710,4 +710,4 @@ mov sp, r7
 ldmfd sp!, {r4-r8, lr}
 bx lr
 FN_END CRYPTO_NAMESPACE(chacha)
-.section	.note.GNU-stack,"",@progbits
+.section	.note.GNU-stack,"",%progbits

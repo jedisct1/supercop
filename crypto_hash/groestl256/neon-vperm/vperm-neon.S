@@ -1079,4 +1079,4 @@ bx lr
 
 /* vim: ft=gas :
 */
-.section	.note.GNU-stack,"",@progbits
+.section	.note.GNU-stack,"",%progbits

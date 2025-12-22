@@ -1,6 +1,7 @@
 /*
   This file is for Niederreiter decryption
 */
+// 20251220 djb: some usage of cryptoint
 // 20240530 djb: include vec128_gf.h
 // 20240530 djb: remove #ifdef KAT ... #endif
 
@@ -13,6 +14,7 @@
 #include "util.h"
 #include "fft.h"
 #include "bm.h"
+#include "crypto_uint16.h"
 
 #include <stdio.h>
 
@@ -115,10 +117,8 @@ static int weight_check(unsigned char * e, vec128 * error)
 		w1 += __builtin_popcountll( e[i] );
 
 	check = (w0 ^ SYS_T) | (w1 ^ SYS_T);
-	check -= 1;
-	check >>= 15;
 
-	return check;
+	return crypto_uint16_zero_01(check);
 }
 
 static uint64_t synd_cmp(vec128 s0[ GFBITS ] , vec128 s1[ GFBITS ])

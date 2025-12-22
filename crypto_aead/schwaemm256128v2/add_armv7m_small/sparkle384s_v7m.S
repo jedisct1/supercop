@@ -231,4 +231,4 @@ RCON:
 .word 0xBB1185EB, 0x4F7C7B57, 0xCFBFA1C8, 0xC2B3293D
 
 
-.section	.note.GNU-stack,"",@progbits
+.section	.note.GNU-stack,"",%progbits

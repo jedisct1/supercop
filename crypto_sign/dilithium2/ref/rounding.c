@@ -1,6 +1,8 @@
+// 20251220 djb: some usage of cryptoint
 #include <stdint.h>
 #include "params.h"
 #include "rounding.h"
+#include "crypto_int32.h"
 
 /*************************************************
 * Name:        power2round
@@ -45,11 +47,11 @@ int32_t decompose(int32_t *a0, int32_t a) {
   a1 &= 15;
 #elif GAMMA2 == (Q-1)/88
   a1  = (a1*11275 + (1 << 23)) >> 24;
-  a1 ^= ((43 - a1) >> 31) & a1;
+  a1 ^= crypto_int32_negative_mask(43 - a1) & a1;
 #endif
 
   *a0  = a - a1*2*GAMMA2;
-  *a0 -= (((Q-1)/2 - *a0) >> 31) & Q;
+  *a0 -= crypto_int32_negative_mask((Q-1)/2 - *a0) & Q;
   return a1;
 }
 

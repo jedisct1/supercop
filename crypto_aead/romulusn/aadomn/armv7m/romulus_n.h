@@ -1,7 +1,9 @@
+// 20251222 djb: more automated conversion to cryptoint
 #ifndef ROMULUS_H_
 #define ROMULUS_H_
 
 #include "skinny128.h"
+#include "crypto_int64.h"
 
 #define TAGBYTES    16
 #define KEYBYTES    TWEAKEYBYTES
@@ -30,7 +32,7 @@
     ((uint32_t*)(tk1))[1] |= (((uint32_t*)(tk1))[0] >> 31); \
     ((uint32_t*)(tk1))[1] |= tmp & 0xff000000;              \
     ((uint32_t*)(tk1))[0] <<= 1;                            \
-    if ((tmp >> 23) & 0x01)                                 \
+    if (crypto_int64_bitmod_01(tmp,23))                                 \
         ((uint32_t*)(tk1))[0] ^= 0x95;                      \
 })
 

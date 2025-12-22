@@ -1,3 +1,4 @@
+// 20251220 djb: more use of cryptoint
 #include <stdlib.h> /* for abort() in case of OpenSSL failures */
 #include "params.h"
 
@@ -19,18 +20,6 @@
 #define uint16 crypto_uint16
 #define uint32 crypto_uint32
 #define uint64 crypto_uint64
-
-/* ----- masks */
-
-/* return -1 if x<0; otherwise return 0 */
-static int int16_negative_mask(int16 x)
-{
-  uint16 u = x;
-  u >>= 15;
-  return -(int) u;
-  /* alternative with gcc -fwrapv: */
-  /* x>>15 compiles to CPU's arithmetic right shift */
-}
 
 /* ----- arithmetic mod 3 */
 
@@ -57,7 +46,7 @@ static Fq Fq_bigfreeze(uint32 x)
   x -= q*((x*(uint64)q31)>>31);
   x -= q*((x*(uint64)q31)>>31);
   x -= q;
-  x += (-(x>>31))&(uint32)q;
+  x += crypto_int32_negative_mask(x)&(uint32)q;
   return x;
 }
 
@@ -259,7 +248,7 @@ int crypto_kem_dec(unsigned char *k,const unsigned char *c,const unsigned char *
       int8 T[I];
       Top_decode(T,c+Rounded_bytes);
       for (i = 0;i < I;++i)
-        r[i] = -int16_negative_mask(Fq_freeze(Right(T[i])-aB[i]+4*w+1));
+        r[i] = crypto_int16_negative_01(Fq_freeze(Right(T[i])-aB[i]+4*w+1));
     }
   }
   {

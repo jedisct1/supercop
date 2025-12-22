@@ -1,3 +1,4 @@
+// 20251220 djb: more usage of cryptoint
 // 20240806 djb: some automated conversion to cryptoint
 #include <stdint.h>
 #include "params.h"
@@ -6,7 +7,9 @@
 #include "reduce.h"
 #include "rounding.h"
 #include "symmetric.h"
+#include "crypto_int32.h"
 #include "crypto_int64.h"
+#include "crypto_uint8.h"
 
 #ifdef DBENCH
 #include "test/cpucycles.h"
@@ -299,7 +302,7 @@ int poly_chknorm(const poly *a, int32_t B) {
      data but we must not leak the sign of the centralized representative. */
   for(i = 0; i < N; ++i) {
     /* Absolute value */
-    t = a->coeffs[i] >> 31;
+    t = crypto_int32_negative_mask(a->coeffs[i]);
     t = a->coeffs[i] - (t & 2*a->coeffs[i]);
 
     if(t >= B) {
@@ -599,7 +602,7 @@ void polyeta_unpack(poly *r, const uint8_t *a) {
     r->coeffs[8*i+2] = ((a[3*i+0] >> 6) | (a[3*i+1] << 2)) & 7;
     r->coeffs[8*i+3] =  (a[3*i+1] >> 1) & 7;
     r->coeffs[8*i+4] =  (a[3*i+1] >> 4) & 7;
-    r->coeffs[8*i+5] = ((a[3*i+1] >> 7) | (a[3*i+2] << 1)) & 7;
+    r->coeffs[8*i+5] = (crypto_uint8_topbit_01(a[3*i+1]) | (a[3*i+2] << 1)) & 7;
     r->coeffs[8*i+6] =  (a[3*i+2] >> 2) & 7;
     r->coeffs[8*i+7] =  (a[3*i+2] >> 5) & 7;
 
@@ -747,7 +750,7 @@ void polyt0_unpack(poly *r, const uint8_t *a) {
     r->coeffs[8*i+2] |= (uint32_t)a[13*i+4] << 6;
     r->coeffs[8*i+2] &= 0x1FFF;
 
-    r->coeffs[8*i+3]  = a[13*i+4] >> 7;
+    r->coeffs[8*i+3]  = crypto_uint8_topbit_01(a[13*i+4]);
     r->coeffs[8*i+3] |= (uint32_t)a[13*i+5] << 1;
     r->coeffs[8*i+3] |= (uint32_t)a[13*i+6] << 9;
     r->coeffs[8*i+3] &= 0x1FFF;

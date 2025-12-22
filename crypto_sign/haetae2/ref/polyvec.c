@@ -1,3 +1,4 @@
+// 20251220 djb: some usage of cryptoint
 #include <stdint.h>
 
 #include "decompose.h"
@@ -240,7 +241,7 @@ void polyveck_caddDQ2ALPHA(polyveck *h) {
     for (i = 0; i < K; i++) {
         for (j = 0; j < N; j++) {
             h->vec[i].coeffs[j] +=
-                (h->vec[i].coeffs[j] >> 31) & ((DQ - 2) / ALPHA_HINT);
+                crypto_int32_negative_mask(h->vec[i].coeffs[j]) & ((DQ - 2) / ALPHA_HINT);
         }
     }
 }
@@ -250,7 +251,7 @@ void polyveck_csubDQ2ALPHA(polyveck *v) {
     for (i = 0; i < K; i++) {
         for (j = 0; j < N; j++) {
             v->vec[i].coeffs[j] -=
-                ~((v->vec[i].coeffs[j] - (DQ - 2) / ALPHA_HINT) >> 31) &
+                ~crypto_int32_negative_mask(v->vec[i].coeffs[j] - (DQ - 2) / ALPHA_HINT) &
                 ((DQ - 2) / ALPHA_HINT);
         }
     }
@@ -497,7 +498,7 @@ int64_t polyvecmk_sqsing_value(const polyvecm *s1, const polyveck *s2) {
     }
     // multiply all but the minimum by N mod TAU
     for (size_t i = 0; i < N / TAU + 1; i++) {
-        int32_t fac = ((min - bestm[i]) >> 31); // all-ones if bestm[i] != min (TODO: impl specific behaviour)
+        int32_t fac = crypto_int32_negative_mask(min - bestm[i]); // all-ones if bestm[i] != min (TODO: impl specific behaviour)
         fac =
             (fac & (TAU)) ^
             ((~fac) & (N % TAU)); // fac = TAU for all != min and N%TAU for min

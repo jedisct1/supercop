@@ -556,4 +556,4 @@ sparkle384_arm:
 .size sparkle384_arm, .-sparkle384_arm
 
 
-.section	.note.GNU-stack,"",@progbits
+.section	.note.GNU-stack,"",%progbits

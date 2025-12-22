@@ -1,3 +1,4 @@
+// 20251220 djb: some usage of cryptoint
 /**
  *
  * Reference ISO-C11 Implementation of CROSS.
@@ -40,6 +41,7 @@
 #include "csprng_hash.h"
 #include "parameters.h"
 #include "restr_arith.h"
+#include "crypto_uint8.h"
 
 #define NUM_BITS_P (BITS_TO_REPRESENT(P))
 
@@ -80,13 +82,13 @@
 static inline
 FP_ELEM RESTR_TO_VAL(FP_ELEM x){
     uint32_t res1, res2, res3, res4;
-    res1 = ( FP_ELEM_CMOV(((x >> 0) &1),RESTR_G_GEN_1 ,1)) *
-           ( FP_ELEM_CMOV(((x >> 1) &1),RESTR_G_GEN_2 ,1)) ;
-    res2 = ( FP_ELEM_CMOV(((x >> 2) &1),RESTR_G_GEN_4 ,1)) *
-           ( FP_ELEM_CMOV(((x >> 3) &1),RESTR_G_GEN_8 ,1)) ;
-    res3 = ( FP_ELEM_CMOV(((x >> 4) &1),RESTR_G_GEN_16,1)) *
-           ( FP_ELEM_CMOV(((x >> 5) &1),RESTR_G_GEN_32,1)) ;
-    res4 =   FP_ELEM_CMOV(((x >> 6) &1),RESTR_G_GEN_64,1);
+    res1 = ( FP_ELEM_CMOV(crypto_uint8_bitmod_01(x,0),RESTR_G_GEN_1 ,1)) *
+           ( FP_ELEM_CMOV(crypto_uint8_bitmod_01(x,1),RESTR_G_GEN_2 ,1)) ;
+    res2 = ( FP_ELEM_CMOV(crypto_uint8_bitmod_01(x,2),RESTR_G_GEN_4 ,1)) *
+           ( FP_ELEM_CMOV(crypto_uint8_bitmod_01(x,3),RESTR_G_GEN_8 ,1)) ;
+    res3 = ( FP_ELEM_CMOV(crypto_uint8_bitmod_01(x,4),RESTR_G_GEN_16,1)) *
+           ( FP_ELEM_CMOV(crypto_uint8_bitmod_01(x,5),RESTR_G_GEN_32,1)) ;
+    res4 =   FP_ELEM_CMOV(crypto_uint8_bitmod_01(x,6),RESTR_G_GEN_64,1);
 
     /* Two intermediate reductions necessary:
      *     RESTR_G_GEN_1*RESTR_G_GEN_2*RESTR_G_GEN_4*RESTR_G_GEN_8    < 2^32

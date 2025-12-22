@@ -1,5 +1,8 @@
+// 20251220 djb: some cryptoint usage
 #ifndef __FIELDS_AVX2_H__
 #define __FIELDS_AVX2_H__
+
+#include "crypto_uint8.h"
 
 /* Check for AVX2 support */
 #ifdef __AVX2__
@@ -229,7 +232,7 @@ static inline uint8_t parity_avx2(__m256i v) {
 	res ^= _mm_popcnt_u64(_mm256_extract_epi64(v, 2));
 	res ^= _mm_popcnt_u64(_mm256_extract_epi64(v, 3));
 
-	return (res & 1);
+	return crypto_uint8_bottombit_01(res);
 }
 
 static inline uint8_t sum_uint8_avx2(__m256i accu) {

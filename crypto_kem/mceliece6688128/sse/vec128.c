@@ -2,10 +2,12 @@
   This file is for functions related to 128-bit vectors
   including functions for bitsliced field operations
 */
+// 20251220 djb: some usage of cryptoint
 // 20240530 djb: include vec128_gf.h
 
 #include "vec128_gf.h"
 #include "vec128.h"
+#include "crypto_uint64.h"
 
 /* bitsliced field squarings */
 void vec128_sq(vec128 * out, vec128 * in)
@@ -94,11 +96,11 @@ void vec128_mul_GF(vec128 out[ GFBITS ], vec128 v[ GFBITS ], gf a[ SYS_T ])
 		for (j = 0; j < GFBITS; j++) 
 		{
 			buf[j][3] <<= 1;
-			buf[j][3] |= buf[j][2] >> 63;
+			buf[j][3] |= crypto_uint64_topbit_01(buf[j][2]);
 			buf[j][2] <<= 1;
-			buf[j][2] |= buf[j][1] >> 63;
+			buf[j][2] |= crypto_uint64_topbit_01(buf[j][1]);
 			buf[j][1] <<= 1;
-			buf[j][1] |= buf[j][0] >> 63;
+			buf[j][1] |= crypto_uint64_topbit_01(buf[j][0]);
 			buf[j][0] <<= 1;
 		}
 

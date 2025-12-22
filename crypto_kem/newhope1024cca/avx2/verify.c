@@ -1,5 +1,7 @@
+// 20251220 djb: some usage of cryptoint
 #include <string.h>
 #include <stdint.h>
+#include "crypto_uint64.h"
 
 /* returns 0 for equal strings, 1 for non-equal strings */
 int verify(const unsigned char *a, const unsigned char *b, size_t len)
@@ -11,8 +13,7 @@ int verify(const unsigned char *a, const unsigned char *b, size_t len)
   for(i=0;i<len;i++)
     r |= a[i] ^ b[i];
 
-  r = (-r) >> 63;
-  return r;
+  return crypto_uint64_nonzero_01(r);
 }
 
 /* b = 1 means mov, b = 0 means don't mov*/

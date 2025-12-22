@@ -1,6 +1,7 @@
 /*
   This file is for Niederreiter encryption
 */
+// 20251220 djb: more usage of cryptoint
 // 20240715 djb: remove unused mask variable
 // 20240608 djb: switch to crypto_*int16_equal_mask
 // 20240530 djb: rename encrypt() as pke_encrypt()
@@ -19,6 +20,7 @@
 
 #include "gf.h"
 #include "crypto_declassify.h"
+#include "crypto_uint8.h"
 #include "crypto_uint16.h"
 #include "crypto_uint32.h"
 
@@ -99,7 +101,7 @@ static void syndrome(unsigned char *s, const unsigned char *pk, unsigned char *e
 		b ^= b >> 4;
 		b ^= b >> 2;
 		b ^= b >> 1;
-		b &= 1;
+		b = crypto_uint8_bottombit_01(b);
 
 		s[ i/8 ] |= (b << (i%8));
 

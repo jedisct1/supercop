@@ -1,3 +1,4 @@
+// 20251220 djb: remove unused smaller_mask
 #ifndef _GF4591_AVX2_H_
 #define _GF4591_AVX2_H_
 
@@ -22,11 +23,6 @@
 #define v1024_16 _mm256_set1_epi16(1024)
 #define v2295_16 _mm256_set1_epi16(2295)
 
-
-static inline int smaller_mask(int x,int y)
-{
-  return (x - y) >> 31;
-}
 
 static inline __m256i montproduct(__m256i x,__m256i y)
 // note : montproduct with v4158_16 to multiply by R=2^16

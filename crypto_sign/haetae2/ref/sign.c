@@ -1,3 +1,4 @@
+// 20251220 djb: more usage of cryptoint
 // 20240806 djb: some automated conversion to cryptoint
 #include "sign.h"
 #include "packing.h"
@@ -13,6 +14,7 @@
 #include <string.h>
 #include <stdio.h>
 #include "crypto_int64.h"
+#include "crypto_uint64.h"
 #include "crypto_declassify.h"
 
 /*************************************************
@@ -228,8 +230,7 @@ reject:
     polyfixveck_add(&z2, &y2, &cs2);
 
     // reject if norm(z) >= B'
-    reject1 = ((uint64_t)B1SQ * LN * LN - polyfixveclk_sqnorm2(&z1, &z2)) >> 63;
-    reject1 &= 1;
+    reject1 = crypto_uint64_topbit_01((uint64_t)B1SQ * LN * LN - polyfixveclk_sqnorm2(&z1, &z2));
 
     polyfixvecl_double(&z1tmp, &z1);
     polyfixveck_double(&z2tmp, &z2);
@@ -239,9 +240,8 @@ reject:
 
     // reject if norm(2z-y) < B and b' = 0
     reject2 =
-        (polyfixveclk_sqnorm2(&z1tmp, &z2tmp) - (uint64_t)B0SQ * LN * LN) >> 63;
-    reject2 &= 1;
-    reject2 &= (b & 0x2) >> 1;
+        crypto_uint64_topbit_01(polyfixveclk_sqnorm2(&z1tmp, &z2tmp) - (uint64_t)B0SQ * LN * LN);
+    reject2 &= crypto_uint64_bitmod_01(b,1);
 
     rejectmask = reject1 | reject2;
     crypto_declassify(&rejectmask,sizeof rejectmask);

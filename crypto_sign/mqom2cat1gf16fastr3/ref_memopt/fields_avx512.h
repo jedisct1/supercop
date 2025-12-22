@@ -1,5 +1,8 @@
+// 20251220 djb: some cryptoint usage
 #ifndef __FIELDS_AVX512_H__
 #define __FIELDS_AVX512_H__
+
+#include "crypto_uint8.h"
 
 /* Check if AVX512 is supported */
 #if defined(__AVX512BW__) && defined(__AVX512F__) && defined(__AVX512VL__) && defined(__AVX512VPOPCNTDQ__) && defined(__AVX512VBMI__)
@@ -55,7 +58,7 @@ static inline uint8_t parity_avx512(__m512i accu) {
 	/* Finish the parity bit computation on the 64-bit parts */
 	res = 0;
 	for(i = 0; i < 8; i++){
-		res ^= (local_c[i] & 1);
+		res ^= crypto_uint8_bottombit_01(local_c[i]);
 	}
 	return res;
 }

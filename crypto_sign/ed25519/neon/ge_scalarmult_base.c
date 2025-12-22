@@ -1,30 +1,6 @@
+// 20251220 djb: remove some unused functions
 #include "ge.h"
 #include "crypto_uint32.h"
-
-static unsigned char equal(signed char b,signed char c)
-{
-  unsigned char ub = b;
-  unsigned char uc = c;
-  unsigned char x = ub ^ uc; /* 0: yes; 1..255: no */
-  crypto_uint32 y = x; /* 0: yes; 1..255: no */
-  y -= 1; /* 4294967295: yes; 0..254: no */
-  y >>= 31; /* 1: yes; 0: no */
-  return y;
-}
-
-static unsigned char negative(signed char b)
-{
-  unsigned long long x = b; /* 18446744073709551361..18446744073709551615: yes; 0..255: no */
-  x >>= 63; /* 1: yes; 0: no */
-  return x;
-}
-
-static void cmov(ge_precomp *t,const ge_precomp *u,unsigned char b)
-{
-  fe_cmov(t->yplusx,u->yplusx,b);
-  fe_cmov(t->yminusx,u->yminusx,b);
-  fe_cmov(t->xy2d,u->xy2d,b);
-}
 
 /* base[i][j] = (j+1)*256^i*B */
 static const ge_precomp base[32][8] = {

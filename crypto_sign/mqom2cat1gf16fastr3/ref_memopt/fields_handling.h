@@ -1,5 +1,8 @@
+// 20251220 djb: some cryptoint usage
 #ifndef __FIELDS_HANDLING_H__
 #define __FIELDS_HANDLING_H__
+
+#include "crypto_uint8.h"
 
 /* Needed for primitive types definitions */
 #include <stdint.h>
@@ -37,7 +40,7 @@ static inline void field_gf256to2_vect_pack(uint16_t elt, uint16_t *packed_elt, 
 /* ==== Unpacking primitives ====== */
 static inline uint8_t field_gf2_vect_unpack(const uint8_t *packed_elt, uint32_t index)
 {
-	return (packed_elt[index / 8] >> (index % 8)) & 1;
+	return crypto_uint8_bitmod_01(packed_elt[index / 8],index);
 }
 static inline uint8_t field_gf4_vect_unpack(const uint8_t *packed_elt, uint32_t index)
 {

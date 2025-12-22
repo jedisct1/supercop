@@ -1,6 +1,8 @@
+// 20251220 djb: more usage of cryptoint
 // 20240806 djb: some automated conversion to cryptoint
 #include "decompose.h"
 #include "params.h"
+#include "crypto_int32.h"
 #include "crypto_int64.h"
 #include <stdint.h>
 
@@ -22,7 +24,7 @@ void decompose_z1(int32_t *highbits, int32_t *lowbits, const int32_t r) {
     uint32_t alpha_mask = alpha - 1;
 
     lb = r & alpha_mask;
-    center = ((alpha >> 1) - (lb + 1)) >> 31; // if lb >= HALF_ALPHA
+    center = crypto_int32_negative_mask((alpha >> 1) - (lb + 1)); // if lb >= HALF_ALPHA
     lb -= alpha & center;
     *lowbits = lb;
     *highbits = (r + (alpha >> 1)) >> log_alpha;
@@ -43,7 +45,7 @@ void decompose_hint(int32_t *highbits, const int32_t r) {
 
     hb = (r + HALF_ALPHA_HINT) >> LOG_ALPHA_HINT;
     edgecase =
-        ((DQ - 2) / ALPHA_HINT - (hb + 1)) >> 31; // if hb == (DQ-2)/ALPHA
+        crypto_int32_negative_mask((DQ - 2) / ALPHA_HINT - (hb + 1)); // if hb == (DQ-2)/ALPHA
     hb -= (DQ - 2) / ALPHA_HINT & edgecase;       // hb = 0
 
     *highbits = hb;

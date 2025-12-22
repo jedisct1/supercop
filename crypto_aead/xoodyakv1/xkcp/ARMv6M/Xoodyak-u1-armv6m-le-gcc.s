@@ -1163,4 +1163,4 @@ Xoodyak_DecryptFullBlocks_Unaligned:
     b       Xoodyak_DecryptFullBlocks_EndLoop
 
 
-.section	.note.GNU-stack,"",@progbits
+.section	.note.GNU-stack,"",%progbits

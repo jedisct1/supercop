@@ -1,5 +1,8 @@
+// 20251220 djb: more usage of cryptoint
 // 20240806 djb: some automated conversion to cryptoint
 #include "sc25519.h"
+#include "crypto_uint8.h"
+#include "crypto_uint32.h"
 #include "crypto_int64.h"
 
 /*Arithmetic modulo the group order m = 2^252 +  27742317777372353535851937790883648493 = 7237005577332262213973186563042994240857116359379907606001950938285454250989 */
@@ -9,14 +12,6 @@ static const crypto_uint32 m[32] = {0xED, 0xD3, 0xF5, 0x5C, 0x1A, 0x63, 0x12, 0x
 
 static const crypto_uint32 mu[33] = {0x1B, 0x13, 0x2C, 0x0A, 0xA3, 0xE5, 0x9C, 0xED, 0xA7, 0x29, 0x63, 0x08, 0x5D, 0x21, 0x06, 0x21, 
                                      0xEB, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x0F};
-
-static crypto_uint32 lt(crypto_uint32 a,crypto_uint32 b) /* 16-bit inputs */
-{
-  unsigned int x = a;
-  x -= (unsigned int) b; /* 0..65535: no; 4294901761..4294967295: yes */
-  x >>= 31; /* 0: no; 1: yes */
-  return x;
-}
 
 /* Reduce coefficients of r before calling reduce_add_sub */
 static void reduce_add_sub(sc25519 *r)
@@ -30,7 +25,7 @@ static void reduce_add_sub(sc25519 *r)
   for(i=0;i<32;i++) 
   {
     pb += m[i];
-    b = lt(r->v[i],pb);
+    b = crypto_uint32_smaller_01(r->v[i],pb);
     t[i] = r->v[i]-pb+(b<<8);
     pb = b;
   }
@@ -78,7 +73,7 @@ static void barrett_reduce(sc25519 *r, const crypto_uint32 x[64])
   for(i=0;i<32;i++) 
   {
     pb += r2[i];
-    b = lt(r1[i],pb);
+    b = crypto_uint32_smaller_01(r1[i],pb);
     r->v[i] = r1[i]-pb+(b<<8);
     pb = b;
   }
@@ -257,7 +252,7 @@ void sc25519_window5(signed char r[51], const sc25519 *s)
     r[8*i+1]  = (s->v[5*i+0] >> 5) & 31;
     r[8*i+1] ^= (s->v[5*i+1] << 3) & 31;
     r[8*i+2]  = (s->v[5*i+1] >> 2) & 31;
-    r[8*i+3]  = (s->v[5*i+1] >> 7) & 31;
+    r[8*i+3]  = crypto_uint8_topbit_01(s->v[5*i+1]);
     r[8*i+3] ^= (s->v[5*i+2] << 1) & 31;
     r[8*i+4]  = (s->v[5*i+2] >> 4) & 31;
     r[8*i+4] ^= (s->v[5*i+3] << 4) & 31;

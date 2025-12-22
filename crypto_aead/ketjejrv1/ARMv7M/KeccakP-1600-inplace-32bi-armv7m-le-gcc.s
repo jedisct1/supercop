@@ -1057,4 +1057,4 @@ KeccakP1600_Permute_RoundLoop:
     pop     { r4 - r12, pc }
 
 
-.section	.note.GNU-stack,"",@progbits
+.section	.note.GNU-stack,"",%progbits

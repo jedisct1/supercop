@@ -1,26 +1,11 @@
+// 20251220 djb: more usage of cryptoint
 // 20240806 djb: some automated conversion to cryptoint
 #define WINDOWSIZE 1 /* Should be 1,2, or 4 */
 #define WINDOWMASK ((1<<WINDOWSIZE)-1)
 
 #include "fe25519.h"
+#include "crypto_uint32.h"
 #include "crypto_int64.h"
-
-static crypto_uint32 equal(crypto_uint32 a,crypto_uint32 b) /* 16-bit inputs */
-{
-  crypto_uint32 x = a ^ b; /* 0: yes; 1..65535: no */
-  x -= 1; /* 4294967295: yes; 0..65534: no */
-  x >>= 31; /* 1: yes; 0: no */
-  return x;
-}
-
-static crypto_uint32 ge(crypto_uint32 a,crypto_uint32 b) /* 16-bit inputs */
-{
-  unsigned int x = a;
-  x -= (unsigned int) b; /* 0..65535: yes; 4294901761..4294967295: no */
-  x >>= 31; /* 0: yes; 1: no */
-  x ^= 1; /* 1: yes; 0: no */
-  return x;
-}
 
 static crypto_uint32 times19(crypto_uint32 a)
 {
@@ -76,10 +61,10 @@ static void reduce_mul(fe25519 *r)
 void fe25519_freeze(fe25519 *r) 
 {
   int i;
-  crypto_uint32 m = equal(r->v[31],127);
+  crypto_uint32 m = crypto_uint32_equal_01(r->v[31],127);
   for(i=30;i>0;i--)
-    m &= equal(r->v[i],255);
-  m &= ge(r->v[0],237);
+    m &= crypto_uint32_equal_01(r->v[i],255);
+  m &= crypto_uint32_leq_01(237,r->v[0]);
 
   m = -m;
 
@@ -112,9 +97,9 @@ int fe25519_iszero(const fe25519 *x)
   int r;
   fe25519 t = *x;
   fe25519_freeze(&t);
-  r = equal(t.v[0],0);
+  r = crypto_uint32_zero_01(t.v[0]);
   for(i=1;i<32;i++) 
-    r &= equal(t.v[i],0);
+    r &= crypto_uint32_zero_01(t.v[i]);
   return r;
 }
 

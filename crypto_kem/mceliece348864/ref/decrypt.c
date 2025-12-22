@@ -1,3 +1,4 @@
+// 20251220 djb: more use of cryptoint
 // 20240806 djb: some automated conversion to cryptoint
 /*
   This file is for Niederreiter decryption
@@ -14,6 +15,7 @@
 #include "root.h"
 #include "gf.h"
 #include "bm.h"
+#include "crypto_uint16.h"
 #include "crypto_int64.h"
 
 /* Niederreiter decryption with the Berlekamp decoder */
@@ -77,9 +79,6 @@ int decrypt(unsigned char *e, const unsigned char *sk, const unsigned char *c)
 	for (i = 0; i < SYS_T*2; i++)
 		check |= s[i] ^ s_cmp[i]; 
 
-	check -= 1;
-	check >>= 15;
-
-	return check ^ 1;
+	return crypto_uint16_nonzero_01(check);
 }
 

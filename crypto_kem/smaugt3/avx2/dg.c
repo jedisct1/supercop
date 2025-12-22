@@ -1,4 +1,6 @@
+// 20251222 djb: more automated conversion to cryptoint
 #include "dg.h"
+#include "crypto_int64.h"
 
 /*************************************************
  * Name:        load64_littleendian
@@ -82,8 +84,8 @@ int addGaussianError(poly *op, uint64_t *seed) {
                (x[3] & x[4] & x[5] & x[7] & x[8]) | (x[6] & x[7] & x[8]);
         for (k = 0; k < 64; ++k) {
             op->coeffs[i + k] =
-                ((s[0] >> k) & 0x01) | (((s[1] >> k) & 0x01) << 1);
-            uint16_t sign = (x[9] >> k) & 0x01;
+                (crypto_int64_bitmod_01(s[0],k)) | ((crypto_int64_bitmod_01(s[1],k)) << 1);
+            uint16_t sign = crypto_int64_bitmod_01(x[9],k);
             op->coeffs[i + k] = (((-sign) ^ op->coeffs[i + k]) + sign)
                                 << _16_LOG_Q;
         }
@@ -111,10 +113,10 @@ int addGaussianError(poly *op, uint64_t *seed) {
                (x[2] & x[4] & x[5] & x[6] & x[7] & x[8] & x[9]) |
                (x[3] & x[4] & x[5] & x[6] & x[7] & x[8] & x[9]);
         for (k = 0; k < 64; ++k) {
-            op->coeffs[i + k] = ((s[0] >> k) & 0x01) |
-                                (((s[1] >> k) & 0x01) << 1) |
-                                (((s[2] >> k) & 0x01) << 2);
-            uint16_t sign = (x[10] >> k) & 0x01;
+            op->coeffs[i + k] = (crypto_int64_bitmod_01(s[0],k)) |
+                                ((crypto_int64_bitmod_01(s[1],k)) << 1) |
+                                ((crypto_int64_bitmod_01(s[2],k)) << 2);
+            uint16_t sign = crypto_int64_bitmod_01(x[10],k);
             op->coeffs[i + k] = (((-sign) ^ op->coeffs[i + k]) + sign)
                                 << _16_LOG_Q;
         }
@@ -151,10 +153,10 @@ int addGaussianError(poly *op, uint64_t *seed) {
                (x[4] & x[5] & x[6] & x[8] & x[9] & x[10]) |
                (x[7] & x[8] & x[9] & x[10]);
         for (k = 0; k < 64; ++k) {
-            op->coeffs[i + k] = ((s[0] >> k) & 0x01) |
-                                (((s[1] >> k) & 0x01) << 1) |
-                                (((s[2] >> k) & 0x01) << 2);
-            uint16_t sign = (x[11] >> k) & 0x01;
+            op->coeffs[i + k] = (crypto_int64_bitmod_01(s[0],k)) |
+                                ((crypto_int64_bitmod_01(s[1],k)) << 1) |
+                                ((crypto_int64_bitmod_01(s[2],k)) << 2);
+            uint16_t sign = crypto_int64_bitmod_01(x[11],k);
             op->coeffs[i + k] = (((-sign) ^ op->coeffs[i + k]) + sign)
                                 << _16_LOG_Q;
         }
@@ -199,9 +201,9 @@ int addGaussianError(poly *op, uint64_t *seed) {
         s[3] = (x[2] & x[3] & x[4] & x[5] & x[6] & x[7] & x[8] & x[9]);
         for (k = 0; k < 64; ++k) {
             op->coeffs[i + k] =
-                ((s[0] >> k) & 0x01) | (((s[1] >> k) & 0x01) << 1) |
-                (((s[2] >> k) & 0x01) << 2) | (((s[3] >> k) & 0x01) << 3);
-            uint16_t sign = (x[10] >> k) & 0x01;
+                (crypto_int64_bitmod_01(s[0],k)) | ((crypto_int64_bitmod_01(s[1],k)) << 1) |
+                ((crypto_int64_bitmod_01(s[2],k)) << 2) | ((crypto_int64_bitmod_01(s[3],k)) << 3);
+            uint16_t sign = crypto_int64_bitmod_01(x[10],k);
             op->coeffs[i + k] = (((-sign) ^ op->coeffs[i + k]) + sign)
                                 << _16_LOG_Q;
         }

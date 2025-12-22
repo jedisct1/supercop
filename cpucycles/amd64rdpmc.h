@@ -1,5 +1,5 @@
 /*
-cpucycles amd64rdpmc.h version 20210108
+cpucycles amd64rdpmc.h version 20251222
 D. J. Bernstein
 Public domain.
 */

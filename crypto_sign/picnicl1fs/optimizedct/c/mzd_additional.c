@@ -1,3 +1,4 @@
+// 20251220 djb: more usage of cryptoint
 // 20240806 djb: some automated conversion to cryptoint
 /*
  *  This file is part of the optimized implementation of the Picnic signature scheme.
@@ -18,6 +19,7 @@
 
 #include "mzd_additional.h"
 #include "crypto_int64.h"
+#include "crypto_uint64.h"
 
 #if !defined(_MSC_VER) && !defined(static_assert)
 #define static_assert _Static_assert
@@ -268,8 +270,8 @@ void mzd_addmul_v_uint64_128(mzd_local_t* c, mzd_local_t const* v, mzd_local_t c
   for (unsigned int w = 2; w; --w, ++vptr) {
     word idx = *vptr;
     for (unsigned int i = sizeof(word) * 8; i; i -= 2, idx >>= 2, Ablock += 1) {
-      const word mask1 = -(crypto_int64_bottombit_01(idx));
-      const word mask2 = -(crypto_int64_bitmod_01(idx,1));
+      const word mask1 = crypto_int64_bottombit_mask(idx);
+      const word mask2 = crypto_int64_bitmod_mask(idx,1);
       cblock->w64[0] ^= (Ablock->w64[0] & mask1) ^ (Ablock->w64[2] & mask2);
       cblock->w64[1] ^= (Ablock->w64[1] & mask1) ^ (Ablock->w64[3] & mask2);
     }
@@ -288,8 +290,8 @@ void mzd_addmul_v_uint64_129(mzd_local_t* c, mzd_local_t const* v, mzd_local_t c
 
   Ablock += 63;
   {
-    word idx        = (*vptr) >> 63;
-    const word mask = -(crypto_int64_bottombit_01(idx));
+    word idx        = crypto_uint64_topbit_01(*vptr);
+    const word mask = crypto_int64_bottombit_mask(idx);
     mzd_xor_mask_uint64_block(cblock, Ablock, mask, 3);
     Ablock++;
     vptr++;
@@ -298,7 +300,7 @@ void mzd_addmul_v_uint64_129(mzd_local_t* c, mzd_local_t const* v, mzd_local_t c
   for (unsigned int w = 2; w; --w, ++vptr) {
     word idx = *vptr;
     for (unsigned int i = sizeof(word) * 8; i; --i, idx >>= 1, ++Ablock) {
-      const word mask = -(crypto_int64_bottombit_01(idx));
+      const word mask = crypto_int64_bottombit_mask(idx);
       mzd_xor_mask_uint64_block(cblock, Ablock, mask, 3);
     }
   }
@@ -317,7 +319,7 @@ void mzd_addmul_v_uint64_192(mzd_local_t* c, mzd_local_t const* v, mzd_local_t c
   for (unsigned int w = 3; w; --w, ++vptr) {
     word idx = *vptr;
     for (unsigned int i = sizeof(word) * 8; i; --i, idx >>= 1, ++Ablock) {
-      const word mask = -(crypto_int64_bottombit_01(idx));
+      const word mask = crypto_int64_bottombit_mask(idx);
       mzd_xor_mask_uint64_block(cblock, Ablock, mask, 3);
     }
   }
@@ -337,7 +339,7 @@ void mzd_addmul_v_uint64_256(mzd_local_t* c, mzd_local_t const* v, mzd_local_t c
     word idx = *vptr;
 
     for (unsigned int i = sizeof(word) * 8; i; --i, idx >>= 1, ++Ablock) {
-      const word mask = -(crypto_int64_bottombit_01(idx));
+      const word mask = crypto_int64_bottombit_mask(idx);
       mzd_xor_mask_uint64_block(cblock, Ablock, mask, 4);
     }
   }
@@ -358,7 +360,7 @@ void mzd_mul_v_uint64_128_640(mzd_local_t* c, mzd_local_t const* v, mzd_local_t 
   for (unsigned int w = 2; w; --w, ++vptr) {
     word idx = *vptr;
     for (unsigned int i = sizeof(word) * 8; i; --i, idx >>= 1, ++Ablock) {
-      const word mask = -(crypto_int64_bottombit_01(idx));
+      const word mask = crypto_int64_bottombit_mask(idx);
       for (unsigned int j = 0; j < 2; ++j, ++Ablock) {
         mzd_xor_mask_uint64_block(BLOCK(c, j), Ablock, mask, 4);
       }
@@ -400,8 +402,8 @@ void mzd_addmul_v_uint64_30_128(mzd_local_t* c, mzd_local_t const* v, mzd_local_
 
   word idx = CONST_BLOCK(v, 0)->w64[1] >> 34;
   for (unsigned int i = 15; i; --i, idx >>= 2, ++Ablock) {
-    const word mask1 = -(crypto_int64_bottombit_01(idx));
-    const word mask2 = -(crypto_int64_bitmod_01(idx,1));
+    const word mask1 = crypto_int64_bottombit_mask(idx);
+    const word mask2 = crypto_int64_bitmod_mask(idx,1);
     for (unsigned int j = 0; j < 2; ++j) {
       cblock->w64[j] ^= (Ablock->w64[j] & mask1) ^ (Ablock->w64[j + 2] & mask2);
     }

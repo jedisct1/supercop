@@ -1,15 +1,12 @@
+// 20251220 djb: some usage of cryptoint
 /* See https://ntruprime.cr.yp.to/software.html for detailed documentation. */
 
 #include "params.h"
 #include "mod3.h"
 #include "swap.h"
 #include "r3.h"
-
-/* caller must ensure that x-y does not overflow */
-static int smaller_mask(int x,int y)
-{
-  return (x - y) >> 31;
-}
+#include "crypto_int64.h"
+#define smaller_mask crypto_int64_smaller_mask
 
 static void vectormod3_product(small *z,int len,const small *x,const small c)
 {

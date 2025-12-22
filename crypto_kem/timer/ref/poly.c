@@ -1,5 +1,9 @@
+// 20251220 djb: some usage of cryptoint
 #include "poly.h"
 #include <string.h>
+#include "crypto_int16.h"
+#include "crypto_uint8.h"
+#include "crypto_uint16.h"
 
 /*************************************************
  * Name:        poly_frommsg
@@ -13,8 +17,8 @@ void poly_frommsg(poly *r, const uint8_t *msg) {
     unsigned int mask;
     for (size_t i = 0; i < MSG_BYTES; i++) {
         for (size_t j = 0; j < 8; j++) {
-            mask = (msg[i] >> j) & 1;
-            mask = (mask * Modulus_Q_2) & Modulus_Q_2;
+            mask = crypto_uint8_bitmod_01(msg[i],j);
+            mask = (-mask) & Modulus_Q_2;
             r->coeffs[8 * i + j] = mask;
             r->coeffs[8 * i + j + 128] = mask;
         }
@@ -38,7 +42,7 @@ void poly_tomsg(unsigned char *msg, const poly *x) {
         t = flipabs(x->coeffs[i]);
         t += flipabs(x->coeffs[i + 128]);
         t = t - Modulus_Q_2;
-        t >>= 15;
+        t = crypto_uint16_topbit_01(t);
         msg[i >> 3] |= t << (i & 7);
     }
 }
@@ -55,7 +59,7 @@ void poly_tomsg(unsigned char *msg, const poly *x) {
 uint16_t flipabs(uint16_t x) {
     int16_t r, m;
     r = x - (Modulus_Q_2);
-    m = r >> 15;
+    m = crypto_int16_negative_mask(r);
     return (r + m) ^ m;
 }
 

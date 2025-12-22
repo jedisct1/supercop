@@ -1,3 +1,4 @@
+// 20251220 djb: some usage of cryptoint
 #include <immintrin.h>
 
 #include "jumpdivsteps.h"
@@ -12,6 +13,7 @@
 #include "polymul_ntt.h"
 
 #include "avx.h"
+#include "crypto_int16.h"
 
 
 #define v4591_16 _mm256_set1_epi16(4591)
@@ -23,16 +25,6 @@
 
 #define ALIGNED __attribute__((aligned(32)))
 
-
-/* return -1 if x!=0; else return 0 */
-static int int16_nonzero_mask(int16 x)
-{
-  uint16 u = x; /* 0, else 1...65535 */
-  uint32 v = u; /* 0, else 1...65535 */
-  v = -v; /* 0, else 2^32-65535...2^32-1 */
-  v >>= 31; /* 0, else 1 */
-  return -v; /* 0, else -1 */
-}
 
 
 static inline void ymm_store( __m256i * c , __m256i * a , int n_ymm ) {
@@ -403,6 +395,6 @@ int rq_recip3(modq *out,const small *s)
   c = modq_reciprocal(modq_freeze(f[0]));
   for (i = 0;i < p;++i) out[i] = modq_product(modq_freeze(v[p-i]),c);
   //for (i = p;i < 768;++i) out[i] = 0;
-  return int16_nonzero_mask(delta);
+  return crypto_int16_nonzero_mask(delta);
 }
 

@@ -1,6 +1,8 @@
+// 20251222 djb: more automated conversion to cryptoint
 #include "params.h"
 #include "packing.h"
 #include "poly.h"
+#include "crypto_int64.h"
 #include <string.h>
 
 #ifdef DBENCH
@@ -576,14 +578,14 @@ int unpack_sig(uint8_t c[SEEDBYTES],
 	/* Decode h */
 	for(i = 0 ; i < POLYH_PACKEDBYTES ; i++)
 	{
-		h->coeffs[8 * i + 0] = (sig[i] >> 0) & 0x1;
-		h->coeffs[8 * i + 1] = (sig[i] >> 1) & 0x1;
-		h->coeffs[8 * i + 2] = (sig[i] >> 2) & 0x1;
-		h->coeffs[8 * i + 3] = (sig[i] >> 3) & 0x1;
-		h->coeffs[8 * i + 4] = (sig[i] >> 4) & 0x1;
-		h->coeffs[8 * i + 5] = (sig[i] >> 5) & 0x1;
-		h->coeffs[8 * i + 6] = (sig[i] >> 6) & 0x1;
-		h->coeffs[8 * i + 7] = (sig[i] >> 7) & 0x1;
+		h->coeffs[8 * i + 0] = crypto_int64_bitmod_01(sig[i],0);
+		h->coeffs[8 * i + 1] = crypto_int64_bitmod_01(sig[i],1);
+		h->coeffs[8 * i + 2] = crypto_int64_bitmod_01(sig[i],2);
+		h->coeffs[8 * i + 3] = crypto_int64_bitmod_01(sig[i],3);
+		h->coeffs[8 * i + 4] = crypto_int64_bitmod_01(sig[i],4);
+		h->coeffs[8 * i + 5] = crypto_int64_bitmod_01(sig[i],5);
+		h->coeffs[8 * i + 6] = crypto_int64_bitmod_01(sig[i],6);
+		h->coeffs[8 * i + 7] = crypto_int64_bitmod_01(sig[i],7);
 	}
 
 	return 0;

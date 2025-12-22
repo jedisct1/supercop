@@ -1,3 +1,4 @@
+// 20251222 djb: more automated conversion to cryptoint
 // 20240806 djb: some automated conversion to cryptoint
 #include "namespace.h"
 
@@ -133,7 +134,7 @@ void KeccakP1600_InitializeRhoOffsets(void)
 
 static int LFSR86540(UINT8 *LFSR)
 {
-    int result = ((*LFSR) & 0x01) != 0;
+    int result = (crypto_int64_bottombit_01(*LFSR)) != 0;
     if (((*LFSR) & 0x80) != 0)
         /* Primitive polynomial over GF(2): x^8+x^6+x^5+x^4+1 */
         (*LFSR) = ((*LFSR) << 1) ^ 0x71;

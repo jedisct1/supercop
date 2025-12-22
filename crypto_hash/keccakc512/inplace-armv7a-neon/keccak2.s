@@ -444,4 +444,4 @@ KeccakF_armv7a_neon:  @
 
   @
 
-.section	.note.GNU-stack,"",@progbits
+.section	.note.GNU-stack,"",%progbits

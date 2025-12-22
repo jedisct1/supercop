@@ -1,6 +1,9 @@
+// 20251220 djb: more usage of cryptoint
 // 20240806 djb: some automated conversion to cryptoint
 #include "poly.h"
 #include "crypto_int64.h"
+#include "crypto_uint64.h"
+#define negative_mask crypto_int64_negative_mask
 
 #include <immintrin.h>
 
@@ -170,11 +173,6 @@ static void vec256_final(small *out,const vec256 *V0,const vec256 *V1)
   for (i = 0;i < p;++i) out[i] = vrev[i+ppad-p];
 }
 
-static inline int negative_mask(int x)
-{
-  return x >> 31;
-}
-
 static inline void vec256_swap(vec256 *f,vec256 *g,int len,vec256 mask)
 {
   vec256 flip;
@@ -251,7 +249,7 @@ static inline void vec256_divx_2(vec256 *f)
   unsigned long long low0 = _mm_cvtsi128_si64(_mm256_castsi256_si128(f0));
   unsigned long long low1 = _mm_cvtsi128_si64(_mm256_castsi256_si128(f1));
 
-  low0 = (low0 >> 1) | (low1 << 63);
+  low0 = (low0 >> 1) | crypto_uint64_shlmod(low1,63);
   low1 = low1 >> 1;
 
   f0 = _mm256_blend_epi32(f0,_mm256_set_epi64x(0,0,0,low0),0x3);
@@ -271,8 +269,8 @@ static inline void vec256_divx_3(vec256 *f)
   unsigned long long low1 = _mm_cvtsi128_si64(_mm256_castsi256_si128(f1));
   unsigned long long low2 = _mm_cvtsi128_si64(_mm256_castsi256_si128(f2));
 
-  low0 = (low0 >> 1) | (low1 << 63);
-  low1 = (low1 >> 1) | (low2 << 63);
+  low0 = (low0 >> 1) | crypto_uint64_shlmod(low1,63);
+  low1 = (low1 >> 1) | crypto_uint64_shlmod(low2,63);
   low2 = low2 >> 1;
 
   f0 = _mm256_blend_epi32(f0,_mm256_set_epi64x(0,0,0,low0),0x3);
@@ -305,7 +303,7 @@ static inline void vec256_timesx_2(vec256 *f)
   unsigned long long low0 = _mm_cvtsi128_si64(_mm256_castsi256_si128(f0));
   unsigned long long low1 = _mm_cvtsi128_si64(_mm256_castsi256_si128(f1));
 
-  low1 = (low1 << 1) | (low0 >> 63);
+  low1 = (low1 << 1) | crypto_uint64_topbit_01(low0);
   low0 = low0 << 1;
 
   f0 = _mm256_blend_epi32(f0,_mm256_set_epi64x(0,0,0,low0),0x3);
@@ -325,8 +323,8 @@ static inline void vec256_timesx_3(vec256 *f)
   unsigned long long low1 = *(unsigned long long *) &f1;
   unsigned long long low2 = _mm_cvtsi128_si64(_mm256_castsi256_si128(f2));
 
-  low2 = (low2 << 1) | (low1 >> 63);
-  low1 = (low1 << 1) | (low0 >> 63);
+  low2 = (low2 << 1) | crypto_uint64_topbit_01(low1);
+  low1 = (low1 << 1) | crypto_uint64_topbit_01(low0);
   low0 = low0 << 1;
 
   *(unsigned long long *) &f0 = low0;

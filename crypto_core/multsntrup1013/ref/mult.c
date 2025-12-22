@@ -1,3 +1,4 @@
+// 20251220 djb: simplify usage of cryptoint
 #include "crypto_core.h"
 #include "params.h"
 
@@ -34,7 +35,7 @@ int crypto_core(unsigned char *outbytes,const unsigned char *inbytes,const unsig
 
   for (i = 0;i < p;++i) {
     small gi = kbytes[i];
-    small gi0 = -crypto_int8_bottombit_mask(gi);
+    small gi0 = crypto_int8_bottombit_01(gi);
     g[i] = gi0-(gi&(gi0<<1));
   }
 

@@ -1,5 +1,6 @@
+// 20251220 djb: more use of cryptoint
 // 20240806 djb: some automated conversion to cryptoint
-#include "crypto_int64.h"
+#include "crypto_uint16.h"
 #ifndef _GF4591_H_
 #define _GF4591_H_
 
@@ -16,25 +17,14 @@ extern  "C" {
 typedef uint16_t sto_t;
 
 
-static inline sto_t gf_is_nonzero( sto_t a )
-{
-	sto_t aa = a-1;
-	aa = ~aa;
-	return crypto_int64_bitmod_01(aa,15);
-}
-
 static inline sto_t _gf_reduce( sto_t a )
 {
-	uint16_t aa = a-4591;
-	aa = ~aa;
-	aa >>= 15; /// sign bit
-	uint16_t mask = 0-aa;
-	return a-(mask&4591);
+	return a-(4591&crypto_int16_smaller_mask(a,4591));
 }
 
 static inline sto_t gf_neg( sto_t a )
 {
-	sto_t mask = 0 - gf_is_nonzero(a);
+	sto_t mask = crypto_uint16_nonzero_mask(a);
 	return (mask&4591)-a;
 }
 

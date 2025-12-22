@@ -735,4 +735,4 @@ round_cst:
 
 
 #endif
-.section	.note.GNU-stack,"",@progbits
+.section	.note.GNU-stack,"",%progbits

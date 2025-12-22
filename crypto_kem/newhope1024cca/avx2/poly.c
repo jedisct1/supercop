@@ -1,21 +1,18 @@
+// 20251220 djb: some usage of cryptoint
 #include "poly.h"
 #include "ntt.h"
 #include "reduce.h"
 #include "fips202.h"
 #include "fips202x4.h"
+#include "crypto_int16.h"
+#include "crypto_uint8.h"
+#include "crypto_uint16.h"
 
 static uint16_t coeff_freeze(uint16_t x)
 {
-  uint16_t m,r;
-  int16_t c;
-  r = barrett_reduce(x);
-
-  m = r - NEWHOPE_Q;
-  c = m;
-  c >>= 15;
-  r = m ^ ((r^m)&c); 
-
-  return r;
+  x = barrett_reduce(x);
+  x -= (NEWHOPE_Q)&crypto_uint16_leq_mask(NEWHOPE_Q,x);
+  return x;
 }
 
 /* Computes abs(x-Q/2) */
@@ -25,7 +22,7 @@ static uint16_t flipabs(uint16_t x)
   r = coeff_freeze(x);
 
   r = r - NEWHOPE_Q/2;
-  m = r >> 15;
+  m = crypto_int16_negative_mask(r);
   return (r + m) ^ m;
 }
 
@@ -94,7 +91,7 @@ void poly_decompress(poly *r, const unsigned char *a)
     r->coeffs[i+2] = (a[0] >> 6) | ((a[1] << 2) & 4);
     r->coeffs[i+3] = (a[1] >> 1) & 7;
     r->coeffs[i+4] = (a[1] >> 4) & 7;
-    r->coeffs[i+5] = (a[1] >> 7) | ((a[2] << 1) & 6);
+    r->coeffs[i+5] = crypto_uint8_topbit_01(a[1]) | ((a[2] << 1) & 6);
     r->coeffs[i+6] = (a[2] >> 2) & 7;
     r->coeffs[i+7] = (a[2] >> 5);
     a += 3;
@@ -110,7 +107,7 @@ void poly_frommsg(poly *r, const unsigned char *msg)
   {
     for(j=0;j<8;j++)
     {
-      mask = -((msg[i] >> j)&1);
+      mask = crypto_int16_bitmod_mask(msg[i],j);
       r->coeffs[8*i+j+  0] = mask & (NEWHOPE_Q/2);
       r->coeffs[8*i+j+256] = mask & (NEWHOPE_Q/2);
 #if (NEWHOPE_N == 1024)

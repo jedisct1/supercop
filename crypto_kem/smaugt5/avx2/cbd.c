@@ -1,4 +1,6 @@
+// 20251222 djb: more automated conversion to cryptoint
 #include "cbd.h"
+#include "crypto_int64.h"
 
 #if SMAUG_MODE == 3
 /*************************************************
@@ -129,8 +131,8 @@ static void cbd(poly *r, const uint8_t buf[CBDSEED_BYTES]) {
         t = load32_littleendian(buf + 4 * i);
 
         for (j = 0; j < 16; j++) {
-            a = (t >> (2 * j + 0)) & 0x01;
-            b = (t >> (2 * j + 1)) & 0x01;
+            a = crypto_int64_bitmod_01(t,(2 * j + 0));
+            b = crypto_int64_bitmod_01(t,(2 * j + 1));
             r->coeffs[16 * i + j] = a - b;
         }
     }

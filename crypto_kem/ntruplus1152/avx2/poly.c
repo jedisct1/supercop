@@ -1,7 +1,9 @@
+// 20251220 djb: some usage of cryptoint
 #include <stdint.h>
 #include "params.h"
 #include "poly.h"
 #include "symmetric.h"
+#include "crypto_int16.h"
 
 /*************************************************
 * Name:        crepmod3
@@ -14,9 +16,9 @@
 **************************************************/
 static int16_t crepmod3(int16_t a)
 {
-	a += (a >> 15) & NTRUPLUS_Q;
+	a += crypto_int16_negative_mask(a) & NTRUPLUS_Q;
 	a -= (NTRUPLUS_Q-1)/2;
-	a += (a >> 15) & NTRUPLUS_Q;
+	a += crypto_int16_negative_mask(a) & NTRUPLUS_Q;
 	a -= (NTRUPLUS_Q+1)/2;
 
 	a  = (a >> 8) + (a & 255);
@@ -24,7 +26,7 @@ static int16_t crepmod3(int16_t a)
 	a  = (a >> 2) + (a & 3);
 	a  = (a >> 2) + (a & 3);
 	a -= 3;
-	a += ((a + 1) >> 15) & 3;
+	a += crypto_int16_negative_mask(a + 1) & 3;
 	return a;
 }
 

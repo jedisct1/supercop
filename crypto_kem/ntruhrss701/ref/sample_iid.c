@@ -1,4 +1,6 @@
+// 20251220 djb: some usage of cryptoint
 #include "sample.h"
+#include "crypto_int16.h"
 
 static uint16_t mod3(uint16_t a)
 {
@@ -11,7 +13,7 @@ static uint16_t mod3(uint16_t a)
   r = (r >> 2) + (r & 0x3); // r' mod 3 == r mod 3
 
   t = r - 3;
-  c = t >> 15;
+  c = crypto_int16_negative_mask(t);
 
   return (c&r) ^ (~c&t);
 }

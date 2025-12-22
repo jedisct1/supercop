@@ -1,6 +1,8 @@
+// 20251220 djb: more usage of cryptoint
 #include <stdint.h>
 #include <stdlib.h>
 #include "crypto_core.h"
+#include "crypto_int16.h"
 #include "crypto_uint16.h"
 
 #define NTRU_N 701
@@ -21,7 +23,7 @@ static uint16_t mod3(uint16_t a)
   r = (r >> 2) + (r & 0x3); // r' mod 3 == r mod 3
 
   t = r - 3;
-  c = t >> 15;
+  c = crypto_int16_negative_mask(t);
 
   return (c&r) ^ (~c&t);
 }

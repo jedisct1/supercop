@@ -903,4 +903,4 @@ ldr r5,[sp,#4]
 # qhasm: return
 add sp,sp,#64
 bx lr
-.section	.note.GNU-stack,"",@progbits
+.section	.note.GNU-stack,"",%progbits

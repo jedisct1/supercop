@@ -1,16 +1,13 @@
+// 20251220 djb: some usage of cryptoint
 #include "crypto_kem.h" /* for namespacing */
 #include <immintrin.h>
 #include "params.h"
 #include "rq.h"
+#include "crypto_int64.h"
+#define smaller_mask crypto_int64_smaller_mask
 
 #define v4591_16 _mm256_set1_epi16(4591)
 #define v15631_16 _mm256_set1_epi16(15631)
-
-/* caller must ensure that x-y does not overflow */
-static inline int smaller_mask(int x,int y)
-{
-  return (x - y) >> 31;
-}
 
 static inline __m256i montproduct(__m256i x,__m256i y)
 {

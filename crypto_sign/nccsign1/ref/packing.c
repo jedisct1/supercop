@@ -1,7 +1,11 @@
+// 20251222 djb: more automated conversion to cryptoint
+// 20251220 djb: some usage of cryptoint
 #include "params.h"
 #include "packing.h"
 #include "poly.h"
 #include <string.h>
+#include "crypto_uint8.h"
+#include "crypto_int64.h"
 
 
 void polyeta_pack(uint8_t *r, const poly *a) {
@@ -32,7 +36,7 @@ void polyeta_unpack(poly *r, const uint8_t *a) {
     r->coeffs[8*i+2] = ((a[3*i+0] >> 6) | (a[3*i+1] << 2)) & 7;
     r->coeffs[8*i+3] =  (a[3*i+1] >> 1) & 7;
     r->coeffs[8*i+4] =  (a[3*i+1] >> 4) & 7;
-    r->coeffs[8*i+5] = ((a[3*i+1] >> 7) | (a[3*i+2] << 1)) & 7;
+    r->coeffs[8*i+5] = (crypto_uint8_topbit_01(a[3*i+1]) | (a[3*i+2] << 1)) & 7;
     r->coeffs[8*i+6] =  (a[3*i+2] >> 2) & 7;
     r->coeffs[8*i+7] =  (a[3*i+2] >> 5) & 7;
 
@@ -84,7 +88,7 @@ void polyt1_unpack(poly *r, const uint8_t *a) {
     r->coeffs[8*i+2] = ((a[11*i+2] >> 6) | ((uint32_t)a[11*i+ 3] << 2) | ((uint32_t)a[11*i+4] << 10 )) & 0x7FF;
     r->coeffs[8*i+3] = ((a[11*i+4] >> 1) | ((uint32_t)a[11*i+ 5] << 7)) & 0x7FF;                               
     r->coeffs[8*i+4] = ((a[11*i+5] >> 4) | ((uint32_t)a[11*i+ 6] << 4)) & 0x7FF;                               
-    r->coeffs[8*i+5] = ((a[11*i+6] >> 7) | ((uint32_t)a[11*i+ 7] << 1) | ((uint32_t)a[11*i+8] <<  9)) & 0x7FF; 
+    r->coeffs[8*i+5] = (crypto_uint8_topbit_01(a[11*i+6]) | ((uint32_t)a[11*i+ 7] << 1) | ((uint32_t)a[11*i+8] <<  9)) & 0x7FF; 
     r->coeffs[8*i+6] = ((a[11*i+8] >> 2) | ((uint32_t)a[11*i+ 9] << 6)) & 0x7FF;                               
     r->coeffs[8*i+7] = ((a[11*i+9] >> 5) | ((uint32_t)a[11*i+10] << 3)) & 0x7FF;                               
   }                               
@@ -146,7 +150,7 @@ void polyt0_unpack(poly *r, const uint8_t *a) {
     r->coeffs[8*i+0] = ((a[13*i+ 0] >> 0) | ((uint32_t)a[13*i+ 1] << 8)) & 0x1FFF;                               
     r->coeffs[8*i+1] =(((a[13*i+ 1] >> 5) | ((uint32_t)a[13*i+ 2] << 3)) | ((uint32_t)a[13*i+ 3] << 11)) & 0x1FFF;                               
     r->coeffs[8*i+2] = ((a[13*i+ 3] >> 2) | ((uint32_t)a[13*i+ 4] << 6)) & 0x1FFF;
-    r->coeffs[8*i+3] =(((a[13*i+ 4] >> 7) | ((uint32_t)a[13*i+ 5] << 1)) | ((uint32_t)a[13*i+ 6] <<  9)) & 0x1FFF;                               
+    r->coeffs[8*i+3] =((crypto_uint8_topbit_01(a[13*i+ 4]) | ((uint32_t)a[13*i+ 5] << 1)) | ((uint32_t)a[13*i+ 6] <<  9)) & 0x1FFF;                               
     r->coeffs[8*i+4] =(((a[13*i+ 6] >> 4) | ((uint32_t)a[13*i+ 7] << 4)) | ((uint32_t)a[13*i+ 8] << 12)) & 0x1FFF;                               
     r->coeffs[8*i+5] = ((a[13*i+ 8] >> 1) | ((uint32_t)a[13*i+ 9] << 7)) & 0x1FFF;
     r->coeffs[8*i+6] =(((a[13*i+ 9] >> 6) | ((uint32_t)a[13*i+10] << 2)) | ((uint32_t)a[13*i+11] << 10)) & 0x1FFF;                               
@@ -246,7 +250,7 @@ void polyz_unpack(poly *r, const uint8_t *a) {
 		r->coeffs[8 * i + 2] = ((a[19 * i +  4] >> 6) | ((uint32_t)a[19 * i +  5] << 2) | ((uint32_t)a[19 * i +  6] << 10) | ((uint32_t)a[19 * i +  7] << 18)) & 0x7FFFF;
 		r->coeffs[8 * i + 3] = ((a[19 * i +  7] >> 1) | ((uint32_t)a[19 * i +  8] << 7) | ((uint32_t)a[19 * i +  9] << 15)) & 0x7FFFF;
 		r->coeffs[8 * i + 4] = ((a[19 * i +  9] >> 4) | ((uint32_t)a[19 * i + 10] << 4) | ((uint32_t)a[19 * i + 11] << 12)) & 0x7FFFF;
-		r->coeffs[8 * i + 5] = ((a[19 * i + 11] >> 7) | ((uint32_t)a[19 * i + 12] << 1) | ((uint32_t)a[19 * i + 13] <<  9) | ((uint32_t)a[19 * i + 14] << 17)) & 0x7FFFF;
+		r->coeffs[8 * i + 5] = (crypto_uint8_topbit_01(a[19 * i + 11]) | ((uint32_t)a[19 * i + 12] << 1) | ((uint32_t)a[19 * i + 13] <<  9) | ((uint32_t)a[19 * i + 14] << 17)) & 0x7FFFF;
 		r->coeffs[8 * i + 6] = ((a[19 * i + 14] >> 2) | ((uint32_t)a[19 * i + 15] << 6) | ((uint32_t)a[19 * i + 16] << 14)) & 0x7FFFF;
 		r->coeffs[8 * i + 7] = ((a[19 * i + 16] >> 5) | ((uint32_t)a[19 * i + 17] << 3) | ((uint32_t)a[19 * i + 18] << 11)) & 0x7FFFF;
 
@@ -414,14 +418,14 @@ int unpack_sig(uint8_t c[SEEDBYTES],
   /* Decode h */
   for (i = 0; i < POLYH_PACKEDBYTES; i++)
   {
-	  h->coeffs[8 * i + 0] = (sig[i] >> 0) & 0x1;
-	  h->coeffs[8 * i + 1] = (sig[i] >> 1) & 0x1;
-	  h->coeffs[8 * i + 2] = (sig[i] >> 2) & 0x1;
-	  h->coeffs[8 * i + 3] = (sig[i] >> 3) & 0x1;
-	  h->coeffs[8 * i + 4] = (sig[i] >> 4) & 0x1;
-	  h->coeffs[8 * i + 5] = (sig[i] >> 5) & 0x1;
-	  h->coeffs[8 * i + 6] = (sig[i] >> 6) & 0x1;
-	  h->coeffs[8 * i + 7] = (sig[i] >> 7) & 0x1;
+	  h->coeffs[8 * i + 0] = crypto_int64_bitmod_01(sig[i],0);
+	  h->coeffs[8 * i + 1] = crypto_int64_bitmod_01(sig[i],1);
+	  h->coeffs[8 * i + 2] = crypto_int64_bitmod_01(sig[i],2);
+	  h->coeffs[8 * i + 3] = crypto_int64_bitmod_01(sig[i],3);
+	  h->coeffs[8 * i + 4] = crypto_int64_bitmod_01(sig[i],4);
+	  h->coeffs[8 * i + 5] = crypto_int64_bitmod_01(sig[i],5);
+	  h->coeffs[8 * i + 6] = crypto_int64_bitmod_01(sig[i],6);
+	  h->coeffs[8 * i + 7] = crypto_int64_bitmod_01(sig[i],7);
   }
 
   return 0;

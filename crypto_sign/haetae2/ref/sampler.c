@@ -1,3 +1,4 @@
+// 20251220 djb: more usage of cryptoint
 // 20240806 djb: some automated conversion to cryptoint
 #include "sampler.h"
 #include "fixpoint.h"
@@ -218,7 +219,7 @@ static int sample_gauss_sigma76(uint64_t *r, fp96_76 *sqr,
                                         // use it for rejection if sample==0
               - (int64_t)approx_exp(exp_in)) >>
              63) // reject with prob 1-approx_exp(exp_in)
-            & (((*r | -*r) >> 63) | rand_rej)) &
+            & ((crypto_int64_topbit_01(*r | -*r)) | rand_rej)) &
            1; // if the sample is zero, clear the return value with prob 1/2
 }
 

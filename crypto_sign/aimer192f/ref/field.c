@@ -1,8 +1,11 @@
+// 20251222 djb: more automated conversion to cryptoint
+// 20251220 djb: more usage of cryptoint
 // 20240806 djb: some automated conversion to cryptoint
 // SPDX-License-Identifier: MIT
 
 #include "field.h"
 #include "crypto_int64.h"
+#include "crypto_uint64.h"
 #include <stddef.h>
 #include <stdint.h>
 
@@ -128,13 +131,13 @@ static void poly64_mul(uint64_t *c1, uint64_t *c0, uint64_t a, uint64_t b)
   low ^= temp << 60;
   high ^= temp >> 4;
 
-  mask = -(int64_t)(top3 & 0x1);
+  mask = -(int64_t)(crypto_int64_bottombit_01(top3));
   low ^= mask & (b << 61);
   high ^= mask & (b >> 3);
-  mask = -(int64_t)((top3 >> 1) & 0x1);
+  mask = -(int64_t)(crypto_int64_bitmod_01(top3,1));
   low ^= mask & (b << 62);
   high ^= mask & (b >> 2);
-  mask = -(int64_t)((top3 >> 2) & 0x1);
+  mask = -(int64_t)(crypto_int64_bitmod_01(top3,2));
   low ^= mask & (b << 63);
   high ^= mask & (b >> 1);
 
@@ -171,17 +174,17 @@ void GF_mul(GF c, const GF a, const GF b)
   temp[3] ^= t[0];
   temp[4] ^= t[1];
 
-  t[0] = temp[3] ^ ((temp[5] >> 57) ^ (temp[5] >> 62) ^ (temp[5] >> 63));
+  t[0] = temp[3] ^ ((temp[5] >> 57) ^ (temp[5] >> 62) ^ crypto_uint64_topbit_01(temp[5]));
 
   c[2] = temp[2] ^ temp[5];
   c[2] ^= (temp[5] << 7) | (temp[4] >> 57);
   c[2] ^= (temp[5] << 2) | (temp[4] >> 62);
-  c[2] ^= (temp[5] << 1) | (temp[4] >> 63);
+  c[2] ^= (temp[5] << 1) | crypto_uint64_topbit_01(temp[4]);
 
   c[1] = temp[1] ^ temp[4];
   c[1] ^= (temp[4] << 7) | (t[0] >> 57);
   c[1] ^= (temp[4] << 2) | (t[0] >> 62);
-  c[1] ^= (temp[4] << 1) | (t[0] >> 63);
+  c[1] ^= (temp[4] << 1) | crypto_uint64_topbit_01(t[0]);
 
   c[0] = temp[0] ^ t[0];
   c[0] ^= (t[0] << 7);
@@ -218,17 +221,17 @@ void GF_mul_add(GF c, const GF a, const GF b)
   temp[3] ^= t[0];
   temp[4] ^= t[1];
 
-  t[0] = temp[3] ^ ((temp[5] >> 57) ^ (temp[5] >> 62) ^ (temp[5] >> 63));
+  t[0] = temp[3] ^ ((temp[5] >> 57) ^ (temp[5] >> 62) ^ crypto_uint64_topbit_01(temp[5]));
 
   c[2] ^= temp[2] ^ temp[5];
   c[2] ^= (temp[5] << 7) | (temp[4] >> 57);
   c[2] ^= (temp[5] << 2) | (temp[4] >> 62);
-  c[2] ^= (temp[5] << 1) | (temp[4] >> 63);
+  c[2] ^= (temp[5] << 1) | crypto_uint64_topbit_01(temp[4]);
 
   c[1] ^= temp[1] ^ temp[4];
   c[1] ^= (temp[4] << 7) | (t[0] >> 57);
   c[1] ^= (temp[4] << 2) | (t[0] >> 62);
-  c[1] ^= (temp[4] << 1) | (t[0] >> 63);
+  c[1] ^= (temp[4] << 1) | crypto_uint64_topbit_01(t[0]);
 
   c[0] ^= temp[0] ^ t[0];
   c[0] ^= (t[0] << 7);
@@ -530,17 +533,17 @@ void GF_mul_s(GF c, const GF a, const GF b)
   temp[3] ^= t[0];
   temp[4] ^= t[1];
 
-  t[0] = temp[3] ^ ((temp[5] >> 57) ^ (temp[5] >> 62) ^ (temp[5] >> 63));
+  t[0] = temp[3] ^ ((temp[5] >> 57) ^ (temp[5] >> 62) ^ crypto_uint64_topbit_01(temp[5]));
 
   c[2] = temp[2] ^ temp[5];
   c[2] ^= (temp[5] << 7) | (temp[4] >> 57);
   c[2] ^= (temp[5] << 2) | (temp[4] >> 62);
-  c[2] ^= (temp[5] << 1) | (temp[4] >> 63);
+  c[2] ^= (temp[5] << 1) | crypto_uint64_topbit_01(temp[4]);
 
   c[1] = temp[1] ^ temp[4];
   c[1] ^= (temp[4] << 7) | (t[0] >> 57);
   c[1] ^= (temp[4] << 2) | (t[0] >> 62);
-  c[1] ^= (temp[4] << 1) | (t[0] >> 63);
+  c[1] ^= (temp[4] << 1) | crypto_uint64_topbit_01(t[0]);
 
   c[0] = temp[0] ^ t[0];
   c[0] ^= (t[0] << 7);
@@ -577,17 +580,17 @@ void GF_mul_add_s(GF c, const GF a, const GF b)
   temp[3] ^= t[0];
   temp[4] ^= t[1];
 
-  t[0] = temp[3] ^ ((temp[5] >> 57) ^ (temp[5] >> 62) ^ (temp[5] >> 63));
+  t[0] = temp[3] ^ ((temp[5] >> 57) ^ (temp[5] >> 62) ^ crypto_uint64_topbit_01(temp[5]));
 
   c[2] ^= temp[2] ^ temp[5];
   c[2] ^= (temp[5] << 7) | (temp[4] >> 57);
   c[2] ^= (temp[5] << 2) | (temp[4] >> 62);
-  c[2] ^= (temp[5] << 1) | (temp[4] >> 63);
+  c[2] ^= (temp[5] << 1) | crypto_uint64_topbit_01(temp[4]);
 
   c[1] ^= temp[1] ^ temp[4];
   c[1] ^= (temp[4] << 7) | (t[0] >> 57);
   c[1] ^= (temp[4] << 2) | (t[0] >> 62);
-  c[1] ^= (temp[4] << 1) | (t[0] >> 63);
+  c[1] ^= (temp[4] << 1) | crypto_uint64_topbit_01(t[0]);
 
   c[0] ^= temp[0] ^ t[0];
   c[0] ^= (t[0] << 7);
@@ -628,17 +631,17 @@ void GF_sqr_s(GF c, const GF a)
   poly64_sqr_s(&temp[3], &temp[2], a[1]);
   poly64_sqr_s(&temp[5], &temp[4], a[2]);
 
-  t = temp[3] ^ ((temp[5] >> 57) ^ (temp[5] >> 62) ^ (temp[5] >> 63));
+  t = temp[3] ^ ((temp[5] >> 57) ^ (temp[5] >> 62) ^ crypto_uint64_topbit_01(temp[5]));
 
   c[2] = temp[2] ^ temp[5];
   c[2] ^= (temp[5] << 7) | (temp[4] >> 57);
   c[2] ^= (temp[5] << 2) | (temp[4] >> 62);
-  c[2] ^= (temp[5] << 1) | (temp[4] >> 63);
+  c[2] ^= (temp[5] << 1) | crypto_uint64_topbit_01(temp[4]);
 
   c[1] = temp[1] ^ temp[4];
   c[1] ^= (temp[4] << 7) | (t >> 57);
   c[1] ^= (temp[4] << 2) | (t >> 62);
-  c[1] ^= (temp[4] << 1) | (t >> 63);
+  c[1] ^= (temp[4] << 1) | crypto_uint64_topbit_01(t);
 
   c[0] = temp[0] ^ t;
   c[0] ^= (t << 7);

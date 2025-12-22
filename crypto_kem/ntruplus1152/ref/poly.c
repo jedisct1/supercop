@@ -1,9 +1,14 @@
+// 20251222 djb: more automated conversion to cryptoint
+// 20251220 djb: some usage of cryptoint
 #include <stdint.h>
 #include "params.h"
 #include "poly.h"
 #include "ntt.h"
 #include "reduce.h"
 #include "symmetric.h"
+#include "crypto_int16.h"
+#include "crypto_int64.h"
+#include "crypto_uint64.h"
 
 /*************************************************
 * Name:        load32_littleendian
@@ -36,9 +41,9 @@ static uint32_t load32_littleendian(const uint8_t x[4])
 **************************************************/
 static int16_t crepmod3(int16_t a)
 {
-	a += (a >> 15) & NTRUPLUS_Q;
+	a += crypto_int16_negative_mask(a) & NTRUPLUS_Q;
 	a -= (NTRUPLUS_Q-1)/2;
-	a += (a >> 15) & NTRUPLUS_Q;
+	a += crypto_int16_negative_mask(a) & NTRUPLUS_Q;
 	a -= (NTRUPLUS_Q+1)/2;
 
 	a  = (a >> 8) + (a & 255);
@@ -46,7 +51,7 @@ static int16_t crepmod3(int16_t a)
 	a  = (a >> 2) + (a & 3);
 	a  = (a >> 2) + (a & 3);
 	a -= 3;
-	a += ((a + 1) >> 15) & 3;
+	a += crypto_int16_negative_mask(a + 1) & 3;
 	return a;
 }
 
@@ -68,13 +73,13 @@ void poly_tobytes(uint8_t r[NTRUPLUS_POLYBYTES], const poly *a)
 		for (int j = 0; j < 18; j++)
 		{
 			t[0]  = a->coeffs[64*j + i];
-			t[0] += (t[0] >> 15) & NTRUPLUS_Q;
+			t[0] += crypto_int16_negative_mask(t[0]) & NTRUPLUS_Q;
 			t[1]  = a->coeffs[64*j + i + 16];
-			t[1] += (t[1] >> 15) & NTRUPLUS_Q;
+			t[1] += crypto_int16_negative_mask(t[1]) & NTRUPLUS_Q;
 			t[2]  = a->coeffs[64*j + i + 32];
-			t[2] += (t[2] >> 15) & NTRUPLUS_Q;			
+			t[2] += crypto_int16_negative_mask(t[2]) & NTRUPLUS_Q;			
 			t[3]  = a->coeffs[64*j + i + 48];
-			t[3] += (t[3] >> 15) & NTRUPLUS_Q;
+			t[3] += crypto_int16_negative_mask(t[3]) & NTRUPLUS_Q;
 
 			r[96*j + 2*i +  0] = t[0];
 			r[96*j + 2*i +  1] = (t[0] >> 8) | (t[1] << 4);			
@@ -145,7 +150,7 @@ void poly_cbd1(poly *r, const unsigned char buf[NTRUPLUS_N/4])
 			{
 				for(int l = 0; l < 16; l++)
 				{
-					r->coeffs[256*i + 16*l + 2*j + k] = (t1 & 0x1) - (t2 & 0x1);
+					r->coeffs[256*i + 16*l + 2*j + k] = (crypto_int64_bottombit_01(t1)) - (crypto_int64_bottombit_01(t2));
 
 					t1 >>= 1;   
 					t2 >>= 1;
@@ -163,7 +168,7 @@ void poly_cbd1(poly *r, const unsigned char buf[NTRUPLUS_N/4])
 		{
 			for(int l = 0; l < 16; l++)
 			{
-				r->coeffs[1024 + 8*l + 2*j + k] = (t1 & 0x1) - (t2 & 0x1);
+				r->coeffs[1024 + 8*l + 2*j + k] = (crypto_int64_bottombit_01(t1)) - (crypto_int64_bottombit_01(t2));
 
 				t1 >>= 1;
 				t2 >>= 1;
@@ -227,10 +232,10 @@ int poly_sotp_inv(unsigned char *msg, const poly *a, const unsigned char *buf)
 			{
 				for(int l = 0; l < 16; l++)
 				{
-					t4 = t2 & 0x1;
+					t4 = crypto_int64_bottombit_01(t2);
 					t4 = a->coeffs[256*i + 16*l + 2*j + k] + t4;
 					r |= t4;
-					t4 = (t4^t1) & 0x1;
+					t4 = crypto_int64_bottombit_01(t4^t1);
 					t3 ^= t4 << (l+16*k);
 
 					t1 >>= 1;
@@ -255,10 +260,10 @@ int poly_sotp_inv(unsigned char *msg, const poly *a, const unsigned char *buf)
 		{
 			for(int l = 0; l < 16; l++)
 			{
-				t4 = t2 & 0x1;
+				t4 = crypto_int64_bottombit_01(t2);
 				t4 = a->coeffs[1024 + 8*l + 2*j + k] + t4;
 				r |= t4;
-				t4 = (t4^t1) & 0x1;
+				t4 = crypto_int64_bottombit_01(t4^t1);
 				t3 ^= t4 << (l+16*k);
 
 				t1 >>= 1;
@@ -273,9 +278,8 @@ int poly_sotp_inv(unsigned char *msg, const poly *a, const unsigned char *buf)
 	}
 
 	r = r >> 1;
-	r = (-(uint64_t)r) >> 63;
 
-	return r;
+	return crypto_uint64_nonzero_01(r);
 }
 
 /*************************************************

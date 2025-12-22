@@ -1,3 +1,4 @@
+// 20251222 djb: more automated conversion to cryptoint
 /*
  *  This file is part of the optimized implementation of the Picnic signature scheme.
  *  See the accompanying documentation for complete details.
@@ -14,13 +15,14 @@
 #include <stdio.h>
 
 #include "mzd_additional.h"
+#include "crypto_int64.h"
 
 void mzd_to_char_array(uint8_t* dst, const mzd_local_t* data, size_t numbytes);
 void mzd_from_char_array(mzd_local_t* result, const uint8_t* data, size_t len);
 
 /* Get one bit from a byte array */
 static inline uint8_t getBit(const uint8_t* array, size_t bitNumber) {
-  return (array[bitNumber / 8] >> (7 - (bitNumber % 8))) & 0x01;
+  return crypto_int64_bitmod_01(array[bitNumber / 8],(7 - (bitNumber % 8)));
 }
 
 /* Set a specific bit in a byte array to a given value */

@@ -1,3 +1,4 @@
+// 20251220 djb: more usage of cryptoint
 // 20240806 djb: some automated conversion to cryptoint
 /*
  *  This file is part of the optimized implementation of the Picnic signature scheme.
@@ -10,6 +11,9 @@
 
 #ifndef PICNIC_MACROS_H
 #define PICNIC_MACROS_H
+
+#include "crypto_uint32.h"
+#include "crypto_int64.h"
 
 /* __FUNCTION__ generates a warning on Linux with -Wpedantic and newer versions
  * of GCC (tested with 5.4).  So we use __func__ in all source and define it on
@@ -288,7 +292,7 @@ ATTR_CONST ATTR_ARTIFICIAL static inline uint32_t clz(uint32_t x) {
     n = n + 2;
     x = x << 2;
   }
-  n = n - (x >> 31);
+  n = n - crypto_uint32_topbit_01(x);
 
   return n;
 }
@@ -310,7 +314,6 @@ ATTR_CONST ATTR_ARTIFICIAL static inline uint32_t ceil_log2(uint32_t x) {
 /* crypto_declassify wrapper */
 #if defined(TIMECOP) || defined(SUPERCOP)
 #include "crypto_declassify.h"
-#include "crypto_int64.h"
 #define picnic_declassify(x, len) crypto_declassify((void*)x, len)
 #elif defined(WITH_VALGRIND)
 #include <valgrind/memcheck.h>

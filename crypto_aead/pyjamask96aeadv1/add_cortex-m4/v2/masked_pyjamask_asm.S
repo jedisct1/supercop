@@ -907,4 +907,4 @@ ________inner_loop_isw_macc_128_203:
 
 // end isw_macc_128_203
 
-.section	.note.GNU-stack,"",@progbits
+.section	.note.GNU-stack,"",%progbits

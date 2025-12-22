@@ -1,3 +1,4 @@
+// 20251220 djb: more usage of cryptoint
 // 20240806 djb: some automated conversion to cryptoint
 #include <stdint.h>
 #include <immintrin.h>
@@ -11,6 +12,7 @@
 #include "consts.h"
 #include "symmetric.h"
 #include "crypto_int64.h"
+#include "crypto_uint8.h"
 #ifndef DILITHIUM_USE_AES
 #include "fips202x4.h"
 #endif
@@ -782,7 +784,7 @@ void polyeta_unpack(poly * restrict r, const uint8_t a[POLYETA_PACKEDBYTES]) {
     r->coeffs[8*i+2] = ((a[3*i+0] >> 6) | (a[3*i+1] << 2)) & 7;
     r->coeffs[8*i+3] =  (a[3*i+1] >> 1) & 7;
     r->coeffs[8*i+4] =  (a[3*i+1] >> 4) & 7;
-    r->coeffs[8*i+5] = ((a[3*i+1] >> 7) | (a[3*i+2] << 1)) & 7;
+    r->coeffs[8*i+5] = (crypto_uint8_topbit_01(a[3*i+1]) | (a[3*i+2] << 1)) & 7;
     r->coeffs[8*i+6] =  (a[3*i+2] >> 2) & 7;
     r->coeffs[8*i+7] =  (a[3*i+2] >> 5) & 7;
 
@@ -930,7 +932,7 @@ void polyt0_unpack(poly * restrict r, const uint8_t a[POLYT0_PACKEDBYTES]) {
     r->coeffs[8*i+2] |= (uint32_t)a[13*i+4] << 6;
     r->coeffs[8*i+2] &= 0x1FFF;
 
-    r->coeffs[8*i+3]  = a[13*i+4] >> 7;
+    r->coeffs[8*i+3]  = crypto_uint8_topbit_01(a[13*i+4]);
     r->coeffs[8*i+3] |= (uint32_t)a[13*i+5] << 1;
     r->coeffs[8*i+3] |= (uint32_t)a[13*i+6] << 9;
     r->coeffs[8*i+3] &= 0x1FFF;

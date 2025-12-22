@@ -1,7 +1,11 @@
+// 20251220 djb: some usage of cryptoint
 #include "poly.h"
 #include "ntt.h"
 #include "reduce.h"
 #include "fips202.h"
+#include "crypto_int16.h"
+#include "crypto_uint8.h"
+#include "crypto_uint16.h"
 
 /*************************************************
 * Name:        coeff_freeze
@@ -14,16 +18,10 @@
 **************************************************/
 static uint16_t coeff_freeze(uint16_t x)
 {
-  uint16_t m,r;
-  int16_t c;
-  r = x % NEWHOPE_Q;
-
-  m = r - NEWHOPE_Q;
-  c = m;
-  c >>= 15;
-  r = m ^ ((r^m)&c);
-
-  return r;
+  x -= (4*NEWHOPE_Q)&crypto_uint16_leq_mask(4*NEWHOPE_Q,x);
+  x -= (2*NEWHOPE_Q)&crypto_uint16_leq_mask(2*NEWHOPE_Q,x);
+  x -= (NEWHOPE_Q)&crypto_uint16_leq_mask(NEWHOPE_Q,x);
+  return x;
 }
 
 /*************************************************
@@ -41,7 +39,7 @@ static uint16_t flipabs(uint16_t x)
   r = coeff_freeze(x);
 
   r = r - NEWHOPE_Q/2;
-  m = r >> 15;
+  m = crypto_int16_negative_mask(r);
   return (r + m) ^ m;
 }
 
@@ -142,7 +140,7 @@ void poly_decompress(poly *r, const unsigned char *a)
     r->coeffs[i+2] = (a[0] >> 6) | ((a[1] << 2) & 4);
     r->coeffs[i+3] = (a[1] >> 1) & 7;
     r->coeffs[i+4] = (a[1] >> 4) & 7;
-    r->coeffs[i+5] = (a[1] >> 7) | ((a[2] << 1) & 6);
+    r->coeffs[i+5] = crypto_uint8_topbit_01(a[1]) | ((a[2] << 1) & 6);
     r->coeffs[i+6] = (a[2] >> 2) & 7;
     r->coeffs[i+7] = (a[2] >> 5);
     a += 3;
@@ -166,7 +164,7 @@ void poly_frommsg(poly *r, const unsigned char *msg)
   {
     for(j=0;j<8;j++)
     {
-      mask = -((msg[i] >> j)&1);
+      mask = crypto_int16_bitmod_mask(msg[i],j);
       r->coeffs[8*i+j+  0] = mask & (NEWHOPE_Q/2);
       r->coeffs[8*i+j+256] = mask & (NEWHOPE_Q/2);
 #if (NEWHOPE_N == 1024)
@@ -261,10 +259,7 @@ void poly_uniform(poly *a, const unsigned char *seed)
 **************************************************/
 static unsigned char hw(unsigned char a)
 {
-  unsigned char i, r = 0;
-  for(i=0;i<8;i++)
-    r += (a >> i) & 1;
-  return r;
+  return crypto_uint8_ones_num(a);
 }
 
 /*************************************************
@@ -351,7 +346,7 @@ void poly_add(poly *r, const poly *a, const poly *b)
 {
   int i;
   for(i=0;i<NEWHOPE_N;i++)
-    r->coeffs[i] = (a->coeffs[i] + b->coeffs[i]) % NEWHOPE_Q;
+    r->coeffs[i] = coeff_freeze(a->coeffs[i] + b->coeffs[i]);
 }
 
 /*************************************************
@@ -367,7 +362,7 @@ void poly_sub(poly *r, const poly *a, const poly *b)
 {
   int i;
   for(i=0;i<NEWHOPE_N;i++)
-    r->coeffs[i] = (a->coeffs[i] + 3*NEWHOPE_Q - b->coeffs[i]) % NEWHOPE_Q;
+    r->coeffs[i] = coeff_freeze(a->coeffs[i] + 3*NEWHOPE_Q - b->coeffs[i]);
 }
 
 /*************************************************

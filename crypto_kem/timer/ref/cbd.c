@@ -1,4 +1,6 @@
+// 20251222 djb: more automated conversion to cryptoint
 #include "cbd.h"
+#include "crypto_int64.h"
 
 static uint32_t load24_littleendian(const uint8_t x[3]) {
     uint32_t r;
@@ -31,9 +33,9 @@ static void sp_cbd1(poly *r, const uint8_t buf[CBDSEED_BYTES]) {
         s = (t >> 2) & 0x00249249;
 
         for (j = 0; j < 8; j++) {
-            a = (d >> (3 * j)) & 0x1;
+            a = crypto_int64_bitmod_01(d,(3 * j));
             r->coeffs[8 * i + j] =
-                a * (((((s >> (3 * j)) & 0x1) - 1) ^ -2) | 1);
+                a * ((((crypto_int64_bitmod_01(s,(3 * j))) - 1) ^ -2) | 1);
         }
     }
 }

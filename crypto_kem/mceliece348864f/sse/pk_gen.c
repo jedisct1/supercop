@@ -1,7 +1,8 @@
-// 20240806 djb: some automated conversion to cryptoint
 /*
   This file is for public-key generation
 */
+// 20251220 djb: more usage of cryptoint
+// 20240806 djb: some automated conversion to cryptoint
 // 20240611 djb: using crypto_uint64_bottomzeros_num
 // 20240608 djb: using crypto_*_mask
 // 20240530 djb: include vec128_gf.h
@@ -18,6 +19,7 @@
 #include "fft.h"
 #include "crypto_declassify.h"
 #include "crypto_int16.h"
+#include "crypto_uint16.h"
 #include "crypto_int64.h"
 #include "crypto_uint64.h"
 
@@ -96,9 +98,7 @@ static inline void minmax_rows(uint16_t *x, vec128 (*mat)[par_width], int i0, in
 	uint16_t m;
 	vec128 mm;
 
-	m = x[i1] - x[i0];
-	m >>= 15;
-	m = -m;
+	m = crypto_uint16_smaller_mask(x[i1], x[i0]);
 	mm = vec128_set1_16b(m);
 
 	uint16_cswap(&x[i0], &x[i1], m);
@@ -241,7 +241,7 @@ static int mov_columns(uint64_t mat[][ (nBlocks_I+1)*2 ], int16_t * pi, uint64_t
 		{
 			d  = t >> j;
 			d ^= t >> pivot_col[j];
-			d &= 1;
+			d = crypto_uint64_bottombit_01(d);
         
 			t ^= d << pivot_col[j];
 			t ^= d << j;

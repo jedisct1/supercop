@@ -2085,4 +2085,4 @@ padding:
 	.size	padding, 64
 
 
-.section	.note.GNU-stack,"",@progbits
+.section	.note.GNU-stack,"",%progbits

@@ -1,7 +1,8 @@
-// 20240806 djb: some automated conversion to cryptoint
 /*
   This file is for public-key generation
 */
+// 20251220 djb: more usage of cryptoint
+// 20240806 djb: some automated conversion to cryptoint
 // 20240530 djb: include vec128_gf.h
 // 20240530 djb: switch from *int*_sort to crypto_sort_int*
 
@@ -15,6 +16,7 @@
 #include "util.h"
 #include "fft.h"
 #include "crypto_declassify.h"
+#include "crypto_uint16.h"
 #include "crypto_int64.h"
 #include "crypto_uint64.h"
 
@@ -40,8 +42,7 @@ static crypto_uint64 uint64_is_zero_declassify(uint64_t t)
 /* set m to 00...0 otherwise */
 static inline void extract_01_masks(uint16_t *m, uint64_t *x, uint64_t *y, int i)
 {
-	*m = crypto_int64_bitmod_01(((~x[ i>>6 ]) & y[ i>>6 ]),i);
-	*m = -(*m);
+	*m = crypto_int64_bitmod_mask(((~x[ i>>6 ]) & y[ i>>6 ]),i);
 }
 
 /* return a 128-bit vector of which each bits is set to the i-th bit of v */
@@ -49,8 +50,7 @@ static inline vec128 extract_mask128(uint64_t v[], int i)
 {
 	uint32_t mask;
 
-	mask = crypto_int64_bitmod_01(v[ i>>6 ],i);
-	mask = -mask;
+	mask = crypto_int64_bitmod_mask(v[ i>>6 ],i);
 
 	return vec128_set1_32b(mask);
 }
@@ -85,9 +85,7 @@ static inline void minmax_rows(uint16_t *x, vec128 (*mat)[par_width], int i0, in
 	uint16_t m;
 	vec128 mm;
 
-	m = x[i1] - x[i0];
-	m >>= 15;
-	m = -m;
+	m = crypto_uint16_smaller_mask(x[i1], x[i0]);
 	mm = vec128_set1_16b(m);
 
 	uint16_cswap(&x[i0], &x[i1], m);

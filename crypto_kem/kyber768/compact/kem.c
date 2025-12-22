@@ -1,3 +1,4 @@
+// 20251220 djb: some usage of cryptoint
 // 20250306 djb: port to latest XKCP
 // 20240806 djb: some automated conversion to cryptoint
 #include <stddef.h>
@@ -6,6 +7,7 @@
 #include <libkeccak.a.headers/SimpleFIPS202.h>
 #include <libkeccak.a.headers/KeccakSponge.h>
 #include "crypto_int8.h"
+#include "crypto_int16.h"
 #include "crypto_int64.h"
 #include "crypto_uint64.h"
 #include "crypto_kem.h"
@@ -129,7 +131,7 @@ static void poly_compress(uint8_t r[KYBER_POLYCOMPRESSEDBYTES], const poly *a) {
   for (i = 0; i < KYBER_N / 8; i++) {
     for (j = 0; j < 8; j++) {
       int16_t u = a->coeffs[8 * i + j];
-      u += (u >> 15) & KYBER_Q;
+      u += crypto_int16_negative_mask(u) & KYBER_Q;
       t[j] = (((((uint32_t)u << 4) + 1665) * 80635) >> 28) & 15;
     }
     for (k = 0; k < 4; k++) r[i * 4 + k] = t[2 * k] | (t[2 * k + 1] << 4);
@@ -150,8 +152,8 @@ static void poly_tobytes(uint8_t r[KYBER_POLYBYTES], const poly *a) {
   for (i = 0; i < KYBER_N / 2; i++) {
     uint16_t t0 = a->coeffs[2 * i];
     uint16_t t1 = a->coeffs[2 * i + 1];
-    t0 += ((int16_t)t0 >> 15) & KYBER_Q;
-    t1 += ((int16_t)t1 >> 15) & KYBER_Q;
+    t0 += crypto_int16_negative_mask((int16_t)t0) & KYBER_Q;
+    t1 += crypto_int16_negative_mask((int16_t)t1) & KYBER_Q;
     r[3 * i + 0] = (t0 >> 0);
     r[3 * i + 1] = (t0 >> 8) | (t1 << 4);
     r[3 * i + 2] = (t1 >> 4);
@@ -235,7 +237,7 @@ static void polyvec_compress(uint8_t r[KYBER_POLYVECCOMPRESSEDBYTES], const poly
     for (j = 0; j < KYBER_N / 4; j++) {
       for (k = 0; k < 4; k++) {
         t[k] = a->vec[i].coeffs[4 * j + k];
-        t[k] += ((int16_t)t[k] >> 15) & KYBER_Q;
+        t[k] += crypto_int16_negative_mask((int16_t)t[k]) & KYBER_Q;
         t[k] = (((((uint64_t)t[k] << 10) + 1665) * 1290167) >> 32) & 0x3ff;
       }
       for (k = 0; k < 5; k++) r[k] = 0;

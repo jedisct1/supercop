@@ -1,4 +1,8 @@
+// 20251222 djb: more automated conversion to cryptoint
+// 20251220 djb: some usage of cryptoint
 #include "poly.h"
+#include "crypto_uint8.h"
+#include "crypto_int64.h"
 
 
 void poly_Sq_tobytes(unsigned char *r, const poly *a)
@@ -15,7 +19,7 @@ void poly_Sq_tobytes(unsigned char *r, const poly *a)
     r[13 * i + 1] = (unsigned char) ((t[0] >>  8) | ((t[1] & 0x07) << 5));
     r[13 * i + 2] = (unsigned char) ((t[1] >>  3) & 0xff);
     r[13 * i + 3] = (unsigned char) ((t[1] >> 11) | ((t[2] & 0x3f) << 2));
-    r[13 * i + 4] = (unsigned char) ((t[2] >>  6) | ((t[3] & 0x01) << 7));
+    r[13 * i + 4] = (unsigned char) ((t[2] >>  6) | ((crypto_int64_bottombit_01(t[3])) << 7));
     r[13 * i + 5] = (unsigned char) ((t[3] >>  1) & 0xff);
     r[13 * i + 6] = (unsigned char) ((t[3] >>  9) | ((t[4] & 0x0f) << 4));
     r[13 * i + 7] = (unsigned char) ((t[4] >>  4) & 0xff);
@@ -40,7 +44,7 @@ void poly_Sq_tobytes(unsigned char *r, const poly *a)
       r[13 * i + 1] = (unsigned char) (t[0] >>  8) | ((t[1] & 0x07) << 5);
       r[13 * i + 2] = (unsigned char) (t[1] >>  3) & 0xff;
       r[13 * i + 3] = (unsigned char) (t[1] >> 11) | ((t[2] & 0x3f) << 2);
-      r[13 * i + 4] = (unsigned char) (t[2] >>  6) | ((t[3] & 0x01) << 7);
+      r[13 * i + 4] = (unsigned char) (t[2] >>  6) | ((crypto_int64_bottombit_01(t[3])) << 7);
       r[13 * i + 5] = (unsigned char) (t[3] >>  1) & 0xff;
       r[13 * i + 6] = (unsigned char) (t[3] >>  9) | ((t[4] & 0x0f) << 4);
       break;
@@ -61,8 +65,8 @@ void poly_Sq_frombytes(poly *r, const unsigned char *a)
     r->coeffs[8*i+0] =  a[13*i+ 0]       | (((uint16_t)a[13*i+ 1] & 0x1f) << 8);
     r->coeffs[8*i+1] = (a[13*i+ 1] >> 5) | (((uint16_t)a[13*i+ 2]       ) << 3) | (((uint16_t)a[13*i+ 3] & 0x03) << 11);
     r->coeffs[8*i+2] = (a[13*i+ 3] >> 2) | (((uint16_t)a[13*i+ 4] & 0x7f) << 6);
-    r->coeffs[8*i+3] = (a[13*i+ 4] >> 7) | (((uint16_t)a[13*i+ 5]       ) << 1) | (((uint16_t)a[13*i+ 6] & 0x0f) <<  9);
-    r->coeffs[8*i+4] = (a[13*i+ 6] >> 4) | (((uint16_t)a[13*i+ 7]       ) << 4) | (((uint16_t)a[13*i+ 8] & 0x01) << 12);
+    r->coeffs[8*i+3] = crypto_uint8_topbit_01(a[13*i+ 4]) | (((uint16_t)a[13*i+ 5]       ) << 1) | (((uint16_t)a[13*i+ 6] & 0x0f) <<  9);
+    r->coeffs[8*i+4] = (a[13*i+ 6] >> 4) | (((uint16_t)a[13*i+ 7]       ) << 4) | ((crypto_int64_bottombit_01((uint16_t)a[13*i+ 8])) << 12);
     r->coeffs[8*i+5] = (a[13*i+ 8] >> 1) | (((uint16_t)a[13*i+ 9] & 0x3f) << 7);
     r->coeffs[8*i+6] = (a[13*i+ 9] >> 6) | (((uint16_t)a[13*i+10]       ) << 2) | (((uint16_t)a[13*i+11] & 0x07) << 10);
     r->coeffs[8*i+7] = (a[13*i+11] >> 3) | (((uint16_t)a[13*i+12]       ) << 5);

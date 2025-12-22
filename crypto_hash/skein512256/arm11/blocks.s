@@ -13997,4 +13997,4 @@ strd r0,[sp,#64]
 
 # qhasm: goto mainloop
 b ._mainloop
-.section	.note.GNU-stack,"",@progbits
+.section	.note.GNU-stack,"",%progbits

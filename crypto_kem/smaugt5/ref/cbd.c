@@ -1,4 +1,6 @@
+// 20251222 djb: more automated conversion to cryptoint
 #include "cbd.h"
+#include "crypto_int64.h"
 
 #if SMAUG_MODE == 1
 static uint32_t load24_littleendian(const uint8_t x[3]) {
@@ -32,9 +34,9 @@ static void sp_cbd1(poly *r, const uint8_t buf[CBDSEED_BYTES]) {
         s = (t >> 2) & 0x00249249;
 
         for (j = 0; j < 8; j++) {
-            a = (d >> (3 * j)) & 0x1;
+            a = crypto_int64_bitmod_01(d,(3 * j));
             r->coeffs[8 * i + j] =
-                a * (((((s >> (3 * j)) & 0x1) - 1) ^ -2) | 1);
+                a * ((((crypto_int64_bitmod_01(s,(3 * j))) - 1) ^ -2) | 1);
         }
     }
 }
@@ -81,8 +83,8 @@ static void cbd(poly *r, const uint8_t buf[CBDSEED_BYTES]) {
         t = load32_littleendian(buf + 4 * i);
 
         for (j = 0; j < 16; j++) {
-            a = (t >> (2 * j + 0)) & 0x01;
-            b = (t >> (2 * j + 1)) & 0x01;
+            a = crypto_int64_bitmod_01(t,(2 * j + 0));
+            b = crypto_int64_bitmod_01(t,(2 * j + 1));
             r->coeffs[16 * i + j] = a - b;
         }
     }
@@ -112,8 +114,8 @@ static void sp_cbd2(poly *r, const uint8_t buf[CBDSEED_BYTES]) {
         d &= (t >> 2) & 0x11111111;
         s = (t >> 3) & 0x11111111;
         for (j = 0; j < 8; j++) {
-            a = (d >> (4 * j)) & 0x1;
-            r->coeffs[8 * i + j] = a * (((((s >> (4 * j)) & 0x1) - 1) ^ -2) | 1);
+            a = crypto_int64_bitmod_01(d,(4 * j));
+            r->coeffs[8 * i + j] = a * ((((crypto_int64_bitmod_01(s,(4 * j))) - 1) ^ -2) | 1);
         }
     }
 }

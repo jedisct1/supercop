@@ -595,4 +595,4 @@ ldr r0,=0
 # qhasm: return result
 add sp,sp,#0
 bx lr
-.section	.note.GNU-stack,"",@progbits
+.section	.note.GNU-stack,"",%progbits

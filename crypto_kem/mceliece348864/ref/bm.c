@@ -2,10 +2,12 @@
   This file is for the Berlekamp-Massey algorithm
   see http://crypto.stanford.edu/~mironov/cs359/massey.pdf
 */
+// 20251220 djb: some usage of cryptoint
 
 #include "params.h"
 #include "gf.h"
 #include "bm.h"
+#include "crypto_uint16.h"
 
 #define min(a, b) ((a < b) ? a : b)
 
@@ -43,8 +45,8 @@ void bm(gf *out, gf *s)
 		for (i = 0; i <= min(N, SYS_T); i++)
 			d ^= gf_mul(C[i], s[ N-i]);
 	
-		mne = d; mne -= 1;   mne >>= 15; mne -= 1;
-		mle = N; mle -= 2*L; mle >>= 15; mle -= 1;
+		mne = crypto_uint16_nonzero_mask(d);
+		mle = crypto_uint16_leq_mask(2*L, N);
 		mle &= mne;
 
 		for (i = 0; i <= SYS_T; i++)			

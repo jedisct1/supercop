@@ -1585,4 +1585,4 @@ Xft4_ExpandFast: @The second loop breaks something.
   mov       r0, r11
   vpop      {d8-d15}
   pop       {r4-r11, pc}
-.section	.note.GNU-stack,"",@progbits
+.section	.note.GNU-stack,"",%progbits

@@ -1,3 +1,4 @@
+// 20251220 djb: more usage of cryptoint
 // 20240806 djb: some automated conversion to cryptoint
 #include <stddef.h>
 #include <stdint.h>
@@ -6,6 +7,8 @@
 #include "crypto_hash_sha3256.h"
 #include "crypto_int8.h"
 #include "crypto_int64.h"
+#include "crypto_int16.h"
+#define both_negative_mask(x,y) crypto_int16_negative_mask((x)&(y))
 
 #define NTRU_N 701
 #define NTRU_LOGQ 13
@@ -33,8 +36,6 @@ static void poly_Rq_mul(poly *r, const poly *a, const poly *b) {
     for (i = 0; i < k + 1; i++) r->coeffs[k] += a->coeffs[k - i] * b->coeffs[i];
   }
 }
-
-static int16_t both_negative_mask(int16_t x, int16_t y) { return (x & y) >> 15; }
 
 static uint16_t mod3(uint16_t x) { return x - 3 * ((10923 * x) >> 15); }
 

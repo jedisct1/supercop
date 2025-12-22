@@ -1,14 +1,11 @@
+// 20251220 djb: more usage of cryptoint
 // 20240806 djb: some automated conversion to cryptoint
 /* Based on supercop-20200702/crypto_core/invhrss701/simpler/core.c */
 
 #include "poly.h"
 #include "crypto_int64.h"
-
-/* return -1 if x<0 and y<0; otherwise return 0 */
-static inline int16_t both_negative_mask(int16_t x,int16_t y)
-{
-  return (x & y) >> 15;
-}
+#include "crypto_int16.h"
+#define both_negative_mask(x,y) crypto_int16_negative_mask((x)&(y))
 
 void poly_R2_inv(poly *r, const poly *a)
 {

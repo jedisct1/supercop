@@ -1,5 +1,7 @@
+// 20251220 djb: some usage of cryptoint
 #include <stddef.h>
 #include <stdint.h>
+#include "crypto_uint64.h"
 
 #include "verify.h"
 
@@ -21,7 +23,7 @@ int verify(const uint8_t *a, const uint8_t *b, size_t len) {
     for (i = 0; i < len; i++)
         r |= a[i] ^ b[i];
 
-    return (-(uint64_t)r) >> 63;
+    return crypto_uint64_nonzero_01(r);
 }
 
 /*************************************************

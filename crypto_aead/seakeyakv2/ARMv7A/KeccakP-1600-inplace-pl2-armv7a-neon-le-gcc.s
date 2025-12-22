@@ -1225,4 +1225,4 @@ KeccakP1600times2_PermuteAll_RoundLoop:
     bx      lr
 
 
-.section	.note.GNU-stack,"",@progbits
+.section	.note.GNU-stack,"",%progbits

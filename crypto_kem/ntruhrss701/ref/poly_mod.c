@@ -1,5 +1,7 @@
+// 20251220 djb: more usage of cryptoint
 // 20240806 djb: some automated conversion to cryptoint
 #include "poly.h"
+#include "crypto_int16.h"
 #include "crypto_int64.h"
 
 static uint16_t mod3(uint16_t a)
@@ -13,7 +15,7 @@ static uint16_t mod3(uint16_t a)
   r = (r >> 2) + (r & 0x3); // r' mod 3 == r mod 3
 
   t = r - 3;
-  c = t >> 15;
+  c = crypto_int16_negative_mask(t);
 
   return (c&r) ^ (~c&t);
 }

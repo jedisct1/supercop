@@ -806,4 +806,4 @@ sparkle512_arm:
 .size sparkle512_arm, .-sparkle512_arm
 
 
-.section	.note.GNU-stack,"",@progbits
+.section	.note.GNU-stack,"",%progbits

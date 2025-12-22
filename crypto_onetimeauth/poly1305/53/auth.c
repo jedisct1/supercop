@@ -1,3 +1,4 @@
+// 20251220 djb: some usage of cryptoint
 /*
 20080910
 D. J. Bernstein
@@ -7,10 +8,15 @@ Public domain.
 #include "crypto_onetimeauth.h"
 
 typedef unsigned char uchar;
-typedef int int32;
-typedef unsigned int uint32;
-typedef long long int64;
-typedef unsigned long long uint64;
+
+#include "crypto_int32.h"
+#include "crypto_uint32.h"
+#include "crypto_int64.h"
+#include "crypto_uint64.h"
+typedef crypto_int32 int32;
+typedef crypto_uint32 uint32;
+typedef crypto_int64 int64;
+typedef crypto_uint64 uint64;
 
 static const double poly1305_53_constants[] = {
   0.00000000558793544769287109375 /* alpham80 = 3 2^(-29) */
@@ -953,15 +959,15 @@ if (l == 0) goto nomorebytes;
 
   lbelow3 = l - 3;
 
-  lbelow2 >>= 31;
+  lbelow2 = crypto_int32_negative_mask(lbelow2);
   lbelow4 = l - 4;
 
   m00 = *(uchar *) (m + 0);
-  lbelow3 >>= 31;
+  lbelow3 = crypto_int32_negative_mask(lbelow3);
   m += lbelow2;
 
   m01 = *(uchar *) (m + 1);
-  lbelow4 >>= 31;
+  lbelow4 = crypto_int32_negative_mask(lbelow4);
   m += lbelow3;
 
   m02 = *(uchar *) (m + 2);
@@ -999,18 +1005,18 @@ if (l == 0) goto nomorebytes;
   lbelow6 = l - 6;
   lbelow7 = l - 7;
 
-  lbelow5 >>= 31;
+  lbelow5 = crypto_int32_negative_mask(lbelow5);
   lbelow8 = l - 8;
 
-  lbelow6 >>= 31;
+  lbelow6 = crypto_int32_negative_mask(lbelow6);
   m += lbelow5;
 
   m10 = *(uchar *) (m + 4);
-  lbelow7 >>= 31;
+  lbelow7 = crypto_int32_negative_mask(lbelow7);
   m += lbelow6;
 
   m11 = *(uchar *) (m + 5);
-  lbelow8 >>= 31;
+  lbelow8 = crypto_int32_negative_mask(lbelow8);
   m += lbelow7;
 
   m12 = *(uchar *) (m + 6);
@@ -1054,18 +1060,18 @@ if (l == 0) goto nomorebytes;
   lbelow10 = l - 10;
   lbelow11 = l - 11;
 
-  lbelow9 >>= 31;
+  lbelow9 = crypto_int32_negative_mask(lbelow9);
   lbelow12 = l - 12;
 
-  lbelow10 >>= 31;
+  lbelow10 = crypto_int32_negative_mask(lbelow10);
   m += lbelow9;
 
   m20 = *(uchar *) (m + 8);
-  lbelow11 >>= 31;
+  lbelow11 = crypto_int32_negative_mask(lbelow11);
   m += lbelow10;
 
   m21 = *(uchar *) (m + 9);
-  lbelow12 >>= 31;
+  lbelow12 = crypto_int32_negative_mask(lbelow12);
   m += lbelow11;
 
   m22 = *(uchar *) (m + 10);
@@ -1103,15 +1109,15 @@ if (l == 0) goto nomorebytes;
   m3 <<= 51;
   lbelow13 = l - 13;
 
-  lbelow13 >>= 31;
+  lbelow13 = crypto_int32_negative_mask(lbelow13);
   lbelow14 = l - 14;
 
-  lbelow14 >>= 31;
+  lbelow14 = crypto_int32_negative_mask(lbelow14);
   m += lbelow13;
   lbelow15 = l - 15;
 
   m30 = *(uchar *) (m + 12);
-  lbelow15 >>= 31;
+  lbelow15 = crypto_int32_negative_mask(lbelow15);
   m += lbelow14;
 
   m31 = *(uchar *) (m + 13);
@@ -1497,7 +1503,7 @@ nomorebytes:;
   g4 = g4 - 4;
   s00 = *(uchar *) (s + 0);
 
-  f = (int64) g4 >> 63;
+  f = crypto_int64_topbit_mask(g4);
   s01 = *(uchar *) (s + 1);
 
   f0 &= f;

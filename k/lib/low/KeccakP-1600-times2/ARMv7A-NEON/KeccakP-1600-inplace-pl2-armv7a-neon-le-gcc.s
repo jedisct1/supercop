@@ -1392,4 +1392,4 @@ KeccakP1600times2_PermuteAll_Round2:
     bx      lr
 
 
-.section	.note.GNU-stack,"",@progbits
+.section	.note.GNU-stack,"",%progbits

@@ -1,3 +1,4 @@
+// 20251222 djb: more automated conversion to cryptoint
 // 20240806 djb: some automated conversion to cryptoint
 #ifndef WORD_H_
 #define WORD_H_
@@ -74,7 +75,7 @@ forceinline uint64_t PAD(int i) {
 }
 
 forceinline uint64_t PRFS_MLEN(uint64_t len) {
-  return ((len & 0x01) << 57) | /* 0000x */
+  return ((crypto_int64_bottombit_01(len)) << 57) | /* 0000x */
          ((len & 0x02) << 25) | /* 000x0 */
          ((len & 0x04) << 56) | /* 00x00 */
          ((len & 0x08) << 24) | /* 0x000 */

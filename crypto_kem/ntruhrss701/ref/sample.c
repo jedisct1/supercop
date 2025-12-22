@@ -1,4 +1,7 @@
+// 20251220 djb: some usage of cryptoint
 #include "sample.h"
+#include "crypto_int16.h"
+#include "crypto_uint16.h"
 
 void sample_fg(poly *f, poly *g, const unsigned char uniformbytes[NTRU_SAMPLE_FG_BYTES])
 {
@@ -33,13 +36,13 @@ void sample_iid_plus(poly *r, const unsigned char uniformbytes[NTRU_SAMPLE_IID_B
     s += (uint16_t)((uint32_t)r->coeffs[i + 1] * (uint32_t)r->coeffs[i]);
 
   /* Extract sign of s (sign(0) = 1) */
-  s = 1 | (-(s>>15));
+  s = 1 | crypto_int16_negative_mask((int16_t)s);
 
   for(i=0; i<NTRU_N; i+=2)
     r->coeffs[i] = (uint16_t)((uint32_t)s * (uint32_t)r->coeffs[i]);
 
   /* Map {0,1,2^16-1} -> {0, 1, 2} */
   for(i=0; i<NTRU_N; i++)
-    r->coeffs[i] = 3 & (r->coeffs[i] ^ (r->coeffs[i]>>15));
+    r->coeffs[i] = 3 & (r->coeffs[i] ^ crypto_uint16_topbit_01(r->coeffs[i]));
 }
 

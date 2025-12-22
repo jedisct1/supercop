@@ -1,4 +1,6 @@
+// 20251222 djb: more automated conversion to cryptoint
 #include "dg.h"
+#include "crypto_int64.h"
 
 /*************************************************
  * Name:        load64_littleendian
@@ -74,8 +76,8 @@ int addGaussianError(poly *op, const uint8_t *seed) {
                (x[3] & x[4] & x[5] & x[7] & x[8]) | (x[6] & x[7] & x[8]);
         for (k = 0; k < 64; ++k) {
             op->coeffs[i + k] =
-                ((s[0] >> k) & 0x01) | (((s[1] >> k) & 0x01) << 1);
-            uint16_t sign = (x[9] >> k) & 0x01;
+                (crypto_int64_bitmod_01(s[0],k)) | ((crypto_int64_bitmod_01(s[1],k)) << 1);
+            uint16_t sign = crypto_int64_bitmod_01(x[9],k);
             op->coeffs[i + k] = (((-sign) ^ op->coeffs[i + k]) + sign)
                                 << _16_LOG_Q;
         }

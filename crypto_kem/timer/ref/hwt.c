@@ -1,5 +1,7 @@
+// 20251220 djb: more usage of cryptoint
 #include "hwt.h"
 #include <stdio.h>
+#include "crypto_int16.h"
 #include "crypto_uint16.h"
 #include "crypto_declassify.h"
 
@@ -101,7 +103,7 @@ int hwt(int16_t *res, const uint8_t *seed) {
     int16_t t0;
     int16_t c0 = LWE_N - HS;
     for (i = 0; i < LWE_N; i++) {
-        t0 = (si[i] - c0) >> 15;
+        t0 = crypto_int16_negative_mask(si[i] - c0);
         c0 += t0;
         res[i] = 1 + t0;
         // Convert to ternary

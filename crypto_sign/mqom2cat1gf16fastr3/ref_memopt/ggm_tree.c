@@ -1,4 +1,6 @@
+// 20251222 djb: more automated conversion to cryptoint
 #include "ggm_tree.h"
+#include "crypto_int64.h"
 
 /* SeedDerive variants 
  * NOTE: we factorize the key schedule, the tweaked salt is inside the encryption context */
@@ -552,7 +554,7 @@ int GGMTree_ExpandPath(const uint8_t salt[MQOM2_PARAM_SALT_SIZE], const uint8_t 
 		}
 		xor_blocks(node[0], parent, node[1]);
 		
-		uint32_t bit = (num_leaf >> (MQOM2_PARAM_NB_EVALS_LOG-1-j)) & 0x01;
+		uint32_t bit = crypto_int64_bitmod_01(num_leaf,(MQOM2_PARAM_NB_EVALS_LOG-1-j));
 		memcpy(path[MQOM2_PARAM_NB_EVALS_LOG-1-j], node[bit ^ 1], MQOM2_PARAM_SEED_SIZE);
 		memcpy(parent, node[bit], MQOM2_PARAM_SEED_SIZE);
 	}
@@ -595,7 +597,7 @@ int GGMTree_GetNextLeaf(ggmtree_ctx_t* ctx, uint8_t lseed[MQOM2_PARAM_SEED_SIZE]
 		uint32_t diff = ctx->num_leaf ^ new_num_leaf;
 		ctx->num_leaf = new_num_leaf;
 		j = 1;
-		while(((diff>>(MQOM2_PARAM_NB_EVALS_LOG-j)) & 0x1) == 0) j++;
+		while((crypto_int64_bitmod_01(diff,(MQOM2_PARAM_NB_EVALS_LOG-j))) == 0) j++;
 		xor_blocks(ctx->path[j-1], ctx->path[j], ctx->path[j]);
 	} else {
 		ctx->num_leaf = 0;
@@ -651,7 +653,7 @@ int GGMTree_GetNextLeaf_x4(ggmtree_ctx_x4_t* ctx, uint8_t lseed[4][MQOM2_PARAM_S
 		uint32_t diff = ctx->num_leaf ^ new_num_leaf;
 		ctx->num_leaf = new_num_leaf;
 		j = 1;
-		while(((diff>>(MQOM2_PARAM_NB_EVALS_LOG-j)) & 0x1) == 0) j++;
+		while((crypto_int64_bitmod_01(diff,(MQOM2_PARAM_NB_EVALS_LOG-j))) == 0) j++;
 		xor_blocks(ctx->path[0][j-1], ctx->path[0][j], ctx->path[0][j]);
 		xor_blocks(ctx->path[1][j-1], ctx->path[1][j], ctx->path[1][j]);
 		xor_blocks(ctx->path[2][j-1], ctx->path[2][j], ctx->path[2][j]);
@@ -719,7 +721,7 @@ int GGMTree_GetNextLeafPartial(ggmtree_ctx_partial_t* ctx, uint8_t lseed[MQOM2_P
 		uint32_t diff = ctx->num_leaf ^ new_num_leaf;
 		ctx->num_leaf = new_num_leaf;
 		j = 1;
-		while(((diff>>(MQOM2_PARAM_NB_EVALS_LOG-j)) & 0x1) == 0) j++;
+		while((crypto_int64_bitmod_01(diff,(MQOM2_PARAM_NB_EVALS_LOG-j))) == 0) j++;
 	} else {
 		ctx->num_leaf = 0;
 		ctx->active = 1;
@@ -730,7 +732,7 @@ int GGMTree_GetNextLeafPartial(ggmtree_ctx_partial_t* ctx, uint8_t lseed[MQOM2_P
 		memset(lseed, 0, MQOM2_PARAM_SEED_SIZE);
 	} else {
 		uint32_t higher = 1;
-		while(((diff2>>(MQOM2_PARAM_NB_EVALS_LOG-higher)) & 0x1) == 0) higher++;
+		while((crypto_int64_bitmod_01(diff2,(MQOM2_PARAM_NB_EVALS_LOG-higher))) == 0) higher++;
 		if(j <= higher) {
 			memcpy(ctx->path[higher], ctx->opening[MQOM2_PARAM_NB_EVALS_LOG-higher], MQOM2_PARAM_SEED_SIZE);
 			j = higher;
@@ -793,7 +795,7 @@ int GGMTree_GetNextLeafPartial_x4(ggmtree_ctx_partial_x4_t* ctx, uint8_t lseed[4
 		uint32_t diff = ctx->num_leaf ^ new_num_leaf;
 		ctx->num_leaf = new_num_leaf;
 		j = 1;
-		while(((diff>>(MQOM2_PARAM_NB_EVALS_LOG-j)) & 0x1) == 0) j++;
+		while((crypto_int64_bitmod_01(diff,(MQOM2_PARAM_NB_EVALS_LOG-j))) == 0) j++;
 	} else {
 		ctx->num_leaf = 0;
 		ctx->active = 1;
@@ -804,7 +806,7 @@ int GGMTree_GetNextLeafPartial_x4(ggmtree_ctx_partial_x4_t* ctx, uint8_t lseed[4
 	for(i=0; i<4; i++) {
 		uint32_t higher = 1;
 		if(diffs[i]) {
-			while(((diffs[i]>>(MQOM2_PARAM_NB_EVALS_LOG-higher)) & 0x1) == 0) higher++;
+			while((crypto_int64_bitmod_01(diffs[i],(MQOM2_PARAM_NB_EVALS_LOG-higher))) == 0) higher++;
 		} else {
 			higher = MQOM2_PARAM_NB_EVALS_LOG;
 		}

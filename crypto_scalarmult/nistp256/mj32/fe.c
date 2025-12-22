@@ -1,3 +1,4 @@
+// 20251220 djb: more use of cryptoint
 // 20250922 djb: more use of cryptoint
 /*
 20140918
@@ -163,7 +164,8 @@ void fe_reducesmall(fe r, const fe p, const u64 carry) {
 
     for (i = 0; i < 8; ++i) {
         pb += (u64)p[i];
-        b = (u64)r[i] - pb; b >>= 63;
+        b = (u64)r[i] - pb;
+        b = crypto_uint64_topbit_01(b);
         t[i] = (u64)r[i] - pb + (b << 32);
         pb = b;
     }

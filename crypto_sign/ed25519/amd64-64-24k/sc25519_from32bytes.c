@@ -1,4 +1,6 @@
+// 20251220 djb: some usage of cryptoint
 #include "sc25519.h"
+#include "crypto_uint64.h"
 
 /*Arithmetic modulo the group order n = 2^252 + 27742317777372353535851937790883648493 
  *                                    = 7237005577332262213973186563042994240857116359379907606001950938285454250989
@@ -13,18 +15,6 @@ static const unsigned long long order[16] = {0x5812631A5CF5D3EDULL, 0x14DEF9DEA2
                                              0x0000000000000000ULL, 0x4000000000000000ULL,
                                              0xC09318D2E7AE9F68ULL, 0xA6F7CEF517BCE6B2ULL,
                                              0x0000000000000000ULL, 0x8000000000000000ULL};
-
-static unsigned long long smaller(unsigned long long a,unsigned long long b)
-{
-  unsigned long long atop = a >> 32;
-  unsigned long long abot = a & 4294967295;
-  unsigned long long btop = b >> 32;
-  unsigned long long bbot = b & 4294967295;
-  unsigned long long atopbelowbtop = (atop - btop) >> 63;
-  unsigned long long atopeqbtop = ((atop ^ btop) - 1) >> 63;
-  unsigned long long abotbelowbbot = (abot - bbot) >> 63;
-  return atopbelowbtop | (atopeqbtop & abotbelowbbot);
-}
 
 void sc25519_from32bytes(sc25519 *r, const unsigned char x[32])
 {
@@ -46,7 +36,7 @@ void sc25519_from32bytes(sc25519 *r, const unsigned char x[32])
     {
       b += order[4*j+i]; /* no overflow for this particular order */
       t[i] = r->v[i] - b;
-      b = smaller(r->v[i],b);
+      b = crypto_uint64_smaller_01(r->v[i],b);
     }
     mask = b - 1;
     for(i=0;i<4;i++) 

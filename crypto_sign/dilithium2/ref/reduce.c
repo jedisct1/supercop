@@ -1,6 +1,8 @@
+// 20251220 djb: some usage of cryptoint
 #include <stdint.h>
 #include "params.h"
 #include "reduce.h"
+#include "crypto_int32.h"
 
 /*************************************************
 * Name:        montgomery_reduce
@@ -48,7 +50,7 @@ int32_t reduce32(int32_t a) {
 * Returns r.
 **************************************************/
 int32_t caddq(int32_t a) {
-  a += (a >> 31) & Q;
+  a += crypto_int32_negative_mask(a) & Q;
   return a;
 }
 

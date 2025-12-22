@@ -1,3 +1,4 @@
+// 20251220 djb: more usage of cryptoint
 // 20240806 djb: some automated conversion to cryptoint
 #include "polyfix.h"
 #include "decompose.h"
@@ -8,6 +9,7 @@
 #include "symmetric.h"
 #include <stdint.h>
 #include "crypto_int64.h"
+#include "crypto_uint8.h"
 #include "crypto_uint64.h"
 #include "crypto_declassify.h"
 
@@ -268,13 +270,13 @@ uint16_t polyfixveclk_sample_hyperball(polyfixvecl *y1, polyfixveck *y2, uint8_t
             for (j = 0; j < N; j++)
                 y1->vec[i].coeffs[j] = fixpoint_mul_rnd13(
                     samples[(i * N + j)], &sqsum,
-                    (signs[(i * N + j) / 8] >> ((i * N + j) % 8)) & 1);
+                    crypto_uint8_bitmod_01(signs[(i * N + j) / 8],i * N + j));
         }
         for (i = L; i < K + L; i++) {
             for (j = 0; j < N; j++)
                 y2->vec[i - L].coeffs[j] = fixpoint_mul_rnd13(
                     samples[(i * N + j)], &sqsum,
-                    (signs[(i * N + j) / 8] >> ((i * N + j) % 8)) & 1);
+                    crypto_uint8_bitmod_01(signs[(i * N + j) / 8],i * N + j));
         }
         rejectmask = crypto_uint64_smaller_mask(B0SQ * LN * LN,polyfixveclk_sqnorm2(y1, y2));
         crypto_declassify(&rejectmask,sizeof rejectmask);

@@ -1,3 +1,4 @@
+// 20251220 djb: more usage of cryptoint
 // 20240806 djb: some automated conversion to cryptoint
 /*
  *  This file is part of the optimized implementation of the Picnic signature scheme.
@@ -26,6 +27,7 @@ static_assert(((sizeof(mzd_local_t) + 0x1f) & ~0x1f) == 32, "sizeof mzd_local_t 
 
 #include "simd.h"
 #include "crypto_int64.h"
+#include "crypto_uint64.h"
 static const unsigned int align_bound = 128 / (8 * sizeof(word));
 
 static inline size_t calculate_rowstride(size_t width) {
@@ -371,7 +373,7 @@ void mzd_mul_v_parity_uint64_192_30(mzd_local_t* c, mzd_local_t const* v, mzd_lo
 
 ATTR_TARGET_S128 ATTR_ARTIFICIAL ATTR_CONST static inline word128
 mm128_compute_mask(const word idx, const size_t bit) {
-  return mm128_broadcast_u64(-(crypto_int64_bitmod_01(idx,bit)));
+  return mm128_broadcast_u64(crypto_int64_bitmod_mask(idx,bit));
 }
 
 ATTR_TARGET_S128
@@ -422,7 +424,7 @@ void mzd_mul_v_s128_129(mzd_local_t* c, mzd_local_t const* v, mzd_local_t const*
   word128 cval[4] ATTR_ALIGNED(alignof(word128)) = {mm128_zero, mm128_zero, mm128_zero, mm128_zero};
   {
     Ablock += 63;
-    word idx = (*vptr) >> 63;
+    word idx = crypto_uint64_topbit_01(*vptr);
     mm128_xor_mask_region(&cval[0], Ablock[0].w128, mm128_compute_mask(idx, 0), 2);
     vptr++;
     Ablock++;
@@ -448,7 +450,7 @@ void mzd_addmul_v_s128_129(mzd_local_t* c, mzd_local_t const* v, mzd_local_t con
                                                     mm128_zero};
   {
     Ablock += 63;
-    word idx = (*vptr) >> 63;
+    word idx = crypto_uint64_topbit_01(*vptr);
     mm128_xor_mask_region(&cval[0], Ablock[0].w128, mm128_compute_mask(idx, 0), 2);
     vptr++;
     Ablock++;
@@ -574,13 +576,13 @@ void mzd_mul_v_s128_192_1024(mzd_local_t* c, mzd_local_t const* v, mzd_local_t c
 
 ATTR_TARGET_AVX2 ATTR_ARTIFICIAL ATTR_CONST static inline word256
 mm256_compute_mask(const word idx, const size_t bit) {
-  return _mm256_set1_epi64x(-(crypto_int64_bitmod_01(idx,bit)));
+  return _mm256_set1_epi64x(crypto_int64_bitmod_mask(idx,bit));
 }
 
 ATTR_TARGET_AVX2 ATTR_ARTIFICIAL ATTR_CONST static inline word256
 mm256_compute_mask_2(const word idx, const size_t bit) {
-  const word m1 = -(crypto_int64_bitmod_01(idx,bit));
-  const word m2 = -(crypto_int64_bitmod_01(idx,(bit + 1)));
+  const word m1 = crypto_int64_bitmod_mask(idx,bit);
+  const word m2 = crypto_int64_bitmod_mask(idx,(bit + 1));
   return _mm256_set_epi64x(m2, m2, m1, m1);
 }
 
@@ -636,7 +638,7 @@ void mzd_addmul_v_s256_129(mzd_local_t* c, mzd_local_t const* v, mzd_local_t con
   word256 cval[2] ATTR_ALIGNED(alignof(word256)) = {cblock->w256, mm256_zero};
   {
     Ablock += 63;
-    word idx = (*vptr) >> 63;
+    word idx = crypto_uint64_topbit_01(*vptr);
     cval[0]  = mm256_xor_mask(cval[0], Ablock[0].w256, mm256_compute_mask(idx, 0));
     vptr++;
     Ablock++;
@@ -662,7 +664,7 @@ void mzd_mul_v_s256_129(mzd_local_t* c, mzd_local_t const* v, mzd_local_t const*
   word256 cval[2] ATTR_ALIGNED(alignof(word256)) = {mm256_zero, mm256_zero};
   {
     Ablock += 63;
-    word idx = (*vptr) >> 63;
+    word idx = crypto_uint64_topbit_01(*vptr);
     cval[0]  = mm256_xor_mask(cval[0], Ablock[0].w256, mm256_compute_mask(idx, 0));
     vptr++;
     Ablock++;
@@ -807,8 +809,8 @@ void mzd_addmul_v_uint64_128(mzd_local_t* c, mzd_local_t const* v, mzd_local_t c
   for (unsigned int w = 2; w; --w, ++vptr) {
     word idx = *vptr;
     for (unsigned int i = sizeof(word) * 8; i; i -= 2, idx >>= 2, Ablock += 1) {
-      const word mask1 = -(crypto_int64_bottombit_01(idx));
-      const word mask2 = -(crypto_int64_bitmod_01(idx,1));
+      const word mask1 = crypto_int64_bottombit_mask(idx);
+      const word mask2 = crypto_int64_bitmod_mask(idx,1);
       cblock->w64[0] ^= (Ablock->w64[0] & mask1) ^ (Ablock->w64[2] & mask2);
       cblock->w64[1] ^= (Ablock->w64[1] & mask1) ^ (Ablock->w64[3] & mask2);
     }
@@ -827,8 +829,8 @@ void mzd_addmul_v_uint64_129(mzd_local_t* c, mzd_local_t const* v, mzd_local_t c
 
   Ablock += 63;
   {
-    word idx        = (*vptr) >> 63;
-    const word mask = -(crypto_int64_bottombit_01(idx));
+    word idx        = crypto_uint64_topbit_01(*vptr);
+    const word mask = crypto_int64_bottombit_mask(idx);
     mzd_xor_mask_uint64_block(cblock, Ablock, mask, 3);
     Ablock++;
     vptr++;
@@ -837,7 +839,7 @@ void mzd_addmul_v_uint64_129(mzd_local_t* c, mzd_local_t const* v, mzd_local_t c
   for (unsigned int w = 2; w; --w, ++vptr) {
     word idx = *vptr;
     for (unsigned int i = sizeof(word) * 8; i; --i, idx >>= 1, ++Ablock) {
-      const word mask = -(crypto_int64_bottombit_01(idx));
+      const word mask = crypto_int64_bottombit_mask(idx);
       mzd_xor_mask_uint64_block(cblock, Ablock, mask, 3);
     }
   }
@@ -856,7 +858,7 @@ void mzd_addmul_v_uint64_192(mzd_local_t* c, mzd_local_t const* v, mzd_local_t c
   for (unsigned int w = 3; w; --w, ++vptr) {
     word idx = *vptr;
     for (unsigned int i = sizeof(word) * 8; i; --i, idx >>= 1, ++Ablock) {
-      const word mask = -(crypto_int64_bottombit_01(idx));
+      const word mask = crypto_int64_bottombit_mask(idx);
       mzd_xor_mask_uint64_block(cblock, Ablock, mask, 3);
     }
   }
@@ -876,7 +878,7 @@ void mzd_addmul_v_uint64_256(mzd_local_t* c, mzd_local_t const* v, mzd_local_t c
     word idx = *vptr;
 
     for (unsigned int i = sizeof(word) * 8; i; --i, idx >>= 1, ++Ablock) {
-      const word mask = -(crypto_int64_bottombit_01(idx));
+      const word mask = crypto_int64_bottombit_mask(idx);
       mzd_xor_mask_uint64_block(cblock, Ablock, mask, 4);
     }
   }
@@ -898,7 +900,7 @@ void mzd_mul_v_uint64_192_960(mzd_local_t* c, mzd_local_t const* v, mzd_local_t 
   for (unsigned int w = 3; w; --w, ++vptr) {
     word idx = *vptr;
     for (unsigned int i = sizeof(word) * 8; i; --i, idx >>= 1, ++Ablock) {
-      const word mask = -(crypto_int64_bottombit_01(idx));
+      const word mask = crypto_int64_bottombit_mask(idx);
       for (unsigned int j = 0; j < 3; ++j, ++Ablock) {
         mzd_xor_mask_uint64_block(BLOCK(c, j), Ablock, mask, 4);
       }
@@ -940,7 +942,7 @@ void mzd_addmul_v_uint64_30_192(mzd_local_t* c, mzd_local_t const* v, mzd_local_
 
   word idx = CONST_BLOCK(v, 0)->w64[2] >> 34;
   for (unsigned int i = 30; i; --i, idx >>= 1, ++Ablock) {
-    const word mask = -(crypto_int64_bottombit_01(idx));
+    const word mask = crypto_int64_bottombit_mask(idx);
     mzd_xor_mask_uint64_block(cblock, Ablock, mask, 3);
   }
 }

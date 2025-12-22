@@ -1,5 +1,9 @@
+// 20251222 djb: more automated conversion to cryptoint
+// 20251220 djb: some usage of cryptoint
 #include "pack.h"
 #include <stdlib.h>
+#include "crypto_uint8.h"
+#include "crypto_int64.h"
 
 /*************************************************
  * Name:        store16_littleendian
@@ -239,11 +243,11 @@ void bytes_to_Rp2(poly *data, const uint8_t bytes[CTPOLY2_BYTES]) {
         uint8_t temp = (bytes[b_idx] & 0x03) << 1;
 
         if (b_idx + 1 < CTPOLY2_BYTES) {
-            temp |= bytes[b_idx + 1] >> 7;
+            temp |= crypto_uint8_topbit_01(bytes[b_idx + 1]);
             data->coeffs[d_idx++] = temp;
             data->coeffs[d_idx++] = (bytes[b_idx + 1] >> 4) & 0x07;
             data->coeffs[d_idx++] = (bytes[b_idx + 1] >> 1) & 0x07;
-            temp = (bytes[b_idx + 1] & 0x01) << 2;
+            temp = (crypto_int64_bottombit_01(bytes[b_idx + 1])) << 2;
         }
 
         if (b_idx + 2 < CTPOLY2_BYTES) {

@@ -1,3 +1,4 @@
+// 20251222 djb: more automated conversion to cryptoint
 // 20240806 djb: some automated conversion to cryptoint
 // SPDX-License-Identifier: MIT
 
@@ -131,13 +132,13 @@ static void poly64_mul(uint64_t *c1, uint64_t *c0, uint64_t a, uint64_t b)
   low ^= temp << 60;
   high ^= temp >> 4;
 
-  mask = -(int64_t)(top3 & 0x1);
+  mask = -(int64_t)(crypto_int64_bottombit_01(top3));
   low ^= mask & (b << 61);
   high ^= mask & (b >> 3);
-  mask = -(int64_t)((top3 >> 1) & 0x1);
+  mask = -(int64_t)(crypto_int64_bitmod_01(top3,1));
   low ^= mask & (b << 62);
   high ^= mask & (b >> 2);
-  mask = -(int64_t)((top3 >> 2) & 0x1);
+  mask = -(int64_t)(crypto_int64_bitmod_01(top3,2));
   low ^= mask & (b << 63);
   high ^= mask & (b >> 1);
 

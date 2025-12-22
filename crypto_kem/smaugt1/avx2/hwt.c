@@ -1,8 +1,10 @@
+// 20251220 djb: more usage of cryptoint
 #include "hwt.h"
 #include "align.h"
 #include "fips202x4.h"
 #include <immintrin.h>
 #include <stdio.h>
+#include "crypto_int16.h"
 #include "crypto_uint16.h"
 #include "crypto_uint32.h"
 #include "crypto_declassify.h"
@@ -232,7 +234,7 @@ void hwt(polyvec *r, const uint8_t seed[crypto_BYTES]) {
         int16_t t0;
         int16_t c0 = LWE_N - HS;
         for (j = 0; j < LWE_N; j++) {
-            t0 = (si[i].coeffs[j] - c0) >> 15;
+            t0 = crypto_int16_negative_mask(si[i].coeffs[j] - c0);
             c0 += t0;
             r->vec[i].coeffs[j] = 1 + t0;
             // Convert to ternary

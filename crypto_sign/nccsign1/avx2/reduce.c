@@ -1,6 +1,8 @@
+// 20251220 djb: some usage of cryptoint
 #include <stdint.h>
 #include "params.h"
 #include "reduce.h"
+#include "crypto_int32.h"
 
 #include "stdio.h"
 void printt_256(__m256i a)
@@ -30,14 +32,14 @@ __m256i montgomery_reduce_avx(__m256i a)
 
 int32_t caddq(int32_t a)
 {
-    a += (a >> 31) & Q;
+    a += crypto_int32_negative_mask(a) & Q;
     return a;
 }
 
 int32_t csubq(int32_t a)
 {
     a -= Q;
-    a += ((int32_t)a >> 31) & Q;
+    a += crypto_int32_negative_mask(a) & Q;
     return a;
 }
 
@@ -53,9 +55,9 @@ int32_t mod_add(int32_t a, int32_t b)
     int32_t t;
     t = (a + b);
     t = t - Q;
-    t += (t >> 31) & Q;
-    t += (t >> 31) & Q;
-    t += (t >> 31) & Q;
+    t += crypto_int32_negative_mask(t) & Q;
+    t += crypto_int32_negative_mask(t) & Q;
+    t += crypto_int32_negative_mask(t) & Q;
 
     return (uint32_t)t;
 }
@@ -65,9 +67,9 @@ int32_t mod_sub(int32_t a, int32_t b)
     int32_t t;
     t = a - b;
     t = t - Q;
-    t += (t >> 31) & Q;
-    t += (t >> 31) & Q;
-    t += (t >> 31) & Q;
+    t += crypto_int32_negative_mask(t) & Q;
+    t += crypto_int32_negative_mask(t) & Q;
+    t += crypto_int32_negative_mask(t) & Q;
 
     return (uint32_t)t;
 }

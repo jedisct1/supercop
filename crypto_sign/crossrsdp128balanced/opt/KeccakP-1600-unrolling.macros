@@ -1,7 +1,9 @@
+// 20251222 djb: more automated conversion to cryptoint
 /* File imported from XKCP for use in CROSS, without modifications. */
 #include "crypto_sign.h"
 #include "namespace.h"
 #include "set.h"
+#include "crypto_int64.h"
 /*
 The eXtended Keccak Code Package (XKCP)
 https://github.com/XKCP/XKCP
@@ -298,7 +300,7 @@ http://creativecommons.org/publicdomain/zero/1.0/
 #define roundsN(__nrounds) \
     prepareTheta \
     i = 24 - (__nrounds); \
-    if ((i&1) != 0) { \
+    if ((crypto_int64_bottombit_01(i)) != 0) { \
         thetaRhoPiChiIotaPrepareTheta(i, A, E) \
         copyStateVariables(A, E) \
         ++i; \

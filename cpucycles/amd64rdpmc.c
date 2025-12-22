@@ -31,6 +31,7 @@ long long cpucycles_amd64rdpmc(void)
     asm volatile("" ::: "memory");
     index = buf->index;
     offset = buf->offset;
+    if (index < 1) index = (1<<30)|2; /* work around perf bug in some kernels on E-cores */
     asm volatile("rdpmc;shlq $32,%%rdx;orq %%rdx,%%rax"
       : "=a"(result) : "c"(index-1) : "%rdx");
     asm volatile("" ::: "memory");

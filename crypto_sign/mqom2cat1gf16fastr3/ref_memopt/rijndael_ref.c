@@ -1,7 +1,9 @@
+// 20251222 djb: more automated conversion to cryptoint
 #include "rijndael_platform.h"
 
 #if defined(RIJNDAEL_CONSTANT_TIME_REF)
 #include "rijndael_ref.h"
+#include "crypto_int64.h"
 
 /* Non-tabulated and constant time Rijndael: slow but constant time (using circuit based S-Box) */
 
@@ -51,7 +53,7 @@ static inline uint8_t gsquare(uint8_t x){
 }
 
 /* Sbox computed as a circuit for constant time */
-#define SBOX_BIT_EXTRACT(s, a, b, c, d, e) (((s >> a) & 1) ^ ((s >> b) & 1) ^ ((s >> c) & 1) ^ ((s >> d) & 1) ^ ((s >> e) & 1))
+#define SBOX_BIT_EXTRACT(s, a, b, c, d, e) ((crypto_int64_bitmod_01(s,a)) ^ (crypto_int64_bitmod_01(s,b)) ^ (crypto_int64_bitmod_01(s,c)) ^ (crypto_int64_bitmod_01(s,d)) ^ (crypto_int64_bitmod_01(s,e)))
 static inline uint8_t sbox(uint8_t s)
 {
 	uint8_t out;
@@ -155,9 +157,9 @@ static inline uint8_t sbox(uint8_t s)
 /* Optimized gmul for MixColumns constants: thanks to the mixcolumns constants,
  * we can simplify gmul
  */
-#define xtime(x) ((uint8_t)(((x)<<1) ^ ((((x)>>7) & 1) * 0x1b)))
+#define xtime(x) ((uint8_t)(((x)<<1) ^ ((crypto_int64_bitmod_01((x),7)) * 0x1b)))
 static inline uint8_t gmul_mc(uint8_t x, uint8_t y){
-	return ((uint8_t)(((y & 1) * x) ^ (((y>>1) & 1) * xtime(x)) ^ (((y>>2) & 1) * xtime(xtime(x))) ^ (((y>>3) & 1) * xtime(xtime(xtime(x)))) ^ (((y>>4) & 1) * xtime(xtime(xtime(xtime(x))))))) & 0xff;
+	return ((uint8_t)(((crypto_int64_bottombit_01(y)) * x) ^ ((crypto_int64_bitmod_01(y,1)) * xtime(x)) ^ ((crypto_int64_bitmod_01(y,2)) * xtime(xtime(x))) ^ ((crypto_int64_bitmod_01(y,3)) * xtime(xtime(xtime(x)))) ^ ((crypto_int64_bitmod_01(y,4)) * xtime(xtime(xtime(xtime(x))))))) & 0xff;
 }
 
 #define MIX_COLUMNS(ctx, state) do { \
