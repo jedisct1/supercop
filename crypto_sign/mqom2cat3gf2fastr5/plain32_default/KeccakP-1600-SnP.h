@@ -1,1 +1,1 @@
-../../mqom2cat1gf16fastr3/plain32_memopt/KeccakP-1600-SnP.h
+../../mqom2cat1gf2fastr3/plain32_memopt/KeccakP-1600-SnP.h

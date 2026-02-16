@@ -1,5 +1,5 @@
 /*
- * measure-anything.c version 20231211
+ * measure-anything.c version 20260214
  * D. J. Bernstein
  * Public domain.
  */
@@ -16,6 +16,7 @@
 #include "supercopcpuid.h"
 #include "measure.h"
 #include "crypto_declassify.h"
+#include "stq.h"
 
 static void printword(const char *s)
 {
@@ -77,7 +78,7 @@ static void printimplementations(void)
   printf("\n"); fflush(stdout);
 
   printword("cpucycles_implementation");
-  printword(cpucycles_implementation);
+  printword(cpucycles_implementation());
   printf("\n"); fflush(stdout);
 
   printword("compiler");
@@ -125,24 +126,19 @@ static void printimplementations(void)
 void printentry(long long mbytes,const char *measuring,long long *m,long long mlen)
 {
   long long i;
-  long long j;
-  long long belowj;
-  long long abovej;
 
   printword(measuring);
   if (mbytes >= 0) printnum(mbytes); else printword("");
-  if (mlen > 0) { 
-    for (j = 0;j + 1 < mlen;++j) { 
-      belowj = 0;
-      for (i = 0;i < mlen;++i) if (m[i] < m[j]) ++belowj;
-      abovej = 0;
-      for (i = 0;i < mlen;++i) if (m[i] > m[j]) ++abovej;
-      if (belowj * 2 < mlen && abovej * 2 < mlen) break;
-    } 
-    printnum(m[j]);
-    if (mlen > 1) { 
-      for (i = 0;i < mlen;++i) printnum(m[i]);
-    } 
+  if (mlen == 1) {
+    printnum(m[0]);
+  } else if (mlen > 1) {
+    long long result = stq2_longlong(m,mlen);
+    printnum(result);
+    for (i = 0;i < mlen;++i)
+      if (m[i] >= result)
+        printf("+%lld",m[i]-result);
+      else
+        printf("-%lld",result-m[i]);
   } 
   printf("\n"); fflush(stdout);
 }
@@ -165,7 +161,7 @@ void limits()
 #endif
 }
 
-void crypto_declassify(void *x,unsigned long long xlen)
+void crypto_declassify(const void *x,unsigned long long xlen)
 {
   (void) x;
   (void) xlen;

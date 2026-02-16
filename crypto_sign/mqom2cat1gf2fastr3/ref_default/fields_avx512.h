@@ -1,1 +1,1 @@
-../../mqom2cat1gf16fastr3/ref_memopt/fields_avx512.h
+../ref_memopt/fields_avx512.h

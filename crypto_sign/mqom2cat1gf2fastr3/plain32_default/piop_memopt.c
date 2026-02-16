@@ -1,1 +1,1 @@
-../../mqom2cat1gf16fastr3/ref_memopt/piop_memopt.c
+../ref_memopt/piop_memopt.c

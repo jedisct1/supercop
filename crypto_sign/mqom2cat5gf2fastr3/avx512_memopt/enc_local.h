@@ -1,0 +1,1 @@
+../../mqom2cat1gf2fastr3/ref_memopt/enc_local.h

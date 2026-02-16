@@ -176,7 +176,7 @@ echo "=== `date` === building cpucycles"
 rm -rf "$top/cpucycles"
 mkdir -p "$top/cpucycles"
 cp -pR cpucycles/* "$top/cpucycles"
-( cd "$top/cpucycles" && sh do )
+( cd "$top/cpucycles" && ./do )
 okabi \
 | while read abi
 do
@@ -188,7 +188,7 @@ echo "=== `date` === building cpucycles for TIMECOP"
 rm -rf "$top/cpucycles"
 mkdir -p "$top/cpucycles"
 cp -pR cpucycles/* "$top/cpucycles"
-( cd "$top/cpucycles" && env CPUCYCLESWRAPPER="killafter 300 valgrind" sh do )
+( cd "$top/cpucycles" && env CPUCYCLESTIMECOP=1 ./do )
 okabi \
 | while read abi
 do
@@ -254,7 +254,7 @@ do
 
         if [ -f "$implementationdir/architectures" ]
         then
-          if grep '^'"$abi"'$' "$implementationdir/architectures" >/dev/null
+          if grep -w "$abi" "$implementationdir/architectures" >/dev/null
           then
             :
           else

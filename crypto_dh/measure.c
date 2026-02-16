@@ -33,7 +33,7 @@ void allocate(void)
   s2 = alignedcalloc(crypto_dh_BYTES);
 }
 
-#define TIMINGS 63
+#define TIMINGS 64
 static long long cycles[TIMINGS + 1];
 static long long rbytes[TIMINGS + 1];
 static long long rcalls[TIMINGS + 1];

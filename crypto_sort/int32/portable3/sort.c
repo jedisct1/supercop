@@ -1,12 +1,12 @@
-#include "crypto_sort.h"
+/* WARNING: auto-converted (by supercop/import/djbsort); do not edit */
 #include "crypto_int32.h"
+#include "crypto_sort.h"
 #define int32 crypto_int32
-#define int32_MINMAX(a,b) crypto_int32_minmax(&a,&b)
+#define int32_MINMAX(a,b) crypto_int32_minmax(&(a),&(b))
 
-void crypto_sort(void *array,long long n)
+static void int32_sort(int32 *x,long long n)
 {
   long long top,p,q,r,i;
-  int32 *x = array;
 
   if (n < 2) return;
   top = 1;
@@ -23,9 +23,14 @@ void crypto_sort(void *array,long long n)
           int32 a = x[i + p];
           for (r = q;r > p;r >>= 1)
             int32_MINMAX(a,x[i+r]);
-	  x[i + p] = a;
-	}
+          x[i + p] = a;
+        }
       }
     }
   }
+}
+
+void crypto_sort(void *array,long long n)
+{
+  int32_sort((crypto_int32 *) array,n);
 }

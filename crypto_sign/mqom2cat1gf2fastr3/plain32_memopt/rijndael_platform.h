@@ -1,1 +1,1 @@
-../../mqom2cat1gf16fastr3/ref_memopt/rijndael_platform.h
+../ref_memopt/rijndael_platform.h

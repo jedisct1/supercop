@@ -1,5 +1,5 @@
 /*
- * crypto_sort/try.c version 20200809
+ * crypto_sort/try.c version 20260214
  * D. J. Bernstein
  * Public domain.
  */
@@ -27,6 +27,8 @@ const char *primitiveimplementation = crypto_sort_IMPLEMENTATION;
 #endif
 #endif
 
+#define VARIANTS 64
+
 static unsigned char *x;
 static unsigned char *y;
 static unsigned char *x2;
@@ -43,9 +45,9 @@ void allocate(void)
   if (alloclen < TUNE) alloclen = TUNE;
   if (alloclen < MAXTEST) alloclen = MAXTEST;
   x = alignedcalloc(crypto_sort_BYTES * alloclen);
-  y = alignedcalloc(crypto_sort_BYTES * alloclen);
+  y = alignedcalloc(VARIANTS * crypto_sort_BYTES * alloclen);
   x2 = alignedcalloc(crypto_sort_BYTES * alloclen);
-  y2 = alignedcalloc(crypto_sort_BYTES * alloclen);
+  y2 = alignedcalloc(VARIANTS * crypto_sort_BYTES * alloclen);
 }
 
 void unalign(void)
@@ -67,13 +69,17 @@ void realign(void)
 void predoit(void)
 {
   long long i;
-  for (i = 0;i < crypto_sort_BYTES * TUNE;++i) y[i] = myrandom();
+  for (i = 0;i < VARIANTS * crypto_sort_BYTES * TUNE;++i) y[i] = myrandom();
 }
+
+static long long doitpos = 0;
 
 void doit(void)
 {
-  memcpy(x,y,crypto_sort_BYTES * TUNE);
+  memcpy(x,y + doitpos * crypto_sort_BYTES * TUNE,crypto_sort_BYTES * TUNE);
   crypto_sort(x,TUNE);
+  doitpos += 1;
+  if (doitpos == VARIANTS) doitpos = 0;
 }
 
 /* on big-endian machines, flip into little-endian */

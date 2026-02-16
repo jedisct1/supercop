@@ -1,3 +1,4 @@
+// 20260214 djb: static inline
 // 20240806 djb: some automated conversion to cryptoint
 #include "crypto_int64.h"
 /**
@@ -56,7 +57,7 @@
  * @return Current random value.
  */
 
-inline uint32_t prvhash42_core64( uint64_t* const Seed0, uint64_t* const lcg0,
+static inline uint32_t prvhash42_core64( uint64_t* const Seed0, uint64_t* const lcg0,
 	uint32_t* const Hash0 )
 {
 	uint64_t Seed = *Seed0; uint64_t lcg = *lcg0; uint32_t Hash = *Hash0;
@@ -76,7 +77,7 @@ inline uint32_t prvhash42_core64( uint64_t* const Seed0, uint64_t* const lcg0,
 	return( out );
 }
 
-inline uint16_t prvhash42_core32( uint32_t* const Seed0, uint32_t* const lcg0,
+static inline uint16_t prvhash42_core32( uint32_t* const Seed0, uint32_t* const lcg0,
 	uint16_t* const Hash0 )
 {
 	uint32_t Seed = *Seed0; uint32_t lcg = *lcg0; uint16_t Hash = *Hash0;
@@ -96,7 +97,7 @@ inline uint16_t prvhash42_core32( uint32_t* const Seed0, uint32_t* const lcg0,
 	return( out );
 }
 
-inline uint8_t prvhash42_core16( uint16_t* const Seed0, uint16_t* const lcg0,
+static inline uint8_t prvhash42_core16( uint16_t* const Seed0, uint16_t* const lcg0,
 	uint8_t* const Hash0 )
 {
 	uint16_t Seed = *Seed0; uint16_t lcg = *lcg0; uint8_t Hash = *Hash0;
@@ -116,7 +117,7 @@ inline uint8_t prvhash42_core16( uint16_t* const Seed0, uint16_t* const lcg0,
 	return( out );
 }
 
-inline uint8_t prvhash42_core8( uint8_t* const Seed0, uint8_t* const lcg0,
+static inline uint8_t prvhash42_core8( uint8_t* const Seed0, uint8_t* const lcg0,
 	uint8_t* const Hash0 )
 {
 	uint8_t Seed = *Seed0; uint8_t lcg = *lcg0; uint8_t Hash = *Hash0;
@@ -136,7 +137,7 @@ inline uint8_t prvhash42_core8( uint8_t* const Seed0, uint8_t* const lcg0,
 	return( out );
 }
 
-inline uint8_t prvhash42_core4( uint8_t* const Seed0, uint8_t* const lcg0,
+static inline uint8_t prvhash42_core4( uint8_t* const Seed0, uint8_t* const lcg0,
 	uint8_t* const Hash0 )
 {
 	uint8_t Seed = *Seed0; uint8_t lcg = *lcg0; uint8_t Hash = *Hash0;
@@ -159,7 +160,7 @@ inline uint8_t prvhash42_core4( uint8_t* const Seed0, uint8_t* const lcg0,
 	return( out );
 }
 
-inline uint8_t prvhash42_core2( uint8_t* const Seed0, uint8_t* const lcg0,
+static inline uint8_t prvhash42_core2( uint8_t* const Seed0, uint8_t* const lcg0,
 	uint8_t* const Hash0 )
 {
 	uint8_t Seed = *Seed0; uint8_t lcg = *lcg0; uint8_t Hash = *Hash0;

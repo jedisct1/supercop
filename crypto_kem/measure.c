@@ -31,7 +31,7 @@ void allocate(void)
   t = alignedcalloc(crypto_kem_BYTES);
 }
 
-#define TIMINGS 31
+#define TIMINGS 32
 static long long cycles[TIMINGS + 1];
 static long long rbytes[TIMINGS + 1];
 static long long rcalls[TIMINGS + 1];

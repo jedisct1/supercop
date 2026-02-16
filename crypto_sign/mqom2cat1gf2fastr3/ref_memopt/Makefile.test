@@ -1,1 +1,13 @@
-../../mqom2cat1gf16fastr3/ref_memopt/Makefile.test
+C_SRCS=$(wildcard *.c)
+ASM_SRCS=$(wildcard *.S)
+ASM_SRCS+=$(wildcard *.s)
+
+OBJS=$(C_SRCS:.c=.o)
+OBJS+=$(ASM_SRCS:.S=.o)
+OBJS+=$(ASM_SRCS:.s=.o)
+CFLAGS = -Wall -Wextra -Wshadow -I. $(EXTRA_CFLAGS)
+
+all: $(OBJS)
+
+clean:
+	@rm -rf *.o

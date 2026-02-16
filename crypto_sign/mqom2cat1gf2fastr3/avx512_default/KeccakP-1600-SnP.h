@@ -1,1 +1,1 @@
-../../mqom2cat1gf16fastr3/avx512_memopt/KeccakP-1600-SnP.h
+../avx512_memopt/KeccakP-1600-SnP.h

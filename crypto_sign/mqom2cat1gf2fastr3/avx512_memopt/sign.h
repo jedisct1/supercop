@@ -1,1 +1,1 @@
-../../mqom2cat1gf16fastr3/ref_memopt/sign.h
+../ref_memopt/sign.h

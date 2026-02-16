@@ -1,1 +1,1 @@
-../../mqom2cat1gf16fastr3/ref_memopt/endian_compat.h
+../ref_memopt/endian_compat.h

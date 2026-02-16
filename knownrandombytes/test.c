@@ -4,7 +4,7 @@
 unsigned char x[65536];
 unsigned long long freq[256];
 
-void randombytes_callback(unsigned char *x,unsigned long long xlen)
+void randombytes_callback(const unsigned char *x,unsigned long long xlen)
 {
 }
 

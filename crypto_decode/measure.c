@@ -22,7 +22,7 @@ void allocate(void)
   y = alignedcalloc(crypto_decode_ITEMS * crypto_decode_ITEMBYTES);
 }
 
-#define TIMINGS 31
+#define TIMINGS 32
 static long long cycles[TIMINGS + 1];
 
 void measure(void)

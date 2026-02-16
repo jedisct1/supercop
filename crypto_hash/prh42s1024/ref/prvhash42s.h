@@ -1,3 +1,4 @@
+// 20260214 djb: static inline
 // 20240806 djb: some automated conversion to cryptoint
 /**
  * prvhash42s.h version 2.31
@@ -82,7 +83,7 @@ typedef struct {
  * in this case.
  */
 
-inline void prvhash42s_init( PRVHASH42S_CTX* ctx, uint8_t* const Hash,
+static inline void prvhash42s_init( PRVHASH42S_CTX* ctx, uint8_t* const Hash,
 	const int HashLen, const uint64_t SeedXOR[ 4 ],
 	const uint8_t InitVec[ 64 ])
 {
@@ -158,7 +159,7 @@ inline void prvhash42s_init( PRVHASH42S_CTX* ctx, uint8_t* const Hash,
  * @param MsgLen Message's length, in bytes.
  */
 
-inline void prvhash42s_update( PRVHASH42S_CTX* ctx, const uint8_t* Msg,
+static inline void prvhash42s_update( PRVHASH42S_CTX* ctx, const uint8_t* Msg,
 	size_t MsgLen )
 {
 	if( MsgLen == 0 )
@@ -259,7 +260,7 @@ inline void prvhash42s_update( PRVHASH42S_CTX* ctx, const uint8_t* Msg,
  * @param ctx Context structure.
  */
 
-inline void prvhash42s_final( PRVHASH42S_CTX* ctx )
+static inline void prvhash42s_final( PRVHASH42S_CTX* ctx )
 {
 	uint8_t fbytes[ PRVHASH42S_LEN ];
 	memset( fbytes, ctx -> fb, PRVHASH42S_LEN );
@@ -315,7 +316,7 @@ inline void prvhash42s_final( PRVHASH42S_CTX* ctx )
  * increments of 4.
  */
 
-inline void prvhash42s_oneshot( const uint8_t* const Msg, const size_t MsgLen,
+static inline void prvhash42s_oneshot( const uint8_t* const Msg, const size_t MsgLen,
 	uint8_t* const Hash, const int HashLen )
 {
 	PRVHASH42S_CTX ctx;

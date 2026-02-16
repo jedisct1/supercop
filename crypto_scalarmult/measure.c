@@ -26,7 +26,7 @@ void allocate(void)
   q = alignedcalloc(crypto_scalarmult_BYTES);
 }
 
-#define TIMINGS 63
+#define TIMINGS 64
 static long long cycles[TIMINGS + 1];
 
 void measure(void)

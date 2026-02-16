@@ -1,1 +1,1 @@
-../../mqom2cat1gf16fastr3/ref_memopt/KeccakP-1600-opt64.c
+../ref_memopt/KeccakP-1600-opt64.c

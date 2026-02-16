@@ -1,1 +1,1 @@
-../../mqom2cat1gf16fastr3/ref_memopt/KeccakHash.h
+../ref_memopt/KeccakHash.h

@@ -1,1 +1,1 @@
-../avx512_memopt/KeccakP-1600-AVX512.S
+../../mqom2cat1gf2fastr3/avx512_memopt/KeccakP-1600-AVX512.S

@@ -1,1 +1,1 @@
-../plain32_memopt/KeccakP-1600-inplace32BI.c
+../../mqom2cat1gf2fastr3/plain32_memopt/KeccakP-1600-inplace32BI.c

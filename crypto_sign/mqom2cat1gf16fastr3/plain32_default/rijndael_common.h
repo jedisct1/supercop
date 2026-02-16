@@ -1,1 +1,1 @@
-../ref_memopt/rijndael_common.h
+../../mqom2cat1gf2fastr3/ref_memopt/rijndael_common.h

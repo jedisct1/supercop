@@ -1,8 +1,9 @@
 #include <stdio.h>
 #include "cpucycles.h"
 #include "randombytes.h"
+#include "stq.h"
 
-#define TIMINGS 21
+#define TIMINGS 24
 unsigned long long t[TIMINGS + 1];
 unsigned char x[65536];
 unsigned long long freq[256];
@@ -11,8 +12,6 @@ int main()
 {
   int i;
   int j;
-  int abovej;
-  int belowj;
 
   for (j = 0;j <= TIMINGS;++j) {
     randombytes(x,sizeof x);
@@ -27,15 +26,6 @@ int main()
   }
 
   for (i = 0;i < TIMINGS;++i) t[i] = t[i + 1] - t[i];
-
-  for (j = 0;j + 1 < TIMINGS;++j) { 
-    belowj = 0;
-    for (i = 0;i < TIMINGS;++i) if (t[i] < t[j]) ++belowj;
-    abovej = 0;
-    for (i = 0;i < TIMINGS;++i) if (t[i] > t[j]) ++abovej;
-    if (belowj * 2 < TIMINGS && abovej * 2 < TIMINGS) break;
-  } 
-
-  printf("%llu\n",t[j]);
+  printf("%lld\n",stq2_longlong(t,TIMINGS));
   return 0;
 }

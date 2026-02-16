@@ -1,5 +1,5 @@
 /*
- * try-anything.c version 20231211
+ * try-anything.c version 20260214
  * D. J. Bernstein
  * Some portions adapted from TweetNaCl by Bernstein, Janssen, Lange, Schwabe.
  * Public domain.
@@ -19,6 +19,7 @@
 #include "crypto_uint32.h"
 #include "crypto_uint64.h"
 #include "crypto_declassify.h"
+#include "stq.h"
 #include "try.h"
 
 #ifdef TIMECOP
@@ -251,7 +252,7 @@ unsigned char *alignedcalloc(unsigned long long len)
 #ifdef TIMECOP
 #define TIMINGS 1
 #else
-#define TIMINGS 63
+#define TIMINGS 64
 #endif
 static long long cycles[TIMINGS + 1];
 
@@ -273,7 +274,7 @@ void limits()
 #endif
 }
 
-void poison(void *x,unsigned long long xlen)
+void poison(const void *x,unsigned long long xlen)
 {
   (void) x;
   (void) xlen;
@@ -282,7 +283,7 @@ void poison(void *x,unsigned long long xlen)
 #endif
 }
 
-void unpoison(void *x,unsigned long long xlen)
+void unpoison(const void *x,unsigned long long xlen)
 {
   (void) x;
   (void) xlen;
@@ -291,7 +292,7 @@ void unpoison(void *x,unsigned long long xlen)
 #endif
 }
 
-void crypto_declassify(void *x,unsigned long long xlen)
+void crypto_declassify(const void *x,unsigned long long xlen)
 {
   (void) x;
   (void) xlen;
@@ -304,7 +305,7 @@ void crypto_declassify(void *x,unsigned long long xlen)
 extern "C" {
 #endif
 
-void randombytes_callback(unsigned char *x,unsigned long long xlen)
+void randombytes_callback(const unsigned char *x,unsigned long long xlen)
 {
   (void) x;
   (void) xlen;
@@ -322,11 +323,9 @@ static unsigned char randombyte[1];
 int main()
 {
   long long i;
-  long long j;
-  long long abovej;
-  long long belowj;
   long long checksumcycles;
   long long cyclespersecond;
+  long long result;
 
   cycles[0] = cpucycles();
   cycles[1] = cpucycles();
@@ -357,13 +356,7 @@ int main()
     doit();
   }
   for (i = 0;i < TIMINGS;++i) cycles[i] = cycles[i + 1] - cycles[i];
-  for (j = 0;j < TIMINGS;++j) {
-    belowj = 0;
-    for (i = 0;i < TIMINGS;++i) if (cycles[i] < cycles[j]) ++belowj;
-    abovej = 0;
-    for (i = 0;i < TIMINGS;++i) if (cycles[i] > cycles[j]) ++abovej;
-    if (belowj * 2 < TIMINGS && abovej * 2 < TIMINGS) break;
-  }
+  result = stq2_longlong(cycles,TIMINGS);
 
   for (i = 0;i < 32;++i) {
     checksum_hex[2 * i] = "0123456789abcdef"[15 & (checksum_state[i] >> 4)];
@@ -372,10 +365,17 @@ int main()
   checksum_hex[2 * i] = 0;
 
   printword(checksum_hex);
-  printnum(cycles[j]);
+  printnum(result);
   printnum(checksumcycles);
   printnum(cyclespersecond);
   printword(primitiveimplementation);
+
+  for (i = 0;i < TIMINGS;++i)
+    if (cycles[i] >= result)
+      printf("+%lld",cycles[i]-result);
+    else
+      printf("-%lld",result-cycles[i]);
+
   printf("\n");
   return 0;
 }

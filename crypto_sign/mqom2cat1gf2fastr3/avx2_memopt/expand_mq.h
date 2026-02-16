@@ -1,1 +1,1 @@
-../../mqom2cat1gf16fastr3/ref_memopt/expand_mq.h
+../ref_memopt/expand_mq.h

@@ -1,1 +1,1 @@
-../../mqom2cat1gf16fastr3/ref_memopt/xof.h
+../ref_memopt/xof.h

@@ -38,7 +38,7 @@ void allocate(void)
   sb = alignedcalloc(crypto_box_BEFORENMBYTES);
 }
 
-#define TIMINGS 15
+#define TIMINGS 16
 static long long cycles[TIMINGS + 1];
 static long long rbytes[TIMINGS + 1];
 static long long rcalls[TIMINGS + 1];

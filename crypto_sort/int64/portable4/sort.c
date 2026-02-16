@@ -1,12 +1,12 @@
-#include "crypto_sort.h"
+/* WARNING: auto-converted (by supercop/import/djbsort); do not edit */
 #include "crypto_int64.h"
+#include "crypto_sort.h"
 #define int64 crypto_int64
-#define int64_MINMAX(a,b) crypto_int64_minmax(&a,&b)
+#define int64_MINMAX(a,b) crypto_int64_minmax(&(a),&(b))
 
-void crypto_sort(void *array,long long n)
+static void int64_sort(int64 *x,long long n)
 {
   long long top,p,q,r,i,j;
-  int64 *x = array;
 
   if (n < 2) return;
   top = 1;
@@ -59,4 +59,9 @@ void crypto_sort(void *array,long long n)
       done: ;
     }
   }
+}
+
+void crypto_sort(void *array,long long n)
+{
+  int64_sort((crypto_int64 *) array,n);
 }

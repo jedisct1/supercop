@@ -163,7 +163,7 @@ do
   
       if [ "$t1" = keccak ]
       then
-        echo "keccak 20250220-nokravatte-noxoofff+fixes" >&8
+        echo "keccak 20250220-nokravatte-noxoofff+fixes+alignment" >&8
       fi
   
       if [ "$t1" = cryptopp ]
@@ -218,7 +218,7 @@ do
         (
           cd "$top/$target/work"
           libs=`"oklibs-$abi"`
-          libs="$top/$abi/lib/nontimecop/cpucycles.o $libs"
+          libs="$top/$abi/lib/nontimecop/libcpucycles.a $libs"
           libs="$top/$abi/lib/kernelrandombytes.o $libs"
           if $compiler -D'COMPILER="'"$compiler"'"' \
             -DLOOPS=1 \
@@ -547,7 +547,7 @@ do
         libs=`"oklibs-$abi"`
         rslibs=`"oklibs-$abi" | tr ' ' '\012' | sed 's/-l//' | tr '\012' ' '`
 
-        libs="$top/$abi/lib/nontimecop/cpucycles.o $libs"
+        libs="$top/$abi/lib/nontimecop/libcpucycles.a $libs"
         rslibs="cpucycles $rslibs"
 
         libs="$top/$abi/lib/kernelrandombytes.o $libs"
@@ -855,6 +855,7 @@ do
             checksumcycles=`awk '{print $3}' < ../outputs`
             cyclespersecond=`awk '{print $4}' < ../outputs`
             impl=`awk '{print $5}' < ../outputs`
+            plusminus=`awk '{print $6}' < ../outputs`
             rm ../outputs ../errors
           else
             echo "$version $shorthostname $abi $startdate $o $p/$security tryfails $implementationdir $compilerword error $?" >&5
@@ -876,7 +877,7 @@ do
           checksumok=ok
           [ "x$expectedchecksumsmall" = x ] && checksumok=unknown
           [ "x$expectedchecksumbig" = x ] && checksumok=unknown
-          echo "$version $shorthostname $abi $startdate $o $p/$security try $checksumsmall/$checksumbig $checksumok $cycles $checksumcycles $cyclespersecond $impl $compilerword" >&5
+          echo "$version $shorthostname $abi $startdate $o $p/$security try $checksumsmall/$checksumbig $checksumok $cycles $checksumcycles $cyclespersecond $impl $compilerword $plusminus" >&5
 
           # ===== try-timecop (_not_ stopping if this fails)
 
@@ -992,7 +993,7 @@ do
       include="-I. -I$top/$abi/include -I$top/$abi/include/nontimecop -I$top/$abi/include/constbranchindex"
 
       libs=`"oklibs-$abi"`
-      libs="$top/$abi/lib/nontimecop/cpucycles.o $libs"
+      libs="$top/$abi/lib/nontimecop/libcpucycles.a $libs"
       libs="$top/$abi/lib/kernelrandombytes.o $libs"
       [ -f "$top/$abi/lib/libcryptopp.a" ] && libs="$top/$abi/lib/libcryptopp.a $libs"
       [ -f "$top/$abi/lib/lib${project}.a" ] && libs="$top/$abi/lib/lib${project}.a $libs"

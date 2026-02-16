@@ -1,1 +1,1 @@
-../../mqom2cat1gf16fastr3/ref_memopt/KeccakHashtimes4.c
+../../mqom2cat1gf2fastr3/ref_memopt/KeccakHashtimes4.c

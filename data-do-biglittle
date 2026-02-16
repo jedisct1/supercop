@@ -13,6 +13,7 @@ from sys import exit as _exit
 from platform import node
 from string import ascii_lowercase, digits
 import subprocess
+import glob
 
 try:
     from sys import implementation  # pylint: disable=ungrouped-imports
@@ -29,6 +30,7 @@ _DATE_FMT = '%Y-%m-%d-%H:%M:%s'
 _CPUINFO = '/proc/cpuinfo'
 _SIBLINGS_FMT = '/sys/devices/system/cpu/cpu{}/topology/thread_siblings_list'
 _MAX_FREQ_FMT = '/sys/devices/system/cpu/cpu{}/cpufreq/cpuinfo_max_freq'
+_CACHE_SIZE_FMT = '/sys/devices/system/cpu/cpu{}/cache/index*/size'
 _MODEL_KEYS = [
     'CPU variant',
     'model name',
@@ -124,6 +126,16 @@ def _extract_max_freq(core_id, _fmt=_MAX_FREQ_FMT):
         return 0
 
 
+def _extract_cache_size(core_id, _fmt=_CACHE_SIZE_FMT):
+    result = []
+    for fn in sorted(glob.glob(_fmt.format(core_id))):
+        with open(fn, 'r') as f:
+            result.append(f.readline().strip())
+    if result == []:
+        return 'nocache'
+    return ''.join(result)
+
+
 def _machine2coremodels(_f=_CPUINFO):
     '''
     *_machine2coremodels* tells us the unique types of cores.
@@ -154,7 +166,7 @@ def _machine2coremodels(_f=_CPUINFO):
         return cores
 
 
-def _cores2detailedcores(cores, _fmt=_MAX_FREQ_FMT):
+def _cores2detailedcores(cores, _fmt=_MAX_FREQ_FMT, _cache_size_fmt=_CACHE_SIZE_FMT):
     '''
     *_cores2detailedcores* extracts frequency and midr information for each
     *core* in *cores* and returns a modified *cores* that contains additional
@@ -172,6 +184,9 @@ def _cores2detailedcores(cores, _fmt=_MAX_FREQ_FMT):
     '''
     enhanced_cores = deepcopy(cores)
     for core in cores:
+        enhanced_cores[core]['cache_size'] = _extract_cache_size(
+            core, _fmt=_cache_size_fmt
+        )
         enhanced_cores[core]['cpuinfo_max_freq'] = _extract_max_freq(
             core, _fmt=_fmt
         )
@@ -247,28 +262,29 @@ def _make_hostname(args, core):
     With one cpu type: hostname
     With several cpu types:
     arm:
-        hostname fmt = hostname,midr,cpuinfo_max_freq
+        hostname fmt = hostname,midr,cpuinfo_max_freq,cache_size
     x86_64/amd64:
-        hostname fmt = hostname,h(model name)[5],cpuinfo_max_freq
+        hostname fmt = hostname,h(model name)[5],cpuinfo_max_freq,cache_size
     riscv/mips/mips64:
-        hostname fmt = hostname,h(isa)[5],cpuinfo_max_freq
+        hostname fmt = hostname,h(isa)[5],cpuinfo_max_freq,cache_size
     ppc:
-        hostname fmt = hostname,h(revision),cpuinfo_max_freq
+        hostname fmt = hostname,h(revision),cpuinfo_max_freq,cache_size
 
     >>> args = parse_args()
     >>> args.hostname = 'host'
     >>> _MAX_FREQ_FMT = 'samples/cpuinfo_max_freq/cpu{}'
+    >>> _CACHE_SIZE_FMT = 'samples/cache/cpu{}/index*'
     >>> info = 'samples/proc_cpuinfo_x86_64'
     >>> thread_ids = _machine2threadslist(_file=info)
     >>> core_models = _machine2coremodels(_f=info)
-    >>> cores = _cores2detailedcores(core_models, _fmt=_MAX_FREQ_FMT)
+    >>> cores = _cores2detailedcores(core_models, _fmt=_MAX_FREQ_FMT, _cache_size_fmt=_CACHE_SIZE_FMT)
     >>> for core in cores:
     ...  x = _make_hostname(args, cores[core])
     ...
     >>> print(x)
-    host,ff0f5016,4500000
+    host,ff0f5016,4500000,nocache
     '''
-    fmt = '{},{},{}'
+    fmt = '{},{},{},{}'
     arch = _get_arch().lower()
     basename = ""
     if arch in ('aarch64') or arch.startswith('arm'):
@@ -286,7 +302,7 @@ def _make_hostname(args, core):
     # This should be more careful as some systems will not have frequency
     # information available and it will be set to 0 which is not very
     # informative.
-    hostname = fmt.format(args.hostname, basename, core['cpuinfo_max_freq'])
+    hostname = fmt.format(args.hostname, basename, core['cpuinfo_max_freq'], core['cache_size'])
     return _clean_hostname(hostname)
 
 
@@ -424,7 +440,7 @@ def data_do(cores, cmd, args):
             + cmd
         ]
         if args.dry_run:
-            task = 'echo ' + task[0]
+            task = 'echo ' + task[0] + " '&'"
         log.debug('Running task: {}'.format(task))
         executed = subprocess.Popen(task, shell=True)
         log.debug('Started pid: {}'.format(executed.pid))
@@ -433,6 +449,8 @@ def data_do(cores, cmd, args):
     for task in processes:
         task.wait()
         log.debug('Pid {} finished'.format(task.pid))
+    if args.dry_run:
+        print('wait',flush=True)
     log.debug("{} finished".format(cmd))
 
 
@@ -444,6 +462,13 @@ def parse_args():
     Namespace(cpu_info='/proc/cpuinfo'...
     '''
     parser = ArgumentParser(prog='data-do-biglittle')
+    parser.add_argument(
+        '-f',
+        '--cpu-info',
+        action='store',
+        default=_CPUINFO,
+        help='set file to read (default: ' + _CPUINFO + ')',
+    )
     parser.add_argument(
         '-v', '--verbose', action='count', help='increase log level'
     )
@@ -474,13 +499,6 @@ def parse_args():
     )
     parser.add_argument(
         '-H', '--hostname', action='store', default=node().split('.')[0], help='set hostname'
-    )
-    parser.add_argument(
-        '-f',
-        '--cpu-info',
-        action='store',
-        default=_CPUINFO,
-        help='set file to read (default: ' + _CPUINFO + ')',
     )
     return parser.parse_args()
 

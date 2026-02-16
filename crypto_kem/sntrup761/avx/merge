@@ -77,7 +77,7 @@ prototypes = readfile('%s/PROTOTYPES.c'%topdir).splitlines()
 macros += moresymbols
 
 writefile('crypto_declassify.h',
-  'extern void crypto_declassify(void *,unsigned long long);\n')
+  'extern void crypto_declassify(const void *,unsigned long long);\n')
 
 for x,y in (
   ('crypto_int8','int8_t'),

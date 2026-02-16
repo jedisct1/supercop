@@ -1,1 +1,1 @@
-../../mqom2cat1gf16fastr3/ref_memopt/ggm_tree.h
+../../mqom2cat1gf2fastr3/ref_memopt/ggm_tree.h

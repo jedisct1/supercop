@@ -1,3 +1,4 @@
+#include <math.h>
 #include <string.h>
 #include "kernelrandombytes.h"
 #include "cpucycles.h"
@@ -13,6 +14,7 @@ static unsigned char *x;
 static unsigned char *y;
 
 #define MAXTEST 65536
+#define TIMINGS 32
 
 void preallocate(void)
 {
@@ -21,28 +23,32 @@ void preallocate(void)
 void allocate(void)
 {
   x = alignedcalloc(MAXTEST * crypto_sort_BYTES);
-  y = alignedcalloc(MAXTEST * crypto_sort_BYTES);
+  y = alignedcalloc((TIMINGS + 1) * MAXTEST * crypto_sort_BYTES);
 }
 
-#define TIMINGS 31
 static long long cycles[TIMINGS + 1];
 
 void measure(void)
 {
-  long long loop,len,i;
+  long long loop,i;
 
   for (loop = 0;loop < LOOPS;++loop) {
-    for (len = 1;len <= MAXTEST;len += len) {
-      kernelrandombytes(y,len * crypto_sort_BYTES);
+    for (long long npos = 0;;++npos) {
+      long long nposlow = npos%24;
+      long long nposhigh = npos/24;
+      long long len = round(exp2(nposhigh+round(27.75001*nposlow)/665));
+      if (len > MAXTEST) break;
+
+      kernelrandombytes(y,(TIMINGS + 1) * len * crypto_sort_BYTES);
       for (i = 0;i <= TIMINGS;++i) {
         cycles[i] = cpucycles();
-        memcpy(x,y,len * crypto_sort_BYTES);
+        memcpy(x,y + i * len * crypto_sort_BYTES,len * crypto_sort_BYTES);
       }
       for (i = 0;i < TIMINGS;++i) cycles[i] = cycles[i + 1] - cycles[i];
       printentry(len,"copy_cycles",cycles,TIMINGS);
       for (i = 0;i <= TIMINGS;++i) {
         cycles[i] = cpucycles();
-        memcpy(x,y,len * crypto_sort_BYTES);
+        memcpy(x,y + i * len * crypto_sort_BYTES,len * crypto_sort_BYTES);
         crypto_sort(x,len);
       }
       for (i = 0;i < TIMINGS;++i) cycles[i] = cycles[i + 1] - cycles[i];

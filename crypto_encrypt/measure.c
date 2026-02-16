@@ -33,7 +33,7 @@ void allocate(void)
   t = alignedcalloc(MAXTEST_BYTES + crypto_encrypt_BYTES);
 }
 
-#define TIMINGS 31
+#define TIMINGS 32
 static long long cycles[TIMINGS + 1];
 static long long bytes[TIMINGS + 1];
 static long long rbytes[TIMINGS + 1];

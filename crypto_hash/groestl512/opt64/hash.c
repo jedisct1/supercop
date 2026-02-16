@@ -142,7 +142,7 @@ void PrintState(u64 y[COLS512]) {
 } while (0)
 
 /* the compression function (short variants) */
-inline void F512(u64 *h, const u64 *m) {
+static inline void F512(u64 *h, const u64 *m) {
   u64 y[COLS512] __attribute__((aligned(16)));
   u64 z[COLS512] __attribute__((aligned(16)));
   u64 outQ[COLS512] __attribute__((aligned(16)));
@@ -187,11 +187,11 @@ inline void F512(u64 *h, const u64 *m) {
 
 
 /* the compression function (long variants) */
-inline void F1024(u64 *h, const u64 *m) {
-  static u64 y[COLS1024] __attribute__((aligned(16)));
-  static u64 z[COLS1024] __attribute__((aligned(16)));
-  static u64 outQ[COLS1024] __attribute__((aligned(16)));
-  static u64 inP[COLS1024] __attribute__((aligned(16)));
+static inline void F1024(u64 *h, const u64 *m) {
+  u64 y[COLS1024] __attribute__((aligned(16)));
+  u64 z[COLS1024] __attribute__((aligned(16)));
+  u64 outQ[COLS1024] __attribute__((aligned(16)));
+  u64 inP[COLS1024] __attribute__((aligned(16)));
   int i;
 
   for (i = 0; i < COLS1024; i++) {

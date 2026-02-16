@@ -1,0 +1,73 @@
+#!/usr/bin/env python3
+
+import os
+
+upstream = 'import/djbsort-20260210'
+
+inlinewrapper = False
+
+for cryptobytes,p in (
+  (4,'int32'),
+  (4,'uint32'),
+  (8,'int64'),
+  (8,'uint64'),
+):
+  for i in sorted(os.listdir(f'{upstream}/{p}')):
+    use = i
+    use = use[4:] if use.startswith('avx2') else use
+    use = use[3:] if use.startswith('use') else None
+    sourcedir = f'{upstream}/{p}/{i}'
+    if i == 'avx2': i = '2026avx2'
+    targetdir = f'crypto_sort/{p}/{i}'
+    os.makedirs(targetdir,exist_ok=True)
+    with open(f'{targetdir}/goal-constbranch','a') as g: pass
+    with open(f'{targetdir}/goal-constindex','a') as g: pass
+    with open(f'{targetdir}/api.h','w') as g:
+      g.write(f'#define CRYPTO_BYTES {cryptobytes}\n')
+    for fn in sorted(os.listdir(sourcedir)):
+      with open(f'{sourcedir}/{fn}') as f:
+        with open(f'{targetdir}/{fn}','w') as g:
+          T = None
+          rightaftercryptosort = False
+          if fn.endswith('.c'):
+            g.write('/* WARNING: auto-converted (by supercop/import/djbsort); do not edit */\n')
+          for line in f:
+            if fn == 'architectures':
+              line = line.replace('arm64','aarch64')
+            if line.strip() == f'#include "crypto_{p}.h"': T = f'crypto_{p}'
+            if line.strip() == f'#include <inttypes.h>': T = f'{p}_t'
+            if line.strip() == f'#include <stdint.h>': T = f'{p}_t'
+            if line.strip() == '#include "djbsort.h"':
+              if use is not None:
+                g.write(f'#include "crypto_sort_{use}.h"\n')
+                T = f'crypto_{p}'
+                g.write(f'#include "crypto_{p}.h"\n')
+                continue
+            if line.strip() == f'#include "{p}_sort.h"':
+              g.write(f'#include "crypto_sort.h"\n')
+              continue
+            if rightaftercryptosort:
+              g.write(line)
+              g.write(f'  crypto_{p} *x = (crypto_{p} *) array;\n')
+              rightaftercryptosort = False
+              continue
+            if inlinewrapper:
+              if f'void {p}_sort(' in line:
+                rightaftercryptosort = True
+              line = line.replace(f'  {p}_sort(','  crypto_sort(')
+              line = line.replace(f'void {p}_sort({p}_t *x,long long n)',f'void crypto_sort(void *array,long long n)')
+              line = line.replace(f'void {p}_sort({p} *x,long long n)',f'void crypto_sort(void *array,long long n)')
+              if use is not None:
+                line = line.replace(f'djbsort_{use}(({use}_t *) x,n)',f'crypto_sort_{use}(array,n)')
+            else:
+              line = line.replace(f'void {p}_sort(',f'static void {p}_sort(')
+              if use is not None:
+                line = line.replace(f'djbsort_{use}(({use}_t *) x,n)',f'crypto_sort_{use}((void *) x,n)')
+            g.write(line)
+          if fn == 'sort.c' and not inlinewrapper:
+            assert T
+            g.write('\n')
+            g.write('void crypto_sort(void *array,long long n)\n')
+            g.write('{\n')
+            g.write(f'  {p}_sort(({T} *) array,n);\n')
+            g.write('}\n')

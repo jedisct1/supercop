@@ -1,1 +1,1 @@
-../../mqom2cat1gf16fastr3/avx512_memopt/SIMD512-4-config.h
+../avx512_memopt/SIMD512-4-config.h

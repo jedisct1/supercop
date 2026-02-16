@@ -1,1 +1,1 @@
-../../mqom2cat1gf16fastr3/ref_memopt/KeccakSponge.c
+../ref_memopt/KeccakSponge.c

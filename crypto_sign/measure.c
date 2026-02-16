@@ -11,7 +11,7 @@ const long long sizes[] = { crypto_sign_BYTES, crypto_sign_PUBLICKEYBYTES, crypt
 
 #define MAXTEST_BYTES 100000
 
-#define TIMINGS 15
+#define TIMINGS 16
 
 static unsigned char *pk[TIMINGS + 1];
 static unsigned char *sk[TIMINGS + 1];

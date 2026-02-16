@@ -1,3 +1,5 @@
+#define NO_MISALIGNED_ACCESSES
+
 /*
 The eXtended Keccak Code Package (XKCP)
 https://github.com/XKCP/XKCP

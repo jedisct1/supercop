@@ -1,3 +1,4 @@
+// 20260214 djb: static inline
 /**
  * @file prvhash42ec.h
  *
@@ -59,7 +60,7 @@
  * @param p 8-byte buffer. Alignment is unimportant.
  */
 
-inline uint64_t prvhash42_u64ec( const uint8_t* const p )
+static inline uint64_t prvhash42_u64ec( const uint8_t* const p )
 {
 	uint64_t v;
 	memcpy( &v, p, 8 );
@@ -75,7 +76,7 @@ inline uint64_t prvhash42_u64ec( const uint8_t* const p )
  * @param p 4-byte buffer. Alignment is unimportant.
  */
 
-inline uint32_t prvhash42_u32ec( const uint8_t* const p )
+static inline uint32_t prvhash42_u32ec( const uint8_t* const p )
 {
 	uint32_t v;
 	memcpy( &v, p, 4 );
@@ -87,7 +88,7 @@ inline uint32_t prvhash42_u32ec( const uint8_t* const p )
 
 #if defined( __GNUC__ ) || defined( __INTEL_COMPILER ) || defined( __clang__ )
 
-inline uint64_t prvhash42_u64ec( const uint8_t* const p )
+static inline uint64_t prvhash42_u64ec( const uint8_t* const p )
 {
 	uint64_t v;
 	memcpy( &v, p, 8 );
@@ -95,7 +96,7 @@ inline uint64_t prvhash42_u64ec( const uint8_t* const p )
 	return( __builtin_bswap64( v ));
 }
 
-inline uint32_t prvhash42_u32ec( const uint8_t* const p )
+static inline uint32_t prvhash42_u32ec( const uint8_t* const p )
 {
 	uint32_t v;
 	memcpy( &v, p, 4 );
@@ -105,7 +106,7 @@ inline uint32_t prvhash42_u32ec( const uint8_t* const p )
 
 #elif defined( _MSC_VER )
 
-inline uint64_t prvhash42_u64ec( const uint8_t* const p )
+static inline uint64_t prvhash42_u64ec( const uint8_t* const p )
 {
 	uint64_t v;
 	memcpy( &v, p, 8 );
@@ -113,7 +114,7 @@ inline uint64_t prvhash42_u64ec( const uint8_t* const p )
 	return( _byteswap_uint64( v ));
 }
 
-inline uint32_t prvhash42_u32ec( const uint8_t* const p )
+static inline uint32_t prvhash42_u32ec( const uint8_t* const p )
 {
 	uint32_t v;
 	memcpy( &v, p, 4 );
@@ -137,13 +138,13 @@ inline uint32_t prvhash42_u32ec( const uint8_t* const p )
  * increments of 4. 
  */
 
-inline void prvhash42_ec32( uint8_t* const Hash, const int HashLen )
+static inline void prvhash42_ec32( uint8_t* const Hash, const int HashLen )
 {
 }
 
 #else // PRVHASH42_LITTLE_ENDIAN
 
-inline void prvhash42_ec32( uint8_t* const Hash, const int HashLen )
+static inline void prvhash42_ec32( uint8_t* const Hash, const int HashLen )
 {
 	int k;
 
@@ -164,7 +165,7 @@ inline void prvhash42_ec32( uint8_t* const Hash, const int HashLen )
  * @param fb Final byte used for padding.
  */
 
-inline uint32_t prvhash42_lp32( const uint8_t* Msg,
+static inline uint32_t prvhash42_lp32( const uint8_t* Msg,
 	const uint8_t* const MsgEnd, const uint8_t fb )
 {
 	if( Msg < MsgEnd - 3 )
@@ -191,7 +192,7 @@ inline uint32_t prvhash42_lp32( const uint8_t* Msg,
  * @param fb Final byte used for padding.
  */
 
-inline uint32_t prvhash42_lp32_1( const uint8_t* Msg,
+static inline uint32_t prvhash42_lp32_1( const uint8_t* Msg,
 	const uint8_t* const MsgEnd, const uint8_t fb )
 {
 	if( Msg < MsgEnd - 3 )
@@ -217,7 +218,7 @@ inline uint32_t prvhash42_lp32_1( const uint8_t* Msg,
  * @param fb Final byte used for padding.
  */
 
-inline uint64_t prvhash42_lp64( const uint8_t* Msg,
+static inline uint64_t prvhash42_lp64( const uint8_t* Msg,
 	const uint8_t* const MsgEnd, const uint8_t fb )
 {
 	return( prvhash42_lp32( Msg, MsgEnd, fb ) |
@@ -234,7 +235,7 @@ inline uint64_t prvhash42_lp64( const uint8_t* Msg,
  * @param fb Final byte used for padding.
  */
 
-inline uint64_t prvhash42_lp64_1( const uint8_t* Msg,
+static inline uint64_t prvhash42_lp64_1( const uint8_t* Msg,
 	const uint8_t* const MsgEnd, const uint8_t fb )
 {
 	return( prvhash42_lp32_1( Msg, MsgEnd, fb ) |

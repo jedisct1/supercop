@@ -32,7 +32,7 @@ void allocate(void)
   m = alignedcalloc(MAXTEST_BYTES);
 }
 
-#define TIMINGS 15
+#define TIMINGS 16
 static long long cycles[TIMINGS + 1];
 
 static void printcycles(long long mlen)

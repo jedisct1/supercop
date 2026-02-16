@@ -1,1 +1,1 @@
-../../mqom2cat1gf16fastr3/ref_memopt/blc_default.c
+../ref_memopt/blc_default.c

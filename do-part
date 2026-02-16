@@ -119,7 +119,7 @@ then
   rm -rf "$work"
   mkdir -p "$work"
   cp -pR cpucycles/* "$work"
-  ( cd "$work" && env CPUCYCLESWRAPPER="killafter 300" sh do )
+  ( cd "$work" && ./do )
   cp -pR "$work"/lib/* "$lib/nontimecop"
   cp -pR "$work"/include/* "$include/nontimecop"
   
@@ -129,7 +129,7 @@ then
     rm -rf "$work"
     mkdir -p "$work"
     cp -pR cpucycles/* "$work"
-    ( cd "$work" && env CPUCYCLESWRAPPER="killafter 300 valgrind" sh do )
+    ( cd "$work" && env CPUCYCLESTIMECOP=1 ./do )
     cp -pR "$work"/lib/* "$lib/timecop"
     cp -pR "$work"/include/* "$include/timecop"
   else
@@ -364,7 +364,7 @@ do
     do
       echo "=== `date` === $abi $o/$p"
       libs=`"oklibs-$abi"`
-      libs="$lib/nontimecop/$abi/cpucycles.o $libs"
+      libs="$lib/nontimecop/$abi/libcpucycles.a $libs"
       libs="$lib/$abi/kernelrandombytes.o $libs"
       [ -f "$lib/$abi/libgmp.a" ] && libs="$lib/$abi/libgmp.a $libs"
       [ -f "$lib/$abi/libgmpxx.a" ] && libs="$lib/$abi/libgmpxx.a $libs"
@@ -375,7 +375,7 @@ do
       [ -f "$lib/$abi/lib${project}.a" ] && libs="$lib/$abi/lib${project}.a $libs"
 
       timecoplibs=`"oklibs-$abi"`
-      timecoplibs="$lib/timecop/$abi/cpucycles.o $timecoplibs"
+      timecoplibs="$lib/timecop/$abi/libcpucycles.a $timecoplibs"
       timecoplibs="$lib/$abi/kernelrandombytes.o $timecoplibs"
       [ -f "$lib/$abi/libgmp.a" ] && timecoplibs="$lib/$abi/libgmp.a $timecoplibs"
       [ -f "$lib/$abi/libgmpxx.a" ] && timecoplibs="$lib/$abi/libgmpxx.a $timecoplibs"
@@ -502,7 +502,7 @@ do
 
           if [ -f "$implementationdir/architectures" ]
           then
-            if grep '^'"$abi"'$' "$implementationdir/architectures" >/dev/null 
+            if grep -w "$abi" "$implementationdir/architectures" >/dev/null
             then
               :
             else
@@ -764,6 +764,7 @@ do
                 checksumcycles=`awk '{print $3}' < ../outputs`
                 cyclespersecond=`awk '{print $4}' < ../outputs`
                 impl=`awk '{print $5}' < ../outputs`
+                plusminus=`awk '{print $6}' < ../outputs`
               else
                 echo "$version $shorthostname $abi $startdate $o $p/$security tryfails $implementationdir $compilerword error $?" >&5
                 cat ../outputs ../errors \
@@ -782,7 +783,7 @@ do
               checksumok=ok
               [ "x$expectedchecksumsmall" = "x" ] && checksumok=unknown
               [ "x$expectedchecksumbig" = "x" ] && checksumok=unknown
-              echo "$version $shorthostname $abi $startdate $o $p/$security try $checksumsmall/$checksumbig $checksumok $cycles $checksumcycles $cyclespersecond $impl $compilerword" >&5
+              echo "$version $shorthostname $abi $startdate $o $p/$security try $checksumsmall/$checksumbig $checksumok $cycles $checksumcycles $cyclespersecond $impl $compilerword $plusminus" >&5
   
               compiledinfo "$version" "$shorthostname" "$abi" "$startdate" "$o" "$p/$security" "$implementationdir" "$compilerword" "$opi" "$language"
 
@@ -937,7 +938,7 @@ do
       includes="-I. -I$include -I$include/nontimecop/$abi -I$include/$abi -I$include/$abi/constbranchindex"
 
       libs=`"oklibs-$abi"`
-      libs="$lib/nontimecop/$abi/cpucycles.o $libs"
+      libs="$lib/nontimecop/$abi/libcpucycles.a $libs"
       libs="$lib/$abi/kernelrandombytes.o $libs"
       [ -f "$lib/$abi/libgmp.a" ] && libs="$lib/$abi/libgmp.a $libs"
       [ -f "$lib/$abi/libgmpxx.a" ] && libs="$lib/$abi/libgmpxx.a $libs"

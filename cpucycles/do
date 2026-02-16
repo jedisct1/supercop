@@ -3,148 +3,96 @@
 okabi | (
   while read abi
   do
+    newabi=$abi
+    [ $abi = aarch64 ] && newabi=amd64
 
-    rm -f cpucycles.o cpucycles.h
-    
+    : > options1.inc
+    : > options2.inc
+
     (
-      # try to keep better precision on top
-
-      case "$abi" in
-        ppc64*)
-          # time base tends to be much too slow
-          echo perfevent
-          echo powerpccpuinfo
-          echo powerpcmacos
-          ;;
-        ppc*)
-          echo powerpccpuinfo
-          echo powerpcmacos
-          ;;
-        amd64*)
-          echo amd64rdpmc
-          echo amd64tscfreq
-          echo amd64cpuinfo
-          echo amd64cpuspeed
-          ;;
-        x86*)
-          echo x86tscfreq
-          echo x86cpuinfo
-          echo x86cpuspeed
-          echo x86estimate
-          ;;
-        cell*)
-          echo celllinux
-          ;;
-        sparc*)
-          echo sparccpuinfo
-          echo sparc32cpuinfo
-          echo leoncpuinfo
-          ;;
-        loong*)
-          echo loong64
-          ;;
-        mips*)
-          echo mips
-          ;;
-        hppa*)
-          echo hppapstat
-          ;;
-        alpha*)
-          echo alpha
-          ;;
-        sgi*)
-          echo sgi
-          ;;
-        arm*)
-          echo arm1176
-          echo cortex
-          echo dev4ns
-          ;;
-        aarch64)
-          echo armv8
-          echo cortex
-          echo apple # on m1 seems more precise than vct
-          echo vct
-          ;;
-      esac
-
-      # rdpmc
-      echo amd64rdpmc
-
-      # rdtsc
-      echo amd64tscfreq
-      echo amd64cpuinfo
-      echo amd64cpuspeed
-      echo x86tscfreq
-      echo x86cpuinfo
-      echo x86cpuspeed
-      echo x86estimate
-
-      # arm cycle counters
-      echo armv8
-      echo cortex
-      echo arm1176
-
-      # mach_absolute_time
-      echo apple
-
-      # powerpc time base
-      echo powerpccpuinfo
-      echo powerpcmacos
-
-      # miscellaneous platforms
-      echo ia64cpuinfo
-      echo celllinux
-      echo sparccpuinfo
-      echo sparc32cpuinfo
-      echo leoncpuinfo
-      echo loong64
-      echo mips
-      echo hppapstat
-      echo alpha
-      echo sgi
-      echo riscv
-
-      # semi-portable
-      echo dev4ns
-      echo perfevent
-
-      # portable; often microsecond or worse
-      echo monotoniccpuinfo
-      echo monotonic
-      echo gettimeofday
+      tr '\055' ' ' < options
+      echo default zero
     ) | (
-      while read n
+      while read arch x
       do
+        [ x"$CPUCYCLESTIMECOP" = x1 ] && case "$x" in
+          *pmc*) continue
+        esac
+        case "$arch" in
+          "$newabi"|default) ;;
+          *) continue
+        esac
+        opts="-Dticks=supercop_cpucycles_ticks_${arch}_$x -Dticks_setup=supercop_cpucycles_ticks_${arch}_${x}_setup -Dticks_close=supercop_cpucycles_ticks_${arch}_${x}_close"
         okc-$abi | (
           while read c
           do
-            echo "=== `date` === Trying $n.c with $c..." >&2
-            rm -f test cpucycles-impl.o cpucycles-impl.h cpucycles-impl.c
-            cp $n.c cpucycles-impl.c || continue
-            cp $n.h cpucycles-impl.h || continue
-            $c -c cpucycles-impl.c || continue
-            $c -o test test.c cpucycles-impl.o || continue
-            $CPUCYCLESWRAPPER $DEVICE ./test || continue
-            echo "=== `date` === Success. Using $n.c." >&2
-            mkdir -p lib/$abi
-            mv cpucycles-impl.o lib/$abi/cpucycles.o
-            okar-$abi cr lib/$abi/libcpucycles.a lib/$abi/cpucycles.o || continue
-            ranlib lib/$abi/libcpucycles.a || :
-            mkdir -p include/$abi
-            mv cpucycles-impl.h include/$abi/cpucycles.h
+            echo "=== `date` === Trying ${arch}-$x.c with $c..." >&2
+            $c $opts -c ${arch}-$x.c || continue
+            echo "=== `date` === Success. Including ${arch}-$x.c." >&2
             exit 0
           done
+          echo "=== `date` === ${arch}-$x.c does not compile, replacing with default-zero.c..." >&2
+          cp default-zero.c ${arch}-$x.c
+          okc-$abi | (
+            while read c
+            do
+              echo "=== `date` === Trying ${arch}-$x.c with $c..." >&2
+              $c $opts -c ${arch}-$x.c || continue
+              echo "=== `date` === Success. Including ${arch}-$x.c." >&2
+              exit 0
+            done
+            echo "=== `date` === ${arch}-$x.c still does not compile" >&2
+            exit 111
+          ) && exit 0
           exit 111
-        ) && exit 0
+        )
+        (
+          echo "extern long long supercop_cpucycles_ticks_${arch}_${x}_setup(void);"
+          echo "extern long long supercop_cpucycles_ticks_${arch}_${x}(void);\n"
+          echo "extern void supercop_cpucycles_ticks_${arch}_${x}_close(void);\n"
+        ) >> options1.inc
+        echo "{ \"${arch}-${x}\", supercop_cpucycles_ticks_${arch}_${x}_setup, supercop_cpucycles_ticks_${arch}_${x}, supercop_cpucycles_ticks_${arch}_${x}_close }," >> options2.inc
+      done
+    ) || (
+      echo ===== Giving up. >&2
+      exit 111
+    )
+
+    (
+      numoptions=`wc -l < options2.inc`
+      echo '#define NUMOPTIONS '$numoptions
+      echo '#define DEFAULTOPTION (NUMOPTIONS-1)'
+      echo ''
+      cat options1.inc
+      echo ''
+      echo 'static struct {'
+      echo '  const char *implementation;'
+      echo '  long long (*ticks_setup)(void);'
+      echo '  long long (*ticks)(void);'
+      echo '  void (*ticks_close)(void);'
+      echo '} options[NUMOPTIONS] = {'
+      cat options2.inc
+      echo '} ;'
+    ) > options.inc
+
+    okc-$abi | (
+      while read c
+      do
+        echo "=== `date` === Trying wrapper.c with $c..." >&2
+        $c -c wrapper.c || continue
+        echo "=== `date` === Success. Including wrapper.c." >&2
+        exit 0
       done
       exit 111
     ) || (
       echo ===== Giving up. >&2
-      rm -f test cpucycles-impl.o cpucycles-impl.h cpucycles-impl.c
       exit 111
-    ) || exit 0
+    )
 
+    mkdir -p lib/$abi include/$abi
+    okar-$abi cr lib/$abi/libcpucycles.a *.o || continue
+    ranlib lib/$abi/libcpucycles.a || :
+    cp cpucycles.h include/$abi/cpucycles.h
   done
   exit 0
 ) || exit 111
