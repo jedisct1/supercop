@@ -599,7 +599,7 @@ do
           rsmeasurelibs="fastrandombytes $rslibs"
         fi
 
-        timecoptrylibs=`echo $trylibs | sed s_lib/nontimecop/cpucycles_lib/timecop/cpucycles_`
+        timecoptrylibs=`echo $trylibs | sed s_lib/nontimecop/libcpucycles_lib/timecop/libcpucycles_`
   
         mkdir -p "$top/$target/work"
         cp -LpR "$implementationdir"/* "$top/$target/work"
