@@ -11,7 +11,7 @@ void owcpa_samplemsg(unsigned char msg[NTRU_OWCPA_MSGBYTES],
 #define owcpa_keypair CRYPTO_NAMESPACE(owcpa_keypair)
 void owcpa_keypair(unsigned char *pk,
                    unsigned char *sk,
-                   const unsigned char seed[NTRU_SEEDBYTES]);
+                   const unsigned char seed[NTRU_SAMPLE_FG_BYTES]);
 
 #define owcpa_enc CRYPTO_NAMESPACE(owcpa_enc)
 void owcpa_enc(unsigned char *c,

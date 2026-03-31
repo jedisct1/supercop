@@ -1,1 +1,1 @@
-../../ecdonaldp256/openssl/signatureofshorthash.c
+../../ecdonaldb163/openssl/signatureofshorthash.c

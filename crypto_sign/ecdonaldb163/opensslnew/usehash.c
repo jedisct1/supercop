@@ -1,1 +1,1 @@
-../../ecdonaldp256/opensslnew/usehash.c
+../openssl/usehash.c

@@ -9,7 +9,7 @@ int crypto_sign_open(unsigned char m[],
 		  unsigned long long *mlen,
 		  const unsigned char sm[],
 		  const unsigned long long smlen,
-		  const unsigned char pk[PUBLICKEY_BYTES]
+		  const unsigned char *pk
 )
 {
   Flash_Complete_Key CK = (Flash_Complete_Key) malloc(sizeof(struct Flash_Complete_Key));

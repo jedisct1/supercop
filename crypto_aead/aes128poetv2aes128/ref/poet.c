@@ -130,7 +130,7 @@ static void gf128_double(block h)
 
 // ---------------------------------------------------------------------
 
-void keysetup_encrypt_only(poet_ctx_t *ctx, const unsigned char key[KEYLEN_BITS])
+void keysetup_encrypt_only(poet_ctx_t *ctx, const unsigned char key[KEYLEN])
 {
     block ctr;
     AES_KEY aes_enc;
@@ -156,7 +156,7 @@ void keysetup_encrypt_only(poet_ctx_t *ctx, const unsigned char key[KEYLEN_BITS]
 
 // ---------------------------------------------------------------------
 
-void keysetup(poet_ctx_t *ctx, const unsigned char key[KEYLEN_BITS])
+void keysetup(poet_ctx_t *ctx, const unsigned char key[KEYLEN])
 {
     keysetup_encrypt_only(ctx, key);
     aes_expand_dec_key(ctx->k, KEYLEN_BITS, &(ctx->aes_dec));

@@ -26,7 +26,7 @@ int CRYPTO_NAMESPACE(xor)(unsigned char *out, const unsigned char *in, unsigned 
 inline __attribute__((always_inline))int Encrypt_Xor(unsigned char *out, const unsigned char *in, u64 nonce[], u128 rk[][8], u64 key[], int numbytes);
 int ExpandKeyBS(u64 K[],u128 rk[][8]);
 int ExpandKeyNBS(u64 K[], u128 rk[][8], u64 key[]);
-inline __attribute__((always_inline)) int Transpose(u128 M[]);
+inline __attribute__((always_inline)) int Transpose(u128 M[8]);
 
 
 

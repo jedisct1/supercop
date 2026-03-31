@@ -1,1 +1,1 @@
-../../ronald512/opensslnew/shortmessagesigned.c
+../../ronald1024/opensslnew/shortmessagesigned.c

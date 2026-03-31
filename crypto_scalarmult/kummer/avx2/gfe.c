@@ -56,7 +56,7 @@ void gfe_unpack(gfe *r, const unsigned char *x)
   r->v[1] &= 0x7fffffffffffffff;
 }
 
-void gfe_pack(unsigned char *r, const gfe *x)
+void gfe_pack(unsigned char r[16], const gfe *x)
 {
   int i;
   for(i=0;i<8;i++)
@@ -77,7 +77,7 @@ static double todouble(unsigned long long l)
   return *(double *) &l - 6755399441055744.0;
 }
 
-void gfe4x3limb_split(gfe *r, const gfe4x *x)
+void gfe4x3limb_split(gfe r[4], const gfe4x *x)
 {
   gfe4x t;
   int i;

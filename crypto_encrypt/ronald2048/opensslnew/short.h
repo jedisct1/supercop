@@ -1,1 +1,1 @@
-../../ronald4096/opensslnew/short.h
+../../ronald1024/opensslnew/short.h

@@ -30,7 +30,7 @@ of Lilliput-TBC's tweakey schedule.
 
 void tweakey_state_init(
     uint8_t TK_X[TWEAKEY_BYTES],
-    uint8_t TK_Y[TWEAKEY_BYTES],
+    uint8_t TK_Y[KEY_BYTES],
     const uint8_t key[KEY_BYTES],
     const uint8_t tweak[TWEAK_BYTES]
 );

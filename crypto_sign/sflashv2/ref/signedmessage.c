@@ -10,7 +10,7 @@ int crypto_sign(
 		  unsigned long long *smlen,
 		  const unsigned char m[],
 		  const unsigned long long mlen,
-		  const unsigned char sk[SECRETKEY_BYTES]
+		  const unsigned char *sk
 
 )
 {

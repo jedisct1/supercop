@@ -63,10 +63,10 @@
  * to Skinny in Romulus-N/M).
  */
 void skinny128_384_plus(
-    unsigned char *out,
-    const unsigned char *in,
-    const unsigned char *tk1,
-    const unsigned char *rtk_23)
+    unsigned char out[BLOCKBYTES],
+    const unsigned char in[BLOCKBYTES],
+    const unsigned char tk1[TWEAKEYBYTES],
+    const unsigned char rtk_23[SKINNY128_384_ROUNDS*BLOCKBYTES/2])
 {
 
     unsigned char rtk_1[BLOCKBYTES/2*16];
@@ -169,9 +169,9 @@ void skinny128_384_plus(
  * round constants c0,c1.
  */
 void tk_schedule_23(
-    unsigned char *rtk_23,
-    const unsigned char *tk2,
-    const unsigned char *tk3)
+    unsigned char rtk_23[SKINNY128_384_ROUNDS*BLOCKBYTES/2],
+    const unsigned char tk2[TWEAKEYBYTES],
+    const unsigned char tk3[TWEAKEYBYTES])
 {
     __m128i tmp0;
     __m128i tmp1;

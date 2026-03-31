@@ -140,7 +140,7 @@ static void gf128mul_5(block h)
 
 // ---------------------------------------------------------------------
 
-void keysetup(poet_ctx_t *ctx, const uint8_t key[KEYLEN_BITS])
+void keysetup(poet_ctx_t *ctx, const uint8_t key[KEYLEN])
 {
     uint8_t ctr[BLOCKLEN];
     AES_KEY aes_enc;

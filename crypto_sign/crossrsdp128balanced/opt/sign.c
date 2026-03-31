@@ -84,6 +84,10 @@ int crypto_sign_open(unsigned char *m,                          // out parameter
                      const unsigned char *pk_static)            // in parameter
 {
 
+   if (smlen < (size_t) sizeof(CROSS_sig_t)) {
+      return -1;
+   }
+
    /* SUPERCOP edit: make a static copy of the public key */
    const pk_t pk;
    memcpy((unsigned char *) &pk, pk_static, sizeof(pk_t));

@@ -1,1 +1,1 @@
-../../ronald4096/opensslnew/shortciphertext.c
+../../ronald1024/opensslnew/shortciphertext.c

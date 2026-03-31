@@ -48,7 +48,7 @@ void rbc_elt_print(const rbc_elt e);
 ***********************/
 
 void rbc_elt_ur_set_zero(rbc_elt_ur o);
-void rbc_elt_ur_set_from_uint64(rbc_elt o, const uint64_t* e);
+void rbc_elt_ur_set_from_uint64(rbc_elt_ur o, const uint64_t* e);
 
 void rbc_elt_ur_mul(rbc_elt_ur o, const rbc_elt e1, const rbc_elt e2);
 void rbc_elt_ur_sqr(rbc_elt_ur o, const rbc_elt e);

@@ -481,7 +481,7 @@ void rbc_elt_ur_mul(rbc_elt_ur o, const rbc_elt e1, const rbc_elt e2) {
 
 
 /**
- * \fn void rbc_elt_ur_sqr(rbc_elt o, const rbc_elt e)
+ * \fn void rbc_elt_ur_sqr(rbc_elt_ur o, const rbc_elt e)
  * \brief This function computes the unreduced square of a finite field element.
  *
  * \param[out] o rbc_elt_ur equal to \f$ e^{2} \f$

@@ -421,7 +421,7 @@ void poly_uniform_preinit(poly *a, stream128_state *state)
   }
 }
 
-void poly_uniform(poly *a, const uint8_t seed[SEEDBYTES], uint16_t nonce)
+void poly_uniform(poly *a, const uint8_t seed[CRHBYTES], uint16_t nonce)
 {
   stream128_state state;
   stream128_init(&state, seed, nonce);
@@ -553,7 +553,7 @@ void poly_uniform_eta_preinit(poly *a, stream128_state *state)
   }
 }
 
-void poly_uniform_eta(poly *a, const uint8_t seed[SEEDBYTES], uint16_t nonce)
+void poly_uniform_eta(poly *a, const uint8_t seed[CRHBYTES], uint16_t nonce)
 {
   stream128_state state;
   stream128_init(&state, seed, nonce);

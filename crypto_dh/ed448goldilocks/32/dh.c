@@ -13,8 +13,8 @@
 #include "crypto_dh.h"
 
 int crypto_dh_keypair (
-    unsigned char pk[SECRETKEY_BYTES],
-    unsigned char sk[PUBLICKEY_BYTES]
+    unsigned char *pk,
+    unsigned char *sk
 ) {
   int ret;
   ret = goldilocks_init();
@@ -28,9 +28,9 @@ int crypto_dh_keypair (
 }
 
 int crypto_dh (
-    unsigned char s[SHAREDSECRET_BYTES],
-    const unsigned char pk[PUBLICKEY_BYTES],
-    const unsigned char sk[SECRETKEY_BYTES]
+    unsigned char *s,
+    const unsigned char *pk,
+    const unsigned char *sk
 ) {
   return goldilocks_shared_secret (
         s,

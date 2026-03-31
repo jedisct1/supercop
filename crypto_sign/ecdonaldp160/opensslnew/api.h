@@ -1,3 +1,1 @@
-#define CRYPTO_SECRETKEYBYTES 60
-#define CRYPTO_PUBLICKEYBYTES 40
-#define CRYPTO_BYTES 40
+../openssl/api.h

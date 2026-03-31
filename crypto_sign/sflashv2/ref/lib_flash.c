@@ -64,7 +64,7 @@ inv_affine(unsigned char z[37], unsigned char x1[37], unsigned char s1[37][37], 
 
 }
 void
-quadratic(unsigned char z[26], unsigned char x[37], unsigned char A[26][37][37], unsigned char B[26][37], unsigned char C[26], unsigned char M[128*128])
+quadratic(unsigned char z[37], unsigned char x[37], unsigned char A[37][37][37], unsigned char B[37][37], unsigned char C[37], unsigned char M[128*128])
 {
 	int i,j,k;
 
@@ -460,7 +460,7 @@ Flash_complete2private(Flash_Complete_Key CK, Flash_Complete_Key PK)
 }
 
 void
-Flash_encrypt(unsigned char out[26], unsigned char in[37], Flash_Complete_Key PK)
+Flash_encrypt(unsigned char out[37], unsigned char in[37], Flash_Complete_Key PK)
 {
 	quadratic(out,in,PK->Q,PK->L,PK->C,PK->M);	
 }

@@ -263,6 +263,14 @@ do
           /bin/echo "$f" `adequatechecksum < $f`
         done >&8
       fi
+
+      if [ "$t1" = try ]
+      then
+        if [ "$t2" = cpp ]
+        then
+          echo "trigger cpp 20260326" >&8
+        fi
+      fi
     fi
   )
 

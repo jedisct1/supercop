@@ -425,7 +425,7 @@ void shake128(unsigned char *output, unsigned long long outlen, const unsigned c
 
 /********** cSHAKE128 ***********/
 
-void cshake128_simple_absorb(uint64_t s[25], uint16_t cstm, const unsigned char *in, unsigned long long inlen)
+void cshake128_simple_absorb(uint64_t *s, uint16_t cstm, const unsigned char *in, unsigned long long inlen)
 {
   unsigned char *sep = (unsigned char*)s;
   unsigned int i;
@@ -521,7 +521,7 @@ void shake256(unsigned char *output, unsigned long long outlen, const unsigned c
 
 /********** cSHAKE256 ***********/
 
-void cshake256_simple_absorb(uint64_t s[25], uint16_t cstm, const unsigned char *in, unsigned long long inlen)
+void cshake256_simple_absorb(uint64_t *s, uint16_t cstm, const unsigned char *in, unsigned long long inlen)
 {
   unsigned char *sep = (unsigned char*)s;
   unsigned int i;

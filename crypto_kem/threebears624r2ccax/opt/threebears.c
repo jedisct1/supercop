@@ -99,7 +99,15 @@ static void noise(
     }
 }
 
-void keygen(uint8_t *pk, uint8_t *sk, const uint8_t *seed) {
+void keygen(
+  uint8_t pk[PUBLIC_KEY_BYTES],
+#if CCA
+  uint8_t sk[DIM*GF_BYTES+PRF_KEY_BYTES+PUBLIC_KEY_BYTES],
+#else
+  uint8_t sk[DIM*GF_BYTES+MATRIX_SEED_BYTES],
+#endif
+  const uint8_t seed[PRIVATE_KEY_BYTES]
+) {
     hash_ctx_t ctx;
     threebears_hash_init(ctx,HASH_PURPOSE_KEYGEN);
     hash_update(ctx,seed,PRIVATE_KEY_BYTES);
@@ -141,10 +149,10 @@ void keygen(uint8_t *pk, uint8_t *sk, const uint8_t *seed) {
 }
 
 void encapsulate(
-    uint8_t *shared_secret,
-    uint8_t *capsule,
-    const uint8_t *pk,
-    const uint8_t *seed
+    uint8_t shared_secret[SHARED_SECRET_BYTES],
+    uint8_t capsule[CAPSULE_BYTES],
+    const uint8_t pk[PUBLIC_KEY_BYTES],
+    const uint8_t seed[ENC_SEED_BYTES + IV_BYTES]
 ) {
     uint8_t *lpr = &capsule[GF_BYTES*DIM];
 #if IV_BYTES
@@ -248,9 +256,13 @@ static void decrypt_seed(uint8_t *seed, gf_t residue, const uint8_t *lpr) {
 }
 
 void decapsulate(
-    uint8_t *shared_secret,
-    const uint8_t *capsule,
-    const uint8_t *sk
+    uint8_t shared_secret[SHARED_SECRET_BYTES],
+    const uint8_t capsule[CAPSULE_BYTES],
+#if CCA
+    const uint8_t sk[DIM*GF_BYTES+PRF_KEY_BYTES+PUBLIC_KEY_BYTES]
+#else
+    const uint8_t sk[DIM*GF_BYTES+MATRIX_SEED_BYTES]
+#endif
 ) { 
 #if ENC_SEED_BYTES > SHARED_SECRET_BYTES
 #error "buffer management: ENC_SEED_BYTES > SHARED_SECRET_BYTES"

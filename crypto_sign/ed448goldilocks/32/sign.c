@@ -13,8 +13,8 @@
 #include "crypto_sign.h"
 
 int crypto_sign_keypair (
-    unsigned char pk[SECRETKEY_BYTES],
-    unsigned char sk[PUBLICKEY_BYTES]
+    unsigned char *pk,
+    unsigned char *sk
 ) {
   int ret;
   ret = goldilocks_init();
@@ -32,7 +32,7 @@ int crypto_sign (
     unsigned long long *smlen,
     const unsigned char *m,
     unsigned long long mlen,
-    const unsigned char sk[SECRETKEY_BYTES]
+    const unsigned char *sk
 ) {
     unsigned char sig[SIGNATURE_BYTES];
     int ret = goldilocks_sign(
@@ -52,7 +52,7 @@ int crypto_sign_open (
     unsigned long long *mlen,
     const unsigned char *sm,
     unsigned long long smlen,
-    const unsigned char pk[PUBLICKEY_BYTES]
+    const unsigned char *pk
 ) {
     int ret = goldilocks_verify(
         sm, sm + SIGNATURE_BYTES, smlen - SIGNATURE_BYTES,

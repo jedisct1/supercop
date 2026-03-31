@@ -14,6 +14,7 @@ at the expense of minor rounding issues.
 */
 
 #ifdef __cplusplus
+#include <algorithm>
 #include <vector>
 #define stq_doublearray std::vector<double>
 #else
@@ -64,8 +65,8 @@ static void stq_longlong(double *stq,const long long *x,long long n)
   for (long long i = 0;i < n;++i)
     for (long long j = 0;j < 8;++j)
       S[8*i+j] = x[i];
-  stq_sort(S,8*n);
 #ifdef __cplusplus
+  std::sort(S.begin(),S.end());
   stq_doublearray X(2*n);
   for (long long loop = 0;loop < 3;++loop) {
     for (long long i = 0;i < 2*n;++i)
@@ -73,6 +74,7 @@ static void stq_longlong(double *stq,const long long *x,long long n)
     stq[loop] = stq_mean(X,2*n);
   }
 #else
+  stq_sort(S,8*n);
   stq[0] = stq_mean(S+n,2*n);
   stq[1] = stq_mean(S+3*n,2*n);
   stq[2] = stq_mean(S+5*n,2*n);

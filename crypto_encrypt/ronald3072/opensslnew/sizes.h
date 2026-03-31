@@ -1,1 +1,1 @@
-../../ronald4096/opensslnew/sizes.h
+../../ronald1024/openssl/sizes.h

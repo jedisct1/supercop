@@ -37,15 +37,17 @@
 void packing(uint32_t* out, const uint8_t* in);
 void unpacking(uint8_t* out, uint32_t *in);
 void tk_schedule_1(uint32_t *rtk_1, const uint8_t *tk_1);
-void tk_schedule_13(uint32_t *rtk_1, uint32_t *rtk_3,
-    const uint8_t *tk_1,
-    const uint8_t *tk_3);
+void tk_schedule_13(uint32_t rtk_1[TKPERMORDER*BLOCKBYTES/4],
+    uint32_t rtk_3[SKINNY128_384_ROUNDS*BLOCKBYTES/4],
+    const uint8_t tk_1[TWEAKEYBYTES],
+    const uint8_t tk_3[TWEAKEYBYTES]);
 void tk_schedule_23(uint32_t *rtk_23,
     const uint8_t *tk_2,
     const uint8_t *tk_3);
-void tk_schedule_123(uint32_t *rtk_1, uint32_t *rtk_23,
-    const uint8_t *tk_1,
-    const uint8_t *tk_2,
-    const uint8_t *tk_3);
+void tk_schedule_123(uint32_t rtk_1[TKPERMORDER*BLOCKBYTES/4],
+    uint32_t rtk_23[SKINNY128_384_ROUNDS*BLOCKBYTES/4],
+    const uint8_t tk_1[TWEAKEYBYTES],
+    const uint8_t tk_2[TWEAKEYBYTES],
+    const uint8_t tk_3[TWEAKEYBYTES]);
 
 #endif  // TK_SCHEDULE_H_

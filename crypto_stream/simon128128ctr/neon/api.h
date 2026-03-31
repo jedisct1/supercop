@@ -1,3 +1,1 @@
-#define CRYPTO_KEYBYTES 16
-#define CRYPTO_NONCEBYTES 16
-#define CRYPTO_VERSION "2.2"
+../avx2/api.h

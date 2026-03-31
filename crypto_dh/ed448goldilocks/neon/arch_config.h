@@ -1,1 +1,1 @@
-#define WORD_BITS 32
+../32/arch_config.h

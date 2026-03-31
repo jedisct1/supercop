@@ -1,1 +1,1 @@
-../../ecdonaldp256/opensslnew/short.h
+../../ecdonaldb163/openssl/short.h

@@ -198,7 +198,7 @@ destroy_fixed_base (
 mask_t
 scalarmul_fixed_base (
     struct tw_extensible_t *out,
-    const word_t *scalar,
+    const word_t scalar[SCALAR_WORDS],
     unsigned int nbits,
     const struct fixed_base_table_t *table
 );
@@ -216,7 +216,7 @@ scalarmul_fixed_base (
 void
 scalarmul_vt (
     struct tw_extensible_t *working,
-    const word_t *scalar,
+    const word_t scalar[SCALAR_WORDS],
     unsigned int nbits
 );
 
@@ -257,7 +257,7 @@ precompute_fixed_base_wnaf (
 void
 scalarmul_fixed_base_wnaf_vt (
     struct tw_extensible_t *out,
-    const word_t *scalar,
+    const word_t scalar[SCALAR_WORDS],
     unsigned int nbits,
     const struct tw_niels_t *precmp,
     unsigned int table_bits

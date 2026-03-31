@@ -44,21 +44,21 @@ extern void mult1_over65536_x16(int16x16 *,const int16x16 *,const int16x16 *);
 extern void mult2_over65536_x16(int16x16 *,const int16x16 *,const int16x16 *);
 extern void mult4_over65536_x16(int16x16 *,const int16x16 *,const int16x16 *);
 extern void mult8_nega_over65536_x16(int16x16 *,const int16x16 *,const int16x16 *);
-extern void mult64_nega_over4096_x16(int16x16 *,const int16x16 *,const int16x16 *);
-extern void mult768_over64(int16 *,const int16 *,const int16 *);
+extern void mult64_nega_over4096_x16(int16x16 [64],const int16x16 [64],const int16x16 [64]);
+extern void mult768_over64(int16 [1536],const int16 [768],const int16 [768]);
 
-extern void transpose(int16x16 *,const int16 (*)[64]);
-extern void untranspose(int16 (*)[64],const int16x16 *);
+extern void transpose(int16x16 [64],const int16 [16][64]);
+extern void untranspose(int16 [16][64],const int16x16 [64]);
 
-extern void fft64(int16x16 (*)[8],const int16x16 *);
-extern void unfft64_scale16(int16x16 *,int16x16 (*)[8]);
-extern void fft8_64(int16 (*)[64]);
-extern void unfft8_64_scale8(int16 (*)[64]);
-extern void fft48_64(int16 (*)[64],const int16 *);
-extern void unfft48_64_scale64(int16 (*)[64]);
+extern void fft64(int16x16 [16][8],const int16x16 [64]);
+extern void unfft64_scale16(int16x16 [64],int16x16 [16][8]);
+extern void fft8_64(int16 [8][64]);
+extern void unfft8_64_scale8(int16 [8][64]);
+extern void fft48_64(int16 [48][64],const int16 [768]);
+extern void unfft48_64_scale64(int16 [48][64]);
 
 
-extern void mult768_over64_2(int16 *,const int16 *,const int16 *,const int16 *,const int16 *);
+extern void mult768_over64_2(int16 [1536],const int16 [768],const int16 [768],const int16 [768],const int16 [768]);
 
 #ifdef  __cplusplus
 }
