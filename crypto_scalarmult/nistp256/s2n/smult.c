@@ -1,3 +1,4 @@
+#include <stddef.h>
 #include <inttypes.h>
 #include "s2n-bignum-c89.h"
 #include "crypto_scalarmult.h"

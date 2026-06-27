@@ -1,0 +1,11 @@
+mladder.S: Kaushik Nath
+
+The algorithm used to implement the Montgomery ladder has been taken from
+https://github.com/Emill/X25519-AArch64/blob/master/X25519_AArch64.pdf.
+The implementation has been done after vividly studying the code publicly available at
+https://github.com/Emill/X25519-AArch64/blob/master/X25519-AArch64.s.
+This ladder implementation uses both NEON and A64 instructions and has 
+layer-wise interleaving of the ladder steps. 
+
+fe25519_{mul,freeze,dense_pack}.S: Kaushik Nath
+other code: see amd64-64

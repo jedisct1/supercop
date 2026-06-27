@@ -1,0 +1,83 @@
+#!/usr/bin/env python3
+
+import os
+
+upstream = 'import/lib25519-20260614'
+
+for (o,p) in (
+  ('crypto_pow','inv25519'),
+  ('crypto_nP','montgomery25519'),
+  ('crypto_nG','merged25519'),
+  ('crypto_nG','montgomery25519'),
+  ('crypto_mGnP','ed25519'),
+  ('crypto_sign','ed25519'),
+):
+  for i in sorted(os.listdir(f'{upstream}/{o}/{p}')):
+    targetdir = f'{o}/{p}/{i}'
+    sourcedir = f'{upstream}/{targetdir}'
+    if o == 'crypto_sign':
+      targetdir = f'{o}/{p}/lib25519-{i}'
+    os.makedirs(targetdir,exist_ok=True)
+    if o != 'crypto_mGnP':
+      with open(f'{targetdir}/goal-constbranch','a') as g: pass
+      with open(f'{targetdir}/goal-constindex','a') as g: pass
+    with open(f'{targetdir}/api.h','w') as g:
+      if o == 'crypto_pow':
+        g.write(f'#define CRYPTO_BYTES 32\n')
+      elif o in ('crypto_nP','crypto_nG'):
+        g.write(f'#define CRYPTO_SCALARBYTES 32\n')
+        g.write(f'#define CRYPTO_POINTBYTES 32\n')
+      elif o == 'crypto_mGnP':
+        g.write(f'#define CRYPTO_MBYTES 32\n')
+        g.write(f'#define CRYPTO_NBYTES 64\n')
+        g.write(f'#define CRYPTO_PBYTES 32\n')
+        g.write(f'#define CRYPTO_OUTPUTBYTES 33\n')
+      else:
+        assert o == 'crypto_sign'
+        g.write(f'#define CRYPTO_SECRETKEYBYTES 64\n')
+        g.write(f'#define CRYPTO_PUBLICKEYBYTES 32\n')
+        g.write(f'#define CRYPTO_BYTES 64\n')
+    for fn in sorted(os.listdir(sourcedir)):
+      with open(f'{sourcedir}/{fn}') as f:
+        with open(f'{targetdir}/{fn}','w') as g:
+          if fn == 'architectures':
+            for line in f:
+              line = line.replace('arm64','aarch64')
+              g.write(line)
+            continue
+          if not fn.endswith('.c'):
+            g.write(f.read())
+            continue
+          g.write('/* WARNING: auto-converted (by supercop/import/lib25519); do not edit */\n')
+          prefix = ''
+          wasvoid = False
+          inapi = False
+          for line in f:
+            line = prefix+line
+            prefix = ''
+            if line.strip() == 'void':
+              prefix = 'void '
+              continue
+            if o == 'crypto_sign':
+              line = line.replace('crypto_mGnP_ed25519','crypto_mGnP_ed25519_publicinputs')
+            if f'void {o}' in line:
+              line = line.replace(f'void {o}',f'int {o}')
+              wasvoid = True
+            if f'int {o}' in line:
+              inapi = True
+            if inapi and line == '}\n':
+              if wasvoid:
+                g.write('  return 0;\n')
+              inapi = False
+            if inapi:
+              line = line.replace('long long mlen,','unsigned long long mlen,')
+              line = line.replace('long long smlen,','unsigned long long smlen,')
+              line = line.replace('long long *mlen,','unsigned long long *mlen,')
+              line = line.replace('long long *smlen,','unsigned long long *smlen,')
+              disablerandomization = True
+              if disablerandomization:
+                line = line.replace('azr','az')
+                line = line.replace('unsigned char az[96]','unsigned char az[64]')
+                if line == '  randombytes(az+64,32);\n': continue
+                if line == '  crypto_hash_sha512(az+32,az+32,64);\n': continue
+            g.write(line)

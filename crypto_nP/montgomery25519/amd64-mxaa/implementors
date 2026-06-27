@@ -1,0 +1,3 @@
+mladder.S, fe25519_{mul, nsquare}.S: Kaushik Nath
+Some optimization ideas have been taken from the s2n-bignum library.
+other code: see amd64-64

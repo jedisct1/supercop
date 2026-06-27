@@ -4,7 +4,7 @@ okabi | (
   while read abi
   do
     newabi=$abi
-    [ $abi = aarch64 ] && newabi=amd64
+    [ $abi = aarch64 ] && newabi=arm64
 
     : > options1.inc
     : > options2.inc

@@ -1,7 +1,8 @@
-// version 20260105
+// version 20260625
 // public domain
 // djb
 
+// 20260625 djb: add second fd for atom cores, sigh
 // 20260105 djb: forked from amd64-perfpmc.c
 // 20251226 djb: add ticks_close()
 // 20251226 djb: include xkernel loop and xhv loop
@@ -31,9 +32,12 @@ long long ticks(void)
 #endif
 
 static int fdperf = -1;
+static int fdperfatom = -1;
 
 void ticks_close(void)
 {
+  if (fdperfatom >= 0) close(fdperfatom);
+  fdperfatom = -1;
   if (fdperf >= 0) close(fdperf);
   fdperf = -1;
 }
@@ -57,7 +61,16 @@ long long ticks_setup(void)
         attr.exclude_hv = xhv;
 
         fdperf = syscall(__NR_perf_event_open,&attr,0,-1,-1,PERF_FLAG_FD_CLOEXEC);
-        if (fdperf != -1) break;
+        if (fdperf != -1) {
+#ifdef PERF_PMU_TYPE_SHIFT
+          // XXX: maybe read /sys/bus/event_source/devices/cpu_atom/type
+          // XXX: maybe allow more fds for more cpu_* directories
+          // XXX: maybe ask linux to add simpler API
+          attr.config |= ((long long) 10) << PERF_PMU_TYPE_SHIFT;
+          fdperfatom = syscall(__NR_perf_event_open,&attr,0,-1,-1,PERF_FLAG_FD_CLOEXEC);
+#endif
+          break;
+        }
       }
       if (fdperf != -1) break;
     }

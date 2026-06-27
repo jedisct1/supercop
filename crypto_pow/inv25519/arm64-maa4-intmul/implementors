@@ -1,0 +1,2 @@
+fe25519_{mul,square,nsquare,freeze}.S: Kaushik Nath
+other code: see amd64-64

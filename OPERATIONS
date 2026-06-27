@@ -7,11 +7,15 @@ crypto_hashblocks
 crypto_xof
 crypto_hash
 crypto_stream
+crypto_pow
 crypto_onetimeauth
 crypto_auth
 crypto_secretbox
 crypto_aead
 crypto_rng
+crypto_nP
+crypto_nG
+crypto_mGnP
 crypto_scalarmult
 crypto_box
 crypto_dh

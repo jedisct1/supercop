@@ -158,7 +158,7 @@ do
 
       if [ "$t1" = s2n-bignum ]
       then
-        echo "s2n-bignum 20250920" >&8
+        echo "s2n-bignum 20260620" >&8
       fi
   
       if [ "$t1" = keccak ]
@@ -516,6 +516,8 @@ do
             case "$incl" in
               crypto_asm_hidden)
                 ;;
+              crypto_int*|crypto_uint*)
+                ;;
               crypto_*_*)
                 [ -f "$top/$abi/security/constbranchindex/$incl" ] || rm -f "$work/all-subroutines-allow-constbranchindex"
                 [ -f "$top/$abi/security/timingleaks/$incl" ] && touch "$work/some-subroutine-allows-timingleaks"
@@ -593,6 +595,9 @@ do
         measurelibs="$libs"
         rsmeasurelibs="$rslibs"
         userandombytes=0
+        [ $o = crypto_nP ] && userandombytes=1
+        [ $o = crypto_nG ] && userandombytes=1
+        [ $o = crypto_mGnP ] && userandombytes=1
         [ $o = crypto_scalarmult ] && userandombytes=1
         [ $o = crypto_box ] && userandombytes=1
         [ $o = crypto_dh ] && userandombytes=1
@@ -1087,13 +1092,15 @@ do
           done
         done
 
-        if [ -f "$top/$target/best-constbranchindex" ]
+        if [ -f "$top/$target/best-timingleaks" ]
         then
-          if [ -f "$top/$target/best-timingleaks" ]
+          # have best-timingleaks (and possibly best-constbranchindex but best-timingleaks is faster)
+          # can use timingleaks _for public inputs_ as a constbranchindex subroutine
+          cp "$top/$abi/include/timingleaks/${op}_publicinputs.h" "$top/$abi/include/constbranchindex/${op}_publicinputs.h"
+        else
+          if [ -f "$top/$target/best-constbranchindex" ]
           then
-            # can use timingleaks _for public inputs_ as a constbranchindex subroutine
-            cp "$top/$abi/include/timingleaks/${op}_publicinputs.h" "$top/$abi/include/constbranchindex/${op}_publicinputs.h"
-          else
+            # have only best-constbranchindex, not best-timingleaks
             # can use a constbranchindex subroutine as a timingleaks subroutine
             cp "$top/$abi/include/constbranchindex/${op}_publicinputs.h" "$top/$abi/include/timingleaks/${op}_publicinputs.h"
             cp "$top/$abi/include/constbranchindex/${op}.h" "$top/$abi/include/timingleaks/${op}.h"

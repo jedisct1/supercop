@@ -403,6 +403,9 @@ do
       rsmeasurelibs="$rslibs"
 
       userandombytes=0
+      [ $o = crypto_nP ] && userandombytes=1
+      [ $o = crypto_nG ] && userandombytes=1
+      [ $o = crypto_mGnP ] && userandombytes=1
       [ $o = crypto_scalarmult ] && userandombytes=1
       [ $o = crypto_box ] && userandombytes=1
       [ $o = crypto_dh ] && userandombytes=1
@@ -477,6 +480,8 @@ do
             do
               case "$incl" in
                 crypto_asm_hidden)
+                  ;;
+                crypto_int*|crypto_uint*)
                   ;;
                 crypto_*_*)
                   [ -f "$securitymodelsdir/$abi/constbranchindex/$incl" ] || rm -f "$work/all-subroutines-allow-constbranchindex"

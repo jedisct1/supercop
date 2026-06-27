@@ -1,0 +1,8 @@
+ge25519_double_scalarmult_precompute.S: Kaushik Nath
+ge25519_double_scalarmult_process.S: Kaushik Nath
+sc25519_barrett.S, fe25519_dense_pack.S: Kaushik Nath
+fe25519_{mul,add,sub,freeze}.S: Kaushik Nath
+fe25519_setint.c, fe25519_iseq.c, fe25519_getparity.c, ge25519_pack.c, ge25519_unpackneg.c: Originals modified by Kaushik Nath
+ge25519_10l_dense_base_slide_multiples.data (generated from the amd64-64-24k implementation): Kaushik Nath
+mGnP.c: D. J. Bernstein
+other code: see amd64-64-24k

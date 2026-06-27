@@ -1,0 +1,2 @@
+20260330 rome1 amd64 20260330 crypto_kem ntruplus864/constbranchindex timecop_pass crypto_kem/ntruplus864/avx2 gcc_-march=native_-mtune=native_-O3_-fwrapv_-fPIC_-fPIE_-gdwarf-4_-Wall 1 0
+20260330 rome1 amd64 20260330 crypto_kem ntruplus864/constbranchindex timecop_output crypto_kem/ntruplus864/avx2 gcc_-march=native_-mtune=native_-O3_-fwrapv_-fPIC_-fPIE_-gdwarf-4_-Wall 10ec18b807fca9842ba6e301cd419fdf8828efa0829b0fa0aceab7f48b06d7f6 7929337 1399245548 2250000000 crypto_kem/ntruplus864/avx2 +0

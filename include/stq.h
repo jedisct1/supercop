@@ -29,6 +29,7 @@ static double stq_mean(const stq_doublearray S,long long n)
   return sum/(double) n;
 }
 
+#ifndef __cplusplus
 static void stq_sort(stq_doublearray S,long long n)
 {
   if (n < 2) return;
@@ -52,6 +53,7 @@ static void stq_sort(stq_doublearray S,long long n)
           }
   }
 }
+#endif
 
 static void stq_longlong(double *stq,const long long *x,long long n)
 {

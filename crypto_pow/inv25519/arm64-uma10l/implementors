@@ -1,0 +1,8 @@
+fe25519_{mul,square,nsquare,freeze,dense_pack}.S: Kaushik Nath
+
+Code within the nsquare assembly has been taken from the AArch64 
+implementation of X25519 by Emil Lenngren publicly available at 
+https://github.com/Emill/X25519-AArch64/blob/master/X25519-AArch64.s 
+and has been slightly modified.
+
+other code: see amd64-64-24k

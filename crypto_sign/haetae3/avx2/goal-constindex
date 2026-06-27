@@ -1,0 +1,2 @@
+20260330 rome1 amd64 20260330 crypto_sign haetae3/constbranchindex timecop_pass crypto_sign/haetae3/avx2 gcc_-march=native_-mtune=native_-O3_-fwrapv_-fPIC_-fPIE_-gdwarf-4_-Wall 10 0
+20260330 rome1 amd64 20260330 crypto_sign haetae3/constbranchindex timecop_output crypto_sign/haetae3/avx2 gcc_-march=native_-mtune=native_-O3_-fwrapv_-fPIC_-fPIE_-gdwarf-4_-Wall 1abb44e934ca5a6f9ad373a524a398cc2addfdb072425f76e726510f2651812d 77243108 8964142988 2250000000 crypto_sign/haetae3/avx2 +0

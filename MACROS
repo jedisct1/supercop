@@ -30,6 +30,8 @@ crypto_stream_xor_afternm
 crypto_stream_KEYBYTES
 crypto_stream_NONCEBYTES
 crypto_stream_BEFORENMBYTES
+crypto_pow
+crypto_pow_BYTES
 crypto_onetimeauth
 crypto_onetimeauth_verify
 crypto_onetimeauth_BYTES
@@ -54,6 +56,17 @@ crypto_aead_NOOVERLAP
 crypto_rng
 crypto_rng_KEYBYTES
 crypto_rng_OUTPUTBYTES
+crypto_nP
+crypto_nP_SCALARBYTES
+crypto_nP_POINTBYTES
+crypto_nG
+crypto_nG_SCALARBYTES
+crypto_nG_POINTBYTES
+crypto_mGnP
+crypto_mGnP_MBYTES
+crypto_mGnP_NBYTES
+crypto_mGnP_PBYTES
+crypto_mGnP_OUTPUTBYTES
 crypto_scalarmult
 crypto_scalarmult_base
 crypto_scalarmult_BYTES

@@ -26,6 +26,6 @@ int main()
   }
 
   for (i = 0;i < TIMINGS;++i) t[i] = t[i + 1] - t[i];
-  printf("%lld\n",stq2_longlong(t,TIMINGS));
+  printf("%lld\n",stq2_longlong((long long *) t,TIMINGS));
   return 0;
 }

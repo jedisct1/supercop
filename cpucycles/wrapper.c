@@ -1,7 +1,16 @@
-// version 20260105
+// version 20260625
 // public domain
 // djb
 
+#define ORDERBUMP 10
+#define EXTENDBUMP 300
+#define OFFCOREBUMP 1000
+
+#define CALLS 1000
+#define ESTIMATES 3
+
+// 20260625 djb: increase OFFCOREBUMP to 1000
+// 20260625 djb: define some tunables at top
 // 20260105 djb: add orderbump
 // 20260105 djb: catch abort() in works(); bump version
 // 20251226 djb: add ticks_close()
@@ -200,7 +209,7 @@ long long cpucycles_persecond(void)
 
 const char *cpucycles_version(void)
 {
-  return "20260105";
+  return "20260625";
 }
 
 // ----- cycle counter scaled from ticks
@@ -288,9 +297,6 @@ static double estimate_cyclespertick(long long (*ticks)(void))
 // ----- selecting an option
 
 #include "options.inc"
-
-#define CALLS 1000
-#define ESTIMATES 3
 
 long long cpucycles_init(void)
 {
@@ -380,13 +386,13 @@ long long cpucycles_init(void)
         precision[opt] = smallestdiff;
 
         // tilt selection towards more robust counters
-        if (freq == cpucycles_MAYBECYCLECOUNTER || freq == cpucycles_FINDMULTIPLIER)
-          precision[opt] += 100;
-        if (freq > 0 || freq == cpucycles_EXTEND32)
-          precision[opt] += 300;
+        if (freq > 0 || freq == cpucycles_MAYBECYCLECOUNTER || freq == cpucycles_FINDMULTIPLIER)
+          precision[opt] += OFFCOREBUMP;
+        if (freq == cpucycles_EXTEND32)
+          precision[opt] += EXTENDBUMP;
 
         precision[opt] += orderbump;
-        orderbump += 10;
+        orderbump += ORDERBUMP;
 
         break;
       }

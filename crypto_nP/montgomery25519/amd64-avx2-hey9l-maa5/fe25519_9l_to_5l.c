@@ -1,0 +1,14 @@
+/* WARNING: auto-converted (by supercop/import/lib25519); do not edit */
+// linker define fe25519_9l_to_5l
+
+#include "fe25519.h"
+#include "crypto_int64.h"
+
+void fe25519_9l_to_5l(fe25519_5l *r, const fe25519_9l *x) {
+  
+        r->l[0] = ((x->l[0] & 0x000000001FFFFFFF))       | ((x->l[1] & 0x00000000003FFFFF) << 29);
+        r->l[1] = ((x->l[1] & 0x000000001FC00000) >> 22) | ((x->l[2] & 0x000000001FFFFFFF) <<  7) | ((x->l[3] & 0x0000000000007FFF) << 36);
+        r->l[2] = ((x->l[3] & 0x000000001FFF8000) >> 15) | ((x->l[4] & 0x000000001FFFFFFF) << 14) | ((x->l[5] & 0x00000000000000FF) << 43);        
+        r->l[3] = ((x->l[5] & 0x000000001FFFFF00) >>  8) | ((x->l[6] & 0x000000001FFFFFFF) << 21) | ((crypto_int64_bottombit_01(x->l[7])) << 50);
+        r->l[4] = ((x->l[7] & 0x000000001FFFFFFE) >>  1) | ((x->l[8] & 0x00000000007FFFFF) << 28);    
+}

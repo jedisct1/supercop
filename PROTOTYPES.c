@@ -11,6 +11,7 @@ extern int crypto_stream_xor(unsigned char *,const unsigned char *,unsigned long
 extern int crypto_stream_beforenm(unsigned char *,const unsigned char *);
 extern int crypto_stream_afternm(unsigned char *,unsigned long long,const unsigned char *,const unsigned char *);
 extern int crypto_stream_xor_afternm(unsigned char *,const unsigned char *,unsigned long long,const unsigned char *,const unsigned char *);
+extern int crypto_pow(unsigned char *,const unsigned char *);
 extern int crypto_onetimeauth(unsigned char *,const unsigned char *,unsigned long long,const unsigned char *);
 extern int crypto_onetimeauth_verify(const unsigned char *,const unsigned char *,unsigned long long,const unsigned char *);
 extern int crypto_auth(unsigned char *,const unsigned char *,unsigned long long,const unsigned char *);
@@ -20,6 +21,9 @@ extern int crypto_secretbox_open(unsigned char *,const unsigned char *,unsigned 
 extern int crypto_aead_encrypt(unsigned char *,unsigned long long *,const unsigned char *,unsigned long long,const unsigned char *,unsigned long long,const unsigned char *,const unsigned char *,const unsigned char *);
 extern int crypto_aead_decrypt(unsigned char *,unsigned long long *,unsigned char *,const unsigned char *,unsigned long long,const unsigned char *,unsigned long long,const unsigned char *,const unsigned char *);
 extern int crypto_rng(unsigned char *,unsigned char *,const unsigned char *);
+extern int crypto_nP(unsigned char *,const unsigned char *,const unsigned char *);
+extern int crypto_nG(unsigned char *,const unsigned char *);
+extern int crypto_mGnP(unsigned char *,const unsigned char *,const unsigned char *,const unsigned char *);
 extern int crypto_scalarmult(unsigned char *,const unsigned char *,const unsigned char *);
 extern int crypto_scalarmult_base(unsigned char *,const unsigned char *);
 extern int crypto_box(unsigned char *,const unsigned char *,unsigned long long,const unsigned char *,const unsigned char *,const unsigned char *);

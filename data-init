@@ -323,6 +323,9 @@ do
         done | sort -u > "$top/$abi/implementation/$implementationdir/dep"
 
         userandombytes=0
+        [ $o = crypto_nP ] && userandombytes=1
+        [ $o = crypto_nG ] && userandombytes=1
+        [ $o = crypto_mGnP ] && userandombytes=1
         [ $o = crypto_scalarmult ] && userandombytes=1
         [ $o = crypto_box ] && userandombytes=1
         [ $o = crypto_dh ] && userandombytes=1

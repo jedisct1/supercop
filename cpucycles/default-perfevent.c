@@ -1,7 +1,9 @@
-// version 20251226
+// version 20260625
 // public domain
 // djb
 
+// 20260625 djb: mark this as CYCLECOUNTER despite concerns about layers screwing this up
+// 20260625 djb: add second fd for atom cores, sigh
 // 20251226 djb: add ticks_close()
 // 20251225 djb: use PERF_FLAG_FD_CLOEXEC
 // 20250925 djb: do disable-enable (suggested by jim apple re graviton 3), but only if read() seems to always return 0
@@ -75,31 +77,44 @@ that have heavier constraints on the number of simultaneous counters.
 #define PERF_FLAG_FD_CLOEXEC 0
 #endif
 
-static int fdperf = -1;
+static int fdperf[2] = {-1,-1};
 static int de = 1;
+static int whichperf = 0;
+static int64_t lastresult = 0;
 
 long long ticks(void)
 {
   int64_t result;
 
-  if (de) ioctl(fdperf,PERF_EVENT_IOC_DISABLE,0);
-  if (read(fdperf,&result,sizeof result) < sizeof result) result = 0;
-  if (de) ioctl(fdperf,PERF_EVENT_IOC_ENABLE,0);
+  for (int loop = 0;loop < 2;++loop) {
+    if (de) ioctl(fdperf[whichperf],PERF_EVENT_IOC_DISABLE,0);
+    if (read(fdperf[whichperf],&result,sizeof result) < sizeof result) result = 0;
+    if (de) ioctl(fdperf[whichperf],PERF_EVENT_IOC_ENABLE,0);
+    if (result != lastresult) break; // the normal case
+    if (fdperf[1] == -1) break;
+    whichperf = 1-whichperf;
+  }
+  lastresult = result;
+
   return result;
 }
 
 void ticks_close(void)
 {
-  if (fdperf >= 0) close(fdperf);
-  fdperf = -1;
+  for (long long i = 0;i < 2;++i) {
+    if (fdperf[i] >= 0) close(fdperf[i]);
+    fdperf[i] = -1;
+  }
   de = 1;
+  whichperf = 0;
+  lastresult = 0;
 }
 
 long long ticks_setup(void)
 {
   int xkernel,xhv,loop;
 
-  if (fdperf == -1) {
+  if (fdperf[0] == -1) {
     // prefer to exclude if platform supports that
     // but fall back to non-exclude if necessary
     for (xkernel = 1;xkernel >= 0;--xkernel) {
@@ -114,22 +129,33 @@ long long ticks_setup(void)
         attr.exclude_kernel = xkernel;
         attr.exclude_hv = xhv;
 
-        fdperf = syscall(__NR_perf_event_open,&attr,0,-1,-1,PERF_FLAG_FD_CLOEXEC);
-        if (fdperf != -1) break;
+        fdperf[0] = syscall(__NR_perf_event_open,&attr,0,-1,-1,PERF_FLAG_FD_CLOEXEC);
+        if (fdperf[0] != -1) {
+#ifdef PERF_PMU_TYPE_SHIFT
+          // XXX: see notes in amd64-perfpmcff.c
+          attr.config |= ((long long) 10) << PERF_PMU_TYPE_SHIFT;
+          fdperf[1] = syscall(__NR_perf_event_open,&attr,0,-1,-1,PERF_FLAG_FD_CLOEXEC);
+#endif
+          break;
+        }
       }
-      if (fdperf != -1) break;
+      if (fdperf[0] != -1) break;
     }
-    if (fdperf == -1) return cpucycles_SKIP;
+    if (fdperf[0] == -1) return cpucycles_SKIP;
 
-    ioctl(fdperf,PERF_EVENT_IOC_RESET,0);
-    ioctl(fdperf,PERF_EVENT_IOC_ENABLE,0);
+    ioctl(fdperf[0],PERF_EVENT_IOC_RESET,0);
+    ioctl(fdperf[0],PERF_EVENT_IOC_ENABLE,0);
+    if (fdperf[1] != -1) {
+      ioctl(fdperf[1],PERF_EVENT_IOC_RESET,0);
+      ioctl(fdperf[1],PERF_EVENT_IOC_ENABLE,0);
+    }
   }
 
   for (loop = 0;loop < 100;++loop) {
     int64_t result;
-    if (read(fdperf,&result,sizeof result) < sizeof result) result = 0;
+    if (read(fdperf[0],&result,sizeof result) < sizeof result) result = 0;
     if (result != 0) { de = 0; break; }
   }
 
-  return cpucycles_MAYBECYCLECOUNTER;
+  return cpucycles_CYCLECOUNTER;
 }

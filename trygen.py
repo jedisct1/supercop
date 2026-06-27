@@ -40,6 +40,11 @@ if operation == 'stream':
   var = [['k','KEYBYTES'],['n','NONCEBYTES'],['m',0],['c','variablelengthciphertext'],['s',0]]
   function = [['',['s'],[],['slen','n','k']],['_xor',['c'],[],['m','mlen','n','k']]]
 
+if operation == 'pow':
+  loop = 64
+  var = [['q','BYTES'],['p','BYTES']]
+  function = [['',['q'],[],['p']]]
+
 if operation in ['auth','onetimeauth']:
   loop = 4096
   var = [['h','BYTES'],['m',0],['k','KEYBYTES']]
@@ -75,6 +80,27 @@ if operation == 'rng':
   var += [['r','OUTPUTBYTES']]
   var += [['n','KEYBYTES']]
   function = [['',['r','n'],[],['k']]]
+
+if operation == 'nP':
+  loop = 64
+  var = [['q','POINTBYTES']]
+  var += [['n','SCALARBYTES']]
+  var += [['p','POINTBYTES']]
+  function += [['',['q'],[],['n','p']]]
+
+if operation == 'nG':
+  loop = 64
+  var = [['q','POINTBYTES']]
+  var += [['n','SCALARBYTES']]
+  function += [['',['q'],[],['n']]]
+
+if operation == 'mGnP':
+  loop = 128
+  var = [['q','OUTPUTBYTES']]
+  var += [['m','MBYTES']]
+  var += [['n','NBYTES']]
+  var += [['p','PBYTES']]
+  function += [['',['q'],[],['m','n','p']]]
 
 if operation == 'scalarmult':
   loop = 64
@@ -171,13 +197,13 @@ print(' */')
 print('')
 print('#include "crypto_%s.h"' % operation)
 print('#include "try.h"')
-if operation in ['box','encrypt','scalarmult','sign']:
+if operation in ['box','encrypt','nP','nG','mGnP','scalarmult','sign']:
   print('#include "randombytes.h"')
 print('')
 print('const char *primitiveimplementation = crypto_%s_IMPLEMENTATION;' % operation)
 print('')
 
-tunebytes = not operation in ['core','dh','scalarmult']
+tunebytes = not operation in ['core','dh','nP','nG','mGnP','scalarmult']
 if tunebytes:
   print('#define TUNE_BYTES 1536')
   print('#ifdef SMALL')
@@ -269,6 +295,18 @@ print('}')
 print('')
 print('void predoit(void)')
 print('{')
+if operation == 'nP':
+  print('  randombytes(n,nlen);')
+  print('  randombytes(p,plen);')
+if operation == 'nG':
+  print('  randombytes(n,nlen);')
+if operation == 'mGnP':
+  print('  randombytes(m,mlen);')
+  print('  randombytes(n,nlen);')
+  print('  randombytes(p,plen);')
+  print('  unpoison(m,crypto_mGnP_PBYTES);')
+  print('  unpoison(n,crypto_mGnP_PBYTES);')
+  print('  unpoison(p,crypto_mGnP_PBYTES);')
 if operation == 'scalarmult':
   print('  randombytes(a,alen);')
   print('  randombytes(b,blen);')
@@ -334,11 +372,19 @@ if operation == 'xof':
   print('  crypto_xof(h,TUNE_BYTES,m,TUNE_BYTES);')
 if operation == 'hash':
   print('  crypto_hash(h,m,TUNE_BYTES);')
+if operation == 'pow':
+  print('  crypto_pow(q,p);')
 if operation == 'onetimeauth':
   print('  crypto_onetimeauth(h,m,TUNE_BYTES,k);')
   print('  crypto_onetimeauth_verify(h,m,TUNE_BYTES,k);')
 if operation == 'rng':
   print('  crypto_rng(r,n,k);')
+if operation == 'nP':
+  print('  crypto_nP(q,n,p);')
+if operation == 'nG':
+  print('  crypto_nG(q,n);')
+if operation == 'mGnP':
+  print('  crypto_mGnP(q,m,n,p);')
 if operation == 'scalarmult':
   print('  crypto_scalarmult_base(c,a);')
   print('  crypto_scalarmult_base(d,b);')
@@ -372,7 +418,7 @@ print(indent)
 print(indent+'for (loop = 0;loop < LOOPS;++loop) {')
 indent += '  '
 
-if not operation in ['core','rng','scalarmult','dh','kem']:
+if not operation in ['core','pow','rng','nP','nG','mGnP','scalarmult','dh','kem']:
   print(indent+'mlen = myrandom() % (MAXTEST_BYTES + 1);')
 
 if operation == 'xof':
