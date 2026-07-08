@@ -48,8 +48,9 @@ okabi | (
         )
         (
           echo "extern long long supercop_cpucycles_ticks_${arch}_${x}_setup(void);"
-          echo "extern long long supercop_cpucycles_ticks_${arch}_${x}(void);\n"
-          echo "extern void supercop_cpucycles_ticks_${arch}_${x}_close(void);\n"
+          echo "extern long long supercop_cpucycles_ticks_${arch}_${x}(void);"
+          echo "extern void supercop_cpucycles_ticks_${arch}_${x}_close(void);"
+          echo
         ) >> options1.inc
         echo "{ \"${arch}-${x}\", supercop_cpucycles_ticks_${arch}_${x}_setup, supercop_cpucycles_ticks_${arch}_${x}, supercop_cpucycles_ticks_${arch}_${x}_close }," >> options2.inc
       done
