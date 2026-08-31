@@ -1,0 +1,354 @@
+#!/bin/sh
+
+supercop=.
+sourcetop='import/haetae-1.1.2'
+
+for p in 2 3 5
+do
+  targettop="$supercop/crypto_sign/haetae${p}v4"
+  rm -r "$targettop"
+  mkdir -p "$targettop"
+  (
+    echo ref "$sourcetop"/reference_implementation
+  ) |
+  while read target source
+  do
+    x="$targettop/$target"
+    [ -d "$x" ] && continue
+    mkdir -p "$x"
+    echo "integrating $x..."
+    cp -Lpr "$source"/include/* "$x"
+    cp -Lpr "$source"/src/* "$x"
+    rm "$x/randombytes.c"
+    rm "$x/randombytes.h"
+    sed -i '2a#define HAETAE_CONFIG_MODE HAETAE_MODE'$p "$x/config.h"
+    sed -i 's/\<crypto_sign\>/crypto_sign_with_context/' "$x"/*
+    sed -i '2a#include "crypto_sign.h"' "$x/api.h"
+    sed -i 's/\<crypto_sign_open\>/crypto_sign_open_with_context/' "$x"/*
+    sed -i 's/HAETAE_NAMESPACE(open)/HAETAE_NAMESPACE(open_with_context)/' "$x"/api.h
+    sed -i 's/HAETAE_NAMESPACE(verify)/HAETAE_NAMESPACE(verify_with_context)/' "$x"/api.h
+    sed -i 's/#define crypto_sign_keypair HAETAE_NAMESPACE(keypair)//' "$x/api.h"
+    sed -i 's/uint8_t/unsigned char/g' "$x/api.h"
+    sed -i 's/uint8_t/unsigned char/g' "$x/sign.c"
+    sed -i 's/size_t/unsigned long long/g' "$x/api.h"
+    sed -i 's/size_t/unsigned long long/g' "$x/sign.c"
+    sed -i 's/CRYPTO_BYTES/crypto_BYTES/g' "$x"/*
+    sed -i 's/CRYPTO_SECRETKEYBYTES/crypto_SECRETKEYBYTES/g' "$x"/*
+    sed -i 's/CRYPTO_PUBLICKEYBYTES/crypto_PUBLICKEYBYTES/g' "$x"/*
+    sed -i '/#include "params.h"/ a#define CRYPTO_BYTES crypto_BYTES' "$x/api.h"
+    sed -i '/#include "params.h"/ a#define CRYPTO_SECRETKEYBYTES crypto_SECRETKEYBYTES' "$x/api.h"
+    sed -i '/#include "params.h"/ a#define CRYPTO_PUBLICKEYBYTES crypto_PUBLICKEYBYTES' "$x/api.h"
+    touch "$x/goal-constbranch"
+    touch "$x/goal-constindex"
+
+    ( cd "$x"
+      patch -p1 << 'EOF'
+--- old/api.h
++++ new/api.h
+@@ -40,6 +40,9 @@
+ int crypto_sign_with_context(unsigned char *sm, unsigned long long *smlen, const unsigned char *m, unsigned long long mlen,
+                 const unsigned char *ctx, unsigned long long ctxlen, const unsigned char *sk);
+ 
++int crypto_sign(unsigned char *sm, unsigned long long *smlen, const unsigned char *m, unsigned long long mlen,
++                const unsigned char *sk);
++
+ #define crypto_sign_verify_internal HAETAE_NAMESPACE(verify_internal)
+ int crypto_sign_verify_internal(const unsigned char *sig, unsigned long long siglen,
+                                 const unsigned char *m, unsigned long long mlen,
+@@ -55,4 +58,7 @@
+ int crypto_sign_open_with_context(unsigned char *m, unsigned long long *mlen, const unsigned char *sm, unsigned long long smlen,
+                      const unsigned char *ctx, unsigned long long ctxlen, const unsigned char *vk);
+ 
++int crypto_sign_open(unsigned char *m, unsigned long long *mlen, const unsigned char *sm, unsigned long long smlen,
++                     const unsigned char *vk);
++
+ #endif // HAETAE_API_H
+EOF
+    )
+
+    ( cd "$x"
+      patch -p1 << 'EOF'
+--- old/sign.c
++++ new/sign.c
+@@ -380,6 +380,18 @@
+   return ret;
+ }
+ 
++int crypto_sign(unsigned char *sm, unsigned long long *smlen, const unsigned char *m, unsigned long long mlen,
++                const unsigned char *sk) {
++  unsigned long long i;
++
++  for (i = 0; i < mlen; ++i)
++    sm[HAETAE_crypto_BYTES + mlen - 1 - i] = m[mlen - 1 - i];
++  int ret = crypto_sign_signature(sm, smlen, sm + HAETAE_crypto_BYTES, mlen,
++                                  (const unsigned char *) "", 0, sk);
++  *smlen += mlen;
++  return ret;
++}
++
+ /*************************************************
+  * Name:        crypto_sign_verify_internal
+  *
+@@ -504,7 +516,6 @@
+ int crypto_sign_verify(const unsigned char *sig, unsigned long long siglen, const unsigned char *m,
+                        unsigned long long mlen, const unsigned char *ctx, unsigned long long ctxlen,
+                        const unsigned char *vk) {
+-  unsigned long long i;
+   unsigned char pre[257];
+ 
+   if (ctxlen > 255)
+@@ -543,6 +554,33 @@
+     goto badsig;
+   else {
+     /* All good, copy msg, return 0 */
++    for (i = 0; i < *mlen; ++i)
++      m[i] = sm[HAETAE_crypto_BYTES + i];
++    return 0;
++  }
++
++badsig:
++  /* Signature verification failed */
++  *mlen = -1;
++  for (i = 0; i < smlen; ++i)
++    m[i] = 0;
++
++  return -1;
++}
++
++int crypto_sign_open(unsigned char *m, unsigned long long *mlen, const unsigned char *sm, unsigned long long smlen,
++                     const unsigned char *vk) {
++  unsigned long long i;
++
++  if (smlen < HAETAE_crypto_BYTES)
++    goto badsig;
++
++  *mlen = smlen - HAETAE_crypto_BYTES;
++  if (crypto_sign_verify(sm, HAETAE_crypto_BYTES, sm + HAETAE_crypto_BYTES,
++                         *mlen, (const unsigned char *) "", 0, vk))
++    goto badsig;
++  else {
++    /* All good, copy msg, return 0 */
+     for (i = 0; i < *mlen; ++i)
+       m[i] = sm[HAETAE_crypto_BYTES + i];
+     return 0;
+EOF
+    )
+
+    python3 -c '
+import os
+import sys
+import glob
+
+def include(fn,lines,I):
+  bits,ui = I
+  includeline = f"#include \"crypto_{ui}{bits}.h\"\n"
+  if includeline in lines: return lines
+
+  otherincl = {}
+
+  for bits2 in 8,16,32,64:
+    for ui2 in "int","uint":
+      includeline2 = f"#include \"crypto_{ui2}{bits2}.h\"\n"
+      if includeline2 in lines:
+        otherincl[bits2,ui2] = lines.index(includeline2)
+
+  if any((bits2,ui2) < (bits,ui) for bits2,ui2 in otherincl):
+    pos = max(otherincl[bits2,ui2] for bits2,ui2 in otherincl if (bits2,ui2) < (bits,ui))
+    lines = lines[:pos+1]+[includeline]+lines[pos+1:]
+  elif any((bits2,ui2) > (bits,ui) for bits2,ui2 in otherincl):
+    pos = min(otherincl[bits2,ui2] for bits2,ui2 in otherincl if (bits2,ui2) > (bits,ui))
+    lines = lines[:pos]+[includeline]+lines[pos:]
+  elif any(L.startswith("#include") and L.strip().endswith(".h\"") for L in lines):
+    pos = -1
+    for i in range(len(lines)):
+      if lines[i].startswith("#include") and lines[i].strip().endswith(".h\""):
+        pos = i
+      if lines[i].startswith("#ifdef"): break
+      if lines[i].startswith("#ifndef") and pos >= 0: break
+      if "{" in lines[i]: break
+      if "}" in lines[i]: break
+    lines = lines[:pos+1]+[includeline]+lines[pos+1:]
+  else:
+    # XXX: maybe should behave differently for .h files
+    lines = [includeline]+lines
+
+  return lines
+
+x = sys.argv[1]
+
+for fn in glob.glob(f"{x}/*.[ch]"):
+  with open(fn) as f:
+    lines = f.readlines()
+  lines2 = []
+  needincl = set()
+  prepend = ""
+  for line in lines:
+    line = prepend+line
+    prepend = ""
+
+    # XXX: line = line.replace("#define HAETAE_NAMESPACE(s)","#define HAETAE_NAMESPACE CRYPTO_NAMESPACE\n#define OLD_HAETAE_NAMESPACE(s)")
+
+    line = line.replace("uint8_t signs[HAETAE_N * (HAETAE_L + HAETAE_K) / 8];","uint8_t signs[HAETAE_N * (HAETAE_L + HAETAE_K) / 8];\n  crypto_uint64 rejectmask;")
+    line = line.replace("} while (polyfixveclk_sqnorm2(y1, y2) > HAETAE_B0SQ * HAETAE_LN * HAETAE_LN);","  rejectmask = crypto_uint64_smaller_mask(HAETAE_B0SQ * HAETAE_LN * HAETAE_LN,polyfixveclk_sqnorm2(y1, y2));\n    crypto_declassify(&rejectmask,sizeof rejectmask);\n  } while (rejectmask);")
+    line = line.replace("if (t < HAETAE_Q)","crypto_uint32 tlessQ = crypto_uint32_smaller_mask(t,HAETAE_Q);\n      crypto_declassify(&tlessQ,sizeof tlessQ);\n      if (tlessQ)")
+    line = line.replace("if (t < 243)","crypto_uint32 tless243 = crypto_uint32_smaller_mask(t,243);\n    crypto_declassify(&tless243,sizeof tless243);\n    if (tless243)")
+    line = line.replace("// Get seed_A","crypto_int64 rejectmask;\n    // Get seed_A")
+    line = line.replace("if (squared_singular_value > HAETAE_GAMMA * HAETAE_GAMMA * HAETAE_N) {","rejectmask = crypto_int64_smaller_mask(HAETAE_GAMMA * HAETAE_GAMMA * HAETAE_N,squared_singular_value);\n  crypto_declassify(&rejectmask,sizeof rejectmask);\n  if (rejectmask) {")
+    line = line.replace("if (reject1 | reject2) {","crypto_int64 rejectmask = reject1 | reject2;\n  crypto_declassify(&rejectmask,sizeof rejectmask);\n  if (rejectmask) {")
+    line = line.replace("polyvecl_highbits(&hb_z1, &z1rnd);","polyvecl_highbits(&hb_z1, &z1rnd);\n  crypto_declassify(&hb_z1,sizeof hb_z1);\n  crypto_declassify(&h,sizeof h);")
+
+    line = line.replace("= a & 1;","= crypto_int64_bottombit_01(a);")
+    line = line.replace("= (y->limb48[1] >> 63) & 1;","= crypto_int64_bitmod_01(y->limb48[1],63);")
+    line = line.replace("= a->coeffs[i] & 1;","= crypto_int64_bottombit_01(a->coeffs[i]);")
+    line = line.replace("= -(buf[0] & 1);","= crypto_int64_bottombit_mask(buf[0]);")
+    line = line.replace("(-(!!cond & 1))","crypto_int64_nonzero_mask(cond)")
+    line = line.replace("= buf[i] & 1;","= crypto_int64_bottombit_01(buf[i]);")
+    line = line.replace("= (buf[i] >> 1) & 1;","= crypto_int64_bitmod_01(buf[i],1);")
+    line = line.replace("= (buf[i] >> 2) & 1;","= crypto_int64_bitmod_01(buf[i],2);")
+    line = line.replace("= (buf[i] >> 3) & 1;","= crypto_int64_bitmod_01(buf[i],3);")
+    line = line.replace("= (buf[i] >> 4) & 1;","= crypto_int64_bitmod_01(buf[i],4);")
+    line = line.replace("= (buf[i] >> 5) & 1;","= crypto_int64_bitmod_01(buf[i],5);")
+    line = line.replace("= (buf[i] >> 6) & 1;","= crypto_int64_bitmod_01(buf[i],6);")
+    line = line.replace("= (buf[i] >> 7) & 1;","= crypto_int64_bitmod_01(buf[i],7);")
+    line = line.replace("& -((xq ^ x2) & 1));","& crypto_int64_bottombit_mask(xq ^ x2));")
+    line = line.replace("(HAETAE_Q & -(xq & 1))","(HAETAE_Q & crypto_int64_bottombit_mask(xq))")
+    line = line.replace("(sqsum.limb48[1] & 1)","crypto_int64_bottombit_01(sqsum.limb48[1])")
+    line = line.replace("(signs[(i * HAETAE_N + j) / 8] >> ((i * HAETAE_N + j) % 8)) & 1);","crypto_uint8_bitmod_01(signs[(i * HAETAE_N + j) / 8],i * HAETAE_N + j));")
+    line = line.replace("= (sig[i / 8] >> (i % 8)) & 1;","= crypto_int8_bitmod_01(sig[i/8],i);")
+    line = line.replace("= (((uint64_t)CDT[i] - rand16) >> 63) & 1;","= crypto_int64_bitmod_01(((uint64_t)CDT[i] - rand16),63);")
+    line = line.replace("(rand_rej & 1)","crypto_int64_bottombit_01(rand_rej)")
+
+    if fn.endswith("/decompose.c"):
+      line = line.replace("= ((alpha >> 1) - (lb + 1)) >> 31;","= crypto_int32_negative_mask((alpha >> 1) - (lb + 1));")
+      if "edgecase = ((HAETAE_DQ - 2) / HAETAE_ALPHA_HINT - (hb + 1)) >>\n" in line:
+        prepend = line[:-1]
+        line = ""
+      line = line.replace("((HAETAE_DQ - 2) / HAETAE_ALPHA_HINT - (hb + 1)) >>             31;","crypto_int32_negative_mask((HAETAE_DQ - 2) / HAETAE_ALPHA_HINT - (hb + 1));")
+
+    if fn.endswith("/packing.c"):
+      line = line.replace(", b & 1)",", crypto_int64_bottombit_01(b))")
+      line = line.replace("= (b & 0x2) >> 1;","= crypto_uint64_bitmod_01(b,1);")
+      line = line.replace("(a->coeffs[d_idx + 1] & 0x1)","crypto_int64_bottombit_01(a->coeffs[d_idx + 1])")
+      line = line.replace("(a[b_idx + 1] >> 7) & 0x1)","crypto_uint8_topbit_01(a[b_idx + 1]))")
+      line = line.replace("= (a->coeffs[8 * i + 0] >> 8) & 0x01;","= crypto_int64_bitmod_01(a->coeffs[8 * i + 0],8);")
+      line = line.replace("(a->coeffs[i] & 1)","crypto_int64_bottombit_01(a->coeffs[i])")
+      line = line.replace("((a->coeffs[d_idx + 6] >> 14) & 0x1)","(crypto_int64_bitmod_01(a->coeffs[d_idx + 6],14))")
+      line = line.replace("(a[b_idx + 13] & 0x1)","crypto_int64_bottombit_01(a[b_idx + 13])")
+      line = line.replace("(a[3 * i + 1] >> 7)","crypto_uint8_topbit_01(a[3 * i + 1])")
+
+    if fn.endswith("/poly.c"):
+      line = line.replace("#include <stdint.h>","#include <stdint.h>\n#include \"crypto_declassify.h\"")
+      line = line.replace("} while (b > i);","  crypto_declassify(&b,sizeof b);\n    } while (b > i);")
+
+    if fn.endswith("/polyfix.c"):
+      line = line.replace("#include <stdint.h>","#include <stdint.h>\n#include \"crypto_declassify.h\"")
+
+    if fn.endswith("/polyvec.c"):
+      line = line.replace("(h->vec[i].coeffs[j] >> 31)","crypto_int32_negative_mask(h->vec[i].coeffs[j])")
+      line = line.replace("((v->vec[i].coeffs[j] - (HAETAE_DQ - 2) / HAETAE_ALPHA_HINT) >> 31)","crypto_int32_negative_mask(v->vec[i].coeffs[j] - (HAETAE_DQ - 2) / HAETAE_ALPHA_HINT)")
+      if "int32_t fac =\n" in line:
+        prepend = line[:-1]
+        line = ""
+      if "int32_t fac =        ((min - bestm[i]) >>\n" in line:
+        prepend = line[:-1]
+        line = ""
+      line = line.replace("=        ((min - bestm[i]) >>         31);","= crypto_int32_negative_mask(min - bestm[i]);")
+
+    if fn.endswith("/reduce.c"):
+      line = line.replace("= (a >> 31) & HAETAE_Q;","= crypto_int32_negative_mask(a) & HAETAE_Q;")
+      line = line.replace("= (t >> 31) & HAETAE_DQ;","= crypto_int32_negative_mask(t) & HAETAE_DQ;")
+      line = line.replace("= (t >> 31) & (HAETAE_DQ * 2);","= crypto_int32_negative_mask(t) & (HAETAE_DQ * 2);")
+      line = line.replace("~((t - HAETAE_Q) >> 31) & HAETAE_Q;","~crypto_int32_negative_mask(t - HAETAE_Q) & HAETAE_Q;")
+      line = line.replace("~((t - HAETAE_Q) >> 31) & HAETAE_DQ;","~crypto_int32_negative_mask(t - HAETAE_Q) & HAETAE_DQ;")
+      line = line.replace("~((t - HAETAE_DQ) >> 31) & HAETAE_DQ;","~crypto_int32_negative_mask(t - HAETAE_DQ) & HAETAE_DQ;")
+
+    if fn.endswith("/sampler.c"):
+      line = line.replace("#include <stdint.h>","#include <stdint.h>\n#include \"crypto_declassify.h\"")
+      line = line.replace("((*r | -*r) >> 63)","crypto_int64_nonzero_01(*r)")
+      line = line.replace("cnt += 1;","crypto_declassify(&accepted,sizeof accepted);\n    cnt += 1;")
+
+    if fn.endswith("/sign.c"):
+      line = line.replace("#include <stdint.h>","#include <stdint.h>\n#include \"crypto_declassify.h\"")
+
+    lines2.append(line)
+
+    for bits in 8,16,32,64:
+      if f"crypto_int{bits}_" in line: needincl.add((bits,"int"))
+      if f"crypto_uint{bits}_" in line: needincl.add((bits,"uint"))
+
+  if lines2 != lines:
+    for I in sorted(needincl):
+      lines2 = include(fn,lines2,I)
+    with open(fn,"w") as f:
+      for line in lines2:
+        f.write(line)
+' "$x"
+
+    ( cd "$x"
+      patch -p1 << 'EOF'
+--- old/polyvec.c
++++ new/polyvec.c
+@@ -444,47 +444,7 @@
+   }
+ }
+
+-/*************************************************
+- * Name:        minmax
+- *
+- * Description: compare and swap two integers
+- *
+- * Arguments:   - int32_t *x: pointer to first input/output integer
+- *              - int32_t *y: pointer to second input/output integer
+- *
+- * Specification: Implements @[KS X 123456, Algorithm 44, minmax]
+- * **************************************************/
+-static inline void minmax(int32_t *x, int32_t *y) // taken from djbsort
+-{
+-  int32_t a = *x;
+-  int32_t b = *y;
+-  int32_t ab = b ^ a;
+-  int32_t c = b - a;
+-  c ^= ab & (c ^ b);
+-  c >>= 31;
+-  c &= ab;
+-  *x = a ^ c;
+-  *y = b ^ c;
+-}
+-static inline void minmaxmask(int32_t *x, int32_t *y,
+-                              int32_t *mask) // adapted from djbsort
+-{
+-  // If mask is -1, we perform the operation, else we do basically nothing.
+-  // mask truth table:
+-  // mask = 0 -> mask = 0, no swap is performed
+-  // mask = -1, swap performed -> mask = 0
+-  // mask = -1, swap not performed -> mask = -1
+-  int32_t a = *x;
+-  int32_t b = *y;
+-  int32_t ab = (b ^ a) & *mask;
+-  int32_t c = b - a;
+-  c ^= ab & (c ^ b);
+-  c >>= 31;
+-  *mask &= ~c;
+-  c &= ab;
+-  *x = a ^ c;
+-  *y = b ^ c;
+-}
++#define minmax crypto_int32_minmax
+
+ /*************************************************
+  * Name:        polyvecmk_sk_singular_value
+EOF
+    )
+
+  done
+done
+
+(
+  cd "$supercop"
+  echo bf5bbfd7ae9cad3db6c4d040f37e61e192e0ba3b9a63cbe229cd87fc71c8035e > crypto_sign/haetae2v4/checksumsmall
+  echo 23b858b8f7bf07287fe249765dd43081c62e5c1b217d5e615cd89e36a5a4766a > crypto_sign/haetae2v4/checksumbig
+  echo 377c8131b5cd34f6661f1f0c3dc91faaddeb3941ee1904e0ace653ef76aeaaef > crypto_sign/haetae3v4/checksumsmall
+  echo 284de40b446b41ce6bae0469acd99f1ef38cda4a22521cead7f5404f33450a5a > crypto_sign/haetae3v4/checksumbig
+  echo 52bcced72fc889e8629240b0ef223f1ced784979c7c44a2f96be5089dbaed77a > crypto_sign/haetae5v4/checksumsmall
+  echo 2ae3bf4845d07e7b5262d703a9cf76f1fadcd6b56a7e917d935d513436546af2 > crypto_sign/haetae5v4/checksumbig
+)

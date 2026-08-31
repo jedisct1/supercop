@@ -7,10 +7,11 @@
  * SPDX-License-Identifier: MIT
  */
 
+#include "util.h"
+
 #include "fips202.h"
 #include "KeccakP-1600-SnP.h"
 
-#include <stdlib.h>
 #include <string.h>
 
 /*************************************************
@@ -31,7 +32,7 @@ static void keccak_init(uint64_t *s) {
  * Description: Absorb step of Keccak; incremental.
  *
  * Arguments:   - uint64_t *s: pointer to Keccak state (s[25]: position)
- *              - unsigned int r: rate in bytes (e.g., 168 for SHAKE128)
+ *              - unsigned int r: rate in bytes (e.g., 136 for SHAKE256)
  *              - const uint8_t *m: pointer to input to be absorbed into s
  *              - size_t mlen: length of input m bytes
  *
@@ -78,7 +79,7 @@ static void keccak_absorb(uint64_t *s, uint32_t r, const uint8_t *m,
  *                First 25 values represent Keccak state.
  *                26th value represents either the number of absorbed bytes
  *                that have not been permuted, or not-yet-squeezed bytes.
- *              - uint32_t r: rate in bytes (e.g., 168 for SHAKE128)
+ *              - uint32_t r: rate in bytes (e.g., 136 for SHAKE256)
  *              - uint8_t p: domain-separation byte for different
  *                                 Keccak-derived functions
  **************************************************/
@@ -101,7 +102,7 @@ static void keccak_finalize(uint64_t *s, uint32_t r, uint8_t p) {
  *                First 25 values represent Keccak state.
  *                26th value represents either the number of absorbed bytes
  *                that have not been permuted, or not-yet-squeezed bytes.
- *              - uint32_t r: rate in bytes (e.g., 168 for SHAKE128)
+ *              - uint32_t r: rate in bytes (e.g., 136 for SHAKE256)
  **************************************************/
 static void keccak_squeeze(uint8_t *h, size_t outlen, uint64_t *s, uint32_t r) {
     while (outlen > s[25]) {
@@ -115,30 +116,6 @@ static void keccak_squeeze(uint8_t *h, size_t outlen, uint64_t *s, uint32_t r) {
     KeccakP1600_ExtractBytes(s, h, (unsigned int)(r - s[25]),
                                   (unsigned int)outlen);
     s[25] -= outlen;
-}
-
-/* shake128 */
-void shake128_init(keccak_state *state) { keccak_init(state->s); }
-
-void shake128_absorb(keccak_state *state, const uint8_t *input, size_t inlen) {
-    keccak_absorb(state->s, SHAKE128_RATE, input, inlen);
-}
-
-void shake128_finalize(keccak_state *state) {
-    keccak_finalize(state->s, SHAKE128_RATE, 0x1F);
-}
-
-void shake128_squeeze(uint8_t *output, size_t outlen, keccak_state *state) {
-    keccak_squeeze(output, outlen, state->s, SHAKE128_RATE);
-}
-
-void shake128(uint8_t *output, size_t outlen, const uint8_t *input,
-              size_t inlen) {
-    keccak_state state;
-    shake128_init(&state);
-    shake128_absorb(&state, input, inlen);
-    shake128_finalize(&state);
-    shake128_squeeze(output, outlen, &state);
 }
 
 /* shake256 */
@@ -163,23 +140,5 @@ void shake256(uint8_t *output, size_t outlen, const uint8_t *input,
     shake256_absorb(&state, input, inlen);
     shake256_finalize(&state);
     shake256_squeeze(output, outlen, &state);
-}
-
-/* sha3-256 */
-void sha3_256_init(keccak_state *state) { keccak_init(state->s); }
-
-void sha3_256_absorb(keccak_state *state, const uint8_t *input, size_t inlen) {
-    keccak_absorb(state->s, SHA3_256_RATE, input, inlen);
-}
-
-void sha3_256_finalize(uint8_t *output, keccak_state *state) {
-    keccak_finalize(state->s, SHA3_256_RATE, 0x06);
-    keccak_squeeze(output, 32, state->s, SHA3_256_RATE);
-}
-
-void sha3_256(uint8_t *output, const uint8_t *input, size_t inlen) {
-    keccak_state state;
-    sha3_256_init(&state);
-    sha3_256_absorb(&state, input, inlen);
-    sha3_256_finalize(output, &state);
+    secure_clear(&state, sizeof(state));
 }

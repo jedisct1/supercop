@@ -1,338 +1,585 @@
 .global poly_cbd1
 poly_cbd1:
+    vmovdqa _16x5555(%rip), %ymm0
+    vmovdqa _16x0303(%rip), %ymm1
+    vmovdqa _16x0101(%rip), %ymm2
 
-vmovdqa		_16x1(%rip),%ymm0
-xor		    %rax,%rax
+    vmovdqu  76(%rsi), %ymm3
+    vmovdqu 184(%rsi), %ymm4
+
+    vpsrlw $1, %ymm3, %ymm5
+    vpsrlw $1, %ymm4, %ymm6
+
+    vpand %ymm0, %ymm3, %ymm3
+    vpand %ymm0, %ymm4, %ymm4
+    vpand %ymm0, %ymm5, %ymm5
+    vpand %ymm0, %ymm6, %ymm6
+
+    vpaddb %ymm0, %ymm3, %ymm3
+    vpaddb %ymm0, %ymm5, %ymm5
+
+    vpsubb %ymm4, %ymm3, %ymm7
+    vpsubb %ymm6, %ymm5, %ymm8
+
+    vpsrlw $2, %ymm7, %ymm9
+    vpsrlw $2, %ymm8, %ymm10
+
+    vpand %ymm1, %ymm7, %ymm3
+    vpand %ymm1, %ymm8, %ymm4
+    vpand %ymm1, %ymm9, %ymm5
+    vpand %ymm1, %ymm10, %ymm6
+
+    vpsubb %ymm2, %ymm3, %ymm3
+    vpsubb %ymm2, %ymm4, %ymm4
+    vpsubb %ymm2, %ymm5, %ymm5
+    vpsubb %ymm2, %ymm6, %ymm6
+
+    vpsrlw $4, %ymm7, %ymm7
+    vpsrlw $4, %ymm8, %ymm8
+    vpsrlw $4, %ymm9, %ymm9
+    vpsrlw $4, %ymm10, %ymm10
+
+    vpand %ymm1, %ymm7, %ymm7
+    vpand %ymm1, %ymm8, %ymm8
+    vpand %ymm1, %ymm9, %ymm9
+    vpand %ymm1, %ymm10, %ymm10
+
+    vpsubb %ymm2, %ymm7, %ymm7
+    vpsubb %ymm2, %ymm8, %ymm8
+    vpsubb %ymm2, %ymm9, %ymm9
+    vpsubb %ymm2, %ymm10, %ymm10
+
+    vpunpcklbw %ymm4, %ymm3, %ymm11
+    vpunpcklbw %ymm6, %ymm5, %ymm12
+    vpunpcklbw %ymm8, %ymm7, %ymm13
+    vpunpcklbw %ymm10, %ymm9, %ymm14
+
+    vpunpckhbw %ymm4, %ymm3, %ymm3
+    vpunpckhbw %ymm6, %ymm5, %ymm4
+    vpunpckhbw %ymm8, %ymm7, %ymm5
+    vpunpckhbw %ymm10, %ymm9, %ymm6
+
+    vpunpcklwd %ymm12, %ymm11, %ymm7
+    vpunpcklwd %ymm14, %ymm13, %ymm8
+    vpunpckhwd %ymm12, %ymm11, %ymm9
+    vpunpckhwd %ymm14, %ymm13, %ymm10
+
+    vpunpcklwd %ymm4, %ymm3, %ymm11
+    vpunpcklwd %ymm6, %ymm5, %ymm12
+    vpunpckhwd %ymm4, %ymm3, %ymm13
+    vpunpckhwd %ymm6, %ymm5, %ymm14
+
+    vpunpckldq %ymm12, %ymm11, %ymm3
+    vpunpckhdq %ymm12, %ymm11, %ymm4
+    vpunpckldq %ymm14, %ymm13, %ymm5
+    vpunpckhdq %ymm14, %ymm13, %ymm6
+
+    vpunpckldq %ymm8, %ymm7, %ymm11
+    vpunpckhdq %ymm8, %ymm7, %ymm12
+    vpunpckldq %ymm10, %ymm9, %ymm13
+    vpunpckhdq %ymm10, %ymm9, %ymm14
+
+    vperm2i128 $0x20, %ymm4, %ymm3, %ymm7
+    vperm2i128 $0x20, %ymm6, %ymm5, %ymm8
+    vperm2i128 $0x31, %ymm4, %ymm3, %ymm9
+    vperm2i128 $0x31, %ymm6, %ymm5, %ymm10
+
+    vperm2i128 $0x20, %ymm12, %ymm11, %ymm3
+    vperm2i128 $0x20, %ymm14, %ymm13, %ymm4
+    vperm2i128 $0x31, %ymm12, %ymm11, %ymm5
+    vperm2i128 $0x31, %ymm14, %ymm13, %ymm6
+
+    vpmovsxbw  %xmm3,  %ymm11
+    vpmovsxbw  %xmm4,  %ymm12
+    vpmovsxbw  %xmm5,  %ymm13
+    vpmovsxbw  %xmm6,  %ymm14
+
+    vmovdqu    %ymm11, 1216(%rdi)
+    vmovdqu    %ymm12, 1280(%rdi)
+    vmovdqu    %ymm13, 1472(%rdi)
+    vmovdqu    %ymm14, 1536(%rdi)
+
+    vpmovsxbw  %xmm7,  %ymm11
+    vpmovsxbw  %xmm8,  %ymm12
+    vpmovsxbw  %xmm9,  %ymm13
+    vpmovsxbw  %xmm10, %ymm14
+
+    vmovdqa    %ymm11, 1344(%rdi)
+    vmovdqa    %ymm12, 1408(%rdi)
+    vmovdqa    %ymm13, 1600(%rdi)
+    vmovdqa    %ymm14, 1664(%rdi)
+
+    vextracti128 $1, %ymm3, %xmm11
+    vextracti128 $1, %ymm4, %xmm12
+    vextracti128 $1, %ymm5, %xmm13
+    vextracti128 $1, %ymm6, %xmm14
+
+    vpmovsxbw    %xmm11, %ymm11
+    vpmovsxbw    %xmm12, %ymm12
+    vpmovsxbw    %xmm13, %ymm13
+    vpmovsxbw    %xmm14, %ymm14
+
+    vmovdqa      %ymm11, 1248(%rdi)
+    vmovdqa      %ymm12, 1312(%rdi)
+    vmovdqa      %ymm13, 1504(%rdi)
+    vmovdqa      %ymm14, 1568(%rdi)
+
+    vextracti128 $1, %ymm7,  %xmm11
+    vextracti128 $1, %ymm8,  %xmm12
+    vextracti128 $1, %ymm9,  %xmm13
+    vextracti128 $1, %ymm10, %xmm14
+
+    vpmovsxbw    %xmm11, %ymm11
+    vpmovsxbw    %xmm12, %ymm12
+    vpmovsxbw    %xmm13, %ymm13
+    vpmovsxbw    %xmm14, %ymm14
+
+    vmovdqa      %ymm11, 1376(%rdi)
+    vmovdqa      %ymm12, 1440(%rdi)
+    vmovdqa      %ymm13, 1632(%rdi)
+    vmovdqa      %ymm14, 1696(%rdi)
+
+    lea 96(%rsi), %r8
+
 .p2align 5
 _looptop_poly_cbd1_1:
-vmovdqu  	(%rsi),%ymm2
-vmovdqu  	108(%rsi),%ymm3
+    vmovdqu   (%rsi), %ymm3
+    vmovdqu 108(%rsi), %ymm4
 
-vpand       %ymm0,%ymm2,%ymm4
-vpand       %ymm0,%ymm3,%ymm5
-vpsubw      %ymm5,%ymm4,%ymm1
-vmovdqa     %ymm1,(%rdi)
+    vpsrlw $1, %ymm3, %ymm5
+    vpsrlw $1, %ymm4, %ymm6
 
-xor         %r8,%r8
-add         $32,%r8
-_looptop_poly_cbd1_1_1:
-vpsrld		$1,%ymm2,%ymm2
-vpsrld		$1,%ymm3,%ymm3
-vpand       %ymm0,%ymm2,%ymm4
-vpand       %ymm0,%ymm3,%ymm5
-vpsubw      %ymm5,%ymm4,%ymm1
-vmovdqa     %ymm1,(%rdi,%r8)
+    vpand %ymm0, %ymm3, %ymm3
+    vpand %ymm0, %ymm4, %ymm4
+    vpand %ymm0, %ymm5, %ymm5
+    vpand %ymm0, %ymm6, %ymm6
 
-add         $32,%r8
-cmp         $512,%r8
-jb          _looptop_poly_cbd1_1_1
+    vpaddb %ymm0, %ymm3, %ymm3
+    vpaddb %ymm0, %ymm5, %ymm5
 
-add		$32,%rsi
-add		$512,%rdi
-add		$512,%rax
-cmp		$1536,%rax
-jb		_looptop_poly_cbd1_1
+    vpsubb %ymm4, %ymm3, %ymm7
+    vpsubb %ymm6, %ymm5, %ymm8
 
-movq         (%rsi),%mm2
-movq       108(%rsi),%mm3
+    vpsrlw $2, %ymm7, %ymm9
+    vpsrlw $2, %ymm8, %ymm10
 
-movq    _4x1(%rip),%mm4
-movq    _4x1(%rip),%mm5
-pand        %mm2,%mm4
-pand        %mm3,%mm5
-psubw       %mm5,%mm4
-movq        %mm4,(%rdi)
+    vpand %ymm1, %ymm7, %ymm3
+    vpand %ymm1, %ymm8, %ymm4
+    vpand %ymm1, %ymm9, %ymm5
+    vpand %ymm1, %ymm10, %ymm6
 
-xor         %r8,%r8
-add         $8,%r8
-_looptop_poly_cbd1_2:
-psrlw 		$1,%mm2
-psrlw		$1,%mm3
+    vpsubb %ymm2, %ymm3, %ymm3
+    vpsubb %ymm2, %ymm4, %ymm4
+    vpsubb %ymm2, %ymm5, %ymm5
+    vpsubb %ymm2, %ymm6, %ymm6
 
-movq    _4x1(%rip),%mm4
-movq    _4x1(%rip),%mm5
-pand        %mm2,%mm4
-pand        %mm3,%mm5
-psubw       %mm5,%mm4
-movq        %mm4,(%rdi,%r8)
-add         $8,%r8
-cmp         $128,%r8
-jb          _looptop_poly_cbd1_2
+    vpsrlw $4, %ymm7, %ymm7
+    vpsrlw $4, %ymm8, %ymm8
+    vpsrlw $4, %ymm9, %ymm9
+    vpsrlw $4, %ymm10, %ymm10
 
-add		$8,%rsi
-add		$128,%rdi 
+    vpand %ymm1, %ymm7, %ymm7
+    vpand %ymm1, %ymm8, %ymm8
+    vpand %ymm1, %ymm9, %ymm9
+    vpand %ymm1, %ymm10, %ymm10
 
-vpbroadcastd (%rsi), %ymm2
-vpbroadcastd 108(%rsi), %ymm3
+    vpsubb %ymm2, %ymm7, %ymm7
+    vpsubb %ymm2, %ymm8, %ymm8
+    vpsubb %ymm2, %ymm9, %ymm9
+    vpsubb %ymm2, %ymm10, %ymm10
 
-vpand       %ymm0,%ymm2,%ymm4
-vpand       %ymm0,%ymm3,%ymm5
-vpsubw      %ymm5,%ymm4,%ymm1
-movq        %xmm1,%rax
-mov         %eax,(%rdi)
+    vpunpcklbw %ymm4, %ymm3, %ymm11
+    vpunpcklbw %ymm6, %ymm5, %ymm12
+    vpunpcklbw %ymm8, %ymm7, %ymm13
+    vpunpcklbw %ymm10, %ymm9, %ymm14
 
-xor         %r8,%r8
-add         $4,%r8
-_looptop_poly_cbd1_3:
-vpsrld		$1,%ymm2,%ymm2
-vpsrld		$1,%ymm3,%ymm3
-vpand       %ymm0,%ymm2,%ymm4
-vpand       %ymm0,%ymm3,%ymm5
-vpsubw      %ymm5,%ymm4,%ymm1
-movq        %xmm1,%rax
-mov         %eax,(%rdi,%r8)
+    vpunpckhbw %ymm4, %ymm3, %ymm3
+    vpunpckhbw %ymm6, %ymm5, %ymm4
+    vpunpckhbw %ymm8, %ymm7, %ymm5
+    vpunpckhbw %ymm10, %ymm9, %ymm6
 
-add         $4,%r8
-cmp         $64,%r8
-jb          _looptop_poly_cbd1_3
+    vpunpcklwd %ymm12, %ymm11, %ymm7
+    vpunpcklwd %ymm14, %ymm13, %ymm8
+    vpunpckhwd %ymm12, %ymm11, %ymm9
+    vpunpckhwd %ymm14, %ymm13, %ymm10
 
-ret
+    vpunpcklwd %ymm4, %ymm3, %ymm11
+    vpunpcklwd %ymm6, %ymm5, %ymm12
+    vpunpckhwd %ymm4, %ymm3, %ymm13
+    vpunpckhwd %ymm6, %ymm5, %ymm14
 
-.global poly_sotp
-poly_sotp:
+    vpunpckldq %ymm12, %ymm11, %ymm3
+    vpunpckhdq %ymm12, %ymm11, %ymm4
+    vpunpckldq %ymm14, %ymm13, %ymm5
+    vpunpckhdq %ymm14, %ymm13, %ymm6
 
-vmovdqa		_16x1(%rip),%ymm0
-xor		    %rax,%rax
+    vpunpckldq %ymm8, %ymm7, %ymm11
+    vpunpckhdq %ymm8, %ymm7, %ymm12
+    vpunpckldq %ymm10, %ymm9, %ymm13
+    vpunpckhdq %ymm10, %ymm9, %ymm14
+
+    vperm2i128 $0x20, %ymm4, %ymm3, %ymm7
+    vperm2i128 $0x20, %ymm6, %ymm5, %ymm8
+    vperm2i128 $0x31, %ymm4, %ymm3, %ymm9
+    vperm2i128 $0x31, %ymm6, %ymm5, %ymm10
+
+    vperm2i128 $0x20, %ymm12, %ymm11, %ymm3
+    vperm2i128 $0x20, %ymm14, %ymm13, %ymm4
+    vperm2i128 $0x31, %ymm12, %ymm11, %ymm5
+    vperm2i128 $0x31, %ymm14, %ymm13, %ymm6
+
+    vpmovsxbw  %xmm3,  %ymm11
+    vpmovsxbw  %xmm4,  %ymm12
+    vpmovsxbw  %xmm5,  %ymm13
+    vpmovsxbw  %xmm6,  %ymm14
+
+    vmovdqa    %ymm11,   0(%rdi)
+    vmovdqa    %ymm12,  64(%rdi)
+    vmovdqa    %ymm13, 256(%rdi)
+    vmovdqa    %ymm14, 320(%rdi)
+
+    vpmovsxbw  %xmm7,  %ymm11
+    vpmovsxbw  %xmm8,  %ymm12
+    vpmovsxbw  %xmm9,  %ymm13
+    vpmovsxbw  %xmm10, %ymm14
+
+    vmovdqa    %ymm11, 128(%rdi)
+    vmovdqa    %ymm12, 192(%rdi)
+    vmovdqa    %ymm13, 384(%rdi)
+    vmovdqa    %ymm14, 448(%rdi)
+
+    vextracti128 $1, %ymm3, %xmm11
+    vextracti128 $1, %ymm4, %xmm12
+    vextracti128 $1, %ymm5, %xmm13
+    vextracti128 $1, %ymm6, %xmm14
+
+    vpmovsxbw    %xmm11, %ymm11
+    vpmovsxbw    %xmm12, %ymm12
+    vpmovsxbw    %xmm13, %ymm13
+    vpmovsxbw    %xmm14, %ymm14
+
+    vmovdqa      %ymm11,  32(%rdi)
+    vmovdqa      %ymm12,  96(%rdi)
+    vmovdqa      %ymm13, 288(%rdi)
+    vmovdqa      %ymm14, 352(%rdi)
+
+    vextracti128 $1, %ymm7,  %xmm11
+    vextracti128 $1, %ymm8,  %xmm12
+    vextracti128 $1, %ymm9,  %xmm13
+    vextracti128 $1, %ymm10, %xmm14
+
+    vpmovsxbw    %xmm11, %ymm11
+    vpmovsxbw    %xmm12, %ymm12
+    vpmovsxbw    %xmm13, %ymm13
+    vpmovsxbw    %xmm14, %ymm14
+
+    vmovdqa      %ymm11, 160(%rdi)
+    vmovdqa      %ymm12, 224(%rdi)
+    vmovdqa      %ymm13, 416(%rdi)
+    vmovdqa      %ymm14, 480(%rdi)
+
+    add $32,  %rsi
+    add $512, %rdi
+    cmp %r8,  %rsi
+    jb  _looptop_poly_cbd1_1
+
+    ret
+
+.global poly_sotp_encode
+poly_sotp_encode:
+    vmovdqa _16x5555(%rip), %ymm0
+    vmovdqa _16x0303(%rip), %ymm1
+    vmovdqa _16x0101(%rip), %ymm2
+
+    vmovdqu  76(%rsi), %ymm5
+    vmovdqu  76(%rdx), %ymm3
+    vmovdqu 184(%rdx), %ymm4
+
+    vpxor %ymm5, %ymm3, %ymm3
+
+    vpsrlw $1, %ymm3, %ymm5
+    vpsrlw $1, %ymm4, %ymm6
+
+    vpand %ymm0, %ymm3, %ymm3
+    vpand %ymm0, %ymm4, %ymm4
+    vpand %ymm0, %ymm5, %ymm5
+    vpand %ymm0, %ymm6, %ymm6
+
+    vpaddb %ymm0, %ymm3, %ymm3
+    vpaddb %ymm0, %ymm5, %ymm5
+
+    vpsubb %ymm4, %ymm3, %ymm7
+    vpsubb %ymm6, %ymm5, %ymm8
+
+    vpsrlw $2, %ymm7, %ymm9
+    vpsrlw $2, %ymm8, %ymm10
+
+    vpand %ymm1, %ymm7, %ymm3
+    vpand %ymm1, %ymm8, %ymm4
+    vpand %ymm1, %ymm9, %ymm5
+    vpand %ymm1, %ymm10, %ymm6
+
+    vpsubb %ymm2, %ymm3, %ymm3
+    vpsubb %ymm2, %ymm4, %ymm4
+    vpsubb %ymm2, %ymm5, %ymm5
+    vpsubb %ymm2, %ymm6, %ymm6
+
+    vpsrlw $4, %ymm7, %ymm7
+    vpsrlw $4, %ymm8, %ymm8
+    vpsrlw $4, %ymm9, %ymm9
+    vpsrlw $4, %ymm10, %ymm10
+
+    vpand %ymm1, %ymm7, %ymm7
+    vpand %ymm1, %ymm8, %ymm8
+    vpand %ymm1, %ymm9, %ymm9
+    vpand %ymm1, %ymm10, %ymm10
+
+    vpsubb %ymm2, %ymm7, %ymm7
+    vpsubb %ymm2, %ymm8, %ymm8
+    vpsubb %ymm2, %ymm9, %ymm9
+    vpsubb %ymm2, %ymm10, %ymm10
+
+    vpunpcklbw %ymm4, %ymm3, %ymm11
+    vpunpcklbw %ymm6, %ymm5, %ymm12
+    vpunpcklbw %ymm8, %ymm7, %ymm13
+    vpunpcklbw %ymm10, %ymm9, %ymm14
+
+    vpunpckhbw %ymm4, %ymm3, %ymm3
+    vpunpckhbw %ymm6, %ymm5, %ymm4
+    vpunpckhbw %ymm8, %ymm7, %ymm5
+    vpunpckhbw %ymm10, %ymm9, %ymm6
+
+    vpunpcklwd %ymm12, %ymm11, %ymm7
+    vpunpcklwd %ymm14, %ymm13, %ymm8
+    vpunpckhwd %ymm12, %ymm11, %ymm9
+    vpunpckhwd %ymm14, %ymm13, %ymm10
+
+    vpunpcklwd %ymm4, %ymm3, %ymm11
+    vpunpcklwd %ymm6, %ymm5, %ymm12
+    vpunpckhwd %ymm4, %ymm3, %ymm13
+    vpunpckhwd %ymm6, %ymm5, %ymm14
+
+    vpunpckldq %ymm12, %ymm11, %ymm3
+    vpunpckhdq %ymm12, %ymm11, %ymm4
+    vpunpckldq %ymm14, %ymm13, %ymm5
+    vpunpckhdq %ymm14, %ymm13, %ymm6
+
+    vpunpckldq %ymm8, %ymm7, %ymm11
+    vpunpckhdq %ymm8, %ymm7, %ymm12
+    vpunpckldq %ymm10, %ymm9, %ymm13
+    vpunpckhdq %ymm10, %ymm9, %ymm14
+
+    vperm2i128 $0x20, %ymm4, %ymm3, %ymm7
+    vperm2i128 $0x20, %ymm6, %ymm5, %ymm8
+    vperm2i128 $0x31, %ymm4, %ymm3, %ymm9
+    vperm2i128 $0x31, %ymm6, %ymm5, %ymm10
+
+    vperm2i128 $0x20, %ymm12, %ymm11, %ymm3
+    vperm2i128 $0x20, %ymm14, %ymm13, %ymm4
+    vperm2i128 $0x31, %ymm12, %ymm11, %ymm5
+    vperm2i128 $0x31, %ymm14, %ymm13, %ymm6
+
+    vpmovsxbw  %xmm3,  %ymm11
+    vpmovsxbw  %xmm4,  %ymm12
+    vpmovsxbw  %xmm5,  %ymm13
+    vpmovsxbw  %xmm6,  %ymm14
+
+    vmovdqu    %ymm11, 1216(%rdi)
+    vmovdqu    %ymm12, 1280(%rdi)
+    vmovdqu    %ymm13, 1472(%rdi)
+    vmovdqu    %ymm14, 1536(%rdi)
+
+    vpmovsxbw  %xmm7,  %ymm11
+    vpmovsxbw  %xmm8,  %ymm12
+    vpmovsxbw  %xmm9,  %ymm13
+    vpmovsxbw  %xmm10, %ymm14
+
+    vmovdqa    %ymm11, 1344(%rdi)
+    vmovdqa    %ymm12, 1408(%rdi)
+    vmovdqa    %ymm13, 1600(%rdi)
+    vmovdqa    %ymm14, 1664(%rdi)
+
+    vextracti128 $1, %ymm3, %xmm11
+    vextracti128 $1, %ymm4, %xmm12
+    vextracti128 $1, %ymm5, %xmm13
+    vextracti128 $1, %ymm6, %xmm14
+
+    vpmovsxbw    %xmm11, %ymm11
+    vpmovsxbw    %xmm12, %ymm12
+    vpmovsxbw    %xmm13, %ymm13
+    vpmovsxbw    %xmm14, %ymm14
+
+    vmovdqa      %ymm11, 1248(%rdi)
+    vmovdqa      %ymm12, 1312(%rdi)
+    vmovdqa      %ymm13, 1504(%rdi)
+    vmovdqa      %ymm14, 1568(%rdi)
+
+    vextracti128 $1, %ymm7,  %xmm11
+    vextracti128 $1, %ymm8,  %xmm12
+    vextracti128 $1, %ymm9,  %xmm13
+    vextracti128 $1, %ymm10, %xmm14
+
+    vpmovsxbw    %xmm11, %ymm11
+    vpmovsxbw    %xmm12, %ymm12
+    vpmovsxbw    %xmm13, %ymm13
+    vpmovsxbw    %xmm14, %ymm14
+
+    vmovdqa      %ymm11, 1376(%rdi)
+    vmovdqa      %ymm12, 1440(%rdi)
+    vmovdqa      %ymm13, 1632(%rdi)
+    vmovdqa      %ymm14, 1696(%rdi)
+
+    lea 96(%rsi), %r8
+
 .p2align 5
 _looptop_poly_sotp_1:
-vmovdqu  	  (%rsi),%ymm1
-vmovdqu   	  (%rdx),%ymm2
-vmovdqu     108(%rdx),%ymm3
 
-#msg xor g1
-vpxor       %ymm1,%ymm2,%ymm2
+    vmovdqu    (%rsi), %ymm5
+    vmovdqu    (%rdx), %ymm3
+    vmovdqu 108(%rdx), %ymm4
 
-vpand       %ymm0,%ymm2,%ymm4
-vpand       %ymm0,%ymm3,%ymm5
-vpsubw      %ymm5,%ymm4,%ymm1
-vmovdqa     %ymm1,(%rdi)
+    vpxor %ymm5, %ymm3, %ymm3
 
-xor         %r8,%r8
-add         $32,%r8
-_looptop_poly_sotp_1_1:
-vpsrld		$1,%ymm2,%ymm2
-vpsrld		$1,%ymm3,%ymm3
-vpand       %ymm0,%ymm2,%ymm4
-vpand       %ymm0,%ymm3,%ymm5
-vpsubw      %ymm5,%ymm4,%ymm1
-vmovdqa     %ymm1,(%rdi,%r8)
+    vpsrlw $1, %ymm3, %ymm5
+    vpsrlw $1, %ymm4, %ymm6
 
-add         $32,%r8
-cmp         $512,%r8
-jb          _looptop_poly_sotp_1_1
+    vpand %ymm0, %ymm3, %ymm3
+    vpand %ymm0, %ymm4, %ymm4
+    vpand %ymm0, %ymm5, %ymm5
+    vpand %ymm0, %ymm6, %ymm6
 
-add		$32,%rsi
-add		$32,%rdx
-add		$512,%rdi
-add		$512,%rax
-cmp		$1536,%rax
-jb		_looptop_poly_sotp_1
+    vpaddb %ymm0, %ymm3, %ymm3
+    vpaddb %ymm0, %ymm5, %ymm5
 
-movq         (%rsi),%mm1
-movq         (%rdx),%mm2
-movq       108(%rdx),%mm3
+    vpsubb %ymm4, %ymm3, %ymm7
+    vpsubb %ymm6, %ymm5, %ymm8
 
-#msg xor g1
-pxor        %mm1,%mm2
+    vpsrlw $2, %ymm7, %ymm9
+    vpsrlw $2, %ymm8, %ymm10
 
-movq        _4x1(%rip),%mm4
-movq        %mm4,%mm5
-pand        %mm2,%mm4
-pand        %mm3,%mm5
-psubw       %mm5,%mm4
-movq        %mm4,(%rdi)
+    vpand %ymm1, %ymm7, %ymm3
+    vpand %ymm1, %ymm8, %ymm4
+    vpand %ymm1, %ymm9, %ymm5
+    vpand %ymm1, %ymm10, %ymm6
 
-xor         %r8,%r8
-add         $8,%r8
-_looptop_poly_sotp_2:
-psrlw 		$1,%mm2
-psrlw		$1,%mm3
+    vpsubb %ymm2, %ymm3, %ymm3
+    vpsubb %ymm2, %ymm4, %ymm4
+    vpsubb %ymm2, %ymm5, %ymm5
+    vpsubb %ymm2, %ymm6, %ymm6
 
-movq        _4x1(%rip),%mm4
-movq        %mm4,%mm5
-pand        %mm2,%mm4
-pand        %mm3,%mm5
-psubw       %mm5,%mm4
-movq        %mm4,(%rdi,%r8)
-add         $8,%r8
-cmp         $128,%r8
-jb          _looptop_poly_sotp_2
+    vpsrlw $4, %ymm7, %ymm7
+    vpsrlw $4, %ymm8, %ymm8
+    vpsrlw $4, %ymm9, %ymm9
+    vpsrlw $4, %ymm10, %ymm10
 
-add		$8,%rsi
-add		$8,%rdx
-add		$128,%rdi 
+    vpand %ymm1, %ymm7, %ymm7
+    vpand %ymm1, %ymm8, %ymm8
+    vpand %ymm1, %ymm9, %ymm9
+    vpand %ymm1, %ymm10, %ymm10
 
-vpbroadcastd (%rsi),%ymm1
-vpbroadcastd (%rdx), %ymm2
-vpbroadcastd 108(%rdx), %ymm3
+    vpsubb %ymm2, %ymm7, %ymm7
+    vpsubb %ymm2, %ymm8, %ymm8
+    vpsubb %ymm2, %ymm9, %ymm9
+    vpsubb %ymm2, %ymm10, %ymm10
 
-#msg xor g1
-vpxor       %ymm1,%ymm2,%ymm2
+    vpunpcklbw %ymm4, %ymm3, %ymm11
+    vpunpcklbw %ymm6, %ymm5, %ymm12
+    vpunpcklbw %ymm8, %ymm7, %ymm13
+    vpunpcklbw %ymm10, %ymm9, %ymm14
 
-vpand       %ymm0,%ymm2,%ymm4
-vpand       %ymm0,%ymm3,%ymm5
-vpsubw      %ymm5,%ymm4,%ymm1
-movq        %xmm1,%rax
-mov         %eax,(%rdi)
+    vpunpckhbw %ymm4, %ymm3, %ymm3
+    vpunpckhbw %ymm6, %ymm5, %ymm4
+    vpunpckhbw %ymm8, %ymm7, %ymm5
+    vpunpckhbw %ymm10, %ymm9, %ymm6
 
-xor         %r8,%r8
-add         $4,%r8
-_looptop_poly_sotp_3:
-vpsrld		$1,%ymm2,%ymm2
-vpsrld		$1,%ymm3,%ymm3
-vpand       %ymm0,%ymm2,%ymm4
-vpand       %ymm0,%ymm3,%ymm5
-vpsubw      %ymm5,%ymm4,%ymm1
-movq        %xmm1,%rax
-mov         %eax,(%rdi,%r8)
+    vpunpcklwd %ymm12, %ymm11, %ymm7
+    vpunpcklwd %ymm14, %ymm13, %ymm8
+    vpunpckhwd %ymm12, %ymm11, %ymm9
+    vpunpckhwd %ymm14, %ymm13, %ymm10
 
-add         $4,%r8
-cmp         $64,%r8
-jb          _looptop_poly_sotp_3
+    vpunpcklwd %ymm4, %ymm3, %ymm11
+    vpunpcklwd %ymm6, %ymm5, %ymm12
+    vpunpckhwd %ymm4, %ymm3, %ymm13
+    vpunpckhwd %ymm6, %ymm5, %ymm14
 
-ret
+    vpunpckldq %ymm12, %ymm11, %ymm3
+    vpunpckhdq %ymm12, %ymm11, %ymm4
+    vpunpckldq %ymm14, %ymm13, %ymm5
+    vpunpckhdq %ymm14, %ymm13, %ymm6
 
-.global poly_sotp_inv
-poly_sotp_inv:
-vmovdqa		_16x1(%rip),%ymm0
-vmovdqa		_8x1(%rip),%ymm4
-vmovdqa		_8x1(%rip),%ymm5
+    vpunpckldq %ymm8, %ymm7, %ymm11
+    vpunpckhdq %ymm8, %ymm7, %ymm12
+    vpunpckldq %ymm10, %ymm9, %ymm13
+    vpunpckhdq %ymm10, %ymm9, %ymm14
 
-xor		    %rax,%rax
-vpxor       %ymm8,%ymm8,%ymm8
+    vperm2i128 $0x20, %ymm4, %ymm3, %ymm7
+    vperm2i128 $0x20, %ymm6, %ymm5, %ymm8
+    vperm2i128 $0x31, %ymm4, %ymm3, %ymm9
+    vperm2i128 $0x31, %ymm6, %ymm5, %ymm10
 
-.p2align 5
-_looptop_poly_sotp_inv_1:
-vmovdqu       (%rsi),%ymm1
-vmovdqu       (%rdx),%ymm2
-vmovdqu     108(%rdx),%ymm3
+    vperm2i128 $0x20, %ymm12, %ymm11, %ymm3
+    vperm2i128 $0x20, %ymm14, %ymm13, %ymm4
+    vperm2i128 $0x31, %ymm12, %ymm11, %ymm5
+    vperm2i128 $0x31, %ymm14, %ymm13, %ymm6
 
-vpand       %ymm0,%ymm3,%ymm6
-vpaddw	    %ymm6,%ymm1,%ymm7
-vpor        %ymm7,%ymm8,%ymm8
+    vpmovsxbw  %xmm3,  %ymm11
+    vpmovsxbw  %xmm4,  %ymm12
+    vpmovsxbw  %xmm5,  %ymm13
+    vpmovsxbw  %xmm6,  %ymm14
 
-xor         %r8,%r8
-add         $32,%r8
-vmovdqa     %ymm5,%ymm4
-.p2align 5
-_looptop_poly_sotp_inv_1_1:
-vmovdqu     (%rsi, %r8),%ymm1
-vpsrld		$1,%ymm3,%ymm3
-vpand       %ymm0,%ymm3,%ymm6
-vpaddw	    %ymm6,%ymm1,%ymm6
-vpor        %ymm6,%ymm8,%ymm8
-vpsllvd		%ymm4,%ymm6,%ymm6
-vpxor       %ymm6,%ymm7,%ymm7
-vpaddw      %ymm5,%ymm4,%ymm4
+    vmovdqa    %ymm11,   0(%rdi)
+    vmovdqa    %ymm12,  64(%rdi)
+    vmovdqa    %ymm13, 256(%rdi)
+    vmovdqa    %ymm14, 320(%rdi)
 
-add         $32,%r8
-cmp         $512,%r8
-jb          _looptop_poly_sotp_inv_1_1
+    vpmovsxbw  %xmm7,  %ymm11
+    vpmovsxbw  %xmm8,  %ymm12
+    vpmovsxbw  %xmm9,  %ymm13
+    vpmovsxbw  %xmm10, %ymm14
 
-vpxor       %ymm7,%ymm2,%ymm2
-vmovdqu     %ymm2,(%rdi)
+    vmovdqa    %ymm11, 128(%rdi)
+    vmovdqa    %ymm12, 192(%rdi)
+    vmovdqa    %ymm13, 384(%rdi)
+    vmovdqa    %ymm14, 448(%rdi)
 
-add		$32,%rdi
-add		$32,%rdx
-add		$512,%rsi
-add		$512,%rax
-cmp		$1536,%rax
-jb		_looptop_poly_sotp_inv_1
+    vextracti128 $1, %ymm3, %xmm11
+    vextracti128 $1, %ymm4, %xmm12
+    vextracti128 $1, %ymm5, %xmm13
+    vextracti128 $1, %ymm6, %xmm14
 
-vperm2i128	$0x01,%ymm8,%ymm8,%ymm9
-por	    	%xmm9,%xmm8
-vpshufd		$0x0E,%xmm8,%xmm9
-por		    %xmm9,%xmm8
-movq        %xmm8,%rax
+    vpmovsxbw    %xmm11, %ymm11
+    vpmovsxbw    %xmm12, %ymm12
+    vpmovsxbw    %xmm13, %ymm13
+    vpmovsxbw    %xmm14, %ymm14
 
-#mmx
-pxor        %mm5,%mm5
+    vmovdqa      %ymm11,  32(%rdi)
+    vmovdqa      %ymm12,  96(%rdi)
+    vmovdqa      %ymm13, 288(%rdi)
+    vmovdqa      %ymm14, 352(%rdi)
 
-movq        (%rsi),%mm1
-movq        108(%rdx),%mm3
+    vextracti128 $1, %ymm7,  %xmm11
+    vextracti128 $1, %ymm8,  %xmm12
+    vextracti128 $1, %ymm9,  %xmm13
+    vextracti128 $1, %ymm10, %xmm14
 
-movq        _4x1(%rip),%mm7
-pand        %mm3,%mm7
-paddw	    %mm1,%mm7
-por         %mm7,%mm5
+    vpmovsxbw    %xmm11, %ymm11
+    vpmovsxbw    %xmm12, %ymm12
+    vpmovsxbw    %xmm13, %ymm13
+    vpmovsxbw    %xmm14, %ymm14
 
-xor         %r8,%r8
-add         $8,%r8
-movq        _4x01(%rip),%mm2
-movq        _4x01(%rip),%mm4
-.p2align 5
-_looptop_poly_sotp_inv_2:
-movq        (%rsi,%r8),%mm1
-psrlw 		$1,%mm3
-movq        _4x1(%rip),%mm6
-pand        %mm3,%mm6
-paddw	    %mm1,%mm6
-por         %mm6,%mm5
-psllw       %mm4,%mm6
-pxor        %mm6,%mm7
-paddw       %mm2,%mm4
+    vmovdqa      %ymm11, 160(%rdi)
+    vmovdqa      %ymm12, 224(%rdi)
+    vmovdqa      %ymm13, 416(%rdi)
+    vmovdqa      %ymm14, 480(%rdi)
 
-add         $8,%r8
-cmp         $128,%r8
-jb          _looptop_poly_sotp_inv_2
+    add $32,  %rsi
+    add $32,  %rdx
+    add $512, %rdi
+    cmp %r8,  %rsi
+    jb  _looptop_poly_sotp_1
 
-movq        (%rdx),%mm2
-pxor         %mm7,%mm2
-movq        %mm2,(%rdi)
+    ret
 
-movq        %mm5,%rcx
-xor         %rcx,%rax
-movq        %rax,%rcx
-shr         $32,%rcx
-or          %rcx,%rax
-
-add		$128,%rsi
-add		$8,%rdx
-add		$8,%rdi 
-
-vpxor       %ymm8,%ymm8,%ymm8
-
-vpbroadcastd (%rsi),%ymm1
-vpbroadcastd (%rdx), %ymm2
-vpbroadcastd 108(%rdx), %ymm3
-
-vpand       %ymm0,%ymm3,%ymm6
-vpaddw	    %ymm6,%ymm1,%ymm6
-vpand       %ymm0,%ymm6,%ymm7
-
-xor         %r8,%r8
-add         $4,%r8
-vmovdqa     %ymm5,%ymm4
-.p2align 5
-_looptop_poly_sotp_inv_3:
-vpbroadcastd (%rsi, %r8),%ymm1
-vpsrld		$1,%ymm3,%ymm3
-vpand       %ymm0,%ymm3,%ymm6
-vpaddw	    %ymm6,%ymm1,%ymm6
-vpor        %ymm8,%ymm6,%ymm8
-vpsllvd		%ymm4,%ymm6,%ymm6
-vpxor       %ymm6,%ymm7,%ymm7
-vpaddw      %ymm5,%ymm4,%ymm4
-
-add         $4,%r8
-cmp         $64,%r8
-jb          _looptop_poly_sotp_inv_3
-
-vpxor       %ymm7,%ymm2,%ymm2
-movq        %xmm2,%rcx
-mov         %ecx,(%rdi)
-
-movq        %xmm8,%rcx
-mov         %ecx,%edx
-
-xor         %rdx,%rax
-movq        %rax,%rdx
-shr         $16,%rdx
-or          %rdx,%rax
-movzx       %ax,%rax
-
-shr         $1,%rax
-neg         %rax
-shr         $63,%rax
-
-ret
+.ifndef no_gnu_stack
+.section .note.GNU-stack,"",@progbits
+.endif

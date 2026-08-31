@@ -6,8 +6,8 @@
 
 extern const int16_t zetas[288];
 
-void ntt(int16_t r[NTRUPLUS_N], const int16_t a[NTRUPLUS_N]);
-void invntt(int16_t r[NTRUPLUS_N], const int16_t a[NTRUPLUS_N]);
+void ntt(int16_t r[NTRUPLUS_N]);
+void invntt(int16_t r[NTRUPLUS_N]);
 
 int  baseinv(int16_t r[3], const int16_t a[3], int16_t zeta);
 void basemul(int16_t r[3], const int16_t a[3], const int16_t b[3], int16_t zeta);

@@ -594,7 +594,9 @@ _KeccakP1600_Permute_24rounds:
     vmovdqu         8+32*3-96(%rdi),%ymm4
     vmovdqu         8+32*4-96(%rdi),%ymm5
     vmovdqu         8+32*5-96(%rdi),%ymm6
+    sub             $8,%rsp
     call            __KeccakF1600
+    add             $8,%rsp
     vmovq           %xmm0,-96(%rdi)
     vmovdqu         %ymm1,8+32*0-96(%rdi)
     vmovdqu         %ymm2,8+32*1-96(%rdi)
@@ -638,7 +640,9 @@ _KeccakP1600_Permute_12rounds:
     vmovdqu         8+32*3-96(%rdi),%ymm4
     vmovdqu         8+32*4-96(%rdi),%ymm5
     vmovdqu         8+32*5-96(%rdi),%ymm6
+    sub             $8,%rsp
     call            __KeccakF1600
+    add             $8,%rsp
     vmovq           %xmm0,-96(%rdi)
     vmovdqu         %ymm1,8+32*0-96(%rdi)
     vmovdqu         %ymm2,8+32*1-96(%rdi)
@@ -684,7 +688,9 @@ _KeccakP1600_Permute_Nrounds:
     vmovdqu         8+32*3-96(%rdi),%ymm4
     vmovdqu         8+32*4-96(%rdi),%ymm5
     vmovdqu         8+32*5-96(%rdi),%ymm6
+    sub             $8,%rsp
     call            __KeccakF1600
+    add             $8,%rsp
     vmovq           %xmm0,-96(%rdi)
     vmovdqu         %ymm1,8+32*0-96(%rdi)
     vmovdqu         %ymm2,8+32*1-96(%rdi)
@@ -717,6 +723,7 @@ _KeccakF1600_FastLoop_Absorb:
 .balign 32
     push            %rbx
     push            %r10
+    sub             $8,%rsp
     shr             $3, %rcx                # rcx = data length in lanes
     mov             %rdx, %rbx              # rbx = initial data pointer
     cmp             %rsi, %rcx
@@ -788,6 +795,7 @@ KeccakF1600_FastLoop_Absorb_Exit:
     vzeroupper
     mov             %rdx, %rax               # return number of bytes processed
     sub             %rbx, %rax
+    add             $8,%rsp
     pop             %r10
     pop             %rbx
     ret
@@ -900,6 +908,7 @@ _KeccakP1600_12rounds_FastLoop_Absorb:
 .balign 32
     push            %rbx
     push            %r10
+    sub             $8,%rsp
     shr             $3, %rcx                # rcx = data length in lanes
     mov             %rdx, %rbx              # rbx = initial data pointer
     cmp             %rsi, %rcx
@@ -971,6 +980,7 @@ KeccakP1600_12rounds_FastLoop_Absorb_Exit:
     vzeroupper
     mov             %rdx, %rax               # return number of bytes processed
     sub             %rbx, %rax
+    add             $8,%rsp
     pop             %r10
     pop             %rbx
     ret
@@ -1150,3 +1160,7 @@ mask6_17:
     .quad    ALLON, ALLON,     0,     0
 
 .asciz  "Keccak-1600 for AVX2, CRYPTOGAMS by <appro@openssl.org>"
+
+.ifndef no_gnu_stack
+.section .note.GNU-stack,"",@progbits
+.endif

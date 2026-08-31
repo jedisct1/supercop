@@ -1,0 +1,211 @@
+#!/bin/sh
+
+supercop=.
+sourcetop=import/aimer-20260130
+
+for p in 128f 128s 192f 192s 256f 256s
+do
+  targettop="$supercop/crypto_sign/aimer${p}v3"
+  rm -rf "$targettop"
+  mkdir -p "$targettop"
+  (
+    echo ref "$sourcetop"/Reference_Implementation
+  ) |
+  while read target source
+  do
+
+    x="$targettop/$target"
+    mkdir -p "$x"
+    echo "integrating $x..."
+    cp -pr "$source"/* "$x"
+    cp -pr "$source"/common/* "$x"
+    cp -pr "$source"/params/params-aimer-$p.h "$x"/params.h
+    rm "$x"/field*.c
+    case $p in
+      128*) cp -pr "$source"/field128.c "$x"/field128.c ;;
+      192*) cp -pr "$source"/field192.c "$x"/field192.c ;;
+      256*) cp -pr "$source"/field256.c "$x"/field256.c ;;
+    esac
+
+    echo '#include "randombytes.h"' > "$x/rng.h"
+    rm -rf "$x/common"
+    rm -rf "$x/params"
+    rm -rf "$x/test"
+    rm -rf "$x/keccak2x"
+    rm -rf "$x/keccak4x"
+    rm -rf "$x/tests"
+    rm "$x/rng.c"
+    rm -f "$x"/crypto_declassify.h
+    rm -f "$x"/Makefile
+
+    sed -i 's/\<crypto_sign\>/crypto_sign_with_context/' "$x"/*
+    sed -i 's/\<crypto_sign_open\>/crypto_sign_open_with_context/' "$x"/*
+    sed -i 's/AIMER_NAMESPACE(crypto_sign)/AIMER_NAMESPACE(crypto_sign_with_context)/' "$x"/api.h
+    sed -i 's/AIMER_NAMESPACE(crypto_sign_open)/AIMER_NAMESPACE(crypto_sign_open_with_context)/' "$x"/api.h
+    sed -i 's/#define crypto_sign_keypair AIMER_NAMESPACE(crypto_sign_keypair)//' "$x/api.h"
+
+    sed -i 's/uint8_t/unsigned char/g' "$x/sign.h"
+    sed -i 's/uint8_t/unsigned char/g' "$x/sign.c"
+    sed -i 's/uint8_t/unsigned char/g' "$x/api.h"
+    sed -i 's/size_t/unsigned long long/g' "$x/sign.h"
+    sed -i 's/size_t/unsigned long long/g' "$x/sign.c"
+    sed -i 's/size_t/unsigned long long/g' "$x/api.h"
+    sed -i 's/#include "common\/crypto_declassify.h"/#include "crypto_declassify.h"/g' "$x/sign.c"
+    sed -i 's/#include "common\/rng.h"/#include "rng.h"/g' "$x/sign.c"
+    sed -i 's/#include "common\/fips202.h"/#include "fips202.h"/g' "$x/hash.h"
+
+    touch "$x/goal-constbranch"
+    touch "$x/goal-constindex"
+
+    python3 -c '
+import os
+import sys
+import glob
+
+def include(fn,lines,I):
+  bits,ui = I
+  includeline = f"#include \"crypto_{ui}{bits}.h\"\n"
+  if includeline in lines: return lines
+
+  otherincl = {}
+
+  for bits2 in 8,16,32,64:
+    for ui2 in "int","uint":
+      includeline2 = f"#include \"crypto_{ui2}{bits2}.h\"\n"
+      if includeline2 in lines:
+        otherincl[bits2,ui2] = lines.index(includeline2)
+
+  if any((bits2,ui2) < (bits,ui) for bits2,ui2 in otherincl):
+    pos = max(otherincl[bits2,ui2] for bits2,ui2 in otherincl if (bits2,ui2) < (bits,ui))
+    lines = lines[:pos+1]+[includeline]+lines[pos+1:]
+  elif any((bits2,ui2) > (bits,ui) for bits2,ui2 in otherincl):
+    pos = min(otherincl[bits2,ui2] for bits2,ui2 in otherincl if (bits2,ui2) > (bits,ui))
+    lines = lines[:pos]+[includeline]+lines[pos:]
+  elif any(L.startswith("#include") and L.strip().endswith(".h\"") for L in lines):
+    pos = -1
+    for i in range(len(lines)):
+      if lines[i].startswith("#include") and lines[i].strip().endswith(".h\""):
+        pos = i
+      if lines[i].startswith("#ifdef"): break
+      if lines[i].startswith("#ifndef") and pos >= 0: break
+      if "{" in lines[i]: break
+      if "}" in lines[i]: break
+    lines = lines[:pos+1]+[includeline]+lines[pos+1:]
+  else:
+    # XXX: maybe should behave differently for .h files
+    lines = [includeline]+lines
+
+  return lines
+
+x = sys.argv[1]
+
+for fn in glob.glob(f"{x}/*.[ch]"):
+  with open(fn) as f:
+    lines = f.readlines()
+  lines2 = []
+  needincl = set()
+  prepend = ""
+  for line in lines:
+    line = prepend+line
+    prepend = ""
+
+    line = line.replace("= -(index & 1);","= crypto_int64_bottombit_mask(index);")
+    line = line.replace("= -((index >> 1) & 1);","= crypto_int64_bitmod_mask(index,1);")
+    line = line.replace("= -((index >> 2) & 1);","= crypto_int64_bitmod_mask(index,2);")
+    line = line.replace("= -((index >> 3) & 1);","= crypto_int64_bitmod_mask(index,3);")
+
+    lines2.append(line)
+
+    for bits in 8,16,32,64:
+      if f"crypto_int{bits}_" in line: needincl.add((bits,"int"))
+      if f"crypto_uint{bits}_" in line: needincl.add((bits,"uint"))
+
+  if lines2 != lines:
+    for I in sorted(needincl):
+      lines2 = include(fn,lines2,I)
+    with open(fn,"w") as f:
+      for line in lines2:
+        f.write(line)
+' "$x"
+
+    ( cd "$x"
+      patch -p1 << 'EOF'
+--- old/api.h
++++ new/api.h
+@@ -9,6 +9,7 @@
+ #ifndef API_H
+ #define API_H
+
++#include "crypto_sign.h"
+ #include "params.h"
+ #include <stddef.h>
+ #include <stdint.h>
+@@ -30,6 +31,9 @@
+ int crypto_sign_with_context(unsigned char *sm, unsigned long long *smlen, const unsigned char *m, unsigned long long mlen,
+                 const unsigned char *ctx, unsigned long long ctxlen, const unsigned char *sk);
+
++int crypto_sign(unsigned char *sm, unsigned long long *smlen, const unsigned char *m, unsigned long long mlen,
++                const unsigned char *sk);
++
+ #define crypto_sign_verify AIMER_NAMESPACE(crypto_sign_verify)
+ int crypto_sign_verify(const unsigned char *sig, unsigned long long siglen,
+                        const unsigned char *m, unsigned long long mlen,
+@@ -39,4 +43,7 @@
+ int crypto_sign_open_with_context(unsigned char *m, unsigned long long *mlen, const unsigned char *sm, unsigned long long smlen,
+                      const unsigned char *ctx, unsigned long long ctxlen, const unsigned char *pk);
+
++int crypto_sign_open(unsigned char *m, unsigned long long *mlen, const unsigned char *sm, unsigned long long smlen,
++                     const unsigned char *pk);
++
+ #endif
+EOF
+    )
+
+    ( cd "$x"
+      patch -p1 << 'EOF'
+--- old/sign.c
++++ new/sign.c
+@@ -367,6 +367,12 @@
+   return ret;
+ }
+
++int crypto_sign(unsigned char *sm, unsigned long long *smlen, const unsigned char *m, unsigned long long mlen,
++                const unsigned char *sk)
++{
++  return crypto_sign_with_context(sm, smlen, m, mlen, (const unsigned char *) "", 0, sk);
++}
++
+ int crypto_sign_verify_internal(const unsigned char *sig, unsigned long long siglen,
+                                 const unsigned char *m, unsigned long long mlen,
+                                 const unsigned char *pre, unsigned long long prelen,
+@@ -592,3 +598,9 @@
+
+   return 0;
+ }
++
++int crypto_sign_open(unsigned char *m, unsigned long long *mlen, const unsigned char *sm, unsigned long long smlen,
++                     const unsigned char *pk)
++{
++  return crypto_sign_open_with_context(m, mlen, sm, smlen, (const unsigned char *) "", 0, pk);
++}
+EOF
+    )
+
+  done
+done
+
+(
+  cd "$supercop"
+  echo d4f38ba1816c2702c119f6f2a5cbbc129903bb74c4986cff88e90d93b931d631 > crypto_sign/aimer128fv3/checksumsmall
+  echo 1e6022215796a650290ce2b95d109dd550e8ee3e69f3c8f2c34ed04c846b5dfe > crypto_sign/aimer128fv3/checksumbig
+  echo 89a0043a3cfb68038ecdcbb62987b05a89730ac37ec58806ef48334c75a419e3 > crypto_sign/aimer128sv3/checksumsmall
+  echo 149dac4e2c218cc3801de85952d888c2bc7d75b2ecd1db84bd58ac4234075486 > crypto_sign/aimer128sv3/checksumbig
+  echo 93ac301fe6c38c16d453cd750e4298185249163cc2bf6bd69ac952684c53eb0b > crypto_sign/aimer192fv3/checksumsmall
+  echo 291174d3f14a1980636093d9f163cba70fecfea7a82b52b71b9ad283ba59a6ad > crypto_sign/aimer192fv3/checksumbig
+  echo 1ba0ae09bc7d9359b7004f325025a0438baab10cb81e63341b2d18903c75bc2a > crypto_sign/aimer192sv3/checksumsmall
+  echo 1d8ea022dc1364a2657bcfe479b77529a8e723aa08184221086a2fa47dd160ff > crypto_sign/aimer192sv3/checksumbig
+  echo 435836836469a7f390fb9ce683554b78e4fd23e0cefff88199442df27e4e02bc > crypto_sign/aimer256fv3/checksumsmall
+  echo 17fdb56f6ef34f3bb89adaf0b481fce57290ec9592eeb4c751b217eb3992dcb1 > crypto_sign/aimer256fv3/checksumbig
+  echo 9842cda1dd3666d5a837e6ed2b581ace8d9510fbf9080dd657114dc7b6167bdc > crypto_sign/aimer256sv3/checksumsmall
+  echo 33aa864eed0070f12511328742d033350c02f566c8cc4e5c50e1888f8abd5b24 > crypto_sign/aimer256sv3/checksumbig
+)

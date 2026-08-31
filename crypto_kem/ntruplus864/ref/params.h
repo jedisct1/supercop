@@ -1,8 +1,11 @@
 #ifndef PARAMS_H
 #define PARAMS_H
 
+#define NTRUPLUS_ALGNAME "NTRU+864"
+
 #define NTRUPLUS_N 864
 #define NTRUPLUS_Q 3457
+#define NTRUPLUS_D 3
 
 #define NTRUPLUS_SYMBYTES  32   /* size in bytes of hashes, and seeds */
 #define NTRUPLUS_SSBYTES   32   /* size in bytes of shared key */

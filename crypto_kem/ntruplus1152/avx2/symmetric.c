@@ -1,39 +1,33 @@
-#include <openssl/sha.h>
+#include "util.h"
+#include <string.h>
 #include "symmetric.h"
 #include "fips202.h"
 
 void hash_f(uint8_t *buf, const uint8_t *msg)
 {
-	uint8_t data[1 + NTRUPLUS_PUBLICKEYBYTES] = {0x0};
+    uint8_t data[1 + HASH_F_INBYTES];
 
-	for (int i = 0; i < NTRUPLUS_PUBLICKEYBYTES; i++)
-	{
-		data[i+1] = msg[i];
-	}
-
-	SHA256(data, NTRUPLUS_PUBLICKEYBYTES + 1, buf);
+    data[0] = 0x00;
+    memcpy(data + 1, msg, HASH_F_INBYTES);
+    shake256(buf, HASH_F_OUTBYTES, data, HASH_F_INBYTES + 1);
 }
 
 void hash_g(uint8_t *buf, const uint8_t *msg)
 {
-	uint8_t data[1 + NTRUPLUS_POLYBYTES] = {0x1};
+    uint8_t data[1 + HASH_G_INBYTES];
 
-	for (int i = 0; i < NTRUPLUS_POLYBYTES; i++)
-	{
-		data[i+1] = msg[i];
-	}
-	
-	shake256(buf,NTRUPLUS_N/4,data,NTRUPLUS_POLYBYTES+1);
+    data[0] = 0x01;
+    memcpy(data + 1, msg, HASH_G_INBYTES);
+    shake256(buf, HASH_G_OUTBYTES, data, HASH_G_INBYTES + 1);
+    secure_clear(data, sizeof data);
 }
 
-void hash_h_kem(uint8_t *buf, const uint8_t *msg)
+void hash_h(uint8_t *buf, const uint8_t *msg)
 {
-	uint8_t data[1 + NTRUPLUS_N/8 + NTRUPLUS_SYMBYTES] = {0x2};
+    uint8_t data[1 + HASH_H_INBYTES];
 
-	for (int i = 0; i < NTRUPLUS_N/8 + NTRUPLUS_SYMBYTES; i++)
-	{
-		data[i+1] = msg[i];
-	}
-
-	shake256(buf,NTRUPLUS_SSBYTES + NTRUPLUS_N/4,data,NTRUPLUS_N/8 + NTRUPLUS_SYMBYTES+1);
+    data[0] = 0x02;
+    memcpy(data + 1, msg, HASH_H_INBYTES);
+    shake256(buf, HASH_H_OUTBYTES, data, HASH_H_INBYTES + 1);
+    secure_clear(data, sizeof data);
 }

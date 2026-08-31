@@ -1,0 +1,117 @@
+// SPDX-License-Identifier: MIT
+
+#ifndef HAETAE_PARAMS_H
+#define HAETAE_PARAMS_H
+
+#include "config.h"
+
+#define HAETAE_SEEDBYTES 32
+#define HAETAE_CRHBYTES 64
+#define HAETAE_N 256
+
+#define HAETAE_Q 64513
+#define HAETAE_DQ (HAETAE_Q << 1) // 2Q
+
+#define HAETAE_MODE HAETAE_CONFIG_MODE
+#define HAETAE_NAMESPACE(s)                                                    \
+  HAETAE_CONCAT(HAETAE_CONFIG_NAMESPACE_PREFIX_MODE, s)
+#define HAETAE_CRYPTO_ALGNAME                                                  \
+  HAETAE_STR(HAETAE_CONCAT(haetae_, HAETAE_CONFIG_MODE_STRING))
+
+#if HAETAE_MODE == HAETAE_MODE2
+#define HAETAE_K 2
+#define HAETAE_L 4
+#define HAETAE_TAU 58
+#define HAETAE_B0 9846.02
+#define HAETAE_B1 9838.98
+#define HAETAE_B2 12777.52
+#define HAETAE_GAMMA 48.858
+#define HAETAE_LN 8192 // Large N
+#define HAETAE_LNHALF 4096
+#define HAETAE_LNBITS 13
+#define HAETAE_SQNM 39.191835884530846 // \sqrt(n * m)
+#define HAETAE_crypto_BYTES 1474
+
+#define HAETAE_BASE_ENC_HB_Z1 132
+#define HAETAE_BASE_ENC_H 7
+
+#define HAETAE_ALPHA_HINT 512
+#define HAETAE_LOG_ALPHA_HINT 9
+
+#define HAETAE_POLYQ_PACKEDBYTES 480 // 16bits * HAETAE_N / 8bits
+
+#elif HAETAE_MODE == HAETAE_MODE3
+#define HAETAE_K 3
+#define HAETAE_L 6
+#define HAETAE_TAU 80
+#define HAETAE_B0 18314.98
+#define HAETAE_B1 18307.70
+#define HAETAE_B2 21906.65
+#define HAETAE_GAMMA 57.707
+#define HAETAE_LN 8192 // Large N
+#define HAETAE_LNHALF 4096
+#define HAETAE_LNBITS 13
+#define HAETAE_SQNM 48.0
+#define HAETAE_crypto_BYTES 2349
+
+#define HAETAE_BASE_ENC_HB_Z1 376
+#define HAETAE_BASE_ENC_H 127
+
+#define HAETAE_ALPHA_HINT 512
+#define HAETAE_LOG_ALPHA_HINT 9
+
+#define HAETAE_POLYQ_PACKEDBYTES 480 // 16bits * HAETAE_N / 8bits
+
+#elif HAETAE_MODE == HAETAE_MODE5
+#define HAETAE_K 4
+#define HAETAE_L 7
+#define HAETAE_TAU 128
+#define HAETAE_B0 22343.66
+#define HAETAE_B1 22334.95
+#define HAETAE_B2 24441.49
+#define HAETAE_GAMMA 55.13
+#define HAETAE_LN 8192 // Large N
+#define HAETAE_LNHALF 4096
+#define HAETAE_LNBITS 13
+#define HAETAE_SQNM 53.0659966456864
+#define HAETAE_crypto_BYTES 2948
+
+#define HAETAE_BASE_ENC_HB_Z1 501
+#define HAETAE_BASE_ENC_H 358
+
+#define HAETAE_ALPHA_HINT 256
+#define HAETAE_LOG_ALPHA_HINT 8
+
+#define HAETAE_POLYQ_PACKEDBYTES 512 // 16bits * HAETAE_N / 8bits
+
+#endif // HAETAE_MODE
+
+#define HAETAE_HALF_ALPHA_HINT (HAETAE_ALPHA_HINT >> 1) // ALPHA / 2
+
+#define HAETAE_B0SQ ((uint64_t)(HAETAE_B0 * HAETAE_B0))
+#define HAETAE_B1SQ ((uint64_t)(HAETAE_B1 * HAETAE_B1))
+#define HAETAE_B2SQ ((uint64_t)(HAETAE_B2 * HAETAE_B2))
+
+#define HAETAE_M (HAETAE_L - 1)
+
+#define HAETAE_ETA 1
+#define HAETAE_POLYETA_PACKEDBYTES 64
+#if (HAETAE_MODE == HAETAE_MODE2) || (HAETAE_MODE == HAETAE_MODE3)
+#define HAETAE_POLY2ETA_PACKEDBYTES 96
+#elif HAETAE_MODE == HAETAE_MODE5
+#define HAETAE_POLY2ETA_PACKEDBYTES 64
+#endif
+
+#define HAETAE_POLYC_PACKEDBYTES 32 // 1bit * HAETAE_N / 8bits
+#define HAETAE_POLY_HIGHBITS_PACKEDBYTES (HAETAE_N * 9 / 8)
+#define HAETAE_POLYVECK_HIGHBITS_PACKEDBYTES                                   \
+  (HAETAE_POLY_HIGHBITS_PACKEDBYTES * HAETAE_K)
+
+#define HAETAE_crypto_PUBLICKEYBYTES                                           \
+  (HAETAE_SEEDBYTES + HAETAE_K * HAETAE_POLYQ_PACKEDBYTES) // seed + b
+#define HAETAE_crypto_SECRETKEYBYTES                                           \
+  (HAETAE_crypto_PUBLICKEYBYTES + HAETAE_M * HAETAE_POLYETA_PACKEDBYTES +      \
+   HAETAE_K * HAETAE_POLY2ETA_PACKEDBYTES +                                    \
+   HAETAE_SEEDBYTES) // vk + s + HAETAE_K
+
+#endif /* !HAETAE_PARAMS_H */

@@ -1,0 +1,119 @@
+#!/bin/sh
+
+supercop=.
+sourcetop=import/ntruplus-20260725
+
+for p in 768 864 1152
+do
+  targettop="$supercop/crypto_kem/ntruplus$p"
+  rm -rf "$targettop"
+  mkdir -p "$targettop"
+  touch "$targettop"/goal-indcpa
+  touch "$targettop"/goal-indcca2
+  (
+    echo ref "$sourcetop"/Reference_Implementation/NTRU+"$p"
+    echo opt "$sourcetop"/Optimized_Implementation/NTRU+"$p"
+    echo avx2 "$sourcetop"/Additional_Implementation/avx2/NTRU+"$p"
+    echo aarch64 "$sourcetop"/Additional_Implementation/aarch64/NTRU+"$p"
+  ) |
+  while read target source
+  do
+    x="$targettop/$target"
+    [ -d "$x" ] && continue
+    mkdir -p "$x"
+    echo "integrating $x..."
+    cp -Lpr "$source"/*.c "$x"
+    cp -Lpr "$source"/*.h "$x"
+    [ "$target" = ref ] && cp -Lpr "$source"/fips202/* "$x"
+    [ "$target" = opt ] && cp -Lpr "$source"/fips202/* "$x"
+    [ "$target" = avx2 ] && cp -Lpr "$source"/fips202/* "$x"
+    [ "$target" = avx2 ] && cp -pr "$source"/asm/* "$x"
+    [ "$target" = aarch64 ] && cp -pr "$source"/asm/* "$x"
+    [ "$target" = aarch64 ] && cp -pr "$source"/NO_CE/* "$x"
+    rm -rf "$x"/asm
+    rm -rf "$x"/Keccak_avx2
+    rm -f "$x"/PQCgenKAT_kem.c
+    rm -f "$x"/cpucycles.c
+    rm -f "$x"/cpucycles.h
+    rm -f "$x"/rng.c
+    rm -f "$x"/rng.h
+    rm -f "$x"/randombytes.c
+    rm -f "$x"/randombytes.h
+    rm -f "$x"/test.c
+    rm -f "$x"/Makefile
+    sed -i 's_#include "fips202/_#include "_' "$x"/*
+    sed -i 's_#include "CE/_#include "_' "$x"/*
+    sed -i 's_#include "NO.CE/_#include "_' "$x"/*
+    sed -i 's_#include "\.\./_#include "_' "$x"/*
+    sed -i '1a#include "crypto_kem.h"' "$x/kem.c"
+    [ "$target" = "avx2" ] && ( echo x86; echo amd64 ) > "$x/architectures"
+    [ "$target" = "aarch64" ] && ( echo aarch64 ) > "$x/architectures"
+    touch "$x/goal-constbranch"
+    touch "$x/goal-constindex"
+
+    python3 -c '
+import os
+import sys
+import glob
+
+x = sys.argv[1]
+
+for fn in glob.glob(f"{x}/*.[ch]"):
+  with open(fn) as f:
+    lines = f.readlines()
+  lines2 = []
+  founddeclassify = False
+  printeddeclassify = False
+  endifcount = 0
+  for line in lines:
+    if fn.endswith("/kem.c"):
+      line = line.replace("#include <stdint.h>","#include <stdint.h>\n#include \"crypto_uint64.h\"")
+      if "declassify" in line: founddeclassify = True
+      if "#endif" in line and founddeclassify and not printeddeclassify:
+        line += "\nstatic int declassify_poly_frombytes(poly *r, const uint8_t a[NTRUPLUS_POLYBYTES])\n{\n  int result = poly_frombytes(r,a);\n  ntruplus_declassify(&result,sizeof result);\n  return result;\n}\n"
+        printeddeclassify = True
+      if "sk" in line:
+        line = line.replace("poly_frombytes","declassify_poly_frombytes")
+
+    if fn.endswith("/ntt.c"):
+      line = line.replace("#include <stdint.h>","#include <stdint.h>\n#include \"crypto_int16.h\"\n#include \"crypto_declassify.h\"")
+      line = line.replace("if(t == 0) return 1;","{ crypto_int16 iszero = crypto_int16_zero_mask(t);\n	crypto_declassify(&iszero,sizeof iszero);\n	if (iszero) return 1;\n      }")
+      line = line.replace("if (t3 == 0) return 1;","{ crypto_int16 iszero = crypto_int16_zero_mask(t3);\n	crypto_declassify(&iszero,sizeof iszero);\n	if (iszero) return 1;\n       }")
+
+    if fn.endswith("/poly.c"):
+      line = line.replace("#include <stdint.h>","#include <stdint.h>\n#include \"crypto_int16.h\"\n#include \"crypto_uint32.h\"\n#include \"crypto_declassify.h\"")
+      line = line.replace("#include <immintrin.h>","#include <stdint.h>\n#include \"crypto_int16.h\"\n#include \"crypto_uint32.h\"\n#include \"crypto_declassify.h\"")
+      line = line.replace("if (fail)","crypto_declassify(&fail,sizeof fail);\n	if (fail)")
+      line = line.replace("if (!_mm256_testz_si256(mask_zero0, mask_zero0))","int ok = _mm256_testz_si256(mask_zero0, mask_zero0);\n    crypto_declassify(&ok,sizeof ok);\n    if (!ok)")
+
+    line = line.replace("NTRUPLUS_SUPERCOP","SUPERCOP")
+
+    line = line.replace("return (-(uint64_t)acc) >> 63;","return crypto_uint64_nonzero_01(acc);")
+    line = line.replace("= (t[0] >> 15) & NTRUPLUS_Q;","= crypto_int16_negative_mask(t[0]) & NTRUPLUS_Q;")
+    line = line.replace("= (t[1] >> 15) & NTRUPLUS_Q;","= crypto_int16_negative_mask(t[1]) & NTRUPLUS_Q;")
+    line = line.replace("return fail >> 31;","return crypto_uint32_topbit_01(fail);")
+    line = line.replace("= (t1 & 0x1) - (t2 & 0x1);","= crypto_int16_bottombit_01(t1) - crypto_int16_bottombit_01(t2);")
+    line = line.replace("= (t4 ^ t1) & 0x1;","= crypto_int16_bottombit_01(t4 ^ t1);")
+    line = line.replace("= (-(uint32_t)r) >> 31;","= crypto_uint32_topbit_01(r);")
+    line = line.replace("= (a >> 15) & NTRUPLUS_Q;","= crypto_int16_negative_mask(a) & NTRUPLUS_Q;")
+
+    lines2.append(line)
+
+  if lines2 != lines:
+    with open(fn,"w") as f:
+      for line in lines2:
+        f.write(line)
+' "$x"
+
+  done
+done
+
+(
+  cd "$supercop"
+  echo 2275d10293515833d4651b83e003df32321d6c6cfa2f52fffc6f5df5e4d13ad8 > crypto_kem/ntruplus1152/checksumsmall
+  echo 16659d2c39dcc4e4ed7904da526462981f2d5ae1b5bc895b5b11eae8a317cb91 > crypto_kem/ntruplus1152/checksumbig
+  echo aa9f61a0a34257b1413336dd42f643f9abf10cb458f2df9097bc0db9de825eff > crypto_kem/ntruplus768/checksumsmall
+  echo 3a04f700b058b26d5a9a7766debc1defc09248912e24dcf0c4a0e59e166e9fbd > crypto_kem/ntruplus768/checksumbig
+  echo b0cdac767e2e48039693200e36eb3f404722e1a383e56856d7edd2a37b48e04c > crypto_kem/ntruplus864/checksumsmall
+  echo 206acd115bdf985bed1e43be837054da8bcdd54a43d934baf1dc791bd3575647 > crypto_kem/ntruplus864/checksumbig
+)

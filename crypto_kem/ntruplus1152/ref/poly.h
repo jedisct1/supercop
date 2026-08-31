@@ -13,19 +13,19 @@ typedef struct{
 } poly;
 
 void poly_tobytes(uint8_t r[NTRUPLUS_POLYBYTES], const poly *a);
-void poly_frombytes(poly *r, const uint8_t a[NTRUPLUS_POLYBYTES]);
+int  poly_frombytes(poly *r, const uint8_t a[NTRUPLUS_POLYBYTES]);
 
 void poly_cbd1(poly *r, const uint8_t buf[NTRUPLUS_N/4]);
-void poly_sotp(poly *r, const unsigned char *msg, const unsigned char *buf);
-int  poly_sotp_inv(unsigned char *msg, const poly *e, const unsigned char *buf);
+void poly_sotp_encode(poly *r, const uint8_t msg[NTRUPLUS_N/8], const uint8_t buf[NTRUPLUS_N/4]);
+int  poly_sotp_decode(uint8_t msg[NTRUPLUS_N/8], const poly *a, const uint8_t buf[NTRUPLUS_N/4]);
 
-void poly_ntt(poly *r, const poly *a);
-void poly_invntt(poly *r, const poly *a);
+void poly_ntt(poly *r);
+void poly_invntt(poly *r);
 int  poly_baseinv(poly *r, const poly *a);
 void poly_basemul(poly *r, const poly *a, const poly *b);
 void poly_basemul_add(poly *r, const poly *a, const poly *b, const poly *c);
 void poly_sub(poly *r, const poly *a, const poly *b);
-void poly_triple(poly *r, const poly *a);
-void poly_crepmod3(poly *r, const poly *a);
+void poly_triple(poly *r);
+void poly_crepmod3(poly *r);
 
 #endif
