@@ -13,51 +13,46 @@
 poly_crepmod3:
 _poly_crepmod3:
     dst        .req x0
-    src        .req x9
+    src        .req x1
     const_ptr  .req x2
-    counter    .req x8
+    counter    .req x3
 
     mov src, dst
     adr const_ptr, crepmod3_consts
-    ld1 {v0.8h - v1.8h}, [const_ptr]
-    movi v2.8h, #3
-    neg v3.8h, v0.8h
+    movi v0.8h, #3
+    ld1 {v1.8h - v2.8h}, [const_ptr]
 
     mov counter, #1536
 
 _looptop:
     ld1 {v16.8h - v19.8h}, [src], #64
 
-    cmgt v20.8h, v16.8h, v0.8h
-    cmgt v21.8h, v17.8h, v0.8h
-    cmgt v22.8h, v18.8h, v0.8h
-    cmgt v23.8h, v19.8h, v0.8h
+    # Barrett quotient for centered reduction modulo q with R = 2^26.
+    sqdmulh v20.8h, v16.8h, v1.8h
+    sqdmulh v21.8h, v17.8h, v1.8h
+    sqdmulh v22.8h, v18.8h, v1.8h
+    sqdmulh v23.8h, v19.8h, v1.8h
+    srshr v20.8h, v20.8h, #11
+    srshr v21.8h, v21.8h, #11
+    srshr v22.8h, v22.8h, #11
+    srshr v23.8h, v23.8h, #11
 
-    add v16.8h, v16.8h, v20.8h
-    add v17.8h, v17.8h, v21.8h
-    add v18.8h, v18.8h, v22.8h
-    add v19.8h, v19.8h, v23.8h
-
-    cmgt v20.8h, v3.8h, v16.8h
-    cmgt v21.8h, v3.8h, v17.8h
-    cmgt v22.8h, v3.8h, v18.8h
-    cmgt v23.8h, v3.8h, v19.8h
-
+    # q = 1 (mod 3): a - t*q = a - t (mod 3).
     sub v16.8h, v16.8h, v20.8h
     sub v17.8h, v17.8h, v21.8h
     sub v18.8h, v18.8h, v22.8h
     sub v19.8h, v19.8h, v23.8h
 
     # Barrett reduction modulo 3 with R = 2^15.
-    sqrdmulh v20.8h, v16.8h, v1.8h
-    sqrdmulh v21.8h, v17.8h, v1.8h
-    sqrdmulh v22.8h, v18.8h, v1.8h
-    sqrdmulh v23.8h, v19.8h, v1.8h
+    sqrdmulh v20.8h, v16.8h, v2.8h
+    sqrdmulh v21.8h, v17.8h, v2.8h
+    sqrdmulh v22.8h, v18.8h, v2.8h
+    sqrdmulh v23.8h, v19.8h, v2.8h
 
-    mls v16.8h, v20.8h, v2.8h
-    mls v17.8h, v21.8h, v2.8h
-    mls v18.8h, v22.8h, v2.8h
-    mls v19.8h, v23.8h, v2.8h
+    mls v16.8h, v20.8h, v0.h[1]
+    mls v17.8h, v21.8h, v0.h[1]
+    mls v18.8h, v22.8h, v0.h[1]
+    mls v19.8h, v23.8h, v0.h[1]
 
     st1 {v16.8h - v19.8h}, [dst], #64
 
@@ -74,6 +69,6 @@ _looptop:
 
 .align 4
 crepmod3_consts:
-    # (q-1)/2 = 1728, round(2^15/3) = 10923
-    .hword 0x06c0, 0x06c0, 0x06c0, 0x06c0, 0x06c0, 0x06c0, 0x06c0, 0x06c0
+    # v1 = round(2^26/q), v2 = round(2^15/3), for q = 3457
+    .hword 0x4bd4, 0x4bd4, 0x4bd4, 0x4bd4, 0x4bd4, 0x4bd4, 0x4bd4, 0x4bd4
     .hword 0x2aab, 0x2aab, 0x2aab, 0x2aab, 0x2aab, 0x2aab, 0x2aab, 0x2aab

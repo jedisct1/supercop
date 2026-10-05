@@ -1,0 +1,57 @@
+// clang-format off
+
+#pragma once
+
+namespace faest {
+
+using CRT_CONSTANTS_128_17_120 = CRT_CONSTANTS<secpar::s128, 17, 120>;
+
+template<>
+struct N_MULT_TRAIT<secpar::s128, 17, 120>
+{
+    constexpr static std::size_t N_MULT = 312;
+};
+
+
+template <>
+inline constexpr decltype(CRT_CONSTANTS_128_17_120::M_i)
+CRT_CONSTANTS_128_17_120::M_i = {
+    0x011b, 0x0083, 0x0089, 0x008f, 0x0091, 0x009d, 0x00a7, 0x00ab,
+    0x00b9, 0x00bf, 0x00c1, 0x00cb, 0x00d3, 0x00d5, 0x00e5, 0x00ef,
+    0x00f1,
+};
+template <>
+inline constexpr decltype(CRT_CONSTANTS_128_17_120::DIV_X64_by_M_i)
+CRT_CONSTANTS_128_17_120::DIV_X64_by_M_i = {
+    0x011a59bcec98e023, 0x020c28f22cea7d0e, 0x02262eb60cd4e7b4, 0x023e9a2f6efe1589,
+    0x024d3dc3f8ec52fa, 0x027f157994461efa, 0x02b7f36a8933c775, 0x0286c83c5ac2277a,
+    0x02c1d09c692edcd9, 0x02d8a0ed3c26e88d, 0x03faa6774b1bdad9, 0x03d98939f208d536,
+    0x03a8b8f76bfa61a1, 0x03b7cfe92baa7196, 0x037c1610e8c4e534, 0x035d2adc8449ea0b,
+    0x033639d70982ad25,
+};
+
+template<>
+alignas(CRT_CONSTANTS_128_17_120::ALIGNMENT)
+inline constexpr decltype(CRT_CONSTANTS_128_17_120::M_TREE) CRT_CONSTANTS_128_17_120::M_TREE = {
+    0x47, 0x4d, 0xea, 0xfb, 0x78, 0xf7, 0x11, 0x59, 0x8d, 0x07, 0x9b, 0xfc, 0xd9, 0xbe, 0x87, 0x01
+};
+
+template <>
+decltype(CRT_CONSTANTS_128_17_120::W_CRT_LIFT_COLUMNS_INDEX_TAB) CRT_CONSTANTS_128_17_120::W_CRT_LIFT_COLUMNS_INDEX_TAB;
+template <>
+decltype(CRT_CONSTANTS_128_17_120::W_CRT_LIFT_ROW_TAB) CRT_CONSTANTS_128_17_120::W_CRT_LIFT_ROW_TAB;
+template <>
+decltype(CRT_CONSTANTS_128_17_120::W_TREE_LIFT_ROW_TAB) CRT_CONSTANTS_128_17_120::W_TREE_LIFT_ROW_TAB;
+template <>
+decltype(CRT_CONSTANTS_128_17_120::W_GATE_LIFT_COLUMNS_INDEX_TAB) CRT_CONSTANTS_128_17_120::W_GATE_LIFT_COLUMNS_INDEX_TAB;
+template <>
+decltype(CRT_CONSTANTS_128_17_120::W_GATE_LIFT_ROW_TAB) CRT_CONSTANTS_128_17_120::W_GATE_LIFT_ROW_TAB;
+template <>
+decltype(CRT_CONSTANTS_128_17_120::F_LIFT_ROW_TAB) CRT_CONSTANTS_128_17_120::F_LIFT_ROW_TAB;
+template <>
+decltype(CRT_CONSTANTS_128_17_120::G_LIFT_ROW_TAB) CRT_CONSTANTS_128_17_120::G_LIFT_ROW_TAB;
+template <>
+decltype(CRT_CONSTANTS_128_17_120::G_LIFT_COLUMNS_INDEX_TAB) CRT_CONSTANTS_128_17_120::G_LIFT_COLUMNS_INDEX_TAB;
+
+
+} // namespace faest

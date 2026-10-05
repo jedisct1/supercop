@@ -1,0 +1,197 @@
+#!/bin/sh
+
+supercop=.
+reftop=import/faest-ref
+opttop=import/faest-arch-opt
+tablestop=import/faest-tables
+firstparams=$supercop/crypto_sign/faest128fv3/ref/parameters.h
+
+for p in 128f 128s 192f 192s 256f 256s em128f em128s em192f em192s em256f em256s
+do
+  targettop="$supercop/crypto_sign/faest${p}v3"
+  rm -rf "$targettop"
+  mkdir -p "$targettop"
+
+  underp=`echo $p | sed s/em/em_/`
+  paramp=param_$underp
+  param=`sed -n s/$paramp'\.set('\''PARAM'\'', '\''\(.*\)'\'')/\1/p' < "$reftop"/meson.build`
+  paraml=`sed -n s/$paramp'\.set('\''PARAM_L'\'', '\''\(.*\)'\'')/\1/p' < "$reftop"/meson.build`
+  skbytes=`sed -n s/$paramp'\.set('\''SK_SIZE'\'', \(.*\))/\1/p' < "$reftop"/meson.build`
+  pkbytes=`sed -n s/$paramp'\.set('\''PK_SIZE'\'', \(.*\))/\1/p' < "$reftop"/meson.build`
+  sigbytes=`sed -n s/$paramp'\.set('\''SIG_SIZE'\'', \(.*\))/\1/p' < "$reftop"/meson.build`
+  owfinput=`sed -n s/$paramp'\.set('\''OWF_INPUT_SIZE'\'', \(.*\))/\1/p' < "$reftop"/meson.build`
+  owfoutput=`sed -n s/$paramp'\.set('\''OWF_OUTPUT_SIZE'\'', \(.*\))/\1/p' < "$reftop"/meson.build`
+  lambda=`sed -n s/$paramp'\.set('\''LAMBDA'\'', \(.*\))/\1/p' < "$reftop"/meson.build`
+  ell=`sed -n s/$paramp'\.set('\''ELL'\'', \(.*\))/\1/p' < "$reftop"/meson.build`
+
+  (
+    echo ref "$reftop"
+    echo avx2 "$opttop"
+    echo aarch64 "$opttop"
+  ) |
+  while read target source
+  do
+
+    x="$targettop/$target"
+    mkdir -p "$x"
+    echo "integrating $x..."
+
+    case $target in
+      ref)
+        cp -pr "$source"/*.c "$x"
+        cp -pr "$source"/*.h "$x"
+        sed -i 's/#define HAVE_MEMPCPY/#undef HAVE_MEMPCPY/' "$x"/compat.h
+        (
+          echo "$source"/faest_param.h.in "$x"/faest_$underp.h
+          echo "$source"/faest_param.c.in "$x"/faest_$underp.c
+          echo "$source"/faest_aes.c.in "$x"/faest_aes_128.c 128
+          echo "$source"/faest_aes.c.in "$x"/faest_aes_192.c 192
+          echo "$source"/faest_aes.c.in "$x"/faest_aes_256.c 256
+          echo "$source"/crypto_sign.c.in "$x"/crypto_sign.c
+        ) | while read input output bits
+        do
+          sed \
+          -e s/@SK_SIZE@/$skbytes/g \
+          -e s/@PK_SIZE@/$pkbytes/g \
+          -e s/@SIG_SIZE@/$sigbytes/g \
+          -e s/@PARAM@/$param/g \
+          -e s/@PARAM_L@/$paraml/g \
+          -e s/@OWF_INPUT_SIZE@/$owfinput/g \
+          -e s/@OWF_OUTPUT_SIZE@/$owfoutput/g \
+          -e s/@LAMBDA@/$lambda/g \
+          -e s/@ELL@/$ell/g \
+          -e s/@SSS@/$bits/g \
+          < "$input" > "$output"
+        done
+        cp "$tablestop"/*.h "$x"
+
+        if [ -f $firstparams ]
+        then
+          cp "$firstparams" "$x"/parameters.h
+        else
+          [ "$firstparams" = "$x"/parameters.h ] || echo oops, firstparams out of order
+          (
+            echo '#pragma once'
+
+            for q in 128f 128s 192f 192s 256f 256s em128f em128s em192f em192s em256f em256s
+            do
+              underq=`echo $q | sed s/em/em_/`
+              paramq=param_$underq
+              zparam=`sed -n s/$paramq'\.set('\''PARAM'\'', '\''\(.*\)'\'')/\1/p' < "$reftop"/meson.build`
+              for x in BETA ELL LAMBDA Lenc Lke N_MULT Nst OWF_INPUT_SIZE OWF_OUTPUT_SIZE PARAM PARAM_L PK_SIZE R SIG_SIZE SK_SIZE Ske TAU T_OPEN W_GRIND
+              do
+                y=`sed -n s/$paramq'\.set('\'$x\'', \(.*\))/\1/p' < "$reftop"/meson.build`
+                echo ''
+                echo "#define FAEST_${zparam}_$x $y"
+              done
+            done
+      
+            echo '#define FAEST_128_LAMBDA 128'
+            echo '#define FAEST_192_LAMBDA 192'
+            echo '#define FAEST_256_LAMBDA 256'
+          ) > "$x"/parameters.h
+        fi
+      ;;
+
+      *)
+        cp -pr "$source"/*.c "$x"
+        cp -pr "$source"/*.h "$x"
+        cp -pr "$source"/*.cpp "$x"
+        cp -pr "$source"/*.hpp "$x"
+        cp -pr "$source"/*.inc "$x"
+        cp -pr "$source"/common/*.inc "$x"
+        cp -pr "$source"/sha3/*.c "$x"
+        cp -pr "$source"/sha3/*.h "$x"
+        cp -pr "$source"/sha3/*.inc "$x"
+        cp -pr "$source"/"$target"/*.cpp "$x"
+        cp -pr "$source"/"$target"/*.hpp "$x"
+        cp "$tablestop"/*.hpp "$x"
+        cp "$tablestop"/*.cpp "$x"
+
+        sed -i 's_align\.h_libkeccak.a.headers/align.h_' "$x"/KeccakSponge-times4.h
+        sed -i 's_config\.h_libkeccak.a.headers/config.h_' "$x"/KeccakHash-times4.h
+        sed -i 's_config\.h_libkeccak.a.headers/config.h_' "$x"/KeccakSponge-times4.h
+        sed -i 's_KeccakHash\.h_libkeccak.a.headers/KeccakHash.h_' "$x"/KeccakHash-times4.h
+        sed -i 's_KeccakHash\.h_libkeccak.a.headers/KeccakHash.h_' "$x"/hash.hpp
+        sed -i 's_KeccakP-1600-times4-SnP\.h_libkeccak.a.headers/KeccakP-1600-times4-SnP.h_' "$x"/KeccakSponge-times4.h
+        sed -i 's_KeccakP-1600-times4-SnP\.h_libkeccak.a.headers/KeccakP-1600-times4-SnP.h_' "$x"/KeccakSponge-times4.c
+
+        # get rid of some frivolous use of c++23 (but there's more, at least std::expected)
+        sed -i \
+        -e 's/std::to_underlying(s)/static_cast<std::size_t>(s)/' \
+        -e 's/std::to_underlying(o)/static_cast<unsigned int>(o)/' \
+        -e 's/= prg_type</= typename prg_type</' \
+        -e 's/= leaf_hash_type</= typename leaf_hash_type</' \
+        -e 's/^    bavc_type</    typename bavc_type</' \
+        "$x"/parameters.hpp
+
+        p_=`echo $underp | sed 's/\(.\)$/_\1/'`
+        sed \
+        -e s/%SECRETKEYBYTES%/$skbytes/g \
+        -e s/%PUBLICKEYBYTES%/$pkbytes/g \
+        -e s/%SIGBYTES%/$sigbytes/g \
+        -e s/%PARAMSTYPE%/v3::faest_${p_}/g \
+        < "$source"/api.cpp.in > "$x"/api.cpp
+
+        sed -i '1i#include "crypto_sign.h"' "$x"/api.cpp
+
+        sed -i 's/HashReturn/extern "C" HashReturn/' "$x"/KeccakHash-times4.h "$x"/KeccakSponge-times4.h
+        sed -i 's/int rand_bytes/extern "C" int rand_bytes/' "$x"/randomness.h
+        sed -i '1i#include "randombytes.h"' "$x"/randomness_randombytes.c
+
+        sed -i '/include.*libkeccak/ {
+          iextern "C" {
+          a}
+        }' "$x"/*
+      ;;
+    esac
+
+    rm -rf "$x"/randombytes*
+    rm -rf "$x"/randomness_os*
+
+    sed -i 's_#include "\.\./_#include "_' "$x"/*
+    sed -i 's_#include "avx2/_#include "_' "$x"/*
+    sed -i 's_#include "aarch64/_#include "_' "$x"/*
+    sed -i 's_#include "sha3/_#include "_' "$x"/*
+    sed -i 's_#include "common/_#include "_' "$x"/*
+
+    (
+      echo '#define CRYPTO_SECRETKEYBYTES' $skbytes
+      echo '#define CRYPTO_PUBLICKEYBYTES' $pkbytes
+      echo '#define CRYPTO_BYTES' $sigbytes
+    ) > "$x"/api.h
+
+    [ "$target" = "avx2" ] && ( echo x86; echo amd64 ) > "$x/architectures"
+    [ "$target" = "aarch64" ] && ( echo aarch64 ) > "$x/architectures"
+  done
+done
+
+linksame crypto_sign/faest* || :
+
+(
+  cd "$supercop"
+  echo 03475c8cd07203f5813c4df1e44813fdbd879cccb68626ce8c0698f4ec452be1 > crypto_sign/faest128fv3/checksumsmall
+  echo 33133f1b78d110b9c1cb33dc72625597769f0b4b8a79d91d474c55a5a0cc7dfc > crypto_sign/faest128fv3/checksumbig
+  echo 97c5ab348027c3438d26b7fd45b7e1665f98d66771f2135b02c188aa703372db > crypto_sign/faest128sv3/checksumsmall
+  echo a5617727d5b5e45c138c5d78b83d5a69683eec5c509e270b9e1dc939fa8fc849 > crypto_sign/faest128sv3/checksumbig
+  echo 5ebac8c5ebc136bc6f5fddf97255350a34f42dfd40ca5a7f87568b0b0a09b287 > crypto_sign/faest192fv3/checksumsmall
+  echo 01f649f6d9390f3a0f68e947a51f6e34d8231925df8acd9c9278ce19cdc99a40 > crypto_sign/faest192fv3/checksumbig
+  echo b86ceb406aba2a83c4f569789369b902e8b0c062868b9f49e0e04ffa53684f87 > crypto_sign/faest192sv3/checksumsmall
+  echo 0a4665d36e2f0de78db3d5a57997daf16b156801c9bdb98e4f29873fa8189ffa > crypto_sign/faest192sv3/checksumbig
+  echo eb05bad8bd15b79a057718c4a8755582ba8ec3efa55e69d92fc2e811d7c297ec > crypto_sign/faest256fv3/checksumsmall
+  echo 8c0ac49980e0f1a85be399c70a46a5f9683e10cc49b7f970db7961279eece316 > crypto_sign/faest256fv3/checksumbig
+  echo ae65d94a74a96f13f8ed26c71155fbb0ed329b4b905e7e276a38e74406044aab > crypto_sign/faest256sv3/checksumsmall
+  echo 629578ab214c223d4b65b0efebc38b4cfd91c7ecb8cf3cd63a1d4057508e3ca1 > crypto_sign/faest256sv3/checksumbig
+  echo fdbcdc36135f11fb5479dc5957793eb3caf6008948f5dd2c116ed8b5501250cd > crypto_sign/faestem128fv3/checksumsmall
+  echo e63629fcf52b0618280b45bdd9371f28c7775c68c3915bee60996731a51d3b4f > crypto_sign/faestem128fv3/checksumbig
+  echo 50d984e67e245ea4726634dcbecc1c82ed899ea2079e3875f05a783e8391023e > crypto_sign/faestem128sv3/checksumsmall
+  echo 445de0cd02d80cf941923faf1368062d11eb24100a2d179fd753aade80b26bb5 > crypto_sign/faestem128sv3/checksumbig
+  echo fa26b7adec6f0d836fa08344cb15a5bff3c8ada1cf4ea1e496ccf8f09061a8da > crypto_sign/faestem192fv3/checksumsmall
+  echo c1a908c210b7a88b87ae7dafa86f4b9ef6edc1d7cdbeb6df2cb6c6ca272e2693 > crypto_sign/faestem192fv3/checksumbig
+  echo d3f581dbd135a51d3330ffc188a497f1b739b4ee9ce32448cf30d8fbabdf8581 > crypto_sign/faestem192sv3/checksumsmall
+  echo 9368bcc175758972d2ed95300cc07cedb93a828a67bc642c71760240696e2cf4 > crypto_sign/faestem192sv3/checksumbig
+  echo 16183d53d01b7f49ac45c1a8faa1ed26f8790a5a40d2cc2291e84f9f760ed8d1 > crypto_sign/faestem256fv3/checksumsmall
+  echo 13d31f2fa83647a9e9b1d4b170e7b921aea4c347ca0a83eb33e3a78e2a8e38e8 > crypto_sign/faestem256fv3/checksumbig
+  echo 2aa113e77acdd8c88c292f9f5ba46be04c10d97e06eda5ba59720d5f6684fbbd > crypto_sign/faestem256sv3/checksumsmall
+  echo dd1fe20dbb5214b366c05d3953e0a962394caa29e5a705eefc9159a0ec96e8c7 > crypto_sign/faestem256sv3/checksumbig
+)

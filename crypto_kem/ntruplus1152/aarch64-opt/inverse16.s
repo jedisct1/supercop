@@ -1,0 +1,413 @@
+.text
+.global invntt16_asm
+invntt16_asm:
+        mov w15, #3457
+        mov w7, #9
+        ldr q18, [x1, #192]
+        ldr q13, [x1, #64]
+        ldr q16, [x1, #208]
+        ldr q28, [x1, #16]
+        ldr q5, [x1, #240]
+        ldr q26, [x1, #144]
+        ldr q25, [x1, #80]
+        ldr q15, [x1, #0]
+        ldr q6, [x1, #224]
+        ldr q2, [x1, #96]
+        ldr q3, [x1, #32]
+        ldr q12, [x1, #128]
+        add v10.8H, v13.8H, v18.8H
+        ldr q4, [x1, #160]
+        ldr q24, [x1, #48]
+        add v19.8H, v28.8H, v26.8H
+        sub v17.8H, v13.8H, v18.8H
+        ldr q18, [x1, #176]
+        sub v26.8H, v28.8H, v26.8H
+        ldr q14, [x3, #32]
+        ldr q28, [x1, #112]
+        add v9.8H, v2.8H, v6.8H
+        add v1.8H, v25.8H, v16.8H
+        orr v21.16B, v2.16B, v2.16B
+        ldr q13, [x3, #48]
+        add v31.8H, v15.8H, v12.8H
+        sub v11.8H, v25.8H, v16.8H
+        orr v29.16B, v15.16B, v15.16B
+        ldr q15, [x3, #64]
+        sub v27.8H, v3.8H, v4.8H
+        mul v16.8H, v17.8H, v14.H[2]
+        sub v2.8H, v21.8H, v6.8H
+        add v21.8H, v3.8H, v4.8H
+        orr v0.16B, v24.16B, v24.16B
+        mul v4.8H, v2.8H, v14.H[6]
+        add v24.8H, v24.8H, v18.8H
+        sub v25.8H, v0.8H, v18.8H
+        add v8.8H, v28.8H, v5.8H
+        sqrdmulh v3.8H, v2.8H, v14.H[7]
+        sub v30.8H, v29.8H, v12.8H
+        sub v29.8H, v31.8H, v10.8H
+        mul v6.8H, v11.8H, v13.H[2]
+        add v22.8H, v31.8H, v10.8H
+        dup v10.8H, w15
+        sub v5.8H, v28.8H, v5.8H
+        sqrdmulh v20.8H, v17.8H, v14.H[3]
+        mls v4.8H, v3.8H, v10.8H
+        sub v0.8H, v21.8H, v9.8H
+        mls v16.8H, v20.8H, v10.8H
+        sub v3.8H, v24.8H, v8.8H
+        add v23.8H, v21.8H, v9.8H
+        mul v31.8H, v0.8H, v15.H[4]
+        sqrdmulh v17.8H, v0.8H, v15.H[5]
+        add v0.8H, v27.8H, v4.8H
+        mul v28.8H, v0.8H, v15.H[2]
+        sub v21.8H, v19.8H, v1.8H
+        sqrdmulh v7.8H, v0.8H, v15.H[3]
+        add v19.8H, v19.8H, v1.8H
+        mls v31.8H, v17.8H, v10.8H
+        add v2.8H, v22.8H, v23.8H
+        sub v1.8H, v22.8H, v23.8H
+        mul v14.8H, v5.8H, v13.H[6]
+        sub v22.8H, v27.8H, v4.8H
+        sqrdmulh v11.8H, v11.8H, v13.H[3]
+        sub v18.8H, v30.8H, v16.8H
+        mls v28.8H, v7.8H, v10.8H
+        ldr q4, [x3, #80]
+        add v8.8H, v24.8H, v8.8H
+        sqrdmulh v17.8H, v5.8H, v13.H[7]
+        add v7.8H, v30.8H, v16.8H
+        ldr q5, [x3, #112]
+        sub v12.8H, v29.8H, v31.8H
+        mls v6.8H, v11.8H, v10.8H
+        add v23.8H, v29.8H, v31.8H
+        orr v30.16B, v7.16B, v7.16B
+        sqrdmulh v16.8H, v22.8H, v15.H[7]
+        add v13.8H, v19.8H, v8.8H
+        mul v29.8H, v22.8H, v15.H[6]
+        add v22.8H, v7.8H, v28.8H
+        ldr q15, [x3, #96]
+        sub v20.8H, v26.8H, v6.8H
+        mls v14.8H, v17.8H, v10.8H
+        add v7.8H, v26.8H, v6.8H
+        sub v6.8H, v30.8H, v28.8H
+        mls v29.8H, v16.8H, v10.8H
+        sqrdmulh v28.8H, v3.8H, v4.H[5]
+        sub v17.8H, v19.8H, v8.8H
+        add v19.8H, v25.8H, v14.8H
+        sub v0.8H, v25.8H, v14.8H
+        mul v9.8H, v3.8H, v4.H[4]
+        add v26.8H, v18.8H, v29.8H
+        mul v11.8H, v0.8H, v4.H[6]
+        sub v31.8H, v18.8H, v29.8H
+        mls v9.8H, v28.8H, v10.8H
+        sqrdmulh v18.8H, v19.8H, v4.H[3]
+        orr v14.16B, v22.16B, v22.16B
+        sqrdmulh v0.8H, v0.8H, v4.H[7]
+        add v8.8H, v21.8H, v9.8H
+        mul v4.8H, v19.8H, v4.H[2]
+        sub v19.8H, v21.8H, v9.8H
+        orr v3.16B, v6.16B, v6.16B
+        sqrdmulh v9.8H, v13.8H, v15.H[1]
+        mls v4.8H, v18.8H, v10.8H
+        mls v11.8H, v0.8H, v10.8H
+        mls v13.8H, v9.8H, v10.8H
+        add v9.8H, v7.8H, v4.8H
+        sqrdmulh v0.8H, v8.8H, v15.H[5]
+        sub v16.8H, v7.8H, v4.8H
+        add v29.8H, v20.8H, v11.8H
+        mul v7.8H, v8.8H, v15.H[4]
+        sub v21.8H, v2.8H, v13.8H
+        sqrdmulh v28.8H, v19.8H, v5.H[5]
+        sub v18.8H, v20.8H, v11.8H
+        add v4.8H, v2.8H, v13.8H
+        mul v11.8H, v19.8H, v5.H[4]
+        sqrdmulh v20.8H, v29.8H, v15.H[7]
+        mls v11.8H, v28.8H, v10.8H
+        mul v24.8H, v29.8H, v15.H[6]
+        orr v13.16B, v12.16B, v12.16B
+        ldr q8, [x4, #48]
+        sqrdmulh v28.8H, v9.8H, v15.H[3]
+        add v27.8H, v12.8H, v11.8H
+        mls v7.8H, v0.8H, v10.8H
+        ldr q19, [x4, #16]
+        mul v12.8H, v9.8H, v15.H[2]
+        mls v12.8H, v28.8H, v10.8H
+        sqrdmulh v9.8H, v17.8H, v5.H[1]
+        mul v0.8H, v17.8H, v5.H[0]
+        add v2.8H, v22.8H, v12.8H
+        sqrdmulh v28.8H, v4.8H, v19.8H
+        add v22.8H, v23.8H, v7.8H
+        sub v23.8H, v23.8H, v7.8H
+        ldr q29, [x4, #32]
+        sqrdmulh v17.8H, v4.8H, v8.8H
+        sub v7.8H, v13.8H, v11.8H
+        sub v13.8H, v14.8H, v12.8H
+        mul v12.8H, v18.8H, v5.H[6]
+        mls v0.8H, v9.8H, v10.8H
+        ldr q14, [x4, #0]
+        sqrdmulh v18.8H, v18.8H, v5.H[7]
+        mul v9.8H, v4.8H, v29.8H
+        ldr q19, [x4, #160]
+        mul v8.8H, v4.8H, v14.8H
+        ldr q14, [x4, #112]
+        mls v9.8H, v17.8H, v10.8H
+        mls v8.8H, v28.8H, v10.8H
+        ldr q28, [x4, #96]
+        sqrdmulh v15.8H, v2.8H, v14.8H
+        ldr q17, [x4, #64]
+        ext v29.16B, v9.16B, v9.16B, #8
+        sqrdmulh v14.8H, v16.8H, v5.H[3]
+        add v4.8H, v9.8H, v29.8H
+        ldr q29, [x4, #176]
+        ldr q9, [x4, #80]
+        mul v30.8H, v2.8H, v28.8H
+        orr v11.16B, v1.16B, v1.16B
+        str d4, [x0, #1152]
+        mul v28.8H, v16.8H, v5.H[2]
+        sqrdmulh v16.8H, v22.8H, v29.8H
+        mls v30.8H, v15.8H, v10.8H
+        sqrdmulh v29.8H, v2.8H, v9.8H
+        mul v19.8H, v22.8H, v19.8H
+        add v9.8H, v1.8H, v0.8H
+        mul v2.8H, v2.8H, v17.8H
+        ext v15.16B, v30.16B, v30.16B, #8
+        ldr q4, [x4, #128]
+        sub v17.8H, v11.8H, v0.8H
+        ldr q11, [x4, #240]
+        ldr q0, [x4, #288]
+        mls v2.8H, v29.8H, v10.8H
+        ext v29.16B, v8.16B, v8.16B, #8
+        add v15.8H, v30.8H, v15.8H
+        ldr q5, [x4, #144]
+        mls v24.8H, v20.8H, v10.8H
+        add v29.8H, v8.8H, v29.8H
+        ldr q30, [x4, #192]
+        str d15, [x0, #1224]
+        ldr q20, [x4, #208]
+        mls v19.8H, v16.8H, v10.8H
+        str d29, [x0, #0]
+        ext v15.16B, v2.16B, v2.16B, #8
+        mls v28.8H, v14.8H, v10.8H
+        ldr q8, [x4, #224]
+        add v16.8H, v26.8H, v24.8H
+        add v14.8H, v2.8H, v15.8H
+        mls v12.8H, v18.8H, v10.8H
+        ext v29.16B, v19.16B, v19.16B, #8
+        str d14, [x0, #72]
+        mul v15.8H, v22.8H, v4.8H
+        add v29.8H, v19.8H, v29.8H
+        add v6.8H, v6.8H, v28.8H
+        sqrdmulh v14.8H, v16.8H, v11.8H
+        ldr q18, [x4, #272]
+        ldr q4, [x4, #256]
+        str d29, [x0, #1296]
+        ldr q19, [x4, #320]
+        sqrdmulh v22.8H, v22.8H, v5.8H
+        sub v11.8H, v26.8H, v24.8H
+        ldr q5, [x4, #336]
+        ldr q24, [x4, #384]
+        sub v25.8H, v31.8H, v12.8H
+        ldr q29, [x4, #304]
+        ldr q1, [x4, #352]
+        sqrdmulh v2.8H, v16.8H, v20.8H
+        sub v26.8H, v3.8H, v28.8H
+        ldr q28, [x4, #368]
+        add v3.8H, v31.8H, v12.8H
+        mul v31.8H, v16.8H, v30.8H
+        mls v15.8H, v22.8H, v10.8H
+        mls v31.8H, v2.8H, v10.8H
+        mul v16.8H, v16.8H, v8.8H
+        dup v8.8H, w7
+        ext v20.16B, v15.16B, v15.16B, #8
+        mls v16.8H, v14.8H, v10.8H
+        ext v14.16B, v31.16B, v31.16B, #8
+        mul v12.8H, v9.8H, v0.8H
+        add v20.8H, v15.8H, v20.8H
+        add v14.8H, v31.8H, v14.8H
+        str d20, [x0, #144]
+        mul v4.8H, v9.8H, v4.8H
+        ldr q2, [x4, #416]
+        ext v31.16B, v16.16B, v16.16B, #8
+        ldr q20, [x4, #400]
+        ldr q30, [x4, #448]
+        str d14, [x0, #216]
+        sqrdmulh v0.8H, v9.8H, v18.8H
+        ldr q18, [x4, #464]
+        add v16.8H, v16.8H, v31.8H
+        ldr q31, [x4, #528]
+        ldr q22, [x4, #432]
+        mul v15.8H, v6.8H, v19.8H
+        ldr q14, [x4, #480]
+        ldr q19, [x4, #496]
+        str d16, [x0, #1368]
+        sqrdmulh v5.8H, v6.8H, v5.8H
+        mls v4.8H, v0.8H, v10.8H
+        sqrdmulh v0.8H, v9.8H, v29.8H
+        mls v15.8H, v5.8H, v10.8H
+        ext v5.16B, v4.16B, v4.16B, #8
+        sqrdmulh v29.8H, v6.8H, v28.8H
+        add v5.8H, v4.8H, v5.8H
+        mls v12.8H, v0.8H, v10.8H
+        str d5, [x0, #288]
+        ext v16.16B, v15.16B, v15.16B, #8
+        mul v4.8H, v6.8H, v1.8H
+        add v0.8H, v15.8H, v16.8H
+        mls v4.8H, v29.8H, v10.8H
+        ldr q5, [x4, #512]
+        ldr q9, [x4, #544]
+        ext v6.16B, v12.16B, v12.16B, #8
+        ldr q15, [x4, #560]
+        ldr q16, [x4, #576]
+        mul v29.8H, v27.8H, v24.8H
+        str d0, [x0, #360]
+        ldr q28, [x4, #608]
+        add v12.8H, v12.8H, v6.8H
+        ldr q0, [x4, #624]
+        mul v2.8H, v27.8H, v2.8H
+        str d12, [x0, #1440]
+        ext v24.16B, v4.16B, v4.16B, #8
+        sqrdmulh v6.8H, v27.8H, v20.8H
+        add v20.8H, v4.8H, v24.8H
+        sqrdmulh v1.8H, v27.8H, v22.8H
+        mul v12.8H, v3.8H, v30.8H
+        str d20, [x0, #1512]
+        mls v29.8H, v6.8H, v10.8H
+        mls v2.8H, v1.8H, v10.8H
+        sqrdmulh v24.8H, v3.8H, v18.8H
+        ext v18.16B, v29.16B, v29.16B, #8
+        sqrdmulh v22.8H, v21.8H, v31.8H
+        add v4.8H, v29.8H, v18.8H
+        ext v30.16B, v2.16B, v2.16B, #8
+        mul v18.8H, v3.8H, v14.8H
+        str d4, [x0, #432]
+        ldr q29, [x4, #592]
+        add v31.8H, v2.8H, v30.8H
+        ldr q14, [x4, #672]
+        ldr q30, [x4, #640]
+        mls v12.8H, v24.8H, v10.8H
+        ldr q24, [x4, #688]
+        ldr q27, [x4, #736]
+        str d31, [x0, #1584]
+        ldr q31, [x4, #752]
+        sqrdmulh v20.8H, v21.8H, v15.8H
+        sqrdmulh v2.8H, v3.8H, v19.8H
+        ext v6.16B, v12.16B, v12.16B, #8
+        mul v9.8H, v21.8H, v9.8H
+        add v15.8H, v12.8H, v6.8H
+        mls v9.8H, v20.8H, v10.8H
+        str d15, [x0, #504]
+        mls v18.8H, v2.8H, v10.8H
+        mul v19.8H, v21.8H, v5.8H
+        ext v5.16B, v9.16B, v9.16B, #8
+        mls v19.8H, v22.8H, v10.8H
+        ext v20.16B, v18.16B, v18.16B, #8
+        add v5.8H, v9.8H, v5.8H
+        mul v6.8H, v13.8H, v16.8H
+        add v16.8H, v18.8H, v20.8H
+        sqrdmulh v8.8H, v5.8H, v8.8H
+        ext v12.16B, v19.16B, v19.16B, #8
+        sqrdmulh v9.8H, v13.8H, v0.8H
+        ldr q21, [x4, #800]
+        ldr q3, [x4, #656]
+        str d16, [x0, #1656]
+        ldr q20, [x4, #704]
+        add v18.8H, v19.8H, v12.8H
+        mul v16.8H, v13.8H, v28.8H
+        ldr q12, [x4, #720]
+        ldr q1, [x4, #768]
+        ldr q19, [x4, #816]
+        ldr q28, [x4, #864]
+        str d18, [x0, #576]
+        sqrdmulh v29.8H, v13.8H, v29.8H
+        mls v16.8H, v9.8H, v10.8H
+        mul v0.8H, v23.8H, v14.8H
+        sqrdmulh v14.8H, v23.8H, v24.8H
+        ext v15.16B, v16.16B, v16.16B, #8
+        mls v6.8H, v29.8H, v10.8H
+        add v18.8H, v16.8H, v15.8H
+        sqrdmulh v15.8H, v11.8H, v31.8H
+        str d18, [x0, #1800]
+        mls v0.8H, v14.8H, v10.8H
+        ext v16.16B, v6.16B, v6.16B, #8
+        mul v29.8H, v11.8H, v27.8H
+        add v9.8H, v6.8H, v16.8H
+        mls v29.8H, v15.8H, v10.8H
+        ext v18.16B, v0.16B, v0.16B, #8
+        mul v27.8H, v23.8H, v30.8H
+        ldr q6, [x4, #880]
+        ldr q22, [x4, #928]
+        str d9, [x0, #648]
+        ldr q15, [x4, #784]
+        add v16.8H, v0.8H, v18.8H
+        mul v21.8H, v17.8H, v21.8H
+        ldr q4, [x4, #832]
+        ldr q30, [x4, #848]
+        ext v0.16B, v29.16B, v29.16B, #8
+        str d16, [x0, #1872]
+        sqrdmulh v23.8H, v23.8H, v3.8H
+        ldr q3, [x4, #896]
+        add v24.8H, v29.8H, v0.8H
+        sqrdmulh v13.8H, v17.8H, v19.8H
+        str d24, [x0, #1944]
+        sqrdmulh v31.8H, v11.8H, v12.8H
+        mul v9.8H, v17.8H, v1.8H
+        mls v21.8H, v13.8H, v10.8H
+        sqrdmulh v19.8H, v26.8H, v6.8H
+        sqrdmulh v2.8H, v17.8H, v15.8H
+        ext v29.16B, v21.16B, v21.16B, #8
+        mul v11.8H, v11.8H, v20.8H
+        add v15.8H, v21.8H, v29.8H
+        mul v21.8H, v26.8H, v28.8H
+        str d15, [x0, #2016]
+        mls v21.8H, v19.8H, v10.8H
+        ldr q28, [x4, #944]
+        ldr q13, [x4, #992]
+        ldr q17, [x4, #1008]
+        ldr q29, [x4, #912]
+        mls v11.8H, v31.8H, v10.8H
+        ldr q15, [x4, #960]
+        ldr q24, [x4, #976]
+        sqrdmulh v6.8H, v26.8H, v30.8H
+        ext v19.16B, v21.16B, v21.16B, #8
+        mls v9.8H, v2.8H, v10.8H
+        add v1.8H, v21.8H, v19.8H
+        ext v14.16B, v11.16B, v11.16B, #8
+        mls v27.8H, v23.8H, v10.8H
+        str d1, [x0, #2088]
+        add v16.8H, v11.8H, v14.8H
+        mul v21.8H, v26.8H, v4.8H
+        ext v30.16B, v9.16B, v9.16B, #8
+        str d16, [x0, #792]
+        mls v21.8H, v6.8H, v10.8H
+        add v31.8H, v9.8H, v30.8H
+        ext v16.16B, v27.16B, v27.16B, #8
+        mul v2.8H, v7.8H, v3.8H
+        str d31, [x0, #864]
+        add v30.8H, v27.8H, v16.8H
+        sqrdmulh v0.8H, v7.8H, v28.8H
+        ext v19.16B, v21.16B, v21.16B, #8
+        str d30, [x0, #720]
+        mul v16.8H, v7.8H, v22.8H
+        add v21.8H, v21.8H, v19.8H
+        mul v19.8H, v25.8H, v13.8H
+        str d21, [x0, #936]
+        mls v16.8H, v0.8H, v10.8H
+        sqrdmulh v22.8H, v25.8H, v17.8H
+        sqrdmulh v1.8H, v7.8H, v29.8H
+        ext v26.16B, v16.16B, v16.16B, #8
+        mul v21.8H, v25.8H, v15.8H
+        add v7.8H, v16.8H, v26.8H
+        sqrdmulh v12.8H, v25.8H, v24.8H
+        str d7, [x0, #2160]
+        mls v19.8H, v22.8H, v10.8H
+        mls v2.8H, v1.8H, v10.8H
+        mls v21.8H, v12.8H, v10.8H
+        ext v23.16B, v19.16B, v19.16B, #8
+        mls v5.8H, v8.8H, v10.8H
+        add v26.8H, v19.8H, v23.8H
+        ext v9.16B, v2.16B, v2.16B, #8
+        ext v24.16B, v21.16B, v21.16B, #8
+        str d26, [x0, #2232]
+        add v6.8H, v2.8H, v9.8H
+        str d5, [x0, #1728]
+        add v3.8H, v21.8H, v24.8H
+        str d6, [x0, #1008]
+        str d3, [x0, #1080]
+    ret

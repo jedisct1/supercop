@@ -1,7 +1,8 @@
-// version 20260625
+// version 20260901
 // public domain
 // djb
 
+// 20260901 djb: use /sys/bus/event_source/devices/cpu_atom/type
 // 20260625 djb: mark this as CYCLECOUNTER despite concerns about layers screwing this up
 // 20260625 djb: add second fd for atom cores, sigh
 // 20251226 djb: add ticks_close()
@@ -72,6 +73,7 @@ that have heavier constraints on the number of simultaneous counters.
 #include <sys/syscall.h>
 #include <linux/perf_event.h>
 #include "cpucycles_internal.h"
+#include "atom_type.h"
 
 #ifndef PERF_FLAG_FD_CLOEXEC
 #define PERF_FLAG_FD_CLOEXEC 0
@@ -115,6 +117,8 @@ long long ticks_setup(void)
   int xkernel,xhv,loop;
 
   if (fdperf[0] == -1) {
+    atom_type_init();
+
     // prefer to exclude if platform supports that
     // but fall back to non-exclude if necessary
     for (xkernel = 1;xkernel >= 0;--xkernel) {
@@ -133,8 +137,10 @@ long long ticks_setup(void)
         if (fdperf[0] != -1) {
 #ifdef PERF_PMU_TYPE_SHIFT
           // XXX: see notes in amd64-perfpmcff.c
-          attr.config |= ((long long) 10) << PERF_PMU_TYPE_SHIFT;
-          fdperf[1] = syscall(__NR_perf_event_open,&attr,0,-1,-1,PERF_FLAG_FD_CLOEXEC);
+          if (atom_type > 0) {
+            attr.config |= ((long long) atom_type) << PERF_PMU_TYPE_SHIFT;
+            fdperf[1] = syscall(__NR_perf_event_open,&attr,0,-1,-1,PERF_FLAG_FD_CLOEXEC);
+          }
 #endif
           break;
         }

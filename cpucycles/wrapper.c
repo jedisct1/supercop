@@ -209,7 +209,7 @@ long long cpucycles_persecond(void)
 
 const char *cpucycles_version(void)
 {
-  return "20260625";
+  return "20260901";
 }
 
 // ----- cycle counter scaled from ticks

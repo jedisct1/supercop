@@ -1,0 +1,60 @@
+// clang-format off
+
+#pragma once
+
+namespace faest {
+
+using CRT_CONSTANTS_192_25_184 = CRT_CONSTANTS<secpar::s192, 25, 184>;
+
+template<>
+struct N_MULT_TRAIT<secpar::s192, 25, 184>
+{
+    constexpr static std::size_t N_MULT = 504;
+};
+
+
+template <>
+inline constexpr decltype(CRT_CONSTANTS_192_25_184::M_i)
+CRT_CONSTANTS_192_25_184::M_i = {
+    0x011b, 0x011d, 0x012b, 0x012d, 0x0139, 0x013f, 0x014d, 0x015f,
+    0x0163, 0x0083, 0x0089, 0x008f, 0x0091, 0x009d, 0x00a7, 0x00ab,
+    0x00b9, 0x00bf, 0x00c1, 0x00cb, 0x00d3, 0x00d5, 0x00e5, 0x00ef,
+    0x00f1,
+};
+template <>
+inline constexpr decltype(CRT_CONSTANTS_192_25_184::DIV_X64_by_M_i)
+CRT_CONSTANTS_192_25_184::DIV_X64_by_M_i = {
+    0x011a59bcec98e023, 0x011c4b81926e415b, 0x012ff1aaf6652231, 0x0129fe315421983e,
+    0x013c809e404f2027, 0x013a88738fd6368c, 0x0158ce07d2a410ef, 0x014aa2eeb93b0b1f,
+    0x0171de2cd879c2bf, 0x020c28f22cea7d0e, 0x02262eb60cd4e7b4, 0x023e9a2f6efe1589,
+    0x024d3dc3f8ec52fa, 0x027f157994461efa, 0x02b7f36a8933c775, 0x0286c83c5ac2277a,
+    0x02c1d09c692edcd9, 0x02d8a0ed3c26e88d, 0x03faa6774b1bdad9, 0x03d98939f208d536,
+    0x03a8b8f76bfa61a1, 0x03b7cfe92baa7196, 0x037c1610e8c4e534, 0x035d2adc8449ea0b,
+    0x033639d70982ad25,
+};
+
+template<>
+alignas(CRT_CONSTANTS_192_25_184::ALIGNMENT)
+inline constexpr decltype(CRT_CONSTANTS_192_25_184::M_TREE) CRT_CONSTANTS_192_25_184::M_TREE = {
+    0xe3, 0x1d, 0x4b, 0xb4, 0x2d, 0x39, 0x4f, 0x48, 0xd4, 0x1f, 0xb0, 0xfc, 0x21, 0x13, 0xec, 0x6c, 0xb2, 0x54, 0x2b, 0xb6, 0x27, 0x58, 0xc4, 0x01
+};
+
+template <>
+decltype(CRT_CONSTANTS_192_25_184::W_CRT_LIFT_COLUMNS_INDEX_TAB) CRT_CONSTANTS_192_25_184::W_CRT_LIFT_COLUMNS_INDEX_TAB;
+template <>
+decltype(CRT_CONSTANTS_192_25_184::W_CRT_LIFT_ROW_TAB) CRT_CONSTANTS_192_25_184::W_CRT_LIFT_ROW_TAB;
+template <>
+decltype(CRT_CONSTANTS_192_25_184::W_TREE_LIFT_ROW_TAB) CRT_CONSTANTS_192_25_184::W_TREE_LIFT_ROW_TAB;
+template <>
+decltype(CRT_CONSTANTS_192_25_184::W_GATE_LIFT_COLUMNS_INDEX_TAB) CRT_CONSTANTS_192_25_184::W_GATE_LIFT_COLUMNS_INDEX_TAB;
+template <>
+decltype(CRT_CONSTANTS_192_25_184::W_GATE_LIFT_ROW_TAB) CRT_CONSTANTS_192_25_184::W_GATE_LIFT_ROW_TAB;
+template <>
+decltype(CRT_CONSTANTS_192_25_184::F_LIFT_ROW_TAB) CRT_CONSTANTS_192_25_184::F_LIFT_ROW_TAB;
+template <>
+decltype(CRT_CONSTANTS_192_25_184::G_LIFT_ROW_TAB) CRT_CONSTANTS_192_25_184::G_LIFT_ROW_TAB;
+template <>
+decltype(CRT_CONSTANTS_192_25_184::G_LIFT_COLUMNS_INDEX_TAB) CRT_CONSTANTS_192_25_184::G_LIFT_COLUMNS_INDEX_TAB;
+
+
+} // namespace faest

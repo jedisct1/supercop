@@ -1,5 +1,5 @@
-#ifndef amd64_cpuid_h
-#define amd64_cpuid_h
+#ifndef cpuid_intel_h
+#define cpuid_intel_h
 
 #ifdef __FILC__
 
@@ -36,6 +36,18 @@ static long long cpuid_says_genuineintel(void)
   unsigned int a,b,c,d;
   cpuid_0(0,&a,&b,&c,&d);
   return b == 0x756e6547 && d == 0x49656e69 && c == 0x6c65746e;
+}
+
+__attribute__((unused))
+static long long cpuid_wide_pmc(void)
+{
+  unsigned int a,b,c,d;
+  cpuid_0(0,&a,&b,&c,&d);
+  if (a < 0x0a) return 0;
+  cpuid_0(0x0a,&a,&b,&c,&d);
+  if ((a & 255) <= 2) return 0;
+  if (((d >> 5) & 255) < 48) return 0;
+  return 1;
 }
 
 // 0 if not clear that tsc is invariant

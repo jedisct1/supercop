@@ -1,15 +1,17 @@
 #!/bin/sh
 
 supercop=.
-sourcetop=import/aimer-20260130
+sourcetop=import/aimer-20260825
 
 for p in 128f 128s 192f 192s 256f 256s
 do
-  targettop="$supercop/crypto_sign/aimer${p}v3"
+  targettop="$supercop/crypto_sign/aimer${p}v3new"
   rm -rf "$targettop"
   mkdir -p "$targettop"
   (
     echo ref "$sourcetop"/Reference_Implementation
+    echo usekcp "$sourcetop"/Reference_Implementation
+    echo clmul "$sourcetop"/Reference_Implementation
   ) |
   while read target source
   do
@@ -20,7 +22,7 @@ do
     cp -pr "$source"/* "$x"
     cp -pr "$source"/common/* "$x"
     cp -pr "$source"/params/params-aimer-$p.h "$x"/params.h
-    rm "$x"/field*.c
+    rm "$x"/field???.c
     case $p in
       128*) cp -pr "$source"/field128.c "$x"/field128.c ;;
       192*) cp -pr "$source"/field192.c "$x"/field192.c ;;
@@ -37,6 +39,8 @@ do
     rm "$x/rng.c"
     rm -f "$x"/crypto_declassify.h
     rm -f "$x"/Makefile
+
+    rm -f "$x"/aes*
 
     sed -i 's/\<crypto_sign\>/crypto_sign_with_context/' "$x"/*
     sed -i 's/\<crypto_sign_open\>/crypto_sign_open_with_context/' "$x"/*
@@ -140,24 +144,6 @@ for fn in glob.glob(f"{x}/*.[ch]"):
  #include "params.h"
  #include <stddef.h>
  #include <stdint.h>
-@@ -30,6 +31,9 @@
- int crypto_sign_with_context(unsigned char *sm, unsigned long long *smlen, const unsigned char *m, unsigned long long mlen,
-                 const unsigned char *ctx, unsigned long long ctxlen, const unsigned char *sk);
-
-+int crypto_sign(unsigned char *sm, unsigned long long *smlen, const unsigned char *m, unsigned long long mlen,
-+                const unsigned char *sk);
-+
- #define crypto_sign_verify AIMER_NAMESPACE(crypto_sign_verify)
- int crypto_sign_verify(const unsigned char *sig, unsigned long long siglen,
-                        const unsigned char *m, unsigned long long mlen,
-@@ -39,4 +43,7 @@
- int crypto_sign_open_with_context(unsigned char *m, unsigned long long *mlen, const unsigned char *sm, unsigned long long smlen,
-                      const unsigned char *ctx, unsigned long long ctxlen, const unsigned char *pk);
-
-+int crypto_sign_open(unsigned char *m, unsigned long long *mlen, const unsigned char *sm, unsigned long long smlen,
-+                     const unsigned char *pk);
-+
- #endif
 EOF
     )
 
@@ -165,8 +151,8 @@ EOF
       patch -p1 << 'EOF'
 --- old/sign.c
 +++ new/sign.c
-@@ -367,6 +367,12 @@
-   return ret;
+@@ -444,6 +444,12 @@
+   return 0;
  }
 
 +int crypto_sign(unsigned char *sm, unsigned long long *smlen, const unsigned char *m, unsigned long long mlen,
@@ -175,10 +161,10 @@ EOF
 +  return crypto_sign_with_context(sm, smlen, m, mlen, (const unsigned char *) "", 0, sk);
 +}
 +
- int crypto_sign_verify_internal(const unsigned char *sig, unsigned long long siglen,
-                                 const unsigned char *m, unsigned long long mlen,
-                                 const unsigned char *pre, unsigned long long prelen,
-@@ -592,3 +598,9 @@
+ static inline void recompute_last_share(const proof_t *proof, tape_t *tape)
+ {
+   gf temp = {0,};
+@@ -705,3 +711,9 @@
 
    return 0;
  }
@@ -191,21 +177,144 @@ EOF
 EOF
     )
 
+    ( cd "$x"
+      patch -p1 << 'EOF'
+--- old/field_common.c
++++ new/field_common.c
+@@ -1,5 +1,7 @@
+ // SPDX-License-Identifier: MIT
+
++#include "crypto_int64.h"
++#include "crypto_declassify.h"
+ #include "field.h"
+ #include <stdbool.h>
+ #include <stddef.h>
+@@ -46,7 +48,9 @@
+   {
+     result |= a[i];
+   }
+-  return result == 0;
++  result = crypto_int64_zero_01(result);
++  crypto_declassify(&result,sizeof result);
++  return result;
+ }
+
+ void gf_copy(gf out, const gf in)
+EOF
+    )
+
+    [ "$target" = clmul ] && ( echo x86; echo amd64 ) > "$x"/architectures
+    [ "$target" = clmul ] && cat > "$x"/field_internal.h << 'EOF'
+// SPDX-License-Identifier: MIT
+
+#ifndef FIELD_INTERNAL_H
+#define FIELD_INTERNAL_H
+
+#include <stdint.h>
+#include <immintrin.h>
+
+static inline void poly64_mul(uint64_t *z1, uint64_t *z0,
+                              uint64_t x0, uint64_t y0)
+{
+  __m128i x = _mm_set_epi64x(0,x0);
+  __m128i y = _mm_set_epi64x(0,y0);
+  __m128i z = _mm_clmulepi64_si128(x,y,0);
+  *z0 = _mm_extract_epi64(z,0);
+  *z1 = _mm_extract_epi64(z,1);
+}
+
+static inline void poly64_sqr(uint64_t *z1, uint64_t *z0, uint64_t x0)
+{
+  __m128i x = _mm_set_epi64x(0,x0);
+  __m128i z = _mm_clmulepi64_si128(x,x,0);
+  *z0 = _mm_extract_epi64(z,0);
+  *z1 = _mm_extract_epi64(z,1);
+}
+
+#endif // FIELD_INTERNAL_H
+EOF
+
+    [ "$target" = clmul -o "$target" = usekcp ] && rm "$x"/hash.c
+    [ "$target" = clmul -o "$target" = usekcp ] && rm "$x"/fips202.c
+    [ "$target" = clmul -o "$target" = usekcp ] && rm "$x"/fips202.h
+    [ "$target" = clmul -o "$target" = usekcp ] && cat > "$x"/hash.h << 'EOF'
+// SPDX-License-Identifier: MIT
+
+#ifndef HASH_H
+#define HASH_H
+
+#include "params.h"
+#include <stddef.h>
+#include <stdint.h>
+#include <libkeccak.a.headers/KeccakSponge.h>
+
+static const uint8_t HASH_PREFIX_0 = (uint8_t)AIMER_HASH_PREFIX_0;
+static const uint8_t HASH_PREFIX_1 = 1;
+static const uint8_t HASH_PREFIX_2 = 2;
+static const uint8_t HASH_PREFIX_3 = 3;
+static const uint8_t HASH_PREFIX_4 = 4;
+static const uint8_t HASH_PREFIX_5 = 5;
+
+typedef KeccakWidth1600_SpongeInstance hash_instance;
+
+#if SECURITY_BITS == 128
+#define HASH_RATE 1344
+#define HASH_CAPACITY 256
+#else
+#define HASH_RATE 1088
+#define HASH_CAPACITY 512
+#endif
+
+static inline void hash_init(hash_instance *ctx)
+{
+  KeccakWidth1600_SpongeInitialize(ctx,HASH_RATE,HASH_CAPACITY);
+}
+
+static inline void hash_update(hash_instance *ctx, const uint8_t *data, size_t data_len)
+{
+  KeccakWidth1600_SpongeAbsorb(ctx,data,data_len);
+}
+
+static inline void hash_init_prefix(hash_instance *ctx, uint8_t prefix)
+{
+  KeccakWidth1600_SpongeInitialize(ctx,HASH_RATE,HASH_CAPACITY);
+  hash_update(ctx,&prefix,1);
+}
+
+static inline void hash_final(hash_instance *ctx)
+{
+  KeccakWidth1600_SpongeAbsorbLastFewBits(ctx,0x1f);
+}
+
+static inline void hash_squeeze(hash_instance *ctx, uint8_t *buffer, size_t buffer_len)
+{
+  KeccakWidth1600_SpongeSqueeze(ctx,buffer,buffer_len);
+}
+
+static inline void hash_ctx_release(hash_instance *ctx)
+{
+}
+
+#endif
+EOF
+
   done
 done
 
+linksame crypto_sign/aimer*v3new || :
+
 (
   cd "$supercop"
-  echo d4f38ba1816c2702c119f6f2a5cbbc129903bb74c4986cff88e90d93b931d631 > crypto_sign/aimer128fv3/checksumsmall
-  echo 1e6022215796a650290ce2b95d109dd550e8ee3e69f3c8f2c34ed04c846b5dfe > crypto_sign/aimer128fv3/checksumbig
-  echo 89a0043a3cfb68038ecdcbb62987b05a89730ac37ec58806ef48334c75a419e3 > crypto_sign/aimer128sv3/checksumsmall
-  echo 149dac4e2c218cc3801de85952d888c2bc7d75b2ecd1db84bd58ac4234075486 > crypto_sign/aimer128sv3/checksumbig
-  echo 93ac301fe6c38c16d453cd750e4298185249163cc2bf6bd69ac952684c53eb0b > crypto_sign/aimer192fv3/checksumsmall
-  echo 291174d3f14a1980636093d9f163cba70fecfea7a82b52b71b9ad283ba59a6ad > crypto_sign/aimer192fv3/checksumbig
-  echo 1ba0ae09bc7d9359b7004f325025a0438baab10cb81e63341b2d18903c75bc2a > crypto_sign/aimer192sv3/checksumsmall
-  echo 1d8ea022dc1364a2657bcfe479b77529a8e723aa08184221086a2fa47dd160ff > crypto_sign/aimer192sv3/checksumbig
-  echo 435836836469a7f390fb9ce683554b78e4fd23e0cefff88199442df27e4e02bc > crypto_sign/aimer256fv3/checksumsmall
-  echo 17fdb56f6ef34f3bb89adaf0b481fce57290ec9592eeb4c751b217eb3992dcb1 > crypto_sign/aimer256fv3/checksumbig
-  echo 9842cda1dd3666d5a837e6ed2b581ace8d9510fbf9080dd657114dc7b6167bdc > crypto_sign/aimer256sv3/checksumsmall
-  echo 33aa864eed0070f12511328742d033350c02f566c8cc4e5c50e1888f8abd5b24 > crypto_sign/aimer256sv3/checksumbig
+  echo fe8436d97df743e949c2b83c6a6368ad508b1e7a859b2c8d7106ea0c9eb47a7e > crypto_sign/aimer128fv3new/checksumsmall
+  echo e84907a9677b93b7eca4d2de1b397c26775f1c762820559e7b5a886caab5ae3a > crypto_sign/aimer128fv3new/checksumbig
+  echo 31c7f1ac14d603053b40d608099f56ffc6f94667784bbab3ef139d6017b13c69 > crypto_sign/aimer128sv3new/checksumsmall
+  echo 37a27834b64ec9c33b0f66d6ec7c954eca3eae41ef38ac91701a2170fe0fbb26 > crypto_sign/aimer128sv3new/checksumbig
+  echo 6138560f093e93936e4125301e22e70bf5a07dbe4a86a63d345c3ecda3392bd7 > crypto_sign/aimer192fv3new/checksumsmall
+  echo 0159dc34631667bcd6e7d3eed6c25173206df57fab0d789af5caebb4d44ce68d > crypto_sign/aimer192fv3new/checksumbig
+  echo d7e0c31a726c53e8092f45a87e19ac427822647b29012025180149ddb9c5fbae > crypto_sign/aimer192sv3new/checksumsmall
+  echo 1b9522a67f8b1a560bbadb332b859535673feafbd055b40f1a0a07bd155dca23 > crypto_sign/aimer192sv3new/checksumbig
+  echo 0cdcd137088eb7ff5b0bee06d452fb6cd9faed355e1896f6bcfd632b79aeee0f > crypto_sign/aimer256fv3new/checksumsmall
+  echo a346d861baa8b619e3361d69992df7a56c2050600e42ad369bd4fd2a25ccb0d8 > crypto_sign/aimer256fv3new/checksumbig
+  echo b86830a67f58fe0e40eab62b08b9364b29b41f53058469899a66c99db7d7c416 > crypto_sign/aimer256sv3new/checksumsmall
+  echo 6db457829589b0001c4470d5511f7631c9a9f4fa42abe07cb1e876c20af48b63 > crypto_sign/aimer256sv3new/checksumbig
 )

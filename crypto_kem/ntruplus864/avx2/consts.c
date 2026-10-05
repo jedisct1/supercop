@@ -7,13 +7,12 @@
 #define BARRETT_V(q) (((1U << 15) + (q)/2)/(q))
 #define V BARRETT_V(NTRUPLUS_Q)
 #define V2 BARRETT_V(3)
+#define Q26 (((1U << 26) + NTRUPLUS_Q / 2) / NTRUPLUS_Q)
+#define Q26_ROUND (1U << 9)
 
 #define WQINV 13706
 #define W -886
 #define ZETA1 -722
-
-#define Qm1div2 1728
-#define Qp1div2 1729
 
 #define R2 867
 #define R2qinv 2787
@@ -31,13 +30,13 @@
 const int16_t _low_mask[16]    __attribute__((aligned(32))) = FILL_16(LOW);
 const int16_t _16xv[16]        __attribute__((aligned(32))) = FILL_16(V);
 const int16_t _16xv2[16]       __attribute__((aligned(32))) = FILL_16(V2);
+const int16_t _16xq26[16]      __attribute__((aligned(32))) = FILL_16(Q26);
+const int16_t _16xq26round[16] __attribute__((aligned(32))) = FILL_16(Q26_ROUND);
 const int16_t _16x1[16]        __attribute__((aligned(32))) = FILL_16(1);
 const int16_t _16x3[16]        __attribute__((aligned(32))) = FILL_16(3);
 const int16_t _16xq[16]        __attribute__((aligned(32))) = FILL_16(NTRUPLUS_Q);
 const int16_t _16xqm1[16]      __attribute__((aligned(32))) = FILL_16(NTRUPLUS_Q - 1);
 const int16_t _16xzeta1[16]    __attribute__((aligned(32))) = FILL_16(ZETA1);
-const int16_t _16xqp1div2[16]  __attribute__((aligned(32))) = FILL_16(Qp1div2);
-const int16_t _16xqm1div2[16]  __attribute__((aligned(32))) = FILL_16(Qm1div2);
 const int16_t _16xqinv[16]     __attribute__((aligned(32))) = FILL_16(QINV);
 const int16_t _16xw[16]        __attribute__((aligned(32))) = FILL_16(W);
 const int16_t _16xwqinv[16]    __attribute__((aligned(32))) = FILL_16(WQINV);

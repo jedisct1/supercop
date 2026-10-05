@@ -1,11 +1,11 @@
 #!/bin/sh
 
 supercop=.
-sourcetop='import/haetae-1.1.2'
+sourcetop='import/haetae-1.2.0'
 
 for p in 2 3 5
 do
-  targettop="$supercop/crypto_sign/haetae${p}v4"
+  targettop="$supercop/crypto_sign/haetae${p}v5"
   rm -r "$targettop"
   mkdir -p "$targettop"
   (
@@ -288,10 +288,10 @@ for fn in glob.glob(f"{x}/*.[ch]"):
       patch -p1 << 'EOF'
 --- old/polyvec.c
 +++ new/polyvec.c
-@@ -444,47 +444,7 @@
+@@ -446,47 +446,7 @@
    }
  }
-
+ 
 -/*************************************************
 - * Name:        minmax
 - *
@@ -300,7 +300,7 @@ for fn in glob.glob(f"{x}/*.[ch]"):
 - * Arguments:   - int32_t *x: pointer to first input/output integer
 - *              - int32_t *y: pointer to second input/output integer
 - *
-- * Specification: Implements @[KS X 123456, Algorithm 44, minmax]
+- * Specification: Implements @[Algorithm 50, minmax]
 - * **************************************************/
 -static inline void minmax(int32_t *x, int32_t *y) // taken from djbsort
 -{
@@ -334,7 +334,7 @@ for fn in glob.glob(f"{x}/*.[ch]"):
 -  *y = b ^ c;
 -}
 +#define minmax crypto_int32_minmax
-
+ 
  /*************************************************
   * Name:        polyvecmk_sk_singular_value
 EOF
@@ -343,12 +343,14 @@ EOF
   done
 done
 
+linksame crypto_sign/haetae*v5 || :
+
 (
   cd "$supercop"
-  echo bf5bbfd7ae9cad3db6c4d040f37e61e192e0ba3b9a63cbe229cd87fc71c8035e > crypto_sign/haetae2v4/checksumsmall
-  echo 23b858b8f7bf07287fe249765dd43081c62e5c1b217d5e615cd89e36a5a4766a > crypto_sign/haetae2v4/checksumbig
-  echo 377c8131b5cd34f6661f1f0c3dc91faaddeb3941ee1904e0ace653ef76aeaaef > crypto_sign/haetae3v4/checksumsmall
-  echo 284de40b446b41ce6bae0469acd99f1ef38cda4a22521cead7f5404f33450a5a > crypto_sign/haetae3v4/checksumbig
-  echo 52bcced72fc889e8629240b0ef223f1ced784979c7c44a2f96be5089dbaed77a > crypto_sign/haetae5v4/checksumsmall
-  echo 2ae3bf4845d07e7b5262d703a9cf76f1fadcd6b56a7e917d935d513436546af2 > crypto_sign/haetae5v4/checksumbig
+  echo fd4bb036dff3bda821ee9e6c394babe02156e72bef40765d5ec8e3c3e276e678 > crypto_sign/haetae2v5/checksumsmall
+  echo 1c65bbb515a935cd868f1b0f040aa9d71a8eba88f136522aad2e8be89e1b0527 > crypto_sign/haetae2v5/checksumbig
+  echo abb15c2eabd9bb611bcb7a2ef5f04a22a5fbaf1c533d4026bf327ef4dd1853c4 > crypto_sign/haetae3v5/checksumsmall
+  echo 9c5626a56e36d397424041bc768156d2f978c05acf94328aa1bf567534cfbc1e > crypto_sign/haetae3v5/checksumbig
+  echo 33e2d1c33d2e9e55191d4f5a8c75d0a5b5e4354b7f1ae75e31933ddc403d0bde > crypto_sign/haetae5v5/checksumsmall
+  echo edbac0423edabb4e404b3d54a36e3c1a05c674a66a5784ed514c2018d9af0265 > crypto_sign/haetae5v5/checksumbig
 )

@@ -1,7 +1,9 @@
-// version 20260625
+// version 20260901
 // public domain
 // djb
 
+// 20260901 djb: skip this counter for PMC below v3 or below 48 bits
+// 20260901 djb: use /sys/bus/event_source/devices/cpu_atom/type
 // 20260625 djb: add second fd for atom cores, sigh
 // 20260105 djb: forked from amd64-perfpmc.c
 // 20251226 djb: add ticks_close()
@@ -18,6 +20,8 @@
 #include <sys/syscall.h>
 #include <linux/perf_event.h>
 #include "cpucycles_internal.h"
+#include "cpuid_intel.h"
+#include "atom_type.h"
 
 long long ticks(void)
 {
@@ -31,6 +35,9 @@ long long ticks(void)
 #define PERF_FLAG_FD_CLOEXEC 0
 #endif
 
+// XXX: maybe allow more fds for more cpu_* directories
+// XXX: maybe ask linux to add simpler API
+
 static int fdperf = -1;
 static int fdperfatom = -1;
 
@@ -42,11 +49,21 @@ void ticks_close(void)
   fdperf = -1;
 }
 
+static long long abort_on_narrow_pmc(void)
+{
+  if (!cpuid_wide_pmc()) abort();
+  return 0;
+}
+
 long long ticks_setup(void)
 {
   int xkernel,xhv;
 
+  if (!cpucycles_works(abort_on_narrow_pmc)) return cpucycles_SKIP;
+
   if (fdperf == -1) {
+    atom_type_init();
+
     // prefer to exclude if platform supports that
     // but fall back to non-exclude if necessary
     for (xkernel = 1;xkernel >= 0;--xkernel) {
@@ -63,11 +80,10 @@ long long ticks_setup(void)
         fdperf = syscall(__NR_perf_event_open,&attr,0,-1,-1,PERF_FLAG_FD_CLOEXEC);
         if (fdperf != -1) {
 #ifdef PERF_PMU_TYPE_SHIFT
-          // XXX: maybe read /sys/bus/event_source/devices/cpu_atom/type
-          // XXX: maybe allow more fds for more cpu_* directories
-          // XXX: maybe ask linux to add simpler API
-          attr.config |= ((long long) 10) << PERF_PMU_TYPE_SHIFT;
-          fdperfatom = syscall(__NR_perf_event_open,&attr,0,-1,-1,PERF_FLAG_FD_CLOEXEC);
+          if (atom_type > 0) {
+            attr.config |= ((long long) atom_type) << PERF_PMU_TYPE_SHIFT;
+            fdperfatom = syscall(__NR_perf_event_open,&attr,0,-1,-1,PERF_FLAG_FD_CLOEXEC);
+          }
 #endif
           break;
         }

@@ -1,7 +1,7 @@
 #!/bin/sh
 
 supercop=.
-sourcetop=import/ntruplus-20260725
+sourcetop=import/ntruplus-20260814
 
 for p in 768 864 1152
 do

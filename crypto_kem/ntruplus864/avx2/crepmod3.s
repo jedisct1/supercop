@@ -1,67 +1,62 @@
+/*************************************************
+* Name:        poly_crepmod3
+*
+* Description: Centers coefficients modulo q and reduces them modulo 3.
+*
+* Arguments:   - poly *r: pointer to the input/output polynomial;
+*                         input coefficients must lie in [-q+1,q-1]
+*
+* Returns:     none. Output coefficients lie in {-1,0,1}.
+**************************************************/
 .global poly_crepmod3
 poly_crepmod3:
-vmovdqa       _16xq(%rip), %ymm0
-vmovdqa _16xqp1div2(%rip), %ymm1
-vmovdqa _16xqm1div2(%rip), %ymm2
-vmovdqa      _16xv2(%rip), %ymm3
-vmovdqa       _16x3(%rip), %ymm4
+vmovdqa      _16xq26(%rip), %ymm0
+vmovdqa _16xq26round(%rip), %ymm1
+vmovdqa       _16xv2(%rip), %ymm2
+vmovdqa        _16x3(%rip), %ymm3
 
 lea 1728(%rdi), %r8
 
 .p2align 5
 _loop_poly_crepmod3:
-vmovdqa   (%rdi), %ymm7
-vmovdqa 32(%rdi), %ymm8
-vmovdqa 64(%rdi), %ymm9
+vmovdqa   (%rdi), %ymm4
+vmovdqa 32(%rdi), %ymm5
+vmovdqa 64(%rdi), %ymm6
 
-vpsraw $15, %ymm7,  %ymm11
-vpsraw $15, %ymm8,  %ymm12
-vpsraw $15, %ymm9,  %ymm13
+#reduceq
+vpmulhw %ymm0, %ymm4, %ymm8
+vpmulhw %ymm0, %ymm5, %ymm9
+vpmulhw %ymm0, %ymm6, %ymm10
 
-vpand %ymm0, %ymm11, %ymm11
-vpand %ymm0, %ymm12, %ymm12
-vpand %ymm0, %ymm13, %ymm13
+vpaddw %ymm1, %ymm8,  %ymm8
+vpaddw %ymm1, %ymm9,  %ymm9
+vpaddw %ymm1, %ymm10, %ymm10
 
-vpaddw %ymm11, %ymm7,  %ymm7
-vpaddw %ymm12, %ymm8,  %ymm8
-vpaddw %ymm13, %ymm9,  %ymm9
+vpsraw $10, %ymm8,  %ymm8
+vpsraw $10, %ymm9,  %ymm9
+vpsraw $10, %ymm10, %ymm10
 
-vpsubw %ymm1, %ymm7,  %ymm7
-vpsubw %ymm1, %ymm8,  %ymm8
-vpsubw %ymm1, %ymm9,  %ymm9
-
-vpsraw $15, %ymm7,  %ymm11
-vpsraw $15, %ymm8,  %ymm12
-vpsraw $15, %ymm9,  %ymm13
-
-vpand %ymm0, %ymm11, %ymm11
-vpand %ymm0, %ymm12, %ymm12
-vpand %ymm0, %ymm13, %ymm13
-
-vpaddw %ymm11, %ymm7,  %ymm7
-vpaddw %ymm12, %ymm8,  %ymm8
-vpaddw %ymm13, %ymm9,  %ymm9
-
-vpsubw %ymm2, %ymm7,  %ymm7
-vpsubw %ymm2, %ymm8,  %ymm8
-vpsubw %ymm2, %ymm9,  %ymm9
+# q = 1 (mod 3)
+vpsubw %ymm8,  %ymm4, %ymm4
+vpsubw %ymm9,  %ymm5, %ymm5
+vpsubw %ymm10, %ymm6, %ymm6
 
 #reduce3
-vpmulhrsw %ymm3, %ymm7, %ymm11
-vpmulhrsw %ymm3, %ymm8, %ymm12
-vpmulhrsw %ymm3, %ymm9, %ymm13
+vpmulhrsw %ymm2, %ymm4, %ymm8
+vpmulhrsw %ymm2, %ymm5, %ymm9
+vpmulhrsw %ymm2, %ymm6, %ymm10
 
-vpmullw %ymm4, %ymm11,  %ymm11
-vpmullw %ymm4, %ymm12,  %ymm12
-vpmullw %ymm4, %ymm13,  %ymm13
+vpmullw %ymm3, %ymm8,  %ymm8
+vpmullw %ymm3, %ymm9,  %ymm9
+vpmullw %ymm3, %ymm10, %ymm10
 
-vpsubw %ymm11,  %ymm7, %ymm7
-vpsubw %ymm12,  %ymm8, %ymm8
-vpsubw %ymm13,  %ymm9, %ymm9
+vpsubw %ymm8,  %ymm4, %ymm4
+vpsubw %ymm9,  %ymm5, %ymm5
+vpsubw %ymm10, %ymm6, %ymm6
 
-vmovdqa %ymm7,    (%rdi)
-vmovdqa %ymm8,  32(%rdi)
-vmovdqa %ymm9,  64(%rdi)
+vmovdqa %ymm4,   (%rdi)
+vmovdqa %ymm5, 32(%rdi)
+vmovdqa %ymm6, 64(%rdi)
 
 add $96, %rdi
 cmp %r8,  %rdi

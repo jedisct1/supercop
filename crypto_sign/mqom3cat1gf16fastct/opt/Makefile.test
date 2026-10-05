@@ -1,0 +1,147 @@
+C_SRCS=$(wildcard *.c)
+ASM_SRCS=$(wildcard *.S)
+ASM_SRCS+=$(wildcard *.s)
+
+# filter before substituting: ASM_SRCS holds both .S and .s, and a bare
+# $(ASM_SRCS:.s=.o) leaves every .S entry untouched, so the .S SOURCE ended
+# up in OBJS. Harmless while only compiling (make sees an existing file and
+# stops there), fatal as soon as anything links: the assembler emits the
+# Keccak symbols a second time and ld reports multiple definitions.
+OBJS=$(C_SRCS:.c=.o)
+OBJS+=$(patsubst %.S,%.o,$(filter %.S,$(ASM_SRCS)))
+OBJS+=$(patsubst %.s,%.o,$(filter %.s,$(ASM_SRCS)))
+
+# Where to find the XKCP that SUPERCOP would otherwise provide.
+XKCP_INCLUDE ?=
+XKCP_LIB ?=
+
+ifeq ($(XKCP_INCLUDE),)
+$(error set XKCP_INCLUDE to the directory HOLDING libkeccak.a.headers, and XKCP_LIB to the matching archive)
+endif
+
+# SUPERCOP generates crypto_sign.h from api.h and ships crypto_declassify.h,
+# and crypto_sign.c reaches for both as soon as -DSUPERCOP is set. The harness
+# stands in for them, OUTSIDE this directory on purpose: a stray crypto_sign.h
+# sitting here would shadow the one SUPERCOP generates for the real build.
+TMPROOT := $(patsubst %/,%,$(or $(TMPDIR),/tmp))
+HARNESS_DIR ?= $(TMPROOT)/mqom3-supercop-harness
+HARNESS_HDRS = $(HARNESS_DIR)/crypto_sign.h $(HARNESS_DIR)/crypto_declassify.h
+
+$(HARNESS_DIR)/crypto_sign.h:
+	@mkdir -p $(HARNESS_DIR)
+	@printf '#include "api.h"\n' > $@
+
+$(HARNESS_DIR)/crypto_declassify.h:
+	@mkdir -p $(HARNESS_DIR)
+	@printf 'extern void crypto_declassify(const void *,unsigned long long);\n' > $@
+
+# -DSUPERCOP is what SUPERCOP itself passes to every implementation source;
+# it is the switch that sends the sponge layer to libkeccak.a.headers.
+CFLAGS = -Wall -Wextra -Wshadow -I. -I$(XKCP_INCLUDE) -I$(HARNESS_DIR) -DSUPERCOP -march=native $(EXTRA_CFLAGS)
+
+$(OBJS): $(HARNESS_HDRS)
+
+all: $(OBJS)
+
+define MQOM3_SELFTEST_SRC
+/* Local self-test for one MQOM3 SUPERCOP instance.
+ *
+ * Not part of the submission: SUPERCOP provides its own harness and its own
+ * randombytes(). This file exists so that a release can be checked locally
+ * beyond "it compiles" - it links an instance and exercises the API end to end.
+ *
+ * Run it with:   make -f Makefile.test check
+ */
+#include <stdio.h>
+#include <string.h>
+#include "api.h"
+
+/* SUPERCOP supplies randombytes(); a standalone link must bring its own.
+ * Deterministic on purpose - a failure here is reproducible, and this is a
+ * functional check, not a randomness one. */
+int randombytes(unsigned char *x, unsigned long long xlen)
+{
+    static unsigned long long s = 0x123456789abcdefULL;
+    unsigned long long i;
+    for (i = 0; i < xlen; i++) {
+        s ^= s << 13;
+        s ^= s >> 7;
+        s ^= s << 17;
+        x[i] = (unsigned char)(s >> 24);
+    }
+    return 0;
+}
+
+/* SUPERCOP provides crypto_declassify() as part of its constant-time checking;
+ * a standalone link must bring its own, and outside that harness it is a no-op. */
+void crypto_declassify(const void *x, unsigned long long len)
+{
+    (void)x;
+    (void)len;
+}
+
+#define MSG_LEN 59
+
+int main(void)
+{
+    static unsigned char pk[CRYPTO_PUBLICKEYBYTES];
+    static unsigned char sk[CRYPTO_SECRETKEYBYTES];
+    static unsigned char sm[CRYPTO_BYTES + MSG_LEN];
+    static unsigned char out[CRYPTO_BYTES + MSG_LEN];
+    unsigned char msg[MSG_LEN];
+    unsigned long long smlen = 0, outlen = 0;
+    unsigned int i;
+    int ret;
+
+    for (i = 0; i < MSG_LEN; i++) { msg[i] = (unsigned char)(i * 7 + 1); }
+
+    printf("%-28s ", CRYPTO_ALGNAME);
+    fflush(stdout);
+
+    ret = crypto_sign_keypair(pk, sk);
+    if (ret != 0) { printf("FAIL (keypair returned %d)\n", ret); return 1; }
+
+    ret = crypto_sign(sm, &smlen, msg, MSG_LEN, sk);
+    if (ret != 0) { printf("FAIL (sign returned %d)\n", ret); return 1; }
+    if (smlen != (unsigned long long)(CRYPTO_BYTES + MSG_LEN)) {
+        printf("FAIL (smlen %llu, expected %llu)\n",
+               smlen, (unsigned long long)(CRYPTO_BYTES + MSG_LEN));
+        return 1;
+    }
+
+    ret = crypto_sign_open(out, &outlen, sm, smlen, pk);
+    if (ret != 0) { printf("FAIL (open rejected a valid signature, %d)\n", ret); return 1; }
+    if (outlen != MSG_LEN || memcmp(out, msg, MSG_LEN) != 0) {
+        printf("FAIL (recovered message differs)\n");
+        return 1;
+    }
+
+    /* A signature that verifies is only half the contract: one that must not. */
+    sm[smlen / 2] ^= 0x01;
+    ret = crypto_sign_open(out, &outlen, sm, smlen, pk);
+    if (ret == 0) { printf("FAIL (open accepted a tampered signature)\n"); return 1; }
+    sm[smlen / 2] ^= 0x01;
+
+    printf("ok (sign/open round trip, tampering rejected)\n");
+    return 0;
+}
+endef
+export MQOM3_SELFTEST_SRC
+
+# Links the instance and exercises the API, rather than stopping at
+# "it compiles": keypair, sign, open, and a tampered signature that
+# must be rejected. The source is written outside this directory and
+# deleted afterwards, whatever the outcome. It is also run from there:
+# the kernel writes a core dump to the working directory of the process,
+# so a self-test that dies - an instance whose ISA the host does not have,
+# say - would otherwise leave a core file in this directory.
+check: $(OBJS)
+	@d=$$(mktemp -d) || exit 1; \
+	 printf '%s\n' "$$MQOM3_SELFTEST_SRC" > $$d/selftest.c; \
+	 r=0; \
+	 $(CC) $(CFLAGS) $$d/selftest.c $(OBJS) $(XKCP_LIB) -o $$d/selftest || r=$$?; \
+	 if [ $$r -eq 0 ]; then ( cd $$d && ./selftest ) || r=$$?; fi; \
+	 rm -rf $$d; exit $$r
+
+clean:
+	@rm -rf *.o $(HARNESS_DIR)
