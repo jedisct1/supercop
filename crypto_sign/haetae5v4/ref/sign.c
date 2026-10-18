@@ -264,8 +264,8 @@ reject:
   polyveck_invntt_tomont(&cs2);
 
   // z = y + (-1)^b cs = z1 + z2
-  polyvecl_cneg(&cs1, b & 1);
-  polyveck_cneg(&cs2, b & 1);
+  polyvecl_cneg(&cs1, crypto_int64_bottombit_01(b));
+  polyveck_cneg(&cs2, crypto_int64_bottombit_01(b));
   polyfixvecl_add(&z1, &y1, &cs1);
   polyfixveck_add(&z2, &y2, &cs2);
 

@@ -6,7 +6,6 @@ sourcetop='import/haetae-1.2.0'
 for p in 2 3 5
 do
   targettop="$supercop/crypto_sign/haetae${p}v5"
-  rm -r "$targettop"
   mkdir -p "$targettop"
   (
     echo ref "$sourcetop"/reference_implementation
@@ -14,9 +13,10 @@ do
   while read target source
   do
     x="$targettop/$target"
-    [ -d "$x" ] && continue
+    rm -rf "$x"
     mkdir -p "$x"
     echo "integrating $x..."
+
     cp -Lpr "$source"/include/* "$x"
     cp -Lpr "$source"/src/* "$x"
     rm "$x/randombytes.c"
@@ -38,8 +38,6 @@ do
     sed -i '/#include "params.h"/ a#define CRYPTO_BYTES crypto_BYTES' "$x/api.h"
     sed -i '/#include "params.h"/ a#define CRYPTO_SECRETKEYBYTES crypto_SECRETKEYBYTES' "$x/api.h"
     sed -i '/#include "params.h"/ a#define CRYPTO_PUBLICKEYBYTES crypto_PUBLICKEYBYTES' "$x/api.h"
-    touch "$x/goal-constbranch"
-    touch "$x/goal-constindex"
 
     ( cd "$x"
       patch -p1 << 'EOF'
@@ -198,6 +196,7 @@ for fn in glob.glob(f"{x}/*.[ch]"):
     line = line.replace("polyvecl_highbits(&hb_z1, &z1rnd);","polyvecl_highbits(&hb_z1, &z1rnd);\n  crypto_declassify(&hb_z1,sizeof hb_z1);\n  crypto_declassify(&h,sizeof h);")
 
     line = line.replace("= a & 1;","= crypto_int64_bottombit_01(a);")
+    line = line.replace(", b & 1)",", crypto_int64_bottombit_01(b))")
     line = line.replace("= (y->limb48[1] >> 63) & 1;","= crypto_int64_bitmod_01(y->limb48[1],63);")
     line = line.replace("= a->coeffs[i] & 1;","= crypto_int64_bottombit_01(a->coeffs[i]);")
     line = line.replace("= -(buf[0] & 1);","= crypto_int64_bottombit_mask(buf[0]);")
@@ -340,6 +339,9 @@ for fn in glob.glob(f"{x}/*.[ch]"):
 EOF
     )
 
+    echo 'derived from upstream haetae by supercop/import/haetae' > "$x"/implementors
+    touch "$x/goal-constbranch"
+    touch "$x/goal-constindex"
   done
 done
 

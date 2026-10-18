@@ -14,7 +14,7 @@
 
 typedef gt_cq_poly keygen_poly;
 
-#include "fips202.h"
+#include "crypto_xof_shake256.h"
 
 static inline void encap_basemul_add_tobytes(uint8_t *ct, const poly *h,
                                              const poly *r, poly *m)
@@ -182,17 +182,19 @@ int crypto_kem_keypair_internal(uint8_t *pk, uint8_t *sk)
 
     randombytes(coins[0], sizeof coins[0]);
     randombytes(coins[1], sizeof coins[1]);
-    shake256_x2(buf[0], buf[1], NTRUPLUS_N / 4, coins[0], coins[1], 32);
+    // XXX: can merge this into a 2-way shake256
+    crypto_xof_shake256(buf[0], NTRUPLUS_N / 4, coins[0], 32);
+    crypto_xof_shake256(buf[1], NTRUPLUS_N / 4, coins[1], 32);
 
     while (genf_from_seed(&f, &finv, buf[cur])) {
         cur ^= 1;
         randombytes(coins[cur ^ 1], sizeof coins[0]);
-        shake256(buf[cur ^ 1], NTRUPLUS_N / 4, coins[cur ^ 1], 32);
+        crypto_xof_shake256(buf[cur ^ 1], NTRUPLUS_N / 4, coins[cur ^ 1], 32);
     }
     cur ^= 1;
     while (geng_from_seed(&g, &ginv, buf[cur])) {
         randombytes(coins[cur], sizeof coins[0]);
-        shake256(buf[cur], NTRUPLUS_N / 4, coins[cur], 32);
+        crypto_xof_shake256(buf[cur], NTRUPLUS_N / 4, coins[cur], 32);
     }
 
     crypto_kem_keypair_derand(pk, sk, &f, &finv, &g, &ginv);

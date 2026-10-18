@@ -1,0 +1,268 @@
+#!/bin/sh
+
+# currently integrating:
+#   crypto_xof/shake{128,256}/mlkn-{ref,aarch64}
+#     (other upstream fips202 impls seem to be just for x2, x4)
+#   crypto_kem/mlkem{512,768,1024}/mlkn-{ref,aarch64,x86_64,riscv64,ppc64le}
+
+supercop=.
+top=import/mlkem-native
+
+for bits in 128 256
+do
+  targettop="$supercop/crypto_xof/shake$bits"
+  mkdir -p "$targettop"
+
+  (
+    echo ref "$top/mlkem/src/fips202"
+    echo aarch64 "$top/mlkem/src/fips202/native/aarch64"
+  ) |
+  while read target source
+  do
+    x="$targettop/mlkn-$target"
+    rm -rf "$x"
+    mkdir -p "$x"
+    echo "integrating $x..."
+
+    cp "$top/mlkem/src/common.h" "$x"
+    cp "$top/mlkem/src/capability.h" "$x"
+    cp "$top/mlkem/src/sys.h" "$x"
+    cp "$top/mlkem/src/cbmc.h" "$x"
+    cp "$top/mlkem/src/context.h" "$x"
+    cp "$top/mlkem/src/verify.h" "$x"
+    touch "$x"/params.h
+
+    cp "$top/mlkem/src/fips202/fips202.h" "$x"
+    cp "$top/mlkem/src/fips202/fips202.c" "$x"
+    cp "$top/mlkem/src/fips202/keccakf1600.h" "$x"
+    cp "$top/mlkem/src/fips202/keccakf1600.c" "$x"
+    case "$target" in
+      ref)
+        (
+          echo '#define MLK_NATIVE_FUNC_SUCCESS 0'
+          echo '#define MLK_NATIVE_FUNC_FALLBACK (-1)'
+          echo '#define MLK_CONFIG_NAMESPACE_PREFIX CRYPTO_NAMESPACETOP'
+        ) > "$x/mlkem_native_config.h"
+        ;;
+      aarch64)
+        cp "$source"/*.h "$x" # XXX: try to narrow this to auto.h and x1_*.h
+        cp "$source"/src/fips202_native_aarch64.h "$x"
+        cp "$source"/src/keccakf1600_round_constants.c "$x"
+        cp "$source"/src/*.S "$x" # XXX: try to narrow this to *_x1_*.S
+        (
+          echo '#define MLK_CONFIG_USE_NATIVE_BACKEND_FIPS202' 
+          echo '#define MLK_CONFIG_FIPS202_BACKEND_FILE "auto.h"'
+          echo '#define MLK_NATIVE_FUNC_SUCCESS 0'
+          echo '#define MLK_NATIVE_FUNC_FALLBACK (-1)'
+          echo '#define MLK_CONFIG_NAMESPACE_PREFIX CRYPTO_NAMESPACETOP'
+        ) > "$x/mlkem_native_config.h"
+        ;;
+    esac
+
+    sed -i 's_#include "src/_#include "_' "$x"/*
+    sed -i 's_#include "\.\./_#include "_' "$x"/*
+    sed -i 's_#include "\.\./_#include "_' "$x"/*
+    sed -i 's_#include "\.\./_#include "_' "$x"/*
+    sed -i 's_#include "\.\./_#include "_' "$x"/*
+
+    case "$bits" in
+      128)
+        sed -i 's/void mlk_shake256/void mlk_shake128/' "$x"/fips202.c
+        sed -i 's/mlk_shake256ctx state;/mlk_shake256ctx state;/' "$x"/fips202.c
+        sed -i 's/SHAKE256_RATE/SHAKE128_RATE/' "$x"/fips202.c
+        sed -i 's/mlk_shake256/mlk_shake128/' "$x"/fips202.h
+        ;;
+    esac
+
+    touch "$x"/api.h
+    (
+      echo '#include "crypto_xof.h"'
+      echo '#include "fips202.h"'
+      echo ''
+      echo 'int crypto_xof('
+      echo '  unsigned char *h,long long hlen,'
+      echo '  const unsigned char *m,long long mlen'
+      echo ')'
+      echo '{'
+      echo '  // XXX: beware size_t'
+      echo "  mlk_shake$bits((uint8_t *) h,hlen,(uint8_t *) m,mlen);"
+      echo '  return 0;'
+      echo '}'
+    ) > "$x"/wrapper.c
+
+    touch "$x"/goal-constbranch
+    touch "$x"/goal-constindex
+
+    echo 'derived from upstream mlkem-native by supercop/import/mlkemnative' > "$x"/implementors
+
+    [ "$target" = "aarch64" ] && ( echo aarch64 ) > "$x/architectures"
+  done
+done
+
+for p in 512 768 1024
+do
+  targettop="$supercop/crypto_kem/mlkem$p"
+  mkdir -p "$targettop"
+
+  (
+    echo ref undef
+    echo aarch64 "$top/mlkem/src/native/aarch64/src"
+    echo x86_64 "$top/mlkem/src/native/x86_64/src"
+    echo riscv64 "$top/mlkem/src/native/riscv64/src"
+    echo ppc64le "$top/mlkem/src/native/ppc64le/src"
+  ) |
+  while read target opt
+  do
+    x="$targettop/mlkn-$target"
+    rm -rf "$x"
+    mkdir -p "$x"
+    echo "integrating $x..."
+
+    cp "$x/../compact/api.h" "$x"/api.h
+
+    cp "$top/mlkem/mlkem_native.h" "$x"
+    cp "$top/mlkem/src/common.h" "$x"
+    cp "$top/mlkem/src/capability.h" "$x"
+    cp "$top/mlkem/src/sys.h" "$x"
+    cp "$top/mlkem/src/cbmc.h" "$x"
+    cp "$top/mlkem/src/context.h" "$x"
+    cp "$top/mlkem/src/verify.h" "$x"
+    cp "$top/mlkem/src/params.h" "$x"
+    cp "$top/mlkem/src/compress.h" "$x"
+    cp "$top/mlkem/src/debug.h" "$x"
+    cp "$top/mlkem/src/indcpa.h" "$x"
+    cp "$top/mlkem/src/kem.h" "$x"
+    cp "$top/mlkem/src/poly.h" "$x"
+    cp "$top/mlkem/src/poly_k.h" "$x"
+    cp "$top/mlkem/src/sampling.h" "$x"
+    cp "$top/mlkem/src/symmetric.h" "$x"
+    cp "$top/mlkem/src/verify.h" "$x"
+    cp "$top/mlkem/src/zetas.inc" "$x"
+
+    cp "$top/mlkem/src/fips202/"*.h "$x"
+    cp "$top/mlkem/src/fips202/"*.c "$x"
+    cp "$top/mlkem/src/fips202/keccakf1600.h" "$x"
+    cp "$top/mlkem/src/fips202/keccakf1600.c" "$x"
+
+    [ "$target" = ref ] || cp "$top/mlkem/src/native/meta.h" "$x"
+    [ "$target" = ref ] || cp "$top/mlkem/src/fips202/native/auto.h" "$x"/topauto.h
+
+    (
+      for z in compress debug indcpa kem poly poly_k sampling verify
+      do
+        echo "$top/mlkem/src" "$z"
+      done
+      case "$target" in
+        ref)
+          ;;
+        aarch64)
+          echo "$opt" aarch64_zetas
+          echo "$opt" rej_uniform_table
+          ;;
+        x86_64)
+          echo "$opt" compress_consts
+          echo "$opt" consts
+          echo "$opt" rej_uniform_table
+          ;;
+        riscv64)
+          echo "$opt" rv64v_debug
+          echo "$opt" rv64v_poly
+          ;;
+        ppc64le)
+          echo "$opt" consts
+          ;;
+      esac
+    ) |
+    while read zdir z
+    do
+      cp "$zdir"/"$z".c "$x"/"$z".inc
+      echo '#include "'$z'.inc"'
+    done > "$x"/merged.c
+
+    [ "$target" = ref ] || (
+      cp "$opt"/../*.h "$x"
+      cp "$opt"/* "$x"
+    )
+
+    case "$target" in
+      aarch64|x86_64)
+        cp "$top/mlkem/src/fips202/native/$target"/*.h "$x"
+        cp "$top/mlkem/src/fips202/native/$target"/src/* "$x"
+        ;;
+    esac
+
+    (
+      echo "#define MLK_CONFIG_PARAMETER_SET $p"
+      echo '#define MLK_NATIVE_FUNC_SUCCESS 0'
+      echo '#define MLK_NATIVE_FUNC_FALLBACK (-1)'
+      echo '#define MLK_CONFIG_NAMESPACE_PREFIX CRYPTO_NAMESPACETOP'
+      echo '#define MLK_CONFIG_FIPS202_CUSTOM_HEADER "fips202.h"'
+      [ "$target" = ref ] || (
+        echo '#define MLK_CONFIG_USE_NATIVE_BACKEND_ARITH'
+        echo '#define MLK_CONFIG_ARITH_BACKEND_FILE "meta.h"'
+        echo '#define MLK_CONFIG_USE_NATIVE_BACKEND_FIPS202'
+        echo '#define MLK_CONFIG_FIPS202_BACKEND_FILE "topauto.h"'
+      )
+    ) > "$x/mlkem_native_config.h"
+
+    sed -i 's_#include "src/_#include "_' "$x"/*
+    sed -i 's_ "fips202/_ "_' "$x"/*
+    sed -i 's_#include "aarch64/_#include "_' "$x"/*
+    sed -i 's_#include "x86\_64/_#include "_' "$x"/*
+    sed -i 's_#include "riscv64/_#include "_' "$x"/*
+    sed -i 's_#include "ppc64le/_#include "_' "$x"/*
+    sed -i 's_#include "\.\./_#include "_' "$x"/*
+    sed -i 's_#include "\.\./_#include "_' "$x"/*
+    sed -i 's_#include "\.\./_#include "_' "$x"/*
+    sed -i 's_#include "\.\./_#include "_' "$x"/*
+
+    sed -i s/randombytes\.h/mlkrandombytes.h/ "$x"/*
+    (
+      echo '#ifndef MLK_RANDOMBYTES_H'
+      echo '#define MLK_RANDOMBYTES_H'
+      echo '#include "cbmc.h"'
+      echo '#include "common.h"'
+      echo '#include "randombytes.h"'
+      echo 'MLK_MUST_CHECK_RETURN_VALUE'
+      echo 'static MLK_INLINE int mlk_randombytes(uint8_t *out, size_t outlen) {'
+      echo '  randombytes(out,outlen);'
+      echo '  return 0;'
+      echo '}'
+      echo '#endif'
+    ) > "$x"/mlkrandombytes.h
+
+    case "$target"/"$p" in
+      x86_64/512)
+        rm "$x"/mlkem_poly_*compress_d5_avx2_asm.S
+        rm "$x"/mlkem_poly_*compress_d11_avx2_asm.S
+        rm "$x"/mlkem_polyvec_basemul_acc_montgomery_cached_k3_avx2_asm.S
+        rm "$x"/mlkem_polyvec_basemul_acc_montgomery_cached_k4_avx2_asm.S
+        ;;
+      x86_64/768)
+        rm "$x"/mlkem_poly_*compress_d5_avx2_asm.S
+        rm "$x"/mlkem_poly_*compress_d11_avx2_asm.S
+        rm "$x"/mlkem_polyvec_basemul_acc_montgomery_cached_k2_avx2_asm.S
+        rm "$x"/mlkem_polyvec_basemul_acc_montgomery_cached_k4_avx2_asm.S
+        ;;
+      x86_64/1024)
+        rm "$x"/mlkem_poly_*compress_d4_avx2_asm.S
+        rm "$x"/mlkem_poly_*compress_d10_avx2_asm.S
+        rm "$x"/mlkem_polyvec_basemul_acc_montgomery_cached_k2_avx2_asm.S
+        rm "$x"/mlkem_polyvec_basemul_acc_montgomery_cached_k3_avx2_asm.S
+        ;;
+    esac
+
+    touch "$x"/goal-constbranch
+    touch "$x"/goal-constindex
+
+    echo 'derived from upstream mlkem-native by supercop/import/mlkn' > "$x"/implementors
+
+    [ "$target" = "aarch64" ] && ( echo aarch64 ) > "$x/architectures"
+    [ "$target" = "x86_64" ] && ( echo amd64 ) > "$x/architectures"
+    [ "$target" = "riscv64" ] && ( echo riscv64 ) > "$x/architectures"
+    [ "$target" = "ppc64le" ] && ( echo ppc64 ) > "$x/architectures"
+  done
+done
+
+linksame crypto_xof/shake*/mlkn* || :
+linksame crypto_kem/mlkem*/mlkn* || :

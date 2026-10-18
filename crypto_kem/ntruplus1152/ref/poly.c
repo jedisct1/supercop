@@ -171,7 +171,7 @@ int poly_sotp_decode(uint8_t msg[NTRUPLUS_N/8], const poly *a, const uint8_t buf
 
 		for(size_t j = 0; j < 8; j++)
 		{
-			t4 = t2 & 0x1;
+			t4 = crypto_uint32_bottombit_01(t2);
 			t4 += a->coeffs[8*i + j];
 			r |= t4;
 			t4 = crypto_int16_bottombit_01(t4 ^ t1);
@@ -185,7 +185,7 @@ int poly_sotp_decode(uint8_t msg[NTRUPLUS_N/8], const poly *a, const uint8_t buf
 	}
 
 	r = r >> 1;
-	r = crypto_uint32_topbit_01(r);
+	r = crypto_uint32_nonzero_01(r);
 
 	mask = (uint8_t)(r - 1);
 

@@ -10,7 +10,6 @@
  *   poly_basemul_scale       Decap first product (Official)
  *   poly_invntt_crepmod3     Decap inverse NTT fused with crepmod3
  *   poly_tobytes/frombytes   12-bit codec
- *   mlk_shake256             mlkem-native's SHAKE256 (fips202.c)
  * pk, sk, ct, ss and the rejection behaviour are byte-identical to Official.
  * The three entry points keep their NIST names, as in the AArch64 packages;
  * under SUPERCOP, crypto_kem.h namespaces them.
@@ -25,7 +24,7 @@
 #include "params.h"
 #include "symmetric.h"
 #include "poly.h"
-#include "fips202.h"
+#include "crypto_xof_shake256.h"
 #include "randombytes.h"
 
 static int declassify_poly_frombytes(poly *r, const uint8_t a[NTRUPLUS_POLYBYTES])
@@ -76,7 +75,7 @@ static inline int genf_derand(poly *f, poly *finv,
                               uint8_t buf[NTRUPLUS_N / 4],
                               const uint8_t *coins)
 {
-    mlk_shake256(buf, NTRUPLUS_N / 4, coins, 32);
+    crypto_xof_shake256(buf, NTRUPLUS_N / 4, coins, 32);
 
     poly_cbd1(f, buf);
     poly_triple(f);
@@ -107,7 +106,7 @@ static inline int geng_derand(poly *g, poly *ginv,
                               uint8_t buf[NTRUPLUS_N / 4],
                               const uint8_t *coins)
 {
-    mlk_shake256(buf, NTRUPLUS_N / 4, coins, 32);
+    crypto_xof_shake256(buf, NTRUPLUS_N / 4, coins, 32);
 
     poly_cbd1(g, buf);
     poly_triple(g);

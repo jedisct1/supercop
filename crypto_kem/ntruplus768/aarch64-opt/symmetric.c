@@ -3,7 +3,10 @@
 #include "symmetric.h"
 #include "util.h"
 
-#include "fips202.h"
+#include "crypto_xof_shake256.h"
+
+extern void ntruplus_hash_g_fixed(uint8_t output[NTRUPLUS_N / 4],
+                           const uint8_t input[NTRUPLUS_POLYBYTES]);
 
 #ifndef HASH_F_INBYTES
 #define HASH_F_INBYTES  (NTRUPLUS_POLYBYTES)
@@ -16,8 +19,10 @@
 
 void hash_f(uint8_t *buf, const uint8_t *msg)
 {
-    /* The prefixed entry point absorbs 0x00 || msg without building a copy. */
-    shake256_prefixed(buf, HASH_F_OUTBYTES, 0x00, msg, HASH_F_INBYTES);
+    uint8_t x[1+HASH_F_INBYTES];
+    x[0] = 0;
+    memcpy(x+1,msg,HASH_F_INBYTES);
+    crypto_xof_shake256(buf,HASH_F_OUTBYTES,x,sizeof x);
 }
 
 void hash_g(uint8_t *buf, const uint8_t *msg)
@@ -29,6 +34,8 @@ void hash_g(uint8_t *buf, const uint8_t *msg)
 
 void hash_h(uint8_t *buf, const uint8_t *msg)
 {
-    /* The prefixed entry point absorbs 0x02 || msg without building a copy. */
-    shake256_prefixed(buf, HASH_H_OUTBYTES, 0x02, msg, HASH_H_INBYTES);
+    uint8_t x[1+HASH_H_INBYTES];
+    x[0] = 2;
+    memcpy(x+1,msg,HASH_H_INBYTES);
+    crypto_xof_shake256(buf,HASH_H_OUTBYTES,x,sizeof x);
 }

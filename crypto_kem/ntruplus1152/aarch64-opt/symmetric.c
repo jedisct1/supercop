@@ -1,7 +1,7 @@
 #include <string.h>
 #include "symmetric.h"
 #include "secure_clear.h"
-#include "fips202.h"
+#include "crypto_xof_shake256.h"
 #include "pack_asm.h"
 
 /*
@@ -53,6 +53,8 @@ void hash_g_fr0(uint8_t *buf, const int16_t coeffs[NTRUPLUS_N])
 
 void hash_h(uint8_t *buf, const uint8_t *msg)
 {
-    /* The prefixed entry point absorbs 0x02 || msg without building a copy. */
-    shake256_prefixed(buf, HASH_H_OUTBYTES, 0x02, msg, HASH_H_INBYTES);
+    uint8_t x[HASH_H_INBYTES+1];
+    x[0] = 2;
+    memcpy(x+1,msg,HASH_H_INBYTES);
+    crypto_xof_shake256(buf,HASH_H_OUTBYTES,x,sizeof x);
 }

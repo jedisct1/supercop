@@ -3,10 +3,11 @@
 supercop=.
 sourcetop=import/ntruplus-20260814
 
+unlinksame crypto_kem/ntruplus* || :
+
 for p in 768 864 1152
 do
   targettop="$supercop/crypto_kem/ntruplus$p"
-  rm -rf "$targettop"
   mkdir -p "$targettop"
   touch "$targettop"/goal-indcpa
   touch "$targettop"/goal-indcca2
@@ -19,7 +20,7 @@ do
   while read target source
   do
     x="$targettop/$target"
-    [ -d "$x" ] && continue
+    rm -rf "$x"
     mkdir -p "$x"
     echo "integrating $x..."
     cp -Lpr "$source"/*.c "$x"
@@ -94,8 +95,9 @@ for fn in glob.glob(f"{x}/*.[ch]"):
     line = line.replace("return fail >> 31;","return crypto_uint32_topbit_01(fail);")
     line = line.replace("= (t1 & 0x1) - (t2 & 0x1);","= crypto_int16_bottombit_01(t1) - crypto_int16_bottombit_01(t2);")
     line = line.replace("= (t4 ^ t1) & 0x1;","= crypto_int16_bottombit_01(t4 ^ t1);")
-    line = line.replace("= (-(uint32_t)r) >> 31;","= crypto_uint32_topbit_01(r);")
+    line = line.replace("= (-(uint32_t)r) >> 31;","= crypto_uint32_nonzero_01(r);")
     line = line.replace("= (a >> 15) & NTRUPLUS_Q;","= crypto_int16_negative_mask(a) & NTRUPLUS_Q;")
+    line = line.replace("= t2 & 0x1;","= crypto_uint32_bottombit_01(t2);")
 
     lines2.append(line)
 
@@ -105,8 +107,11 @@ for fn in glob.glob(f"{x}/*.[ch]"):
         f.write(line)
 ' "$x"
 
+    echo 'derived from upstream ntruplus by supercop/import/ntruplus' > "$x"/implementors
   done
 done
+
+linksame crypto_kem/ntruplus* || :
 
 (
   cd "$supercop"

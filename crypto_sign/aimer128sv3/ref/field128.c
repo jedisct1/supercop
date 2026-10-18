@@ -382,19 +382,19 @@ void gf_mat_vec_mul(gf c, const gf a, const gf b[AIM2_NUM_BITS_FIELD])
       temp_c0 ^= (b_ptr[3][0] & mask);
       temp_c1 ^= (b_ptr[3][1] & mask);
 
-      mask = -((index >> 4) & 1);
+      mask = crypto_int64_bitmod_mask(index,4);
       temp_c0 ^= (b_ptr[4][0] & mask);
       temp_c1 ^= (b_ptr[4][1] & mask);
 
-      mask = -((index >> 5) & 1);
+      mask = crypto_int64_bitmod_mask(index,5);
       temp_c0 ^= (b_ptr[5][0] & mask);
       temp_c1 ^= (b_ptr[5][1] & mask);
 
-      mask = -((index >> 6) & 1);
+      mask = crypto_int64_bitmod_mask(index,6);
       temp_c0 ^= (b_ptr[6][0] & mask);
       temp_c1 ^= (b_ptr[6][1] & mask);
 
-      mask = -((index >> 7) & 1);
+      mask = crypto_int64_bitmod_mask(index,7);
       temp_c0 ^= (b_ptr[7][0] & mask);
       temp_c1 ^= (b_ptr[7][1] & mask);
     }
@@ -433,19 +433,19 @@ void gf_mat_vec_mul_add(gf c, const gf a, const gf b[AIM2_NUM_BITS_FIELD])
       temp_c0 ^= (b_ptr[3][0] & mask);
       temp_c1 ^= (b_ptr[3][1] & mask);
 
-      mask = -((index >> 4) & 1);
+      mask = crypto_int64_bitmod_mask(index,4);
       temp_c0 ^= (b_ptr[4][0] & mask);
       temp_c1 ^= (b_ptr[4][1] & mask);
 
-      mask = -((index >> 5) & 1);
+      mask = crypto_int64_bitmod_mask(index,5);
       temp_c0 ^= (b_ptr[5][0] & mask);
       temp_c1 ^= (b_ptr[5][1] & mask);
 
-      mask = -((index >> 6) & 1);
+      mask = crypto_int64_bitmod_mask(index,6);
       temp_c0 ^= (b_ptr[6][0] & mask);
       temp_c1 ^= (b_ptr[6][1] & mask);
 
-      mask = -((index >> 7) & 1);
+      mask = crypto_int64_bitmod_mask(index,7);
       temp_c0 ^= (b_ptr[7][0] & mask);
       temp_c1 ^= (b_ptr[7][1] & mask);
     }

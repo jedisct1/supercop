@@ -15,18 +15,25 @@
  */
 #include <stdint.h>
 #include <stddef.h>
+#include <string.h>
 
 #include "params.h"
-#include "fips202.h"
+#include "crypto_xof_shake256.h"
 
 void ntruplus_hash_f_fixed(uint8_t output[32],
                            const uint8_t input[NTRUPLUS_POLYBYTES])
 {
-    shake256_prefixed(output, 32, 0x00, input, NTRUPLUS_POLYBYTES);
+    uint8_t x[1+NTRUPLUS_POLYBYTES];
+    x[0] = 0;
+    memcpy(x+1,input,NTRUPLUS_POLYBYTES);
+    crypto_xof_shake256(output,32,x,sizeof x);
 }
 
 void ntruplus_hash_g_fixed(uint8_t output[NTRUPLUS_N / 4],
                            const uint8_t input[NTRUPLUS_POLYBYTES])
 {
-    shake256_prefixed(output, NTRUPLUS_N / 4, 0x01, input, NTRUPLUS_POLYBYTES);
+    uint8_t x[1+NTRUPLUS_POLYBYTES];
+    x[0] = 1;
+    memcpy(x+1,input,NTRUPLUS_POLYBYTES);
+    crypto_xof_shake256(output,NTRUPLUS_N / 4,x,sizeof x);
 }

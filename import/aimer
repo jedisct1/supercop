@@ -3,10 +3,11 @@
 supercop=.
 sourcetop=import/aimer-20260825
 
+unlinksame crypto_sign/aimer*v3new || :
+
 for p in 128f 128s 192f 192s 256f 256s
 do
   targettop="$supercop/crypto_sign/aimer${p}v3new"
-  rm -rf "$targettop"
   mkdir -p "$targettop"
   (
     echo ref "$sourcetop"/Reference_Implementation
@@ -17,6 +18,7 @@ do
   do
 
     x="$targettop/$target"
+    rm -rf "$x"
     mkdir -p "$x"
     echo "integrating $x..."
     cp -pr "$source"/* "$x"
@@ -117,6 +119,18 @@ for fn in glob.glob(f"{x}/*.[ch]"):
     line = line.replace("= -((index >> 1) & 1);","= crypto_int64_bitmod_mask(index,1);")
     line = line.replace("= -((index >> 2) & 1);","= crypto_int64_bitmod_mask(index,2);")
     line = line.replace("= -((index >> 3) & 1);","= crypto_int64_bitmod_mask(index,3);")
+    line = line.replace("= -((index >> 4) & 1);","= crypto_int64_bitmod_mask(index,4);")
+    line = line.replace("= -((index >> 5) & 1);","= crypto_int64_bitmod_mask(index,5);")
+    line = line.replace("= -((index >> 6) & 1);","= crypto_int64_bitmod_mask(index,6);")
+    line = line.replace("= -((index >> 7) & 1);","= crypto_int64_bitmod_mask(index,7);")
+    line = line.replace("= 0U - (index & 1);","= crypto_int64_bottombit_mask(index);")
+    line = line.replace("= 0U - ((index >> 1) & 1);","= crypto_int64_bitmod_mask(index,1);")
+    line = line.replace("= 0U - ((index >> 2) & 1);","= crypto_int64_bitmod_mask(index,2);")
+    line = line.replace("= 0U - ((index >> 3) & 1);","= crypto_int64_bitmod_mask(index,3);")
+    line = line.replace("= 0U - ((index >> 4) & 1);","= crypto_int64_bitmod_mask(index,4);")
+    line = line.replace("= 0U - ((index >> 5) & 1);","= crypto_int64_bitmod_mask(index,5);")
+    line = line.replace("= 0U - ((index >> 6) & 1);","= crypto_int64_bitmod_mask(index,6);")
+    line = line.replace("= 0U - ((index >> 7) & 1);","= crypto_int64_bitmod_mask(index,7);")
 
     lines2.append(line)
 
@@ -297,6 +311,8 @@ static inline void hash_ctx_release(hash_instance *ctx)
 
 #endif
 EOF
+
+    echo 'derived from upstream aimer by supercop/import/aimer' > "$x"/implementors
 
   done
 done

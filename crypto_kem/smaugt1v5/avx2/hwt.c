@@ -6,6 +6,7 @@
 #include "align.h"
 #include "fips202x4.h"
 #include "crypto_uint16.h"
+#include "crypto_uint32.h"
 #include <immintrin.h>
 #include <string.h>
 
@@ -134,30 +135,39 @@ static int rejsampling_mod(int16_t res[SMAUGT_N], const uint16_t *rand) {
 
         _mm256_store_si256((__m256i *)&res[i], rv);
 
+        crypto_declassify(&mask1,sizeof mask1);
+        crypto_declassify(&mask2,sizeof mask2);
+
         while (mask1 != 0) {
             k = __builtin_ctz(mask1) / 4;
-            do {
+            for (;;) {
                 if (j >= (SMAUGT_HWTSEEDBYTES / 2)) {
                     return -1;
                 }
                 m = (uint32_t)rand[j] * sv.coeffs[k];
                 j++;
                 l = m;
-            } while (l < T_REJ[i + k]);
+                uint32_t tlel = crypto_uint32_leq_01(T_REJ[i + k],l);
+                crypto_declassify(&tlel,sizeof tlel);
+                if (tlel) break;
+            }
             res[i + k] = m >> 16;
             mask1 ^= 0xfu << (4 * k);
         }
 
         while (mask2 != 0) {
             k = __builtin_ctz(mask2) / 4;
-            do {
+            for (;;) {
                 if (j >= (SMAUGT_HWTSEEDBYTES / 2)) {
                     return -1;
                 }
                 m = (uint32_t)rand[j] * sv.coeffs[8 + k];
                 j++;
                 l = m;
-            } while (l < T_REJ[i + 8 + k]);
+                uint32_t tlel = crypto_uint32_leq_01(T_REJ[i + 8 + k],l);
+                crypto_declassify(&tlel,sizeof tlel);
+                if (tlel) break;
+            }
             res[i + 8 + k] = m >> 16;
             mask2 ^= 0xfu << (4 * k);
         }

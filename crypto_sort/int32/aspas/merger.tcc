@@ -184,7 +184,7 @@ void merger(T*& orig, uint32_t size)
     int count = 0;
     while (num!= 0) 
     {
-        if (num & 1) 
+        if (num & 1)
         {
             break;
         } else 
@@ -193,7 +193,7 @@ void merger(T*& orig, uint32_t size)
             num = num >> 1;
         }
     }
-    if(count&1==1)
+    if(count&1)
         flip_flag = false;
     else
         flip_flag = true;
@@ -376,7 +376,7 @@ void merger_key(T*& orig, int *&ptr, uint32_t size)
     int count = 0;
     while (num!= 0) 
     {
-        if (num & 1 == 1) 
+        if (num & 1)
         {
             break;
         } else 
@@ -385,7 +385,7 @@ void merger_key(T*& orig, int *&ptr, uint32_t size)
             num = num >> 1;
         }
     }
-    if(count&1==1)
+    if(count&1)
         flip_flag = false;
     else
         flip_flag = true;
@@ -578,7 +578,7 @@ void merger_key(T*& orig, long *&ptr, uint32_t size)
     int count = 0;
     while (num!= 0) 
     {
-        if (num & 1 == 1) 
+        if (num & 1)
         {
             break;
         } else 
@@ -587,7 +587,7 @@ void merger_key(T*& orig, long *&ptr, uint32_t size)
             num = num >> 1;
         }
     }
-    if(count&1==1)
+    if(count&1)
         flip_flag = false;
     else
         flip_flag = true;

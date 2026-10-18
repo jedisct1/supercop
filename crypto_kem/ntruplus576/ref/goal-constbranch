@@ -1,2 +1,1 @@
-20260330 rome1 amd64 20260330 crypto_kem ntruplus576/constbranchindex timecop_pass crypto_kem/ntruplus576/ref gcc_-march=native_-mtune=native_-O3_-fwrapv_-fPIC_-fPIE_-gdwarf-4_-Wall 1 0
-20260330 rome1 amd64 20260330 crypto_kem ntruplus576/constbranchindex timecop_output crypto_kem/ntruplus576/ref gcc_-march=native_-mtune=native_-O3_-fwrapv_-fPIC_-fPIE_-gdwarf-4_-Wall a9b6b883393aa56d18170f1c8c5424c8840ca3268b79c963d2a05f88e8f43147 10224855 649109768 2250000000 crypto_kem/ntruplus576/ref +0
+goal-constindex

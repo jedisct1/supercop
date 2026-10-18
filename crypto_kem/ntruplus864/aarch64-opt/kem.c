@@ -11,7 +11,7 @@
 #include "secure_clear.h"
 #include "randombytes.h"
 
-#include "fips202.h"
+#include "crypto_xof_shake256.h"
 
 static int declassify_poly_frombytes(poly *r, const uint8_t a[NTRUPLUS_POLYBYTES])
 {
@@ -156,7 +156,9 @@ int crypto_kem_keypair(uint8_t *pk, uint8_t *sk)
 
     randombytes(coins[0], sizeof coins[0]);
     randombytes(coins[1], sizeof coins[1]);
-    shake256_x2(buf[0], buf[1], NTRUPLUS_N / 4, coins[0], coins[1], 32);
+    // XXX: can merge this into a 2-way shake256
+    crypto_xof_shake256(buf[0], NTRUPLUS_N / 4, coins[0], 32);
+    crypto_xof_shake256(buf[1], NTRUPLUS_N / 4, coins[1], 32);
 
     for (;;) {
         r = genf_from_seed(&f, &finv, buf[cur]);
@@ -165,7 +167,7 @@ int crypto_kem_keypair(uint8_t *pk, uint8_t *sk)
             break;
         cur ^= 1;
         randombytes(coins[cur ^ 1], sizeof coins[0]);
-        shake256(buf[cur ^ 1], NTRUPLUS_N / 4, coins[cur ^ 1], 32);
+        crypto_xof_shake256(buf[cur ^ 1], NTRUPLUS_N / 4, coins[cur ^ 1], 32);
     }
     cur ^= 1;
     for (;;) {
@@ -174,7 +176,7 @@ int crypto_kem_keypair(uint8_t *pk, uint8_t *sk)
         if (!r)
             break;
         randombytes(coins[cur], sizeof coins[0]);
-        shake256(buf[cur], NTRUPLUS_N / 4, coins[cur], 32);
+        crypto_xof_shake256(buf[cur], NTRUPLUS_N / 4, coins[cur], 32);
     }
 
     crypto_kem_keypair_derand(pk, sk, &f, &finv, &g, &ginv);

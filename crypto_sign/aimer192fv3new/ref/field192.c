@@ -2,6 +2,7 @@
 
 #include "field.h"
 #include "field_internal.h"
+#include "crypto_int64.h"
 #include <stddef.h>
 #include <stdint.h>
 
@@ -82,22 +83,22 @@ void gf_mat_vec_mul(gf c, const gf a, const gf b[AIM3_NUM_BITS_FIELD])
     uint64_t index = *a_ptr;
     for (size_t j = AIM3_NUM_BITS_WORD; j; j -= 4, index >>= 4, b_ptr += 4)
     {
-      mask = 0U - (index & 1);
+      mask = crypto_int64_bottombit_mask(index);
       temp_c0 ^= (b_ptr[0][0] & mask);
       temp_c1 ^= (b_ptr[0][1] & mask);
       temp_c2 ^= (b_ptr[0][2] & mask);
 
-      mask = 0U - ((index >> 1) & 1);
+      mask = crypto_int64_bitmod_mask(index,1);
       temp_c0 ^= (b_ptr[1][0] & mask);
       temp_c1 ^= (b_ptr[1][1] & mask);
       temp_c2 ^= (b_ptr[1][2] & mask);
 
-      mask = 0U - ((index >> 2) & 1);
+      mask = crypto_int64_bitmod_mask(index,2);
       temp_c0 ^= (b_ptr[2][0] & mask);
       temp_c1 ^= (b_ptr[2][1] & mask);
       temp_c2 ^= (b_ptr[2][2] & mask);
 
-      mask = 0U - ((index >> 3) & 1);
+      mask = crypto_int64_bitmod_mask(index,3);
       temp_c0 ^= (b_ptr[3][0] & mask);
       temp_c1 ^= (b_ptr[3][1] & mask);
       temp_c2 ^= (b_ptr[3][2] & mask);
